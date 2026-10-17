@@ -1,0 +1,12 @@
+PASS app backups off
+PASS cleartext traffic prohibited
+PASS VPN restricted to NOVA Android package
+PASS VPN route matches exact private gateway
+PASS no public or broad LAN routes accepted
+PASS no public LAN fallback
+PASS certificate failures are not classified offline
+PASS Jellyfin server identity pinned
+PASS encryption backed by Android Keystore
+PASS no always-on insecure trust manager
+PASS no embedded PEM private key
+Heuristic source checks: 11/11 passed

@@ -1,0 +1,2 @@
+Jellyfin HTTP mock: 19 / 19 transport tests PASS
+NOVA Connect v0.3: 112 / 112 policy tests PASS; 19 / 19 local HTTP transport tests PASS; total 131

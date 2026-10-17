@@ -1,0 +1,54 @@
+name: nova-server
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:12.2.20261005-225228
+    restart: unless-stopped
+    user: "${NOVA_UID:?}:${NOVA_GID:?}"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    ports:
+      - "127.0.0.1:8096:8096/tcp"
+    volumes:
+      - ./state/jellyfin/config:/config:rw
+      - ./state/jellyfin/cache:/cache:rw
+      - type: bind
+        source: ${NOVA_MEDIA_A:?}
+        target: /media/source-a
+        read_only: true
+      - type: bind
+        source: ${NOVA_MEDIA_B:?}
+        target: /media/source-b
+        read_only: true
+    networks:
+      - nova_internal
+
+  nova-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    user: "${NOVA_UID:?}:${NOVA_GID:?}"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    ports:
+      - "127.0.0.1:8787:8787/tcp"
+    environment:
+      NOVA_STATE_DIR: /data
+      NOVA_JELLYFIN_URL: http://jellyfin:8096
+    volumes:
+      - ./state/nova:/data:rw
+    depends_on:
+      - jellyfin
+    networks:
+      - nova_internal
+
+networks:
+  nova_internal:
+    driver: bridge

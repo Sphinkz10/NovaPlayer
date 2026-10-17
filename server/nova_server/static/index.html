@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="pt-PT"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA Server · Control</title><link rel="stylesheet" href="/static/control.css"></head>
+<body><main><header><span class="brand">✦ NOVA <em>Server</em></span><span class="pre">P01 · LOCAL CONTROL</span></header>
+<section class="hero"><p class="eyebrow">CINEMA PRIVADO · INSTALAÇÃO LOCAL</p><h1>O teu cinema.<br><strong>O teu servidor.</strong></h1><p>Este painel está disponível apenas no próprio servidor ou através de um túnel administrativo. A ligação remota para convidados ainda não está ativa.</p></section>
+<section class="columns"><article class="panel"><h2>Estado do NOVA Server</h2><div id="publicStatus" aria-live="polite">A verificar…</div><p class="muted">O Jellyfin está incluído no pacote, mas o assistente inicial dele ainda precisa de ser concluído.</p></article>
+<article class="panel"><h2>Entrar como proprietário</h2><form id="login"><label>Utilizador<input name="username" required autocomplete="username" maxlength="40"></label><label>Palavra-passe<input name="password" type="password" required autocomplete="current-password"></label><button>Entrar</button></form><div id="loginError" role="alert"></div></article></section>
+<section class="panel" id="ownerPanel" hidden><div class="head"><h2>Diagnóstico protegido</h2><button id="logout">Terminar sessão</button></div><div id="overview" aria-live="polite">A consultar…</div><button id="refresh">Atualizar diagnóstico</button></section>
+<footer>JELLYFIN · NOVA CORE · LIGAÇÃO REMOTA BLOQUEADA ATÉ VALIDAÇÃO</footer></main>
+<script src="/static/control.js" defer></script></body></html>

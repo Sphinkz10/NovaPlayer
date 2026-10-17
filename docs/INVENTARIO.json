@@ -1,0 +1,310 @@
+{
+  "created_at_utc": "2026-10-17T16:02:03.532000+00:00",
+  "package": "NOVA_Projeto_Completo_2026-10-17",
+  "origins": {
+    "documents": [
+      "NOVA_Cinema_G0_Especificacao_Mestre_v1.md",
+      "NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
+      "NOVA_Cinema_3_0_F01_Arquitetura_v0_1.md",
+      "NOVA_Platform_Security_Architecture_v0_1.md"
+    ],
+    "archives_originals": [
+      "NOVA_Server_P01_v0.1.zip",
+      "NOVA_Connect_POC_v0.3.zip"
+    ],
+    "figma_file_url": "https://www.figma.com/design/AAwpusB10YU5tXg4y8Z6P3",
+    "figma_offline_export_included": false
+  },
+  "files": [
+    {
+      "path": "01_DOCUMENTACAO/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
+      "bytes": 23945,
+      "sha256": "186c72375279a02ff160a683732016c9b0d38f3c338577ea9684b0708c5a7a1f"
+    },
+    {
+      "path": "01_DOCUMENTACAO/NOVA_Cinema_3_0_F01_Arquitetura_v0_1.md",
+      "bytes": 23539,
+      "sha256": "46687c67b91e727055d51e263df905cde64402610ae154a4588f648b930fb72d"
+    },
+    {
+      "path": "01_DOCUMENTACAO/NOVA_Cinema_G0_Especificacao_Mestre_v1.md",
+      "bytes": 24835,
+      "sha256": "48814707b2b0e21d30793710c8afc6774b1c16271b0a7894f1644ad5005ba948"
+    },
+    {
+      "path": "01_DOCUMENTACAO/NOVA_Platform_Security_Architecture_v0_1.md",
+      "bytes": 10572,
+      "sha256": "e8ef755cb0e185fd9a7ecfae2b70c276a931535d47f2be7dd328e990ffeea689"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/.env.example",
+      "bytes": 150,
+      "sha256": "a3de96706cf153f0265fd1ba4567a5b391f726837babf32161e8c957af734539"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/.gitignore",
+      "bytes": 74,
+      "sha256": "a6f86e1b0a0b4f06bb153d14ec10ccec8489f675f732dce18a8099fbe58d1a0f"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/Dockerfile",
+      "bytes": 341,
+      "sha256": "8e251dc8a284b937de03962b77cee5dbb5fab97185aea95258bad3b617deb232"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/README.md",
+      "bytes": 8152,
+      "sha256": "9275545092e8bd7771d6c7c565ca5ed5a02fd2bf2fdbac95e85a83df11f0bbaf"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/compose.yaml",
+      "bytes": 1208,
+      "sha256": "b436148ecb99395d49ef5807e9f918c14e6cccbdb26866e6578cf619cdd00047"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/docs/DELIVERY_STATUS.md",
+      "bytes": 1794,
+      "sha256": "bbdc4c68748985c9509bf822b0ce8ae0f321d224ef9c603ec5f2bf981ab15746"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/__init__.py",
+      "bytes": 99,
+      "sha256": "5b66dfe846f1154f33198d3c3bd1d9473f863ced67b4c94cf4959bb333e584fb"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/app.py",
+      "bytes": 6123,
+      "sha256": "c0b785243b5e3b4d236756fb6a159e826275f95372fc919be501515a5ffef0a1"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/jellyfin.py",
+      "bytes": 1586,
+      "sha256": "b1d3883722049fc301e58a802d6df4d5dfad44737294a3c5e870f906cd044ed7"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/security.py",
+      "bytes": 1309,
+      "sha256": "e5b2876d1cd5f5f3202d7179a8c9bdc9144b31c2fe9eaa21567c111c7340f695"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/static/control.css",
+      "bytes": 2013,
+      "sha256": "3f7c6c13c98509b0436e7d985c87995ffd8a396ce323f89954fa74315e8b1341"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/static/control.js",
+      "bytes": 2368,
+      "sha256": "dce5f0cb110217e33c9ebc34d26a601e6b12316ff0bb64bbe6583bde7ea60b89"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/static/index.html",
+      "bytes": 1730,
+      "sha256": "5f9ac9c91ceb8041965ee5580de98e7dc157c1ad802439268ac9eea56879f4e7"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/storage.py",
+      "bytes": 4066,
+      "sha256": "37b5a57ced4e25b19cf08c749518eb39ff4539d89d0972e5e45ad789f99bc9e2"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/pytest.ini",
+      "bytes": 29,
+      "sha256": "e28a989e765f6f1fc37e02fb00a351f56391f749cafcd3f93057abbfb17ba26b"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/requirements-dev.txt",
+      "bytes": 70,
+      "sha256": "67e8e5b0cf1ba4a69293e8e6c8cdefcb5cd95f4ef71bd06ab781e91fda5f58cd"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/requirements.txt",
+      "bytes": 67,
+      "sha256": "c1feb82a407a74eb57fc45e993b40f8ea2ae9845638018e676b2304f455c44fc"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/scripts/first_run.py",
+      "bytes": 1631,
+      "sha256": "4ad428a05b73226042fc403fe9411919e5aa37ae752daac3874e55ec36f27e7e"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/scripts/install.py",
+      "bytes": 3380,
+      "sha256": "cfcf153b0e27f9a9421c566d0fd8b37d7018bc2859834fd5f49122b5778b9027"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/scripts/smoke_http.py",
+      "bytes": 2727,
+      "sha256": "ec9890b81eece16a3dfc7c478010da1cafff4e620a36c1034c6aa5162a167503"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/conftest.py",
+      "bytes": 386,
+      "sha256": "d2012d89115f313e35b1133a9fa3c1ad0b2fd9e0f330c599a0f0f8f36ce6cb74"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_api.py",
+      "bytes": 5336,
+      "sha256": "13e8891139c66d2fd81772f6afe67f3709181ff55ae1bb2c7dd4661ebf1d5024"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_compose.py",
+      "bytes": 1474,
+      "sha256": "05e204d344a82bf60a63a7a8d7e2952e5726677fac1977e14c665418a13ca535"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_installer.py",
+      "bytes": 1581,
+      "sha256": "1fa26e75d084971a148e53c3f624be0c120b0abfe07e63f1e7c5addf24bbbcdd"
+    },
+    {
+      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_jellyfin.py",
+      "bytes": 2609,
+      "sha256": "e1a6aaef4f73108b81e4a5641c26f629e94cc71ce130d8023cc932382576919e"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/LOCAL_STATIC_RESULTS.txt",
+      "bytes": 461,
+      "sha256": "224dcd53e2c96423c1d4d5b5fe018112ac6e8e4a9a0a6831a2e501db7a178490"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/LOCAL_TEST_RESULTS.txt",
+      "bytes": 148,
+      "sha256": "d9a3a35222bdf3fac0ac3cf31e976f1a2d2d0a3de03db7158a3bc9db95df8e14"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/README.md",
+      "bytes": 5424,
+      "sha256": "037b0d3a93fc0edbefc8fd06e201ddd42657ec7437e4becde739baf9ac9c0a9a"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/build.gradle.kts",
+      "bytes": 640,
+      "sha256": "f7ea7e8ac13788eae50f3fba96a77f37fb2a2796f0d9d67a49a4ef9d48158c18"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/AndroidManifest.xml",
+      "bytes": 1035,
+      "sha256": "49ebce19fc71efe1111ed9595056b4966dd9de6fcf76835521bf5378de4172ab"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/JellyfinHttpProbe.kt",
+      "bytes": 940,
+      "sha256": "bdd4e03d74e240333a877468f4e2a4598a643bdbfeefa6cd7cfe1c8b7e62d974"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/MainActivity.kt",
+      "bytes": 5043,
+      "sha256": "f381fe2560931b590d2e86a5808a61702227060e756f2c7cb032df1d213ed4ac"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt",
+      "bytes": 4303,
+      "sha256": "5bc94ea1a660cc759e69f6b9248f4a62e1f90a26d2766554ec59cbb1313bd47d"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/WireGuardBridge.kt",
+      "bytes": 2184,
+      "sha256": "803ff0a33ba77c8b1f57d73e3292ebe41f4a35ace676e8ac76b2cbd253b4531b"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/build.gradle.kts",
+      "bytes": 142,
+      "sha256": "1ab4e60f89de7a2c805a3b2d820e3b9b1c0d4657cb8fe2f26253179e5eba3fa2"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/ConnectionPolicy.kt",
+      "bytes": 3289,
+      "sha256": "595e3bbfd0764e032daac9d0d34d3f0f3112dd27863bc34ead4b28f787872280"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/JellyfinHealth.kt",
+      "bytes": 2930,
+      "sha256": "ff7f0f4a9d46e0714cef1fc36b56de9bb5144a9e72b2a0ea78fbad64fe033ec9"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/JellyfinNetworkProbe.kt",
+      "bytes": 2819,
+      "sha256": "aae46d746b63402eb94054c4230124144c5483b846a1df3c559f6183bcac1a35"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/SecurityPolicies.kt",
+      "bytes": 3155,
+      "sha256": "073ba96d3cae47713318bd4501f6aa3189a80295b4eefe1bad87074fc420155c"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/test/kotlin/com/novacinema/connect/core/JellyfinTransportTest.kt",
+      "bytes": 7299,
+      "sha256": "10db3cb3115f93354d1f64d81640f23b79003aebdd3caf7fff8de526fbf25425"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/test/kotlin/com/novacinema/connect/core/POCTest.kt",
+      "bytes": 13996,
+      "sha256": "728dc939b4d465ab2585487b7f95598ae4273ce9b8fbbdb096c7df81844a9b25"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/ANDROID_BUILD_GATE.md",
+      "bytes": 2363,
+      "sha256": "e6ddb82b3002d9add97d9b1fa5c4b452886b998106b21775f4edcada857ec724"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/CHANGELOG.md",
+      "bytes": 1351,
+      "sha256": "30cad82536af5451fb817ceff5035cdd744adfbb283fbeea424ee872fdec34cc"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/JELLYFIN_HEALTH_MATRIX.md",
+      "bytes": 1768,
+      "sha256": "6fcae61f7b536ea489dba2086e9d8a58cbf8284715afd82db2825258b81cdddf"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/SECURITY_REVIEW.md",
+      "bytes": 3273,
+      "sha256": "8032bff2be46bb09f410fda372b3907f8eaee54523cd351b98f6cfc45dce5651"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/gradle.properties",
+      "bytes": 103,
+      "sha256": "fa078c27c9e4bde28a029d673875b028884505efa436b68cf60e1ac0be5b679b"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/scripts/check_source_hygiene.py",
+      "bytes": 2341,
+      "sha256": "ec6df90f84847efbb0f3d77ceca79cdff6c2e39c973a1b6a4ca0c3c1384bcdf0"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/scripts/run_core_tests.sh",
+      "bytes": 315,
+      "sha256": "26da91767b8bb5b31bc9687dc7a646ea17f650cb53eb47464434aa84f62fc5e5"
+    },
+    {
+      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/settings.gradle.kts",
+      "bytes": 283,
+      "sha256": "3c27eaab2c0cbaae85fced0c27ab4d8f5c6de3a67cea40be4a69eb1e2a7434b7"
+    },
+    {
+      "path": "04_FIGMA_E_DESIGN/LINKS_FIGMA.md",
+      "bytes": 3759,
+      "sha256": "2a1d65edf373d83ca21cf5ba33669e0c93bf708bccd92719ef9bb0ad61085219"
+    },
+    {
+      "path": "05_ZIPS_ORIGINAIS/NOVA_Connect_POC_v0.3.zip",
+      "bytes": 36831,
+      "sha256": "715f5a1fe4abb32d038e53d0b2af6989eae8a730caa2f52a3751bda19687b9a4"
+    },
+    {
+      "path": "05_ZIPS_ORIGINAIS/NOVA_Server_P01_v0.1.zip",
+      "bytes": 24709,
+      "sha256": "34308fbd113b693bfb0690498fbce4d74770424f98e41ce9ceb547989ce9c04a"
+    },
+    {
+      "path": "ESTADO_REAL.md",
+      "bytes": 2651,
+      "sha256": "38f4dcb25ad2fbcd1db289a7307c429bed03a818d57df83b082e13b6cb9b88d2"
+    },
+    {
+      "path": "LER_PRIMEIRO.md",
+      "bytes": 1605,
+      "sha256": "ce6a66a5685b40e4a5dd77a4d6672ede5f7763ff2ae7de57b63ab62afac3e9c0"
+    }
+  ]
+}
