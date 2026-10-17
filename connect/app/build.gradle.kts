@@ -11,4 +11,9 @@ dependencyLocking { lockAllConfigurations() }
 android.sourceSets["main"].java.srcDir("../core/src/main/kotlin")
 dependencies {
     implementation("com.wireguard.android:tunnel:1.0.20260102")
+    // Compile-only research gate; normal builds keep unimplemented providers disabled.
+    providers.gradleProperty("novaNativeProofAar").orNull?.let { aar ->
+        require(file(aar).isFile) { "Native proof AAR was not built" }
+        implementation(files(aar))
+    }
 }
