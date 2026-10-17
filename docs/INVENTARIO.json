@@ -390,8 +390,8 @@
     },
     {
       "path": "server/nova_server/app.py",
-      "bytes": 7473,
-      "sha256": "c68bb7b0727f16498e5db28955da1670fe8e7f7b7dfc99ff04383c7be61e6318"
+      "bytes": 8730,
+      "sha256": "c21c529188419b6ec1491e3155350ffd1fe8bdee2d5f7cea44fb1dd95e5c8918"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -409,24 +409,29 @@
       "sha256": "e5b2876d1cd5f5f3202d7179a8c9bdc9144b31c2fe9eaa21567c111c7340f695"
     },
     {
+      "path": "server/nova_server/setup.py",
+      "bytes": 11256,
+      "sha256": "5364e2eeb9934605b075302c32d2711769b1ae477d2f1f1c5dde0ba9a382d370"
+    },
+    {
       "path": "server/nova_server/static/control.css",
       "bytes": 2252,
       "sha256": "2f4ec6afbad26557932c7a5bd1f438077eecdeccddd1050602e6733c17dfe6a6"
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 5193,
-      "sha256": "e5ae46be58ced1a5d1ec8cf195ed9b1c893d14c49310594e0035843c525adcdb"
+      "bytes": 8830,
+      "sha256": "3bfeeeb4cd60a8d39a28fb3540fad19556f362c6c66c737660db53bc07747f15"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 2478,
-      "sha256": "774a78efe08cf4f35281f30f8cc7599406813244331065150dcb95e79bf4818b"
+      "bytes": 4524,
+      "sha256": "8c4710451551885177ba291974d8d9be352dcec1a95933a80bea1e61cf67bc66"
     },
     {
       "path": "server/nova_server/storage.py",
-      "bytes": 5411,
-      "sha256": "463cd7068a3d1a4afeb3a759a14b9c3fea468eeac36854d8a646be7a147f31e6"
+      "bytes": 7056,
+      "sha256": "b36c90b633d68d816ebf17d1424b5fa8c3a79b6b93aed9a9f966d7bb0bcbb2dd"
     },
     {
       "path": "server/pytest.ini",
@@ -470,13 +475,13 @@
     },
     {
       "path": "server/scripts/smoke_browser.py",
-      "bytes": 6432,
-      "sha256": "1b118a11eee935619faa7d8135e823d6cacec7372d8d948e0e1b3bea87a1f125"
+      "bytes": 7487,
+      "sha256": "f738c815bc9ca223df72696f846e6fed17d9af71d9b03b48af22626d5c0ed502"
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 4329,
-      "sha256": "fe78d9650d92d0b038ae2358e880a80413a2beecbfac1e146f4efdb14deb03fa"
+      "bytes": 8131,
+      "sha256": "2d42c5561163a41cbcc1a8aa7e002416f3ee0c955f325fdbc1fe8ac6f8072b04"
     },
     {
       "path": "server/scripts/smoke_http.py",
@@ -517,6 +522,11 @@
       "path": "server/tests/test_regressions.py",
       "bytes": 5795,
       "sha256": "f5d09f386e755c2fa2cc629fa7d22e184c1652ddfe1397dff038938197a25176"
+    },
+    {
+      "path": "server/tests/test_setup.py",
+      "bytes": 7211,
+      "sha256": "897207352e93ea8bd4c0a2add73b56ce476e1bd3e90df9ce23343992ca182149"
     }
   ]
 }

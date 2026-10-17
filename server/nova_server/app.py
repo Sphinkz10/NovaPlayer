@@ -8,6 +8,7 @@ import re
 import threading
 from pathlib import Path
 from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -16,6 +17,7 @@ from .security import hash_password, verify_password, token_matches, new_session
 from .storage import Store
 from .jellyfin import probe_jellyfin
 from .connect import ConnectDraft, provider_catalog
+from .setup import JellyfinSetup, SetupRequest, Credentials, SetupError
 
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z][a-zA-Z0-9_.-]{2,39}$')
 DUMMY_HASH = '$argon2id$v=19$m=65536,t=3,p=2$bsLfU/8cH1R+4e68utTSNQ$8Tk5/U5Y6zx5/ZrURl0G7DtU5y3EXazaQ+3mifoBRLI'
@@ -38,8 +40,20 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     api.state.store=store
     api.state.jellyfin_url=jellyfin_url
     jellyfin_server_id = jellyfin_server_id or os.environ.get('NOVA_JELLYFIN_SERVER_ID')
+    api.state.jellyfin_setup = JellyfinSetup(store, jellyfin_url, jellyfin_server_id)
     hosts = allowed_hosts if allowed_hosts is not None else ['127.0.0.1', 'localhost']
     api.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts, www_redirect=False)
+
+    @api.exception_handler(RequestValidationError)
+    async def invalid_payload(request, exc):
+        # Pydantic's default error includes submitted values, including passwords.
+        return JSONResponse(status_code=422, content={'detail': [
+            {'type': error['type'], 'loc': error['loc'], 'msg': 'Campo inválido.'}
+            for error in exc.errors()]})
+
+    @api.exception_handler(SetupError)
+    async def setup_error(request, exc):
+        return JSONResponse(status_code=exc.status, content={'detail': exc.code})
 
     @api.middleware('http')
     async def security_headers(req: Request, call_next):
@@ -137,6 +151,18 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     def connect_settings(token:str=Depends(owner)):
         return {'schema_version':1, 'active_provider':None, 'remote_access_enabled':False,
                 'providers':provider_catalog(), 'drafts':store.connect_drafts()}
+
+    @api.get('/api/v1/admin/setup')
+    def setup_status(token:str=Depends(owner)):
+        return store.setup_state()
+
+    @api.post('/api/v1/admin/setup/jellyfin')
+    async def setup_jellyfin(payload:SetupRequest, token:str=Depends(owner)):
+        return await api.state.jellyfin_setup.run(payload, configure=True)
+
+    @api.post('/api/v1/admin/setup/jellyfin/verify')
+    async def verify_jellyfin(payload:Credentials, token:str=Depends(owner)):
+        return await api.state.jellyfin_setup.run(payload)
 
     @api.put('/api/v1/admin/connect/draft')
     def save_connect_draft(payload:ConnectDraft, token:str=Depends(owner)):

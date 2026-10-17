@@ -45,9 +45,6 @@ def run(channel=None, output=None):
                     time.sleep(.1)
                 else:
                     raise RuntimeError('Temporary API did not start')
-                assert client.post('/api/v1/admin/bootstrap', json={
-                    'username':'owner', 'password':'browser-only-test-passphrase'},
-                    headers={'X-NOVA-Bootstrap':secret}).status_code == 201
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True, **({'channel':channel} if channel else {}))
                 try:
@@ -55,6 +52,16 @@ def run(channel=None, output=None):
                     errors = []
                     page.on('pageerror', lambda error: errors.append(str(error)))
                     page.goto(base)
+                    expect(page.locator('#bootstrapPanel')).to_be_visible()
+                    page.locator('[name=bootstrap_code]').fill('invalid-code')
+                    page.locator('[name=owner_name]').fill('owner')
+                    page.locator('[name=owner_password]').fill('browser-only-test-passphrase')
+                    page.locator('#bootstrap button').click()
+                    expect(page.locator('#bootstrapMessage')).to_contain_text('Não foi possível criar')
+                    page.locator('[name=bootstrap_code]').fill(secret)
+                    page.locator('#bootstrap button').click()
+                    expect(page.locator('#bootstrapPanel')).to_be_hidden()
+                    expect(page.locator('[name=bootstrap_code]')).to_have_value('')
                     page.locator('[name=username]').fill('owner')
                     page.locator('[name=password]').fill('wrong')
                     page.locator('#login button').click()
@@ -66,6 +73,11 @@ def run(channel=None, output=None):
                     expect(page.locator('#overview')).to_contain_text('por verificar')
                     expect(page.locator('[name=password]')).to_have_value('')
                     expect(page.locator('#connectMessage')).to_contain_text('Acesso remoto desativado')
+                    page.locator('[name=jf_username]').fill('owner')
+                    page.locator('[name=jf_password]').fill('synthetic-jellyfin-password')
+                    page.locator('#jellyfinSetup button[type=submit]').click()
+                    expect(page.locator('#setupMessage')).to_contain_text('Não foi possível concluir')
+                    expect(page.locator('[name=jf_password]')).to_have_value('')
                     configurations = {
                         'wireguard':{'endpoint_host':'vpn.example.org','endpoint_port':'51820'},
                         'tailscale':{'tailnet':'test.example'},
@@ -96,7 +108,7 @@ def run(channel=None, output=None):
                     expect(page.locator('#ownerPanel')).to_be_hidden()
                     assert not errors, errors
                     report = {'result':'passed', 'browser':channel or 'chromium',
-                              'checks':['invalid_login','login_panel','form_reset','unverified_media',
+                              'checks':['bootstrap_invalid_code','bootstrap_in_browser','invalid_login','login_panel','form_reset','unverified_media','setup_offline_password_cleared',
                                         'three_provider_drafts','reload_persistence','no_local_storage',
                                         'no_cookies','logout','no_page_errors']}
                     if output:

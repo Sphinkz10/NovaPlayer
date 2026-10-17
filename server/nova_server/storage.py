@@ -29,6 +29,11 @@ CREATE TABLE IF NOT EXISTS connect_drafts (
  provider TEXT PRIMARY KEY CHECK(provider IN ('wireguard','tailscale','netbird')),
  configuration TEXT NOT NULL, updated_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS jellyfin_setup (
+ id INTEGER PRIMARY KEY CHECK(id=1), server_id TEXT, report TEXT,
+ lease TEXT, lease_until INTEGER NOT NULL DEFAULT 0
+);
+INSERT OR IGNORE INTO jellyfin_setup(id) VALUES(1);
 """
 
 class Store:
@@ -58,6 +63,34 @@ class Store:
     def has_admin(self) -> bool:
         with self._db() as con:
             return bool(con.execute('SELECT 1 FROM admin WHERE id=1').fetchone())
+
+    def setup_state(self):
+        with self._db() as con:
+            sid, report, expiry = con.execute(
+                'SELECT server_id,report,lease_until FROM jellyfin_setup WHERE id=1').fetchone()
+            return {'server_id': sid, 'last_observation': json.loads(report) if report else None,
+                    'busy': expiry > time.time()}
+
+    def acquire_setup(self, lease):
+        with self._db() as con:
+            con.execute('BEGIN IMMEDIATE')
+            return con.execute('UPDATE jellyfin_setup SET lease=?,lease_until=? '
+                               'WHERE id=1 AND lease_until<=?',
+                               (lease, int(time.time())+120, int(time.time()))).rowcount == 1
+
+    def pin_setup_server(self, lease, server_id):
+        with self._db() as con:
+            return con.execute('UPDATE jellyfin_setup SET server_id=? WHERE id=1 AND lease=? '
+                               'AND (server_id IS NULL OR server_id=?)',
+                               (server_id, lease, server_id)).rowcount == 1
+
+    def finish_setup(self, lease, report=None):
+        with self._db() as con:
+            if report is not None:
+                con.execute('UPDATE jellyfin_setup SET report=? WHERE id=1 AND lease=?',
+                            (json.dumps(report), lease))
+            con.execute('UPDATE jellyfin_setup SET lease=NULL,lease_until=0 WHERE id=1 AND lease=?',
+                        (lease,))
 
     def bootstrap(self, username: str, hashed: str) -> bool:
         with self.lock, self._db() as con:

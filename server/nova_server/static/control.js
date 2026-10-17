@@ -5,7 +5,8 @@ const el=id=>document.getElementById(id);
 const write=(target,message)=>{target.textContent=message};
 async function status(){
  try {const r=await fetch('/api/v1/status',{cache:'no-store'});const j=await r.json();
- write(el('publicStatus'),j.owner_setup_required?'Primeira configuração pendente: usa scripts/first_run.py.':'NOVA Core ativo · Proprietário configurado · Acesso remoto desativado.');}
+ el('bootstrapPanel').hidden=!j.owner_setup_required;
+ write(el('publicStatus'),j.owner_setup_required?'Cria o proprietário para iniciar a configuração.':'NOVA Core ativo · Proprietário configurado · Acesso remoto desativado.');}
  catch {write(el('publicStatus'),'Serviço temporariamente indisponível.');}
 }
 async function loadOverview(){
@@ -18,7 +19,44 @@ async function loadOverview(){
  for(const [k,v] of entries){const dt=document.createElement('dt');dt.textContent=k;const dd=document.createElement('dd');dd.textContent=v;d.append(dt,dd);}
  el('overview').replaceChildren(d);
  await loadConnect();
+ await loadSetup();
 }
+function showSetupReport(report){
+ if(!report){write(el('setupReport'),'Ainda não existe uma verificação de instalação.');return;}
+ write(el('setupReport'),'Última verificação: '+new Date(report.observed_at*1000).toLocaleString('pt-PT')+
+  '. Diretórios acessíveis para listagem. '+report.libraries.map(lib=>lib.name+': '+lib.indexed_items+' itens indexados').join(' · ')+
+  '. Permissões de só leitura e reprodução ainda por validar no servidor.');
+}
+async function loadSetup(){
+ const r=await fetch('/api/v1/admin/setup',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+ if(r.ok)showSetupReport((await r.json()).last_observation);
+}
+el('bootstrap').addEventListener('submit',async ev=>{
+ ev.preventDefault();const form=ev.currentTarget;const data=new FormData(form);
+ try{
+  const r=await fetch('/api/v1/admin/bootstrap',{method:'POST',headers:{'Content-Type':'application/json','X-NOVA-Bootstrap':data.get('bootstrap_code')},body:JSON.stringify({username:data.get('owner_name'),password:data.get('owner_password')})});
+  if(!r.ok){write(el('bootstrapMessage'),'Não foi possível criar a conta. Verifica o código, o utilizador e a palavra-passe.');return;}
+  form.reset();await status();write(el('loginError'),'Proprietário criado. Entra com a conta NOVA.');
+ }catch{write(el('bootstrapMessage'),'Servidor indisponível. Tenta novamente.');}
+});
+async function configureJellyfin(configure){
+ if(!token)return;const form=el('jellyfinSetup');
+ if(!form.reportValidity())return;
+ const data=new FormData(form);const payload={username:data.get('jf_username'),password:data.get('jf_password')};
+ if(configure){payload.server_name=data.get('server_name');payload.libraries=[{name:data.get('library_name'),collection_type:data.get('collection_type'),roots:['source-a','source-b']}];}
+ const buttons=[...form.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);
+ write(el('setupMessage'),'A contactar o Jellyfin…');
+ try{
+  const r=await fetch('/api/v1/admin/setup/jellyfin'+(configure?'':'/verify'),{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const result=await r.json();
+  if(!r.ok){const messages={setup_busy:'Já existe uma configuração em curso.',jellyfin_identity_changed:'A identidade do Jellyfin mudou. Verifica a instalação antes de continuar.',library_conflict:'Existe uma biblioteca com nome ou origens incompatíveis. Verifica as bibliotecas no Jellyfin.',jellyfin_credentials_rejected:'Credenciais Jellyfin rejeitadas. Usa a conta administrativa existente para retomar.',jellyfin_admin_required:'É necessária uma conta administrativa Jellyfin.',new_password_too_short:'Uma conta Jellyfin nova exige pelo menos 14 caracteres.',jellyfin_setup_required:'Conclui primeiro a configuração.'};
+   write(el('setupMessage'),r.status===401?'Sessão NOVA expirada. Volta a entrar.':messages[result.detail]||'Não foi possível concluir. Verifica os dados e o serviço Jellyfin; podes retomar a operação.');return;}
+  showSetupReport(result);write(el('setupMessage'),configure?'Jellyfin configurado. Indexação pedida; a contagem pode ainda estar a atualizar.':'Verificação atualizada.');
+ }catch{write(el('setupMessage'),'Ligação interrompida. Podes retomar a operação.');}
+ finally{form.elements.jf_password.value='';buttons.forEach(b=>b.disabled=false);}
+}
+el('jellyfinSetup').addEventListener('submit',ev=>{ev.preventDefault();configureJellyfin(true);});
+el('verifyJellyfin').addEventListener('click',()=>configureJellyfin(false));
 function showProviderFields(){
  const provider=el('provider').value;
  const saved=connectDrafts[provider]||{};

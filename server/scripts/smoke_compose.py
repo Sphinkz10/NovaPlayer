@@ -1,7 +1,7 @@
 """Linux Docker integration gate. Uses a unique project and disposable bind mounts.
 
-Verifies boot, HTTP, read-only mounts, restart and owner/session persistence.
-It does NOT prove media indexing, playback, VPN, or TrueNAS compatibility.
+Verifies boot, setup through NOVA, two-source indexing, read-only mounts and restart.
+It does NOT prove playback, VPN, or TrueNAS compatibility.
 """
 import json
 import os
@@ -67,12 +67,60 @@ def run():
                 headers = {'Authorization':'Bearer '+login.json()['access_token']}
                 overview = client.get(base+'/api/v1/admin/overview', headers=headers).json()
                 assert overview['jellyfin']['state'] in ('ready','setup_required'), overview['jellyfin']['state']
+                # Generate tiny synthetic media using the image's bundled ffmpeg.
+                compose('exec', '-T', 'jellyfin', '/usr/lib/jellyfin-ffmpeg/ffmpeg',
+                        '-hide_banner', '-loglevel', 'error', '-f', 'lavfi', '-i',
+                        'color=c=black:s=64x64:r=10', '-t', '1', '-c:v', 'libx264',
+                        '-pix_fmt', 'yuv420p', '-y', '/cache/nova-fixture.mp4')
+                for name, directory in (('A', a), ('B', b)):
+                    compose('cp', 'jellyfin:/cache/nova-fixture.mp4', str(directory/f'NOVA Fixture {name}.mp4'))
+                credentials = {'username': 'nova-media-admin', 'password': 'compose-jellyfin-test-password'}
+                setup = {**credentials, 'server_name': 'NOVA Docker Lab', 'libraries': [
+                    {'name': 'NOVA Fixtures', 'collection_type': 'movies', 'roots': ['source-a', 'source-b']}]}
+                result = client.post(base+'/api/v1/admin/setup/jellyfin', headers=headers, json=setup, timeout=55)
+                assert result.status_code == 200, result.text
+                assert result.json()['wizard_completed'] is True
+                # A second setup must reuse the library, never append a duplicate.
+                repeat = client.post(base+'/api/v1/admin/setup/jellyfin', headers=headers, json=setup, timeout=55)
+                assert repeat.status_code == 200, repeat.text
+                for _ in range(60):
+                    verification = client.post(base+'/api/v1/admin/setup/jellyfin/verify',
+                                               headers=headers, json=credentials, timeout=55)
+                    assert verification.status_code == 200, verification.text
+                    libraries = verification.json()['libraries']
+                    if len(libraries) == 1 and libraries[0]['indexed_items'] == 2:
+                        break
+                    time.sleep(2)
+                else:
+                    raise AssertionError('Both synthetic films were not indexed')
+                # Independently inspect indexed paths, not only the NOVA summary.
+                jf_headers = {'Authorization': 'MediaBrowser Client="NOVA CI", Device="CI", DeviceId="ci-audit", Version="1"'}
+                jf_login = client.post('http://127.0.0.1:8096/Users/AuthenticateByName',
+                                       headers=jf_headers, json={'Username': credentials['username'], 'Pw': credentials['password']})
+                assert jf_login.status_code == 200
+                jf_token = jf_login.json()['AccessToken']
+                jf_headers['X-Emby-Token'] = jf_token
+                try:
+                    items = client.get('http://127.0.0.1:8096/Items', headers=jf_headers,
+                                       params={'Recursive': 'true', 'IncludeItemTypes': 'Movie', 'Fields': 'Path'}).json()['Items']
+                    assert {item['Path'] for item in items} == {
+                        '/media/source-a/NOVA Fixture A.mp4', '/media/source-b/NOVA Fixture B.mp4'}
+                    assert len(client.get('http://127.0.0.1:8096/Library/VirtualFolders', headers=jf_headers).json()) == 1
+                finally:
+                    client.post('http://127.0.0.1:8096/Sessions/Logout', headers=jf_headers)
+                for file in (root/'state/nova').iterdir():
+                    if file.is_file():
+                        data = file.read_bytes()
+                        assert credentials['password'].encode() not in data and jf_token.encode() not in data
                 compose('restart')
                 await_services(client)
                 assert client.get(base+'/api/v1/status').json()['owner_setup_required'] is False
                 assert client.get(base+'/api/v1/admin/overview', headers=headers).status_code == 200
                 assert not (root/'state/nova/bootstrap.token').exists()
-                print(json.dumps({'compose':'passed','read_only_sources':2,'restart_persistence':True}))
+                persisted = client.get(base+'/api/v1/admin/setup', headers=headers).json()['last_observation']
+                assert persisted['libraries'][0]['indexed_items'] == 2
+                print(json.dumps({'compose':'passed','read_only_sources':2,'restart_persistence':True,
+                                  'nova_jellyfin_setup':True,'indexed_media_sources':2,'duplicate_libraries':0}))
         except Exception:
             # Only this disposable CI project; never dump credentials or the environment.
             compose('ps', '--all', check=False)
