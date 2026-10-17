@@ -5,7 +5,10 @@ com os pacotes Tailscale e NetBird, depois tenta incluí-lo na APK NOVA que já
 contém WireGuard. Uma única geração evita duplicar a classe `go.Seq` e a
 biblioteca `libgojni.so`.
 
-Estado: ensaio experimental em execução, sem resultado de sucesso presumido.
+Compilação aprovada em [39069358627](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39069358627): AAR conjunto e APK com WireGuard construídos com sucesso.
+O workflow separado native-runtime.yml testa o carregamento JNI em emuladores
+API 26 e 35, nas duas ordens possíveis, com processos novos. Resultado de
+runtime ainda pendente; não inferir sucesso a partir da compilação.
 Não inicia túneis, não recebe credenciais e não prova HTTPS. O registo Android
 continua a marcar Tailscale/NetBird como não implementados até existir ponte e
 teste de funcionamento. Uma compilação bem-sucedida só fecha o risco de build.
