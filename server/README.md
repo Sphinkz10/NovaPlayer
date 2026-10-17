@@ -1,4 +1,10 @@
-# NOVA Server — P01 v0.1 · pacote local de instalação
+# NOVA Server — P01 v0.1.1 · base de laboratório
+
+Atualização de 17-10-2026: login Control corrigido, diagnóstico Jellyfin limitado a 16 KiB/4 s com validação de produto/wizard/identidade opcional, limite de login atómico, duas verificações Argon2 simultâneas por processo, dependências transitivas fixadas com hashes. Cinco falhas/tentativas em curso por origem durante 15 minutos; sucesso retira apenas a própria reserva e não apaga outras falhas. A administração aceita Host `localhost`/`127.0.0.1`.
+
+O Control guarda **rascunhos** WireGuard/Tailscale/NetBird sem segredos nem ativação de rede. As origens mostram permissões/leitura/indexação ainda não verificadas. Para comparar a identidade Jellyfin com uma associação aprovada, definir `NOVA_JELLYFIN_SERVER_ID` no ambiente do Core; sem isso o diagnóstico devolve `identity_verified=false`.
+
+Testes e limitações atuais: [fase 1](../docs/FASE_1_RESULTADOS.md). O restante percurso de instalação abaixo continua destinado a laboratório; não foi executado neste TrueNAS.
 
 > **Estado:** primeira entrega funcional **de código**, NÃO uma versão pronta para famílias, nem uma instalação validada no TrueNAS. Não há ainda VPN, NOVA Directory, login universal nem APK NOVA Cinema. **Não publicar estas portas na Internet.**
 
@@ -23,7 +29,7 @@ Quando terminarmos o produto, o proprietário só instalará NOVA Server e confi
 
 ## Instalação passo a passo
 
-1. Extrair o ZIP e entrar na pasta `NOVA_Server_P01_v0.1`.
+1. Entrar na pasta `server/` das fontes atuais, ou na pasta do pacote de servidor extraído.
 2. Confirmar que ambos os diretórios têm os ficheiros desejados (ou pastas vazias temporárias).
 3. Criar configuração, **sem utilizar root** (substituir pelos teus caminhos):
 
@@ -130,7 +136,7 @@ Os testes usam `httpx.MockTransport` e FastAPI `TestClient`; **não testam conte
 
 1. **P01.2:** verificar Docker real, saúde da imagem Jellyfin e acesso a ambos os diretórios; desenhar wizard unificado de Jellyfin + NOVA e testes TrueNAS SCALE.
 2. **P02:** NOVA Directory/Identity, convites, associação servidor-conta, autenticação segura via código no telemóvel (RFC 8628).
-3. **P03:** NOVA Connect, canal autenticado e cifrado NOVA Cinema↔NOVA Server, modo integrado e integração VPN externa; testar relay que não pode desencriptar conteúdo.
+3. **P03:** NOVA Connect, canal autenticado e cifrado NOVA Cinema↔NOVA Server, WireGuard/Tailscale/NetBird nativos; testar relay que não pode desencriptar conteúdo.
 4. **P04:** primeira APK NOVA Cinema real com login, descoberta automática de servidor, biblioteca Jellyfin e Media3 Direct Play.
 5. **SEC:** testes das 12 barreiras de segurança, isolamento entre duas instalações, backup cifrado e auditoria externa antes de disponibilizar a familiares.
 

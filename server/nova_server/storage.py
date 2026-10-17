@@ -1,8 +1,10 @@
 """Single-owner SQLite bootstrap/storage boundary for local P01; no media stored."""
 from __future__ import annotations
 import sqlite3
+import json
 import threading
 import time
+from contextlib import contextmanager
 from pathlib import Path
 from .security import token_hash
 
@@ -23,6 +25,10 @@ CREATE TABLE IF NOT EXISTS audit (
  id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL,
  created_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS connect_drafts (
+ provider TEXT PRIMARY KEY CHECK(provider IN ('wireguard','tailscale','netbird')),
+ configuration TEXT NOT NULL, updated_at INTEGER NOT NULL
+);
 """
 
 class Store:
@@ -39,10 +45,15 @@ class Store:
         except OSError:
             pass
 
-    def _db(self) -> sqlite3.Connection:
+    @contextmanager
+    def _db(self):
         conn = sqlite3.connect(self.path, timeout=20)
-        conn.execute('PRAGMA foreign_keys=ON')
-        return conn
+        try:
+            conn.execute('PRAGMA foreign_keys=ON')
+            with conn:
+                yield conn
+        finally:
+            conn.close()
 
     def has_admin(self) -> bool:
         with self._db() as con:
@@ -82,20 +93,35 @@ class Store:
             con.execute('DELETE FROM sessions WHERE digest=?', (token_hash(token),))
             con.commit()
 
-    def login_blocked(self, source: str, max_failures: int=5, window: int=900) -> bool:
-        with self._db() as con:
+    def reserve_login_attempt(self, source: str, max_attempts: int=5, window: int=900) -> int | None:
+        """Atomically count failures AND in-flight verifications, across workers."""
+        now = int(time.time())
+        with self.lock, self._db() as con:
+            con.execute('BEGIN IMMEDIATE')
+            con.execute('DELETE FROM login_attempts WHERE created_at<=?', (now-window,))
             n=con.execute('SELECT COUNT(1) FROM login_attempts WHERE source=? AND created_at>?',
-                          (source,int(time.time())-window)).fetchone()[0]
-        return n >= max_failures
+                          (source,now-window)).fetchone()[0]
+            if n >= max_attempts:
+                return None
+            return con.execute('INSERT INTO login_attempts(source,created_at) VALUES(?,?)',
+                               (source,now)).lastrowid
 
-    def failed_login(self, source: str):
-        now=int(time.time())
+    def complete_successful_login(self, attempt: int):
+        # Never erase failed or in-flight attempts belonging to other requests.
         with self.lock, self._db() as con:
-            con.execute('DELETE FROM login_attempts WHERE created_at<?',(now-86400,))
-            con.execute('INSERT INTO login_attempts(source,created_at) VALUES(?,?)',(source,now))
-            con.commit()
+            con.execute('DELETE FROM login_attempts WHERE id=?',(attempt,))
 
-    def clear_login_attempts(self, source: str):
+    def connect_drafts(self) -> dict:
+        with self._db() as con:
+            return {provider: json.loads(config) for provider, config in
+                    con.execute('SELECT provider,configuration FROM connect_drafts')}
+
+    def save_connect_draft(self, draft: dict):
+        now = int(time.time())
         with self.lock, self._db() as con:
-            con.execute('DELETE FROM login_attempts WHERE source=?',(source,))
-            con.commit()
+            con.execute('INSERT INTO connect_drafts(provider,configuration,updated_at) VALUES(?,?,?) '
+                        'ON CONFLICT(provider) DO UPDATE SET configuration=excluded.configuration, '
+                        'updated_at=excluded.updated_at',
+                        (draft['provider'], json.dumps(draft, sort_keys=True), now))
+            con.execute('INSERT INTO audit(event,created_at) VALUES(?,?)',
+                        ('connect.draft_saved.' + draft['provider'], now))

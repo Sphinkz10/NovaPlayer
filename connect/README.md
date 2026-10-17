@@ -1,6 +1,14 @@
-# NOVA Connect — Prova Técnica v0.3
+# NOVA Connect — Laboratório v0.4 / fase 1
 
-**12 outubro 2026 · Estado: código-fonte experimental + lógica testada localmente. NÃO é APK nem uma VPN funcional aprovada.**
+**17 outubro 2026 · APK debug compilada; diagnóstico e lógica de domínio testados. Rede VPN e reprodução ainda não aprovadas.**
+
+Esta fase acrescenta deteção de SDK/ABIs/Leanback, contratos WireGuard/Tailscale/NetBird e estados que não confundem túnel UP com serviço autorizado. Não há restrição a Xiaomi/Chromecast: Android API 26+ e ABIs compatíveis definem a base. Tailscale e NetBird são explicitamente não implementados; o motor WireGuard conserva a prova existente.
+
+Build reproduzível por dependências fixadas: JDK 17, SDK 35, `gradlew.bat :core:verifyCore :app:assembleDebug :app:lintDebug` em Windows, ou `bash gradlew ...` em Linux. Wrapper 8.11.1, checksum oficial da distribuição e do JAR, locks e checksums de dependências incluídos. Isto não promete APKs bit a bit iguais: a assinatura debug é local.
+
+Para atualizar checksums após revisão: `bash gradlew -I scripts/resolve_build_tools.gradle :app:resolveBuildToolArtifacts :core:verifyCore :app:assembleDebug :app:lintDebug --write-locks --write-verification-metadata sha256`. Rever o diff; a CI normal não regenera nem aceita novos checksums automaticamente.
+
+A política de reprodução agora distingue remux de contentor, conversão de áudio, vídeo autorizado e codecs/legendas incompatíveis. A política ainda não controla um player. [Resultados e limites da fase 1](../docs/FASE_1_RESULTADOS.md).
 
 ## Objetivo
 
@@ -29,24 +37,27 @@ JDK 17+, `kotlinc` instalado:
 python3 scripts/check_source_hygiene.py
 ```
 
-Resultado local verificado em 12/10/2026:
+Resultado local verificado em 17/10/2026 (fase 1):
 
 | Testes | Resultado |
 |---|---|
-| Políticas Kotlin: conexão, privacidade, saúde, reprodução, rotas, identidade | **112/112 PASS** |
+| Políticas Kotlin: conexão, privacidade, saúde, reprodução, rotas, identidade | **116/116 PASS** |
 | Transportes HTTP falsos, TLS e identity mismatch | **19/19 PASS** |
-| Total Kotlin/HTTP | **131/131 PASS** |
+| Contratos de fornecedor e compatibilidade | **30/30 PASS** |
+| Total Kotlin/HTTP/fornecedores | **165/165 PASS** |
 | Inspeção estática heurística de fonte | **11/11 PASS** |
-| Gradle / SDK / APK / emulador | **NÃO executados** |
+| Gradle Wrapper / build APK / assinatura debug | **Aprovados em Windows, JDK 17 / SDK 35** |
+| Android lint | **0 erros; 10 avisos**, descritos no relatório de fase |
+| TV / emulador | **Não executados nesta fase** |
 | WireGuard handshake e Jellyfin reais | **NÃO executados** |
 
 Os testes HTTP são locais, com servidores de resposta fictícios. Não confirmam autenticação Jellyfin nem reprodução.
 
-## Build Android — ainda PENDENTE
+## Build Android — verificado localmente
 
 Requer Android Studio, SDK 35, Java 17 e resolução de dependências Gradle AGP `8.9.2`, Kotlin `2.0.21` e `com.wireguard.android:tunnel:1.0.20260102`.
 
-O código não inclui `gradlew` porque não foi possível validar nem gerar o wrapper oficial neste ambiente. Abrir a pasta no Android Studio com Gradle instalado, realizar um sync e compilar um APK **debug** numa máquina Android SDK. O `applicationId` da prova é `com.novacinema.connect.poc`. A versão foi incrementada para `0.3` (versionCode 3).
+O código inclui `gradlew` e `gradlew.bat`. O `applicationId` da prova é `com.novacinema.connect.poc`, versão `0.4-phase1` (versionCode 4). A APK gerada fica em `app/build/outputs/apk/debug/app-debug.apk`. Os resultados `LOCAL_TEST_RESULTS.txt`, `LOCAL_STATIC_RESULTS.txt` e o gate em `docs/ANDROID_BUILD_GATE.md` preservam evidência histórica v0.3; o estado atual está no relatório da fase 1.
 
 **Não instalar em familiares nem ligar a chaves de produção** antes dos testes obrigatórios. A classe `ProvisioningStore.provisionAdminOnly` é uma API interna de demonstração, **não** um endpoint de associação seguro.
 

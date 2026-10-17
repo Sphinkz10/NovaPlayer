@@ -96,8 +96,12 @@ object POCTest {
         test("direct play allowed") { eq(PlaybackOutcome.DIRECT_PLAY, PlaybackPolicy.decide(play())) }
         test("never play unauthorized") { eq(PlaybackOutcome.BLOCK_NO_ACCESS, PlaybackPolicy.decide(play(granted=false))) }
         test("never play missing media") { eq(PlaybackOutcome.BLOCK_NO_MEDIA, PlaybackPolicy.decide(play(has=false))) }
-        test("audio remux if allowed") { eq(PlaybackOutcome.AUDIO_REMUX, PlaybackPolicy.decide(play(aCodec=false))) }
-        test("audio codec mismatch blocked") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(aCodec=false,remux=false))) }
+        test("unsupported audio requires conversion, not remux") { eq(PlaybackOutcome.AUDIO_TRANSCODE, PlaybackPolicy.decide(play(aCodec=false))) }
+        test("audio codec mismatch blocked") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_AUDIO, PlaybackPolicy.decide(play(aCodec=false,remux=false))) }
+        test("container mismatch can use remux without changing codecs") { eq(PlaybackOutcome.CONTAINER_REMUX, PlaybackPolicy.decide(play().copy(containerSupported=false, containerRemuxAllowed=true))) }
+        test("unsupported container requires remux permission") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_CONTAINER, PlaybackPolicy.decide(play().copy(containerSupported=false))) }
+        test("container remux cannot fix unsupported audio") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_AUDIO, PlaybackPolicy.decide(play(aCodec=false,remux=false).copy(containerSupported=false,containerRemuxAllowed=true))) }
+        test("unsupported subtitle cannot silently burn into video") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_SUBTITLE, PlaybackPolicy.decide(play().copy(subtitleSupported=false))) }
         test("unsupported video blocked by default") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(vCodec=false))) }
         test("admin alone insufficient for video transcode") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(vCodec=false,admin=true))) }
         test("user alone insufficient for video transcode") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(vCodec=false,optin=true))) }
@@ -122,6 +126,7 @@ object POCTest {
         test("deny missing playable path") { check(!AuthorizationPolicy.mayIssuePlaybackSession(SessionAuthorization(true,true,true,false))) }
         test("allow fully authorized session") { check(AuthorizationPolicy.mayIssuePlaybackSession(SessionAuthorization(true,true,true,true))) }
         val networkTests = JellyfinTransportTest.run()
-        println("NOVA Connect v0.3: $executed / $executed policy tests PASS; $networkTests / $networkTests local HTTP transport tests PASS; total ${executed + networkTests}")
+        val providerTests = ProviderContractTest.run()
+        println("NOVA Connect: $executed policy tests PASS; $networkTests HTTP transport tests PASS; $providerTests provider tests PASS; total ${executed + networkTests + providerTests}")
     }
 }

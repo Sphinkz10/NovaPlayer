@@ -1,16 +1,19 @@
 package com.novacinema.connect.core
 
-enum class PlaybackOutcome { DIRECT_PLAY, AUDIO_REMUX, TRANSCODE_APPROVED, BLOCK_NO_ACCESS, BLOCK_NO_MEDIA, BLOCK_UNSUPPORTED_VIDEO, BLOCK_INSUFFICIENT_BANDWIDTH }
+enum class PlaybackOutcome { DIRECT_PLAY, CONTAINER_REMUX, AUDIO_TRANSCODE, TRANSCODE_APPROVED, BLOCK_NO_ACCESS, BLOCK_NO_MEDIA, BLOCK_UNSUPPORTED_VIDEO, BLOCK_UNSUPPORTED_AUDIO, BLOCK_UNSUPPORTED_CONTAINER, BLOCK_UNSUPPORTED_SUBTITLE, BLOCK_INSUFFICIENT_BANDWIDTH }
 data class PlaybackInputs(
     val accountAuthorized: Boolean,
     val mediaAvailable: Boolean,
     val videoCodecSupported: Boolean,
     val audioCodecSupported: Boolean,
-    val audioRemuxAllowed: Boolean,
+    val audioTranscodeAllowed: Boolean,
     val bitrateMbps: Double,
     val measuredCapacityMbps: Double,
     val userOptedIntoVideoTranscode: Boolean,
-    val adminAllowsVideoTranscode: Boolean
+    val adminAllowsVideoTranscode: Boolean,
+    val containerSupported: Boolean = true,
+    val containerRemuxAllowed: Boolean = false,
+    val subtitleSupported: Boolean = true
 )
 object PlaybackPolicy {
     fun decide(i: PlaybackInputs): PlaybackOutcome {
@@ -23,7 +26,10 @@ object PlaybackPolicy {
         if (!i.bitrateMbps.isFinite() || !i.measuredCapacityMbps.isFinite() || i.bitrateMbps <= 0 || i.measuredCapacityMbps <= 0 || i.bitrateMbps > i.measuredCapacityMbps * .8)
             return if (i.userOptedIntoVideoTranscode && i.adminAllowsVideoTranscode) PlaybackOutcome.TRANSCODE_APPROVED
             else PlaybackOutcome.BLOCK_INSUFFICIENT_BANDWIDTH
-        if (!i.audioCodecSupported) return if (i.audioRemuxAllowed) PlaybackOutcome.AUDIO_REMUX else PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO
+        if (!i.subtitleSupported) return PlaybackOutcome.BLOCK_UNSUPPORTED_SUBTITLE
+        if (!i.containerSupported && !i.containerRemuxAllowed) return PlaybackOutcome.BLOCK_UNSUPPORTED_CONTAINER
+        if (!i.audioCodecSupported) return if (i.audioTranscodeAllowed) PlaybackOutcome.AUDIO_TRANSCODE else PlaybackOutcome.BLOCK_UNSUPPORTED_AUDIO
+        if (!i.containerSupported) return PlaybackOutcome.CONTAINER_REMUX
         return PlaybackOutcome.DIRECT_PLAY
     }
 }

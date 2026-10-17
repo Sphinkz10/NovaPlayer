@@ -1,30 +1,27 @@
-# Estado real — NOVA Platform (17-10-2026)
+# Estado real — NOVA Platform (17-10-2026, fase 1)
 
-## Visão correta do produto
+A base está em desenvolvimento. O servidor local e a APK de diagnóstico compilam;
+a jornada instalar → associar → biblioteca → vídeo ainda não existe.
 
-**NOVA Server:** pacote instalável no servidor de cada proprietário, contendo Jellyfin + NOVA Core e, futuramente, NOVA Connect, NOVA Control, gestão de bibliotecas, usuários, contas, pedidos e planeamento. Instalação pretendida no TrueNAS SCALE ou Linux com Docker. Dois ou mais diretórios.
-
-**NOVA Cinema:** aplicação Android TV destinada aos convidados, com interface Premium, login, descoberta automática do servidor e reprodução Jellyfin. Não tem de configurar IP nem VPN.
-
-**NOVA Directory:** infraestrutura proposta para login e ligação conta ↔ NOVA Server, com descoberta automática. Por implementar; não guarda media.
-
-**NOVA Connect:** comunicação segura integrada; modos direto, VPN externa controlada pelo admin e alternativa edge/relay. O relay não deve ter chaves para descodificar vídeos. Por implementar na arquitetura final.
-
-## Componentes efetivamente disponíveis
-
-| Componente | Estado demonstrado | Falta |
+| Componente | Estado atual | Próxima prova |
 |---|---|---|
-| Figma Premium 1080p/720p | Design e protótipos editáveis no Figma remoto | UI Android real e exportação `.fig` offline |
-| Documento G0, F00, F01, Security | Ficheiros Markdown originais | Revisão e atualização final para arquitetura multi-proprietário |
-| NOVA Server P01 v0.1 | Código FastAPI, Docker Compose com Jellyfin, README, testes Python | Validação Docker/TrueNAS, configuração unificada, segurança produção |
-| NOVA Connect PoC v0.3 | Android Kotlin PoC e testes JVM conforme documentação original | APK compilada, handshake real, associação, permissão e isolamento reais |
-| NOVA Directory/Identity | Planeado / documentado no Figma | Implementação completa |
-| NOVA Cinema APK | Protótipos Figma | Código funcional, builds, instalação, testes TV |
-| Plataforma multi-servidor | Arquitetura corrigida no Figma | Dois servidores a funcionar em teste, auto-discovery |
-| Segurança P2P/E2EE | Requisitos e gates documentados | Implementação e auditoria de terceiros; 0/12 verificações finais |
+| NOVA Server 0.1.1 | Login Control corrigido, Argon2id/sessões, concorrência protegida, diagnóstico estrito, dependências com hashes | Linux/Docker/TrueNAS real, wizard e bibliotecas |
+| Configuração Connect | Rascunhos autenticados de WireGuard/Tailscale/NetBird no Control e SQLite | Inscrição, agentes e aplicação da configuração real |
+| NOVA Connect 0.4-phase1 | APK debug, WireGuard AAR, contratos de fornecedor, deteção SDK/ABI/Leanback; 165 testes Kotlin | Motores Tailscale/NetBird, associação, handshake e HTTPS reais |
+| NOVA Cinema | Designs e políticas de reprodução corrigidas | UI TV, biblioteca Jellyfin e player Media3 |
+| Directory/Identity | Contratos documentados | Serviço, contas, descoberta e dispositivos |
+| CI | Workflows Linux/Windows/Android/Docker criados | Execução remota; nenhum resultado remoto alegado nesta entrega |
+| Segurança | Correções locais verificadas e análise Python sem avisos conhecidos | SEC-01…12 continuam sem validação final |
 
-Não existe aqui uma APK final, nem um pacote NOVA Server produção pronto, nem um ficheiro `.fig` exportado. Os resultados de testes anteriores estão documentados nas respetivas versões de origem, não foram novamente executados para gerar este arquivo.
+Alvos: TrueNAS Community e vários Android TV/Google TV. Xiaomi Box S2 e Chromecast
+Android TV são aparelhos iniciais de aceitação, sem restrição da aplicação a essas
+marcas. Android API 26+ e ABIs disponíveis são requisitos técnicos; não garantem
+codec, HDR, 4K ou desempenho sem medição.
 
-## Segurança e confidencialidade
+O proprietário configura o NOVA Server. O familiar deverá instalar só NOVA Cinema
+e associar a conta/dispositivo, sem introduzir IPs ou perfis VPN. Apps VPN externas
+não satisfazem o requisito de integração nativa dos três fornecedores.
 
-Não colocar na Internet o protótipo do NOVA Server nem abrir as portas 8096/8787 do NAS. Não reutilizar diretamente o protótipo da VPN como configuração de produção. Não incluir credenciais reais, chaves de família, tokens nem `.env` gerado nos arquivos de partilha.
+Resultados detalhados: [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md).
+Decisões: [ADR_001_CONNECT_NATIVO.md](ADR_001_CONNECT_NATIVO.md).
+Etapas de instalação: [roadmap](ROADMAP_INSTALACAO_SERVER_TV_v0_2.md).

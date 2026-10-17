@@ -7,7 +7,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.ScrollView
 import com.novacinema.connect.core.JellyfinStatus
+import com.novacinema.connect.core.ProviderId
+import com.novacinema.connect.core.ProviderRegistry
+import com.novacinema.connect.core.ProviderObservation
+import com.novacinema.connect.core.ProviderState
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -24,12 +29,27 @@ class MainActivity : Activity() {
         provisioning = ProvisioningStore(this)
         bridge = WireGuardBridge(this)
         val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(46, 46, 46, 46) }
-        val label = TextView(this).apply { text = "NOVA Connect · Prova 0.3"; textSize = 26f }
+        val label = TextView(this).apply { text = "NOVA Connect · Laboratório 0.4"; textSize = 26f }
         status = TextView(this).apply { textSize = 21f; text = "Sem credenciais no APK. Associação administrativa ainda por implementar." }
-        val connect = Button(this).apply { text = "Validar ligação privada"; setOnClickListener { begin() } }
+        val device = AndroidCapabilities.read(this)
+        val compatibility = TextView(this).apply {
+            textSize = 18f
+            text = "Android API ${device.sdk} · ${device.abis.joinToString()} · TV: ${device.television}\n" +
+                ProviderId.entries.joinToString("\n") { provider ->
+                    val result = ProviderRegistry.evaluate(provider, device, ProviderObservation())
+                    val description = when (result) {
+                        ProviderState.NEEDS_PROVISIONING -> "motor incluído; associação e rede por validar"
+                        ProviderState.NOT_IMPLEMENTED -> "motor nativo ainda por integrar"
+                        else -> "dispositivo sem suporte nesta compilação"
+                    }
+                    "${provider.wireId}: $description"
+                }
+        }
+        val connect = Button(this).apply { text = "Validar WireGuard privado"; setOnClickListener { begin() } }
         val disconnect = Button(this).apply { text = "Desligar túnel"; setOnClickListener { stopTunnel() } }
-        root.addView(label); root.addView(status); root.addView(connect); root.addView(disconnect)
-        setContentView(root)
+        root.addView(label); root.addView(compatibility); root.addView(status); root.addView(connect); root.addView(disconnect)
+        setContentView(ScrollView(this).apply { addView(root) })
+        connect.requestFocus()
     }
 
     override fun onStart() {
@@ -37,12 +57,16 @@ class MainActivity : Activity() {
         // Best-effort reconnect when the app is opened again and Android consent is already valid.
         // This does NOT implement unattended recovery after a device restart.
         if (provisioning.load() != null && VpnService.prepare(this) == null &&
-            runCatching { !bridge.isConnected() }.getOrDefault(false)) connectInBackground()
+            runCatching { !bridge.isTunnelUp() }.getOrDefault(false)) connectInBackground()
     }
 
     private fun note(text: String) { runOnUiThread { status.text = text } }
 
     private fun begin() {
+        if (ProviderRegistry.evaluate(ProviderId.WIREGUARD, AndroidCapabilities.read(this), ProviderObservation()) == ProviderState.UNSUPPORTED_DEVICE) {
+            note("Este Android/ABI não é suportado pelo motor incluído.")
+            return
+        }
         if (provisioning.load() == null) {
             note("Dispositivo não associado. O administrador deverá aprovar este equipamento numa versão futura.")
             return

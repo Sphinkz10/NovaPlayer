@@ -1,0 +1,14 @@
+// Used only when reviewing/regenerating dependency checksums, never by the APK.
+// Match the AAPT version selected by AGP 8.9.2 so Windows-generated metadata also
+// covers Linux CI and macOS development, without executing foreign binaries.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.project(':app')
+    app.tasks.register('resolveBuildToolArtifacts') {
+        doLast {
+            ['linux', 'osx', 'windows'].each { platform ->
+                def artifact = app.dependencies.create("com.android.tools.build:aapt2:8.9.2-12782657:${platform}")
+                app.configurations.detachedConfiguration(artifact).resolve()
+            }
+        }
+    }
+}
