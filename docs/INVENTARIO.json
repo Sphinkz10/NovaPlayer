@@ -15,13 +15,18 @@
     },
     {
       "path": ".github/workflows/native-engines.yml",
-      "bytes": 1596,
-      "sha256": "6637466931764e8646213874119278fe30a8ed2031fd3d32cc44fad2ef5d7a47"
+      "bytes": 1563,
+      "sha256": "760691331e792c9f17fb55ea211de7e307ed030a2eb6eca30bbe6efd49baa531"
+    },
+    {
+      "path": ".github/workflows/native-runtime.yml",
+      "bytes": 2283,
+      "sha256": "36ebfd44463a7b28ba99a0f7f4db30579a198a5b9199a0e6fe67292059a78000"
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 2936,
-      "sha256": "13dd7616b07e6f3ae494fa7fbc5b55b601663880aa9c83249769ffbfb0a40f45"
+      "bytes": 3033,
+      "sha256": "5b71a604003ff187f190bfd03113ecbdc35a81123d891659b160885ce62aab1d"
     },
     {
       "path": ".gitignore",
@@ -70,8 +75,8 @@
     },
     {
       "path": "connect/app/build.gradle.kts",
-      "bytes": 965,
-      "sha256": "5bae225210c079a2f4c113f590fe6f97bcf5634600605775cea13950d543d3f6"
+      "bytes": 1515,
+      "sha256": "52f4987add85f0c7ccf3eb37703d4f55f6edcb71177775b8bb38e949dced0dd1"
     },
     {
       "path": "connect/app/gradle.lockfile",
@@ -235,13 +240,33 @@
     },
     {
       "path": "connect/native-proof/README.md",
-      "bytes": 1209,
-      "sha256": "6a0ee04fd9063be9a2162549b70701032999d57880cecc7c353bab5fe6798b98"
+      "bytes": 2425,
+      "sha256": "1f32df630a9c7420ef00a6ef22c607ee66da71d6219081720ba2ecb63cf5099d"
     },
     {
       "path": "connect/native-proof/build.sh",
       "bytes": 2171,
       "sha256": "c2ea3c98d82125db6cae7766ca4b2f375f0fde7b93cdaae9a1837a06b73c1e17"
+    },
+    {
+      "path": "connect/native-proof/smoke_runtime.py",
+      "bytes": 2168,
+      "sha256": "31f90b8c431041432eacb72323f7eb1b236b8e5fdc27eee28f56cf26eb473123"
+    },
+    {
+      "path": "connect/native-proof/src/androidTest/kotlin/com/novacinema/connect/NativeEngineSmokeInstrumentation.kt",
+      "bytes": 4295,
+      "sha256": "fef51d87a76d90829cae329b8e9ff5db7fdaebe2da09a5b6a9d32a07579025e7"
+    },
+    {
+      "path": "connect/native-proof/src/debug/AndroidManifest.xml",
+      "bytes": 271,
+      "sha256": "963bc5d8bb714412fb1b3bf33b2f4a70bf12f63bb30545b486c202d2d32d6e6d"
+    },
+    {
+      "path": "connect/native-proof/src/debug/kotlin/com/novacinema/connect/NativeEngineSmokeService.kt",
+      "bytes": 1373,
+      "sha256": "3e67a48363371a0d1bcffc4cf3c2660a83b62911855bccdf783735c244ef8818"
     },
     {
       "path": "connect/scripts/check_source_hygiene.py",
@@ -270,23 +295,23 @@
     },
     {
       "path": "docs/ADR_001_CONNECT_NATIVO.md",
-      "bytes": 5834,
-      "sha256": "957f7a06a7b30f13032278e57f1347e0e23bb74c4ef08c532712e85afc755dfb"
+      "bytes": 7689,
+      "sha256": "1a2cc804cf56fd34b39bee62a0662e64123f0f4dc1e2e6b4c0a8655e6057296b"
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2118,
-      "sha256": "b0b6024a7aa258e5c9cea40adf7dd70054b33f00e920d85814b242e3948241cb"
+      "bytes": 2158,
+      "sha256": "39a61c5ab98cec648aafaa7bfdbad2c697b06dcbbbb8d323cabe46678d1e6d43"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
-      "bytes": 5606,
-      "sha256": "2096170eb4acb32a5759810af0e9225aa5cd9323bc32e8143dbab227e2cacc3c"
+      "bytes": 6590,
+      "sha256": "c938995d320a5dfd0f9688471139befbcf405be4e7345603696426d381119454"
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 1829,
-      "sha256": "3b60bf8a67ba8192db74c1ce38f281cb9087494d20d2fef437a91374a266f47a"
+      "bytes": 1850,
+      "sha256": "49ebc6336fd34d700c9fc1b98b26da521f634c0f5b7f92e0e137c0da13fd20a4"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",

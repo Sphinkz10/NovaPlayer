@@ -18,6 +18,6 @@
 - **Não** contém ficheiro `.fig` editável offline; o original reside no Figma.
 - O build produz uma APK de diagnóstico; NOVA Directory, associação e vídeo ainda não estão implementados.
 - O pacote servidor é apenas uma primeira prova local, **não instalar em produção nem expor na Internet**.
-- WireGuard, Tailscale e NetBird são requisitos nativos. Só o motor WireGuard está compilado; nenhum dos três tem a jornada remota completa aprovada.
+- WireGuard, Tailscale e NetBird compilaram juntos numa APK experimental. A APK normal ainda inclui apenas WireGuard; nenhum dos três tem a jornada remota completa aprovada.
 
 Os ZIPs originais não recebem as correções atuais. Usar as fontes atuais ou o pacote de fase 1.

@@ -7,10 +7,10 @@ a jornada instalar → associar → biblioteca → vídeo ainda não existe.
 |---|---|---|
 | NOVA Server 0.1.1 | Login Control corrigido, Argon2id/sessões, concorrência protegida, diagnóstico estrito, dependências com hashes | TrueNAS real, wizard e bibliotecas; Docker Linux já aprovado |
 | Configuração Connect | Rascunhos autenticados de WireGuard/Tailscale/NetBird no Control e SQLite | Inscrição, agentes e aplicação da configuração real |
-| NOVA Connect 0.4-phase1 | APK debug, WireGuard AAR, contratos de fornecedor, deteção SDK/ABI/Leanback; 166 testes Kotlin | Motores Tailscale/NetBird, associação, handshake e HTTPS reais |
+| NOVA Connect 0.4-phase1 | 166 testes Kotlin; os três motores compilaram numa APK experimental; carregamento em processos separados passou em API 26/35 x86_64 | Pontes funcionais, associação, handshake e HTTPS reais; ARM/TV físicos |
 | NOVA Cinema | Designs e políticas de reprodução corrigidas | UI TV, biblioteca Jellyfin e player Media3 |
 | Directory/Identity | Contratos documentados | Serviço, contas, descoberta e dispositivos |
-| CI | Linux/Windows, HTTP, navegador, Docker e Android aprovados na mesma revisão | Prova nativa Tailscale/NetBird e execução em hardware; ver resultados ligados no relatório |
+| CI | Linux/Windows, HTTP, navegador, Docker, Android e runtime nativo em emulador aprovados | Ligação real dos três fornecedores e execução em hardware; ver relatório |
 | Segurança | Correções locais verificadas e análise Python sem avisos conhecidos | SEC-01…12 continuam sem validação final |
 
 Alvos: TrueNAS Community e vários Android TV/Google TV. Xiaomi Box S2 e Chromecast

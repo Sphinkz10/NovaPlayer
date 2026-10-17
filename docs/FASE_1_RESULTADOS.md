@@ -40,6 +40,8 @@ pelos três motores continuam por demonstrar.
 
 Código testado: `bf0702583978e61254418fe3d8d94c1cbdff3533`.
 [Execução de integração](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39069361596).
+A revisão `5a7f71ab62522e0179220b32d651339268d3f4b5` repetiu com sucesso
+os sete jobs na [CI atualizada](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39074987869).
 
 | Verificação | Resultado observado |
 |---|---|
@@ -52,12 +54,21 @@ Código testado: `bf0702583978e61254418fe3d8d94c1cbdff3533`.
 | Docker Compose real | **Aprovado**: Core + Jellyfin, duas origens legíveis com escrita bloqueada |
 | Reinício Docker | Proprietário e sessão persistiram; token bootstrap removido |
 | Windows 3.12/3.13 | **89 aprovados, 4 ignorados** por versão; HTTP e Chromium aprovados |
+| Motores nativos | AAR Tailscale/NetBird e APK com WireGuard compilados |
+| Runtime Android API 26/35 | **4/4 combinações aprovadas**, com processos privados separados, em x86_64 |
 
 A prova Docker usa um projeto único e diretórios temporários com ficheiros
 sintéticos. Verifica HTTP, diagnóstico do Jellyfin, bootstrap/login, leitura,
 escrita bloqueada e persistência após restart. Não indexa filmes nem demonstra
 compatibilidade TrueNAS ou reprodução. Em falha preserva diagnóstico nos logs
 antes de remover apenas o projeto temporário.
+
+O primeiro ensaio JNI detetou SIGSEGV em API 35 ao carregar gomobile antes de
+WireGuard no mesmo processo. O teste corrigido usa um serviço privado para
+Tailscale/NetBird e exige PIDs distintos. Ambas as ordens passaram nos dois
+emuladores: [evidência](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39074985057).
+O serviço é uma prova debug de carregamento, sem inscrição nem túnel. Processos
+privados continuam dentro da mesma APK e usam o mesmo UID Android.
 
 ## Evidência local e artefactos anteriores
 
@@ -76,8 +87,10 @@ Os ZIPs históricos em archives não recebem estas correções.
 
 ## Limites e sequência seguinte
 
-M1 já tem provas Linux, navegador, Android e Docker. M0 permanece aberto:
-Tailscale e NetBird precisam de compilação compatível, ponte Android,
+M1 já tem provas Linux, navegador, Android e Docker. A compilação conjunta de
+Tailscale/NetBird e a APK com os três motores passaram na
+[prova nativa](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39069358627).
+M0 permanece aberto: Tailscale e NetBird precisam de ponte Android funcional,
 consentimento, persistência, inscrição por dispositivo e HTTPS real.
 Ver [ensaio nativo](../connect/native-proof/README.md) e
 [ADR 001](ADR_001_CONNECT_NATIVO.md).

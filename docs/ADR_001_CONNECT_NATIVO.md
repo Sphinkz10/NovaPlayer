@@ -1,6 +1,6 @@
 # ADR 001 — Base comum para três fornecedores nativos
 
-Estado: contrato inicial implementado; motores Tailscale/NetBird e provas de rede pendentes.
+Estado: contrato inicial e compilação conjunta dos três motores aprovados; pontes funcionais e provas de rede pendentes.
 Data: 17-10-2026. Substitui a interpretação de que uma app VPN externa satisfaz NOVA Connect.
 
 ## Compatibilidade
@@ -58,15 +58,44 @@ ter fronteiras separadas. O HTTP local existente serve apenas a administração 
 | Motor | Fonte fixada para a investigação | Resultado nesta fase |
 |---|---|---|
 | WireGuard | `com.wireguard.android:tunnel:1.0.20260102` | AAR oficial incluído; build e quatro ABIs verificados; handshake pendente |
-| Tailscale | `tailscale/tailscale-android@264102cc702fbd844e900227ee02e5cbb4d7f801` | Makefile produz AAR móvel; não integrado nem compilado no NOVA |
-| NetBird | `netbirdio/android-client@ad7865a2c3cc1bc940bf63512ccab1819ebf53a6` | Script gomobile produz `netbird.aar`, API mínima 26 e NDK 23.1.7779620; não integrado nem compilado no NOVA |
+| Tailscale | `tailscale/tailscale-android@264102cc702fbd844e900227ee02e5cbb4d7f801` | Pacote libtailscale compilado no AAR conjunto e incluído na APK NOVA experimental |
+| NetBird | `netbirdio/netbird@01185ba3536bcc037481578420d73cb7cee96094` | Pacote client/android compilado no mesmo AAR; fonte Go fixada pelo cliente Android consultado |
 
-As receitas móveis consultadas requerem toolchain Go/NDK, ausente neste ambiente.
-Não se deve tratar `tsnet` como um SDK Android pronto. Antes de combinar AARs gerados
-por gomobile, verificar nomes de bibliotecas JNI e coexistência de runtimes Go na mesma
-APK: não resolver possíveis colisões com `pickFirst`, que pode descartar um motor.
-Falta fixar todos os componentes Go, rever as respetivas licenças/avisos, selecionar
-a ponte Android e comprovar os três motores dentro de uma única aplicação.
+A [prova de compilação](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39069358627)
+passou num runner Linux com Go 1.27.1, NDK 23.1.7779620 e API mínima 26.
+Um único comando gomobile gera bindings para os dois pacotes, evitando duplicar
+go.Seq/libgojni.so. Não foi usado pickFirst. A APK experimental inclui esse AAR e
+WireGuard; ARM64, ARMv7 e x86_64 são as ABIs do AAR conjunto. A variante normal
+continua apenas com WireGuard e não ativa Tailscale/NetBird.
+
+O workflow preserva go.mod dos dois projetos, go.work/go.work.sum, módulos
+resolvidos, licenças de topo e SHA256. O gerador mobile é fixado em
+v0.0.0-20260816165457-f98cc9b3c733. A licença do wrapper Android NetBird não é
+usada como substituto da revisão das licenças do código Go incorporado; o wrapper
+Kotlin upstream não foi copiado. Falta rever também as dependências transitivas.
+
+WireGuard mantém o seu próprio runtime Go. Compilar ambos na mesma APK não prova
+que os runtimes funcionam no mesmo processo. O ensaio native-runtime testa as
+duas ordens de carregamento JNI em API 26 e 35. Mesmo esse teste não cobre
+concorrência de túneis, callbacks, suspensão ou passagem real de tráfego.
+
+### Decisão após o teste de runtime
+
+A execução [39074565825](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39074565825)
+detetou SIGSEGV em API 35 ao carregar WireGuard depois de gomobile no mesmo
+processo. API 26 passou nas duas ordens. Portanto, a incorporação futura não
+deve depender da coexistência desses dois runtimes no mesmo processo.
+
+O ensaio revisto coloca Tailscale/NetBird num serviço privado `:nova_overlay`,
+com `exported=false`, e mantém WireGuard noutro processo da mesma aplicação.
+O IPC de diagnóstico devolve o PID; o teste exige processos distintos e repete
+a chamada JNI WireGuard depois da inicialização do overlay. O serviço atual é
+exclusivo do build debug de prova: ainda não é um VpnService nem controla peers.
+Os processos usam o mesmo UID Android. Esta separação resolve uma fronteira
+de runtime/memória; não substitui autorização, firewall ou isolamento de rede.
+As duas ordens passaram em ambos os emuladores x86_64 na
+[execução corrigida](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39074985057).
+Falta provar o ciclo de vida funcional e a mesma arquitetura em hardware ARM/TV.
 
 **M0 permanece aberto:** exige pedido HTTPS por cada motor incorporado, com inscrição,
 consentimento e duas pontas reais. Configuração de rascunhos e estados testados não
@@ -81,7 +110,7 @@ Fontes técnicas consultadas:
 
 ## Próximo ensaio
 
-1. Preparar toolchain Linux Go/NDK reproduzível e integrar motores sem colisões JNI.
+1. Validar carregamento JNI em Android após a compilação conjunta já aprovada.
 2. Implementar associação de teste autenticada, com credenciais descartáveis por dispositivo.
 3. Validar pedido HTTPS, troca de fornecedor e desligamento/revogação em cada motor.
 4. Medir isolamento de portas, restauração após suspensão e atualização em Android TV.
