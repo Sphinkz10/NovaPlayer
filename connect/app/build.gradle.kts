@@ -10,6 +10,8 @@ android {
             ndk { abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86_64")) }
         }
         sourceSets["androidTest"].java.srcDir("../native-proof/src/androidTest/kotlin")
+        sourceSets["debug"].java.srcDir("../native-proof/src/debug/kotlin")
+        sourceSets["debug"].manifest.srcFile("../native-proof/src/debug/AndroidManifest.xml")
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }

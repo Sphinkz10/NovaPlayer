@@ -1,7 +1,12 @@
 name: Verify NOVA foundation
 on:
   push:
+    branches: [main]
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+      - 'archives/**'
   workflow_dispatch:
 permissions:
   contents: read

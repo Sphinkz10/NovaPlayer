@@ -38,7 +38,8 @@ def run():
         (OUT / "results.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf8")
         print(json.dumps({"native_runtime": results, "tunnel_tested": False}))
     finally:
-        (OUT / "logcat.txt").write_text(adb("logcat", "-d", "-t", "500"), encoding="utf8")
+        (OUT / "logcat.txt").write_text(adb("logcat", "-d", "-t", "1000"), encoding="utf8")
+        (OUT / "crash.txt").write_text(adb("logcat", "-d", "-b", "crash"), encoding="utf8")
 
 
 if __name__ == "__main__":

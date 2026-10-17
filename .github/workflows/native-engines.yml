@@ -5,8 +5,7 @@ on:
     branches: [codex/phase-one]
     paths:
       - '.github/workflows/native-engines.yml'
-      - 'connect/native-proof/**'
-      - 'connect/app/build.gradle.kts'
+      - 'connect/native-proof/build.sh'
 permissions:
   contents: read
 jobs:

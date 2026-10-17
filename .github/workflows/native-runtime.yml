@@ -1,12 +1,19 @@
 name: Native engine runtime smoke
 on:
   workflow_dispatch:
+    inputs:
+      native_build_run:
+        description: Successful native-engines run containing the AAR artifact
+        required: true
+        default: '39069358627'
+        type: string
   push:
     branches: [codex/phase-one]
     paths:
       - '.github/workflows/native-runtime.yml'
       - 'connect/native-proof/src/**'
       - 'connect/native-proof/smoke_runtime.py'
+      - 'connect/app/build.gradle.kts'
 permissions:
   contents: read
   actions: read
@@ -29,7 +36,7 @@ jobs:
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: native-engine-feasibility
-          run-id: 39069358627
+          run-id: ${{ inputs.native_build_run || '39069358627' }}
           github-token: ${{ github.token }}
       - name: Build test APK with the same native engines
         working-directory: connect
