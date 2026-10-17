@@ -32,4 +32,4 @@ bash gradlew :core:verifyCore :app:assembleDebug :app:lintDebug
 
 Em Windows usar `gradlew.bat`; o teste de navegador aceita `--channel msedge` quando o Edge já está instalado. Os quatro testes de permissões/caminhos do instalador são exclusivos de Linux. O gate Docker de laboratório é `python server/scripts/smoke_compose.py`, num anfitrião Linux com Docker e portas 8096/8787 livres.
 
-Os workflows estão preparados; a sua presença não significa que já tenham sido executados no GitHub. M0 exige ainda provar os três motores nativos com HTTPS real; M2 exige arranque e armazenamento reais no servidor.
+A [CI de integração](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39069361596) já aprovou Linux, HTTP, navegador e Docker real: dois mounts legíveis com escrita bloqueada, reinício e persistência de proprietário/sessão. M0 exige ainda provar os três motores nativos com HTTPS real; M2 exige wizard/bibliotecas e validação no TrueNAS.

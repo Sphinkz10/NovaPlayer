@@ -8,7 +8,7 @@
 - Testes unitários/integração HTTP em memória e verificações estáticas da composição.
 
 ## Não implementado / não validado
-- Sem Docker Engine no ambiente de desenvolvimento: imagens/Compose não iniciadas nem testadas em execução.
+- Docker indisponível localmente; arranque conjunto aprovado na CI Linux, com duas origens read-only, reinício e persistência de conta/sessão. TrueNAS, indexação e reprodução ainda não testados.
 - Não foi instalado nem configurado no NAS/TrueNAS; nenhum diretório real foi acedido.
 - Jellyfin tem wizard inicial independente na versão P01; unificação pendente.
 - Jellyfin usa HTTP em bridge Docker; não satisfaz o requisito completo de encriptação em trânsito.
@@ -18,8 +18,8 @@
 ## Roadmap de gates
 | Gate | Objetivo | Estado |
 |---|---|---|
-| P01-A | Projeto NOVA Server distribuível e testes locais | Implementado, a validar em Docker |
-| P01-B | Docker real + wizard integrado + suporte TrueNAS | Pendente |
+| P01-A | Projeto NOVA Server distribuível e testes locais | Implementado; HTTP, navegador e Docker Linux aprovados |
+| P01-B | Docker real + wizard integrado + suporte TrueNAS | Docker aprovado; wizard/TrueNAS pendentes |
 | P02 | Directory, login e convites | Pendente |
 | P03 | Ligação privada automática e E2EE | Pendente |
 | P04 | APK NOVA Cinema e Media3 | Pendente |

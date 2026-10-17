@@ -91,7 +91,7 @@ docker compose up -d --build         # reinicia após revisão das versões
 
 | Medida | Estado |
 |---|---|
-| Duas origens montadas read-only no Jellyfin | Configurado em Compose; não testado em Docker real |
+| Duas origens montadas read-only no Jellyfin | Aprovado em Docker Linux na CI: leitura e tentativa de escrita bloqueada |
 | NOVA Core sem acesso direto aos filmes | Configurado em Compose |
 | Portas 8096 e 8787 vinculadas a `127.0.0.1` | Configurado, exige validação real no host |
 | Senha NOVA Argon2id + segredo de bootstrap | Implementado e testado em Python |
@@ -134,7 +134,7 @@ Os testes usam `httpx.MockTransport` e FastAPI `TestClient`; **não testam conte
 
 ## Próximas entregas (não confundir com concluídas)
 
-1. **P01.2:** verificar Docker real, saúde da imagem Jellyfin e acesso a ambos os diretórios; desenhar wizard unificado de Jellyfin + NOVA e testes TrueNAS SCALE.
+1. **P01.2:** Docker Linux, saúde Jellyfin e acesso read-only às duas origens aprovados na CI; implementar wizard unificado de Jellyfin + NOVA e testes TrueNAS SCALE.
 2. **P02:** NOVA Directory/Identity, convites, associação servidor-conta, autenticação segura via código no telemóvel (RFC 8628).
 3. **P03:** NOVA Connect, canal autenticado e cifrado NOVA Cinema↔NOVA Server, WireGuard/Tailscale/NetBird nativos; testar relay que não pode desencriptar conteúdo.
 4. **P04:** primeira APK NOVA Cinema real com login, descoberta automática de servidor, biblioteca Jellyfin e Media3 Direct Play.

@@ -15,3 +15,5 @@ local.properties
 node_modules/
 test-results/
 dist/
+.native-sources/
+native-output/
