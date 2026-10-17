@@ -70,19 +70,19 @@ def test_untrusted_hosts_rejected_by_default(tmp_path):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('changes', [
-    {'ProductName': 'Different Product'}, {'ProductName': None},
+    {'ProductName': 'Jellyfin'}, {'ProductName': 'Different Product'}, {'ProductName': None},
     {'StartupWizardCompleted': None}, {'StartupWizardCompleted': 'false'},
     {'StartupWizardCompleted': 1}, {'Id': '   '}, {'Id': 'x' * 257},
 ])
 async def test_false_ready_responses_rejected(changes):
-    payload = {'Id': 'server', 'ProductName': 'Jellyfin', 'StartupWizardCompleted': True, **changes}
+    payload = {'Id': 'server', 'ProductName': 'Jellyfin Server', 'StartupWizardCompleted': True, **changes}
     transport = httpx.MockTransport(lambda _: httpx.Response(200, json=payload))
     assert (await probe_jellyfin('http://jellyfin', transport))['state'] == 'invalid_response'
 
 
 @pytest.mark.asyncio
 async def test_pinned_identity_is_checked_before_readiness():
-    payload = {'Id': 'server', 'ProductName': 'Jellyfin', 'StartupWizardCompleted': True}
+    payload = {'Id': 'server', 'ProductName': 'Jellyfin Server', 'StartupWizardCompleted': True}
     transport = httpx.MockTransport(lambda _: httpx.Response(200, json=payload))
     assert (await probe_jellyfin('http://jellyfin', transport, expected_server_id='other'))['state'] == 'identity_mismatch'
     result = await probe_jellyfin('http://jellyfin', transport, expected_server_id='server')

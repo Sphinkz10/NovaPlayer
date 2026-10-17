@@ -38,7 +38,7 @@ async def probe_jellyfin(url: str, transport=None, *, expected_server_id: str | 
         payload = json.loads(body)
     except (ValueError, UnicodeError, RecursionError):
         return {'state': 'invalid_response', 'reason': 'JSON inválido do Jellyfin.'}
-    if (not isinstance(payload, dict) or payload.get('ProductName') != 'Jellyfin'
+    if (not isinstance(payload, dict) or payload.get('ProductName') != 'Jellyfin Server'
             or not isinstance(payload.get('Id'), str) or not payload['Id'].strip()
             or len(payload['Id']) > 256 or type(payload.get('StartupWizardCompleted')) is not bool):
         return {'state': 'invalid_response', 'reason': 'Identidade, produto ou estado Jellyfin inválido.'}

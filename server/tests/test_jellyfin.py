@@ -13,13 +13,13 @@ async def test_statuses(status,expected):
 
 @pytest.mark.asyncio
 async def test_ready():
-    transport=httpx.MockTransport(lambda r:httpx.Response(200,json={'Id':'server-a','ProductName':'Jellyfin','Version':'12.2.0','StartupWizardCompleted':True}))
+    transport=httpx.MockTransport(lambda r:httpx.Response(200,json={'Id':'server-a','ProductName':'Jellyfin Server','Version':'12.2.0','StartupWizardCompleted':True}))
     result=await probe_jellyfin('http://jellyfin:8096/',transport)
     assert result=={'state':'ready','server_id':'server-a','identity_verified':False,'version':'12.2.0'}
 
 @pytest.mark.asyncio
 async def test_wizard_pending():
-    transport=httpx.MockTransport(lambda r:httpx.Response(200,json={'Id':'srv','ProductName':'Jellyfin','StartupWizardCompleted':False}))
+    transport=httpx.MockTransport(lambda r:httpx.Response(200,json={'Id':'srv','ProductName':'Jellyfin Server','StartupWizardCompleted':False}))
     assert (await probe_jellyfin('http://localhost',transport))['state']=='setup_required'
 
 @pytest.mark.asyncio

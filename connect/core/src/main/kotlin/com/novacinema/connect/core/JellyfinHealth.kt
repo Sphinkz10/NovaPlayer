@@ -18,7 +18,7 @@ object JellyfinHealth {
         if (httpStatus == null) return JellyfinProbeResult(JellyfinStatus.OFFLINE, true)
         return when (httpStatus) {
             200 -> when {
-                info == null || !info.productName.equals("Jellyfin", ignoreCase = true) || info.serverId.isNullOrBlank() ->
+                info == null || !info.productName.equals("Jellyfin Server", ignoreCase = true) || info.serverId.isNullOrBlank() ->
                     JellyfinProbeResult(JellyfinStatus.UNEXPECTED_RESPONSE, false)
                 expectedServerId != null && (expectedServerId.isBlank() || info.serverId != expectedServerId) ->
                     JellyfinProbeResult(JellyfinStatus.SERVER_IDENTITY_MISMATCH, false)

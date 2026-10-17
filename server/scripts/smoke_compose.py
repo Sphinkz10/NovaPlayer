@@ -43,7 +43,7 @@ def run():
                 try:
                     health = client.get('http://127.0.0.1:8787/api/v1/health/live')
                     jf = client.get('http://127.0.0.1:8096/System/Info/Public')
-                    if health.status_code == jf.status_code == 200 and jf.json().get('ProductName') == 'Jellyfin':
+                    if health.status_code == jf.status_code == 200 and jf.json().get('ProductName') == 'Jellyfin Server':
                         return
                 except (httpx.HTTPError, ValueError):
                     pass
@@ -73,6 +73,11 @@ def run():
                 assert client.get(base+'/api/v1/admin/overview', headers=headers).status_code == 200
                 assert not (root/'state/nova/bootstrap.token').exists()
                 print(json.dumps({'compose':'passed','read_only_sources':2,'restart_persistence':True}))
+        except Exception:
+            # Only this disposable CI project; never dump credentials or the environment.
+            compose('ps', '--all', check=False)
+            compose('logs', '--no-color', '--tail', '100', check=False)
+            raise
         finally:
             compose('down','--remove-orphans', check=False)
 

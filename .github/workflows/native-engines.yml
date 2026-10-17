@@ -24,7 +24,10 @@ jobs:
           distribution: temurin
           java-version: '17'
       - name: Install pinned Android NDK
-        run: sdkmanager 'ndk;23.1.7779620' 'platforms;android-35' 'build-tools;35.0.0'
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$SDKMANAGER"
+          "$SDKMANAGER" 'ndk;23.1.7779620' 'platforms;android-35' 'build-tools;35.0.0'
       - name: Build one gomobile AAR containing both engines
         run: bash connect/native-proof/build.sh
       - name: Compile NOVA APK with WireGuard and combined bindings
