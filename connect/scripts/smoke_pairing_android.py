@@ -14,6 +14,8 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
@@ -40,6 +42,11 @@ def provision_file(name, data):
 def run():
     if os.environ.get('GITHUB_ACTIONS') != 'true' or adb('shell','getprop','ro.kernel.qemu').strip() != '1':
         raise SystemExit('Only the disposable GitHub Actions emulator is permitted.')
+    # Older emulator images can start with a stale RTC. Keep certificate/expiry
+    # checks strict in the product; synchronise only this disposable test device.
+    adb('root'); adb('wait-for-device')
+    adb('shell','date','-u',datetime.now(timezone.utc).strftime('%m%d%H%M%Y.%S'))
+    assert abs(int(adb('shell','date','+%s').strip())-time.time()) < 5
     OUT.mkdir(parents=True,exist_ok=True)
     for path in ('app/build/outputs/apk/debug/app-debug.apk',
                  'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk'):
@@ -92,6 +99,7 @@ def run():
                 provision_file('untrusted-certificate.der',ssl.PEM_cert_to_DER_cert(wrong_cert.read_text()))
                 def phase(name):
                     adb('shell','am','force-stop',PACKAGE)
+                    adb('logcat','-c')
                     command=['adb','shell','am','instrument','-w','-r','-e','phase',name,
                              PACKAGE+'.test/com.novacinema.connect.DevicePairingInstrumentation']
                     process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
@@ -115,6 +123,14 @@ def run():
                         if process.poll() is None: process.kill();process.wait(timeout=5)
                     output=''.join(sanitized)
                     (OUT/(str(len(results))+'-'+name+'.txt')).write_text(output,encoding='utf8')
+                    if 'INSTRUMENTATION_RESULT: nova_pairing=passed' not in output:
+                        # Preserve class/line diagnostics, never exception messages or app data.
+                        crash=adb('logcat','-d','-b','crash','-v','brief')
+                        frames=re.findall(r'\bat ([A-Za-z0-9_.$]+\([A-Za-z0-9_. :]+\))',crash)
+                        types=re.findall(r'\b([A-Za-z0-9_.$]+(?:Exception|Error)):',crash)
+                        (OUT/(str(len(results))+'-crash.json')).write_text(
+                            json.dumps({'types':types,'frames':frames},indent=2)+'\n',encoding='utf8')
+                        print(json.dumps({'phase':name,'types':types,'frames':frames}))
                     assert 'INSTRUMENTATION_RESULT: nova_pairing=passed' in output, output
                     assert 'INSTRUMENTATION_CODE: -1' in output, output
                     results.append({'phase':name,'result':'passed'})

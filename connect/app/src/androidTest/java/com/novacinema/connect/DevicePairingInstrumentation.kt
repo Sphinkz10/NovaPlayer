@@ -104,13 +104,20 @@ class DevicePairingInstrumentation : Instrumentation() {
     private fun views(root: View): List<View> = listOf(root) +
         if(root is ViewGroup) (0 until root.childCount).flatMap { views(root.getChildAt(it)) } else emptyList()
 
+    private fun onMainChecked(action: () -> Unit) {
+        var failure: Throwable? = null
+        runOnMainSync { try { action() } catch (error: Throwable) { failure = error } }
+        failure?.let { throw it }
+    }
+
     private fun pairThroughUi() {
         val activity=startActivitySync(Intent(targetContext,DevicePairingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as DevicePairingActivity
         val raw=File(targetContext.filesDir,"pairing-invitation.json").readBytes()
         try {
             waitForIdleSync()
-            runOnMainSync { activity.reviewInvitation(raw) }
-            runOnMainSync {
+            setInTouchMode(false)
+            onMainChecked { activity.reviewInvitation(raw) }
+            onMainChecked {
                 val button=views(activity.window.decorView).filterIsInstance<Button>().first { it.text.toString().startsWith("Confirmei") }
                 check(button.isFocusable && button.isEnabled)
                 check(button.requestFocus() && button.hasFocus())

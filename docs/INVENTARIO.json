@@ -90,8 +90,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/DevicePairingInstrumentation.kt",
-      "bytes": 7726,
-      "sha256": "1dd9dd70cf3d3146cfb42975e52d3dd55b776e824bba323c368981d44e6a3c62"
+      "bytes": 7980,
+      "sha256": "5d63f00ee43c4cbcba627f817da1089886fc1df66df566d0210b04f14ddee35d"
     },
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
@@ -325,8 +325,8 @@
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
-      "bytes": 9439,
-      "sha256": "8683b740fff9c81c1badeba753bf6e44db3910ada50e7b3175ece8321ad78860"
+      "bytes": 10594,
+      "sha256": "71b6e1aac19604a127ec57f91956ae7985811e4da91c5192848d9170383924b7"
     },
     {
       "path": "connect/settings.gradle.kts",
