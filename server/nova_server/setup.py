@@ -72,7 +72,7 @@ class JellyfinSetup:
                     try:
                         report = await self._run(client, payload, configure, lease)
                     finally:
-                        if 'X-Emby-Token' in client.headers:
+                        if ', Token=' in client.headers['Authorization']:
                             try:
                                 await self._request(client, 'POST', '/Sessions/Logout')
                             except (SetupError, httpx.HTTPError):
@@ -91,18 +91,18 @@ class JellyfinSetup:
                 raise SetupError('jellyfin_credentials_rejected', 403)
             if response.status_code not in (200, 204):
                 raise SetupError('jellyfin_request_failed')
-            if response.headers.get('Content-Encoding', 'identity') != 'identity':
+            if response.headers.get('Content-Encoding', 'identity').lower() != 'identity':
                 raise SetupError('jellyfin_invalid_response')
             content = bytearray()
-            async for chunk in response.aiter_bytes():
-                content.extend(chunk)
-                if len(content) > 262144:
+            async for chunk in response.aiter_bytes(chunk_size=4096):
+                if len(content) + len(chunk) > 262144:
                     raise SetupError('jellyfin_response_too_large')
+                content.extend(chunk)
             if not content:
                 return None
             try:
                 return json.loads(content)
-            except (ValueError, UnicodeError):
+            except (ValueError, UnicodeError, RecursionError):
                 raise SetupError('jellyfin_invalid_response') from None
 
     async def _authenticate(self, client, payload, server_id, optional=False):
@@ -117,7 +117,8 @@ class JellyfinSetup:
         access = data.get('AccessToken')
         # Register the token for cleanup even if the returned account is not an administrator.
         if isinstance(access, str) and 1 <= len(access) <= 1024 and access.isascii() and access.isalnum():
-            client.headers['X-Emby-Token'] = access
+            # Current Jellyfin disables legacy X-Emby-Token authentication.
+            client.headers['Authorization'] += ', Token="'+access+'"'
         else:
             raise SetupError('jellyfin_invalid_response')
         user = data.get('User')

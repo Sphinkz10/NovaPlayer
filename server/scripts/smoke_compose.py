@@ -25,11 +25,12 @@ def run():
             check.bind(('127.0.0.1', port))  # Never interfere with an existing server.
     source = Path(__file__).resolve().parents[1]
     with tempfile.TemporaryDirectory(prefix='nova-compose-') as folder:
-        root = Path(folder)
+        root = Path(folder)/'package'
+        root.mkdir()
         for name in ('compose.yaml', 'Dockerfile', 'requirements.txt', '.dockerignore'):
             shutil.copy2(source/name, root/name)
         shutil.copytree(source/'nova_server', root/'nova_server', ignore=shutil.ignore_patterns('__pycache__'))
-        a, b = root/'media-a', root/'media-b'
+        a, b = Path(folder)/'media-a', Path(folder)/'media-b'
         for directory in (a, b):
             directory.mkdir()
             (directory/'read-only-fixture.txt').write_text('NOVA synthetic fixture', encoding='utf8')
@@ -99,7 +100,7 @@ def run():
                                        headers=jf_headers, json={'Username': credentials['username'], 'Pw': credentials['password']})
                 assert jf_login.status_code == 200
                 jf_token = jf_login.json()['AccessToken']
-                jf_headers['X-Emby-Token'] = jf_token
+                jf_headers['Authorization'] += ', Token="'+jf_token+'"'
                 try:
                     items = client.get('http://127.0.0.1:8096/Items', headers=jf_headers,
                                        params={'Recursive': 'true', 'IncludeItemTypes': 'Movie', 'Fields': 'Path'}).json()['Items']

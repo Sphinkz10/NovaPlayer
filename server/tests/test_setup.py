@@ -60,7 +60,8 @@ class Jellyfin:
         else:
             data = None
         if path not in ('/System/Info/Public', '/Startup/User', '/Users/AuthenticateByName'):
-            assert request.headers.get('X-Emby-Token') == 'ephemeralSecret123'
+            assert ', Token="ephemeralSecret123"' in request.headers.get('Authorization', '')
+            assert 'X-Emby-Token' not in request.headers
         return httpx.Response(200, json=data) if data is not None else httpx.Response(204)
 
 

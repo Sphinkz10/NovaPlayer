@@ -39,3 +39,21 @@ def test_root_disallowed(tmp_path):
     a=tmp_path/'a';b=tmp_path/'b';a.mkdir();b.mkdir()
     root=tmp_path/'pkg';root.mkdir()
     with pytest.raises(ValueError, match='root'):install(str(a),str(b),root=root,uid=0,gid=0)
+
+@pytest.mark.skipif(os.name != 'posix', reason='Linux paths')
+def test_private_state_cannot_be_inside_media(tmp_path):
+    a=tmp_path/'a'; b=tmp_path/'b'; a.mkdir(); b.mkdir()
+    root=a/'nova'; root.mkdir()
+    with pytest.raises(ValueError, match='separados'):
+        install(str(a),str(b),root=root,uid=1000,gid=1000)
+    assert not (root/'.env').exists()
+
+@pytest.mark.skipif(os.name != 'posix', reason='Linux paths')
+def test_partial_existing_state_is_preserved(tmp_path):
+    a=tmp_path/'a'; b=tmp_path/'b'; a.mkdir(); b.mkdir()
+    root=tmp_path/'package'; (root/'state/nova').mkdir(parents=True)
+    database=root/'state/nova/nova.sqlite3'; database.write_bytes(b'existing')
+    with pytest.raises(FileExistsError):
+        install(str(a),str(b),root=root,uid=1000,gid=1000)
+    assert database.read_bytes() == b'existing'
+    assert not (root/'.env').exists()

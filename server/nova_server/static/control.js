@@ -43,7 +43,9 @@ async function configureJellyfin(configure){
  if(!token)return;const form=el('jellyfinSetup');
  if(!form.reportValidity())return;
  const data=new FormData(form);const payload={username:data.get('jf_username'),password:data.get('jf_password')};
- if(configure){payload.server_name=data.get('server_name');payload.libraries=[{name:data.get('library_name'),collection_type:data.get('collection_type'),roots:['source-a','source-b']}];}
+ if(configure){payload.server_name=data.get('server_name');const separate=el('libraryLayout').value==='two';
+  payload.libraries=[{name:data.get('library_name'),collection_type:data.get('collection_type'),roots:separate?['source-a']:['source-a','source-b']}];
+  if(separate)payload.libraries.push({name:data.get('library_name_b'),collection_type:data.get('collection_type_b'),roots:['source-b']});}
  const buttons=[...form.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);
  write(el('setupMessage'),'A contactar o Jellyfin…');
  try{
@@ -57,6 +59,10 @@ async function configureJellyfin(configure){
 }
 el('jellyfinSetup').addEventListener('submit',ev=>{ev.preventDefault();configureJellyfin(true);});
 el('verifyJellyfin').addEventListener('click',()=>configureJellyfin(false));
+el('libraryLayout').addEventListener('change',()=>{
+ const separate=el('libraryLayout').value==='two';el('libraryB').hidden=!separate;
+ el('jellyfinSetup').elements.library_name_b.required=separate;
+});
 function showProviderFields(){
  const provider=el('provider').value;
  const saved=connectDrafts[provider]||{};

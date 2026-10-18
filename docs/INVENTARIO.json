@@ -410,8 +410,8 @@
     },
     {
       "path": "server/nova_server/setup.py",
-      "bytes": 11256,
-      "sha256": "5364e2eeb9934605b075302c32d2711769b1ae477d2f1f1c5dde0ba9a382d370"
+      "bytes": 11415,
+      "sha256": "efdb2e5ef4eab1b80bacfea583d366acdca4a8bddadf7d321fb9c0ec0968a561"
     },
     {
       "path": "server/nova_server/static/control.css",
@@ -420,13 +420,13 @@
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 8830,
-      "sha256": "3bfeeeb4cd60a8d39a28fb3540fad19556f362c6c66c737660db53bc07747f15"
+      "bytes": 9245,
+      "sha256": "976c371f59ad84c6dadda26c2a5f8399eaa41d74d6a905adff7e71c044116f2d"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 4524,
-      "sha256": "8c4710451551885177ba291974d8d9be352dcec1a95933a80bea1e61cf67bc66"
+      "bytes": 5073,
+      "sha256": "bced284bbd79036c587ae268f7cf0ae55144c2a6b6b7bab0cf7960a09814fb0c"
     },
     {
       "path": "server/nova_server/storage.py",
@@ -465,13 +465,18 @@
     },
     {
       "path": "server/scripts/install.py",
-      "bytes": 3380,
-      "sha256": "cfcf153b0e27f9a9421c566d0fd8b37d7018bc2859834fd5f49122b5778b9027"
+      "bytes": 3974,
+      "sha256": "81220388108a443d7919228ab5aa90a5613b9624cf654a9bdab9e6f168983dca"
     },
     {
       "path": "server/scripts/lock_dependencies.py",
       "bytes": 599,
       "sha256": "3df32a4e9ab7a68e58fceeeeb05a9593819f48709a7ea5f9a185db2265e40333"
+    },
+    {
+      "path": "server/scripts/preflight.py",
+      "bytes": 3506,
+      "sha256": "36b0f5333694e77f0f9c079dfc3b800808e68181f122062bbbfbaed7b217b9c7"
     },
     {
       "path": "server/scripts/smoke_browser.py",
@@ -480,8 +485,8 @@
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 8131,
-      "sha256": "2d42c5561163a41cbcc1a8aa7e002416f3ee0c955f325fdbc1fe8ac6f8072b04"
+      "bytes": 8196,
+      "sha256": "6ed365d351e5e0c79976f0b78849040dc81d89056d33d850435d2d86e51b1da1"
     },
     {
       "path": "server/scripts/smoke_http.py",
@@ -510,8 +515,8 @@
     },
     {
       "path": "server/tests/test_installer.py",
-      "bytes": 2010,
-      "sha256": "10db6de40b9eb961cd67fdf3bea9c771af20e17977dabfce15fbb081ec1aac41"
+      "bytes": 2881,
+      "sha256": "51847848406eaa8e56b391f78ddd915ae314547ebd9a5ea6b6dc3b6a72ab3cc3"
     },
     {
       "path": "server/tests/test_jellyfin.py",
@@ -525,8 +530,8 @@
     },
     {
       "path": "server/tests/test_setup.py",
-      "bytes": 7211,
-      "sha256": "897207352e93ea8bd4c0a2add73b56ce476e1bd3e90df9ce23343992ca182149"
+      "bytes": 7283,
+      "sha256": "2242982abc99507852acb99f51c46e8b49e1edd70a53dc5e7fbee0d41eebf0a3"
     }
   ]
 }
