@@ -1,8 +1,10 @@
 # NOVA — Roadmap até à instalação no servidor e na TV
 
-**Versão:** 0.2 · **Data:** 17-10-2026 · **Estado:** plano de execução; integrações novas ainda não implementadas.
+**Versão:** 0.2, atualização M2 · **Data:** 18-10-2026 · **Estado:** execução parcial; consultar os marcos e evidências abaixo.
 
 **Requisito incorporado:** WireGuard, Tailscale e NetBird são opções nativas do NOVA Connect. O proprietário configura a ligação no NOVA Control. A TV instala a NOVA Cinema e recebe a configuração autorizada através da associação de dispositivo. Instalar outra app VPN na TV não satisfaz o objetivo de integração nativa deste roadmap.
+
+**Última entrega — M2:** proprietário no navegador, configuração Jellyfin pelo Control, uma ou duas bibliotecas, retoma e contagem de indexação. Docker Linux aprovou o fluxo com dois vídeos sintéticos, um em cada origem, sem duplicar bibliotecas e com persistência após reinício. [Entrega e ensaio M2](M2_SERVIDOR_LAB.md). O servidor pode ser ensaiado em laboratório; TrueNAS físico, atualização e backup/restauro continuam por validar. TV com reprodução continua a ser M4.
 
 **Execução iniciada:** [fase 1](FASE_1_RESULTADOS.md) e [ADR 001](ADR_001_CONNECT_NATIVO.md). Correções e contratos implementados; gates Linux e Docker aprovados na CI. M0 permanece aberto até à prova de incorporação e HTTPS dos três motores. Os modelos indicados são aparelhos de aceitação, não uma lista que limita o produto: a compatibilidade é decidida por SDK, ABI, recursos e capacidades de reprodução. A recolha das versões exatas acontece no ensaio de instalação, sem bloquear o desenvolvimento da base.
 
@@ -30,7 +32,7 @@ Uma aplicação NOVA Cinema com suporte aos dois dispositivos é o objetivo inic
 
 Auditoria do commit `57391fcc64e9e65220d6ed59f02dfa98f052db38`: 61 ficheiros locais iguais ao GitHub; servidor executável por HTTP; 51/53 testes Python aprovados em Windows, com duas falhas de caminhos Linux; 131/131 testes Kotlin; 11/11 verificações heurísticas; APK Connect debug compilada. Nenhum Docker/TrueNAS, handshake VPN, biblioteca ou vídeo reais demonstrados.
 
-O painel tem um erro de login reproduzido. O diagnóstico Python aceita falsos ready, as origens são mostradas sem medição, o limite de login tem uma corrida e há dependências a atualizar. Consultar o relatório `AUDITORIA_NOVA_2026-10-17.md`, na pasta principal do workspace.
+**Achados históricos da auditoria inicial, entretanto corrigidos na fase 1:** o painel tinha um erro de login reproduzido. O diagnóstico Python aceitava falsos ready, as origens eram mostradas sem medição, o limite de login tinha uma corrida e havia dependências a atualizar. Consultar o relatório `AUDITORIA_NOVA_2026-10-17.md`, na pasta principal do workspace.
 
 ## 3. Contrato de integração nativa
 

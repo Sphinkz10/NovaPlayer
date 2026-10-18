@@ -1,10 +1,10 @@
 # NOVA — Guia das fontes atuais
 
-**Atualização:** 17 outubro 2026, primeira fase de implementação após auditoria.
+**Atualização:** 18 outubro 2026, assistente M2 e indexação das duas origens aprovados em Docker.
 
 ## Como usar este arquivo
 
-1. Ler [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md) e [ESTADO_REAL.md](ESTADO_REAL.md).
+1. Ler [M2_SERVIDOR_LAB.md](M2_SERVIDOR_LAB.md), [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md) e [ESTADO_REAL.md](ESTADO_REAL.md).
 2. Consultar [roadmap](ROADMAP_INSTALACAO_SERVER_TV_v0_2.md) e [contrato nativo](ADR_001_CONNECT_NATIVO.md); as especificações G0/F00/F01 são históricas onde divergirem destes documentos.
 3. [../server/README.md](../server/README.md) contém instruções do servidor de laboratório.
 4. [../connect/README.md](../connect/README.md) contém build Android e testes.

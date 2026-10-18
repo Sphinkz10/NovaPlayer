@@ -300,8 +300,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2158,
-      "sha256": "39a61c5ab98cec648aafaa7bfdbad2c697b06dcbbbb8d323cabe46678d1e6d43"
+      "bytes": 2212,
+      "sha256": "dd6cf2dc81eae07b25ce2ceffff740a532b12039c50aa4b68d338504bca48250"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -310,8 +310,13 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 1850,
-      "sha256": "49ebc6336fd34d700c9fc1b98b26da521f634c0f5b7f92e0e137c0da13fd20a4"
+      "bytes": 1908,
+      "sha256": "e4c5c09cb3e7fcf98076a5f515ae4b28aaffe44b01203694305c519b1ec55994"
+    },
+    {
+      "path": "docs/M2_SERVIDOR_LAB.md",
+      "bytes": 5093,
+      "sha256": "95be3a81b21bea29ebead8d71c0b6bb481ead0e1602cb3e28d4c7d59a2c8b28d"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -335,8 +340,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 24489,
-      "sha256": "23817aaf0125e2e35dad512d080e630b3e38fb683cb4c3dff7415ea85ae183b0"
+      "bytes": 25083,
+      "sha256": "fd7a51066e94c07433172f0cca5ea5341a1b1b82ead5f032752b62225728b7a1"
     },
     {
       "path": "scripts/inventory.py",
@@ -370,8 +375,8 @@
     },
     {
       "path": "server/README.md",
-      "bytes": 9203,
-      "sha256": "a5066585ac21b9769ea44550f706774e4bc115de600277629de4a11f7c63e839"
+      "bytes": 10555,
+      "sha256": "26acf6bbd577eabcf2ae63f457bb4fe22eef3bbcfd1d4b7149d0d47cf4f3aa37"
     },
     {
       "path": "server/compose.yaml",
