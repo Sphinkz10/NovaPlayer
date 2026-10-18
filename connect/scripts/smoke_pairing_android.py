@@ -4,6 +4,7 @@ Only the disposable CI emulator is modified. Owner credentials stay on the host.
 The test APK reports a public pairing code; the host approves it using Control's API.
 """
 import json
+import hashlib
 import os
 import re
 import secrets
@@ -138,6 +139,7 @@ def run():
                 device=new_pair();phase('logout')
                 assert database('SELECT revoked FROM devices WHERE id=?',(device,))==[(1,)]
                 report={'result':'passed','android_api':adb('shell','getprop','ro.build.version.sdk').strip(),
+                        'apk_sha256':hashlib.sha256((ROOT/'connect/app/build/outputs/apk/debug/app-debug.apk').read_bytes()).hexdigest(),
                         'phases':results,'real_tls':True,'owner_approval_api':True,'keystore_persistence':True,
                         'process_restart':True,'refresh_rotation':True,'interrupted_refresh_not_replayed':True,
                         'tampered_storage_rejected':True,'physical_tv':False,'directory':False,'media':False,'vpn_tunnel':False}

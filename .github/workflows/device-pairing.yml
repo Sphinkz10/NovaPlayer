@@ -44,4 +44,6 @@ jobs:
         if: always()
         with:
           name: android-pairing-api-${{ matrix.api }}
-          path: connect/test-results/pairing/
+          path: |
+            connect/test-results/pairing/
+            connect/app/build/outputs/apk/debug/app-debug.apk

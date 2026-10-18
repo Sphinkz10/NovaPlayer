@@ -15,8 +15,8 @@
     },
     {
       "path": ".github/workflows/device-pairing.yml",
-      "bytes": 1660,
-      "sha256": "a95e9fad571a10d3ec4fbcb89c8d5ccf2d37022b57e6d7abf23c8355e9fa53aa"
+      "bytes": 1736,
+      "sha256": "c56f3b41c667a634074d1a98b6b26b3da0b4b59f49d481171b3f0401b6e83a6b"
     },
     {
       "path": ".github/workflows/native-engines.yml",
@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 5405,
-      "sha256": "72f32db989744b8c2ac2da748621287aeea82c86b99307a20d2ee3e7b4091c84"
+      "bytes": 5460,
+      "sha256": "c7883c1068f61cb6f946b71e2405f95379bf07147e239942df58d42a1958d243"
     },
     {
       "path": ".gitignore",
@@ -325,8 +325,8 @@
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
-      "bytes": 9286,
-      "sha256": "612fb501b767b599f9ed13cdff289c40fd33dd5a7861af528afeeeecdaf63a88"
+      "bytes": 9439,
+      "sha256": "8683b740fff9c81c1badeba753bf6e44db3910ada50e7b3175ece8321ad78860"
     },
     {
       "path": "connect/settings.gradle.kts",
