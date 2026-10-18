@@ -30,6 +30,7 @@ def run():
         for name in ('compose.yaml', 'Dockerfile', 'requirements.txt', '.dockerignore'):
             shutil.copy2(source/name, root/name)
         shutil.copytree(source/'nova_server', root/'nova_server', ignore=shutil.ignore_patterns('__pycache__'))
+        shutil.copytree(source/'scripts', root/'scripts', ignore=shutil.ignore_patterns('__pycache__'))
         a, b = Path(folder)/'media-a', Path(folder)/'media-b'
         for directory in (a, b):
             directory.mkdir()
@@ -120,8 +121,80 @@ def run():
                 assert not (root/'state/nova/bootstrap.token').exists()
                 persisted = client.get(base+'/api/v1/admin/setup', headers=headers).json()['last_observation']
                 assert persisted['libraries'][0]['indexed_items'] == 2
+                # A missing bind source must fail, never silently create an empty library.
+                compose('stop')
+                offline = b.with_name('media-b-offline')
+                b.rename(offline)
+                try:
+                    failed = compose('up', '-d', '--force-recreate', check=False)
+                    assert failed.returncode != 0 and not b.exists()
+                finally:
+                    offline.rename(b)
+                compose('up', '-d', '--force-recreate')
+                await_services(client)
+                result = client.post(base+'/api/v1/admin/setup/jellyfin/verify', headers=headers,
+                                     json=credentials, timeout=55)
+                assert result.status_code == 200 and result.json()['libraries'][0]['indexed_items'] == 2
+                # Encryption and recovery use the same packaged maintenance tools as installation.
+                image = subprocess.check_output(['docker','compose','-p',project,'images','-q','nova-core'],
+                                                cwd=root, text=True).strip()
+                keys = Path(folder)/'keys'; keys.mkdir()
+                backups = Path(folder)/'backups'; backups.mkdir()
+                recovered = Path(folder)/'recovered'; recovered.mkdir()
+                def helper(arguments, mounts, check=True, capture=False):
+                    cmd = ['docker', 'run', '--rm', '--network=none', '--read-only',
+                           '--cap-drop=ALL', '--security-opt=no-new-privileges',
+                           '--user', f'{os.getuid()}:{os.getgid()}']
+                    for host, guest, mode in mounts:
+                        cmd.extend(['-v', f'{host}:{guest}:{mode}'])
+                    return subprocess.run([*cmd, image, *arguments], check=check,
+                                          capture_output=capture, text=True)
+                helper(['age-keygen','-o','/keys/recovery.key'], [(keys,'/keys','rw')])
+                recipient = helper(['age-keygen','-y','/keys/recovery.key'],
+                                   [(keys,'/keys','ro')], capture=True).stdout.strip()
+                # Keep a live Jellyfin token in the backup to prove it is revoked on restore.
+                jf_auth = client.post('http://127.0.0.1:8096/Users/AuthenticateByName',
+                    headers={'Authorization':'MediaBrowser Client="Recovery CI", Device="CI", DeviceId="recovery", Version="1"'},
+                    json={'Username': credentials['username'], 'Pw': credentials['password']}).json()
+                old_jf_auth = {'Authorization':'MediaBrowser Token="'+jf_auth['AccessToken']+'"'}
+                compose('stop')
+                deployment = subprocess.check_output(['docker','compose','-p',project,'config','--format','json'], cwd=root)
+                (root/'deployment.json').write_bytes(deployment)
+                helper(['python','scripts/recovery.py','backup','--state','/state','--output','/backups/nova.age',
+                        '--recipient',recipient,'--deployment','/deployment.json','--services-stopped'],
+                       [(root/'state','/state','rw'),(backups,'/backups','rw'),(root/'deployment.json','/deployment.json','ro')])
+                ciphertext = (backups/'nova.age').read_bytes()
+                assert b'SQLite format 3' not in ciphertext and account['password'].encode() not in ciphertext
+                corrupt = bytearray(ciphertext); corrupt[-1] ^= 1
+                (backups/'corrupt.age').write_bytes(corrupt)
+                restore_mounts = [(backups,'/backups','ro'),(keys,'/keys','ro'),(recovered,'/restore','rw')]
+                rejected = helper(['python','scripts/recovery.py','restore','--input','/backups/corrupt.age',
+                    '--output','/restore/rejected','--identity','/keys/recovery.key'],restore_mounts,check=False,capture=True)
+                assert rejected.returncode != 0 and not (recovered/'rejected').exists()
+                helper(['python','scripts/recovery.py','restore','--input','/backups/nova.age',
+                    '--output','/restore/accepted','--identity','/keys/recovery.key'],restore_mounts)
+                # Switch disposable test mounts to the recovered state; original remains untouched.
+                restored = recovered/'accepted/state'
+                override = {'services':{'nova-core':{'volumes':[f'{restored}/nova:/data:rw']},
+                    'jellyfin':{'volumes':[f'{restored}/jellyfin/config:/config:rw',f'{restored}/jellyfin/cache:/cache:rw']}}}
+                (root/'compose.override.yaml').write_text(json.dumps(override), encoding='utf8')
+                compose('up','-d','--force-recreate')
+                await_services(client)
+                assert client.get(base+'/api/v1/admin/overview',headers=headers).status_code == 401
+                assert client.get('http://127.0.0.1:8096/Users/Me',headers=old_jf_auth).status_code in (401,403)
+                fresh = client.post(base+'/api/v1/admin/login',json=account)
+                assert fresh.status_code == 200
+                restored_headers = {'Authorization':'Bearer '+fresh.json()['access_token']}
+                verification = client.post(base+'/api/v1/admin/setup/jellyfin/verify',headers=restored_headers,
+                                           json=credentials,timeout=55)
+                assert verification.status_code == 200, verification.text
+                assert verification.json()['libraries'][0]['indexed_items'] == 2
+                assert verification.json()['server_id'] == persisted['server_id']
                 print(json.dumps({'compose':'passed','read_only_sources':2,'restart_persistence':True,
-                                  'nova_jellyfin_setup':True,'indexed_media_sources':2,'duplicate_libraries':0}))
+                                  'nova_jellyfin_setup':True,'indexed_media_sources':2,'duplicate_libraries':0,
+                                  'missing_source_refused':True,'container_recreation':True,
+                                  'encrypted_backup_restore':True,'tampered_backup_rejected':True,
+                                  'nova_and_jellyfin_sessions_revoked':True}))
         except Exception:
             # Only this disposable CI project; never dump credentials or the environment.
             compose('ps', '--all', check=False)

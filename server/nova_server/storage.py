@@ -8,6 +8,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from .security import token_hash
 
+SCHEMA_VERSION = 1
+
 SCHEMA = """
 PRAGMA journal_mode=WAL;
 CREATE TABLE IF NOT EXISTS admin (
@@ -43,7 +45,12 @@ class Store:
         self.path = self.dir / 'nova.sqlite3'
         self.lock = threading.RLock()
         with self._db() as conn:
+            version = conn.execute('PRAGMA user_version').fetchone()[0]
+            if version > SCHEMA_VERSION:
+                raise RuntimeError('Base de dados de uma versão mais recente; restaurar uma cópia compatível.')
+            # Version 0 is the original P01 schema. All v1 additions are additive.
             conn.executescript(SCHEMA)
+            conn.execute('PRAGMA user_version=1')
             conn.commit()
         try:
             self.path.chmod(0o600)

@@ -25,8 +25,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 3033,
-      "sha256": "5b71a604003ff187f190bfd03113ecbdc35a81123d891659b160885ce62aab1d"
+      "bytes": 4489,
+      "sha256": "78716cc5ee17a94a59dbf0965f504f63e127211329386b1d2fd3c106f3275116"
     },
     {
       "path": ".gitignore",
@@ -319,6 +319,11 @@
       "sha256": "95be3a81b21bea29ebead8d71c0b6bb481ead0e1602cb3e28d4c7d59a2c8b28d"
     },
     {
+      "path": "docs/M2_TRUENAS_RECUPERACAO.md",
+      "bytes": 9162,
+      "sha256": "3c9257fef033d95dbe699ebce13d0069db0395447fee0d6ed9a92f862a76a4f3"
+    },
+    {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
       "bytes": 23945,
       "sha256": "186c72375279a02ff160a683732016c9b0d38f3c338577ea9684b0708c5a7a1f"
@@ -370,8 +375,8 @@
     },
     {
       "path": "server/Dockerfile",
-      "bytes": 358,
-      "sha256": "2d969d179524388c9d5426a0557eb714d8d03f9eeb4a6e0276050d698f99d2a8"
+      "bytes": 821,
+      "sha256": "61789df2252b52d91d4683d4adc62984e502f9001c24b94ec1f3087a5ed6f10d"
     },
     {
       "path": "server/README.md",
@@ -380,8 +385,8 @@
     },
     {
       "path": "server/compose.yaml",
-      "bytes": 1208,
-      "sha256": "b436148ecb99395d49ef5807e9f918c14e6cccbdb26866e6578cf619cdd00047"
+      "bytes": 1304,
+      "sha256": "1bb45db5bfbd79bf4b55688849d18f8a5840dbdc4f46294a3999d029042cd94f"
     },
     {
       "path": "server/docs/DELIVERY_STATUS.md",
@@ -407,6 +412,11 @@
       "path": "server/nova_server/jellyfin.py",
       "bytes": 3309,
       "sha256": "5b0f7fb795e99f525cf0ed1a13fb9103ff8be9768dfae31e850167ef7030d221"
+    },
+    {
+      "path": "server/nova_server/launch.py",
+      "bytes": 775,
+      "sha256": "f580fd040a463c86663230817902a5a29211ca59470439c7f6fcb79685bde6e2"
     },
     {
       "path": "server/nova_server/security.py",
@@ -435,8 +445,8 @@
     },
     {
       "path": "server/nova_server/storage.py",
-      "bytes": 7056,
-      "sha256": "b36c90b633d68d816ebf17d1424b5fa8c3a79b6b93aed9a9f966d7bb0bcbb2dd"
+      "bytes": 7437,
+      "sha256": "013a67a4a35f9c5597cb533b77c67e63a5566985d4ba42f234115e0ce32c9256"
     },
     {
       "path": "server/pytest.ini",
@@ -484,19 +494,29 @@
       "sha256": "36b0f5333694e77f0f9c079dfc3b800808e68181f122062bbbfbaed7b217b9c7"
     },
     {
+      "path": "server/scripts/recovery.py",
+      "bytes": 10107,
+      "sha256": "eb954b1cb99542a087bee089767f1d8f65ea41c329a3767367ed050d32f91a41"
+    },
+    {
       "path": "server/scripts/smoke_browser.py",
       "bytes": 7487,
       "sha256": "f738c815bc9ca223df72696f846e6fed17d9af71d9b03b48af22626d5c0ed502"
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 8196,
-      "sha256": "6ed365d351e5e0c79976f0b78849040dc81d89056d33d850435d2d86e51b1da1"
+      "bytes": 14139,
+      "sha256": "41c10fb4c11f8c4063358359aadd618fe545d01bfc7ced11b3114b45625234c4"
     },
     {
       "path": "server/scripts/smoke_http.py",
       "bytes": 2761,
       "sha256": "a5a5d0c578ca4ccc8cdc02cc0192a84e844c0e07dfae78b3176cab4382fefb9c"
+    },
+    {
+      "path": "server/scripts/truenas.py",
+      "bytes": 3556,
+      "sha256": "871b8e127ce64fc3d55d362ba7c52d8850c55adba4b3ed8d59ae6d792c153c48"
     },
     {
       "path": "server/tests/conftest.py",
@@ -527,6 +547,11 @@
       "path": "server/tests/test_jellyfin.py",
       "bytes": 2699,
       "sha256": "cebaf231b1be65acc77e80ca16c1b8531f0512a5f3c915c35cc1a6fef998604d"
+    },
+    {
+      "path": "server/tests/test_recovery.py",
+      "bytes": 5343,
+      "sha256": "15291bc18bf0ed83624d0a09818a44455a7ad3b7e394f30d2603da03acb42c03"
     },
     {
       "path": "server/tests/test_regressions.py",
