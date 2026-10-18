@@ -25,8 +25,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 4814,
-      "sha256": "a0033b40c3def63408146d2dd512727b2be04780585c39919789e75a2d908b6f"
+      "bytes": 5103,
+      "sha256": "d09a18c15311c1cda4d5f336fcd420b2fd9f803edc19506ca0bb20d3f07adae3"
     },
     {
       "path": ".gitignore",
@@ -300,8 +300,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2212,
-      "sha256": "dd6cf2dc81eae07b25ce2ceffff740a532b12039c50aa4b68d338504bca48250"
+      "bytes": 2271,
+      "sha256": "fac8d18b335f23d507407e33c16185c0e32e9dc161724d1aba37c7341f505403"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -315,13 +315,13 @@
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
-      "bytes": 5093,
-      "sha256": "95be3a81b21bea29ebead8d71c0b6bb481ead0e1602cb3e28d4c7d59a2c8b28d"
+      "bytes": 6538,
+      "sha256": "763b626d210424658c63adeea3f5b362e179660c2b655318b1634ca0fbe387a7"
     },
     {
       "path": "docs/M2_TRUENAS_RECUPERACAO.md",
-      "bytes": 9162,
-      "sha256": "3c9257fef033d95dbe699ebce13d0069db0395447fee0d6ed9a92f862a76a4f3"
+      "bytes": 10017,
+      "sha256": "cf74a2d5761ab8d39df6388479749932e03ed828c581320c36b69dd8dea00c52"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -345,8 +345,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 25083,
-      "sha256": "fd7a51066e94c07433172f0cca5ea5341a1b1b82ead5f032752b62225728b7a1"
+      "bytes": 25274,
+      "sha256": "ddd594797439e3ab7a30ff6d7c34f75438d10f242e763f4d01ebb8b7d96e9ed9"
     },
     {
       "path": "scripts/inventory.py",
@@ -380,8 +380,8 @@
     },
     {
       "path": "server/README.md",
-      "bytes": 10555,
-      "sha256": "26acf6bbd577eabcf2ae63f457bb4fe22eef3bbcfd1d4b7149d0d47cf4f3aa37"
+      "bytes": 10825,
+      "sha256": "5d1c33e965fbfffd02a128dfcaf85ac94f85a1bb283dac382d68138d954009cd"
     },
     {
       "path": "server/compose.yaml",
@@ -510,8 +510,8 @@
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 15375,
-      "sha256": "2f94f6e1f6c02d2a49e9b6df61f2a7eb089d618ca432f116387040f692b8094e"
+      "bytes": 15923,
+      "sha256": "35ebda5d543faa056166aff3b6c91ef99422c6ee913692f3378c0cb900e7ebb6"
     },
     {
       "path": "server/scripts/smoke_http.py",

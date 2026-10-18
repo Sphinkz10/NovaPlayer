@@ -1,6 +1,10 @@
 # M2 — Servidor de laboratório e próximo ensaio
 
-Atualização: 18-10-2026. Este incremento desenvolve o servidor; não entrega ainda o player NOVA Cinema.
+Atualização: 18-10-2026. NOVA Server 0.2.0-lab. Este incremento desenvolve o servidor; não entrega ainda o player NOVA Cinema.
+
+**Fecho técnico:** assistente, gerador TrueNAS, imagem de instalação, healthchecks, schema versionado e recuperação cifrada implementados. **Aceitação física:** pendente; o proprietário confirmou que ainda não dispõe de acesso SSH. Não declarar M2 integralmente concluída antes desse ensaio.
+
+[Guia TrueNAS, backup/restauro e atualização](M2_TRUENAS_RECUPERACAO.md).
 
 ## Implementado
 
@@ -13,6 +17,10 @@ Atualização: 18-10-2026. Este incremento desenvolve o servidor; não entrega a
 - Guardar identidade, última observação e contagens. Credenciais Jellyfin ficam apenas na memória da operação; há tentativa de logout no fim. Uma quebra de ligação pode impedir a revogação desse token no Jellyfin.
 - Impedir duas configurações simultâneas com reserva SQLite válida entre processos e prazo limitado.
 - Verificações prévias de Linux, arquitetura, Docker/Compose, portas, conta e caminhos. Instalador recusa estado parcial existente e sobreposição entre media e pasta privada NOVA.
+- Gerador de YAML independente para Apps TrueNAS, com imagem por digest, UID/GID explícitos e mounts que recusam origens inexistentes.
+- Inicialização do código de proprietário dentro do contentor, healthchecks e migração aditiva do schema NOVA 0 → 1; schemas futuros são recusados.
+- Backup offline cifrado com age e restauro em pasta nova, sem media/cache, com revogação das sessões NOVA e tokens/chaves API Jellyfin. Recuperação M2 restrita a um único proprietário Jellyfin.
+- Recolha de evidência de saúde, portas, utilizador e mounts sem expor credenciais, através de scripts/acceptance.py.
 
 Uma listagem acessível não prova leitura de todos os ficheiros, montagem read-only, indexação completa ou reprodução. O painel mantém essa distinção e mostra a data da observação. Não há sincronização automática de palavras-passe entre NOVA e Jellyfin.
 
@@ -30,7 +38,9 @@ Seguir [server/README.md](../server/README.md) num Linux de laboratório com Doc
 
 No TrueNAS Community, começar pela recolha da versão/build e pela verificação de pré-requisitos, sem instalar pacotes no sistema base. A passagem para instalação depende do método suportado pela versão, permissões/ACL dos datasets e armazenamento persistente. Aprovação Docker genérica não certifica TrueNAS.
 
-Após esse ensaio, faltam reinício real do NAS, origem indisponível, atualização, cópia de segurança e restauro antes de fechar M2. Não há acesso ou resultado físico deste NAS registado nesta entrega.
+Os testes Docker foram ampliados para origem ausente, recriação dos contentores, backup cifrado, recusa de cópia alterada, restauro e rejeição dos tokens anteriores. O primeiro ensaio passou no commit eab3eed, CI 39124579105. A revisão final é 8117529, CI 39124765714; consultar o estado e artefactos dessa execução. No Windows local: 126 testes aprovados, seis específicos Linux omitidos, HTTP real aprovado.
+
+Continuam por executar no NAS: instalação Apps na versão concreta, ACL/datasets, reinício físico, falha de origem, atualização e restauro. Não há resultado físico deste TrueNAS registado nesta entrega.
 
 ## Quando podes instalar e testar
 

@@ -1,6 +1,6 @@
 # M2 — instalação TrueNAS e recuperação
 
-Estado em 18-10-2026: implementação e ensaio automatizado em curso. O proprietário confirmou que ainda não tem SSH disponível. Nenhum teste no seu NAS foi executado.
+Estado em 18-10-2026: implementação pronta para validação; o primeiro ensaio de recuperação Docker passou. Consultar a execução final 39124765714 para as evidências da revisão 8117529. O proprietário confirmou que ainda não tem SSH disponível. Nenhum teste no seu NAS foi executado.
 
 ## Pacote para Apps
 
@@ -69,6 +69,16 @@ Gerar um YAML novo apontado a `ensaio/state`, usando inicialmente **a mesma imag
 4. Se falhar, parar e restaurar a cópia numa pasta nova com os digests antigos. Não executar uma imagem antiga sobre uma base já migrada sem compatibilidade demonstrada.
 
 Não existe ainda migração automática de qualquer versão futura de Jellyfin, nem atualização automática das imagens.
+
+## Recolher evidência da instalação
+
+Depois de os healthchecks ficarem saudáveis, consultar os nomes/IDs dos dois contentores na interface Apps e executar na Shell administrativa:
+
+```text
+python3 server/scripts/acceptance.py --core-container NOME_CORE --jellyfin-container NOME_JELLYFIN --output verificacao-nas.json
+```
+
+O relatório regista imagens, saúde, portas loopback, utilizador não root e mounts read-only. Não inclui variáveis de ambiente ou credenciais. Mesmo com todos esses checks aprovados, `physical_acceptance_complete` permanece falso: reinício, indexação e recuperação precisam de resultados próprios. As licenças age/Go e módulos compilados acompanham a imagem em `/usr/share/nova/licenses/`.
 
 ## Aceitação física necessária para fechar M2
 

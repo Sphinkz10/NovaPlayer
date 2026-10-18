@@ -54,6 +54,13 @@ def run():
                 time.sleep(1)
             raise RuntimeError('Compose services did not become available')
         try:
+            if os.environ.get('NOVA_TEST_IMAGE'):
+                # Package gate: test the exact image that will be pushed, without rebuilding it.
+                rendered = json.loads(subprocess.check_output(
+                    ['docker','compose','-p',project,'config','--format','json'],cwd=root))
+                rendered['services']['nova-core'].pop('build',None)
+                rendered['services']['nova-core']['image'] = os.environ['NOVA_TEST_IMAGE']
+                (root/'compose.yaml').write_text(json.dumps(rendered),encoding='utf8')
             compose('config','--quiet')
             compose('up','--build','-d')
             with httpx.Client(trust_env=False, timeout=5) as client:

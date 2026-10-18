@@ -1,8 +1,10 @@
-# NOVA Server — M2: assistente de instalação em laboratório
+# NOVA Server 0.2.0-lab — M2
 
-Atualização de 17-10-2026: login Control corrigido, diagnóstico Jellyfin limitado a 16 KiB/4 s com validação de produto/wizard/identidade opcional, limite de login atómico, duas verificações Argon2 simultâneas por processo, dependências transitivas fixadas com hashes. Cinco falhas/tentativas em curso por origem durante 15 minutos; sucesso retira apenas a própria reserva e não apaga outras falhas. A administração aceita Host `localhost`/`127.0.0.1`.
+Base de segurança implementada em 17-10-2026: login Control corrigido, diagnóstico Jellyfin limitado a 16 KiB/4 s com validação de produto/wizard/identidade opcional, limite de login atómico, duas verificações Argon2 simultâneas por processo, dependências transitivas fixadas com hashes. Cinco falhas/tentativas em curso por origem durante 15 minutos; sucesso retira apenas a própria reserva e não apaga outras falhas. A administração aceita Host `localhost`/`127.0.0.1`.
 
 O Control guarda **rascunhos** WireGuard/Tailscale/NetBird sem segredos nem ativação de rede. As origens mostram permissões/leitura/indexação ainda não verificadas. Para comparar a identidade Jellyfin com uma associação aprovada, definir `NOVA_JELLYFIN_SERVER_ID` no ambiente do Core; sem isso o diagnóstico devolve `identity_verified=false`.
+
+Instalação Apps TrueNAS, imagem por digest, cópia cifrada, recuperação e reversão: [guia M2](../docs/M2_TRUENAS_RECUPERACAO.md). Aceitação no NAS físico pendente.
 
 Novo incremento: [assistente M2](../docs/M2_SERVIDOR_LAB.md). Criação do proprietário pelo navegador, configuração Jellyfin, uma ou duas bibliotecas, retoma e contagens de indexação.
 
@@ -84,7 +86,7 @@ docker compose down                  # preserva diretórios persistentes
 docker compose up -d --build         # reinicia após revisão das versões
 ```
 
-**Não executar `docker compose down -v` nem eliminar `state/` sem cópias de segurança.** Em futuras versões o instalador deverá gerir migrações e backups cifrados.
+**Não executar `docker compose down -v` nem eliminar `state/` sem cópias de segurança.** A recuperação cifrada offline e o procedimento de reversão já estão disponíveis no guia M2; não há atualização automática. O Core versiona o schema SQLite e recusa schemas futuros.
 
 ## Fronteiras de segurança desta prova
 
