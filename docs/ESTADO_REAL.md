@@ -9,7 +9,7 @@ a jornada instalar → associar → biblioteca → vídeo ainda não existe.
 | Configuração Connect | Rascunhos autenticados de WireGuard/Tailscale/NetBird no Control e SQLite | Inscrição, agentes e aplicação da configuração real |
 | NOVA Connect 0.4-phase1 | 166 testes Kotlin; os três motores compilaram numa APK experimental; carregamento em processos separados passou em API 26/35 x86_64 | Pontes funcionais, associação, handshake e HTTPS reais; ARM/TV físicos |
 | NOVA Cinema | Designs e políticas de reprodução corrigidas | UI TV, biblioteca Jellyfin e player Media3 |
-| Identidade/dispositivos M3 | Associação por código no servidor, aprovação no Control, credenciais rotativas/revogação e API HTTPS isolada em laboratório | Cliente Android, confiança TLS inicial, Directory e permissões Jellyfin |
+| Identidade/dispositivos M3 | Servidor e cliente Android de laboratório: associação, confirmação de identidade importada, Keystore, refresh e revogação | Prova emuladores/hardware; Directory, renovação TLS integrada e permissões Jellyfin |
 | Directory | Contratos documentados; serviço ainda não implementado | Contas, registo com prova de posse e descoberta autenticada |
 | CI | Linux/Windows, HTTP, navegador, Docker, Android e runtime nativo em emulador aprovados | Ligação real dos três fornecedores e execução em hardware; ver relatório |
 | Segurança | Correções locais verificadas e análise Python sem avisos conhecidos | SEC-01…12 continuam sem validação final |
@@ -23,6 +23,6 @@ O proprietário configura o NOVA Server. O familiar deverá instalar só NOVA Ci
 e associar a conta/dispositivo, sem introduzir IPs ou perfis VPN. Apps VPN externas
 não satisfazem o requisito de integração nativa dos três fornecedores.
 
-Incremento atual: [M3_ASSOCIACAO_DISPOSITIVOS.md](M3_ASSOCIACAO_DISPOSITIVOS.md). Entrega M2: [M2_SERVIDOR_LAB.md](M2_SERVIDOR_LAB.md). Histórico: [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md).
+Incremento atual: [M3_CLIENTE_ANDROID.md](M3_CLIENTE_ANDROID.md) e [servidor M3](M3_ASSOCIACAO_DISPOSITIVOS.md). Entrega M2: [M2_SERVIDOR_LAB.md](M2_SERVIDOR_LAB.md). Histórico: [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md).
 Decisões: [ADR_001_CONNECT_NATIVO.md](ADR_001_CONNECT_NATIVO.md).
 Etapas de instalação: [roadmap](ROADMAP_INSTALACAO_SERVER_TV_v0_2.md).

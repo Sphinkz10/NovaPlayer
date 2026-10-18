@@ -122,6 +122,15 @@ def make_client_app(state_dir=None, origin=None):
                                 'directory_enabled': False, 'remote_access_enabled': False}
         return result
 
+    @api.post('/api/v1/device/logout')
+    def logout(request: Request):
+        limit(request, 'logout')
+        bearer = request.headers.get('Authorization', '')
+        if not bearer.startswith('Bearer ') or not 40 <= len(bearer[7:]) <= 128:
+            raise DeviceError('invalid_token', 401)
+        device = devices.authenticate(bearer[7:])
+        return devices.revoke(device['device_id'])
+
     return api
 
 

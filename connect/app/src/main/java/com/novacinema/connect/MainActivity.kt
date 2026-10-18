@@ -29,8 +29,8 @@ class MainActivity : Activity() {
         provisioning = ProvisioningStore(this)
         bridge = WireGuardBridge(this)
         val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(46, 46, 46, 46) }
-        val label = TextView(this).apply { text = "NOVA Connect · Laboratório 0.4"; textSize = 26f }
-        status = TextView(this).apply { textSize = 21f; text = "Sem credenciais no APK. Associação administrativa ainda por implementar." }
+        val label = TextView(this).apply { text = "NOVA Connect · Laboratório 0.5"; textSize = 26f }
+        status = TextView(this).apply { textSize = 21f; text = "Associação NOVA disponível em laboratório. Configuração VPN continua independente e por implementar." }
         val device = AndroidCapabilities.read(this)
         val compatibility = TextView(this).apply {
             textSize = 18f
@@ -48,8 +48,12 @@ class MainActivity : Activity() {
         val connect = Button(this).apply { text = "Validar WireGuard privado"; setOnClickListener { begin() } }
         val disconnect = Button(this).apply { text = "Desligar túnel"; setOnClickListener { stopTunnel() } }
         root.addView(label); root.addView(compatibility); root.addView(status); root.addView(connect); root.addView(disconnect)
+        val pair = Button(this).apply { text = "Associar ao NOVA Server"; setOnClickListener {
+            startActivity(Intent(this@MainActivity, DevicePairingActivity::class.java))
+        } }
+        root.addView(pair)
         setContentView(ScrollView(this).apply { addView(root) })
-        connect.requestFocus()
+        pair.requestFocus()
     }
 
     override fun onStart() {
@@ -68,7 +72,7 @@ class MainActivity : Activity() {
             return
         }
         if (provisioning.load() == null) {
-            note("Dispositivo não associado. O administrador deverá aprovar este equipamento numa versão futura.")
+            note("Configuração WireGuard indisponível. A associação NOVA ainda não fornece perfis VPN nesta fase.")
             return
         }
         val consent = VpnService.prepare(this)

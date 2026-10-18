@@ -2,6 +2,8 @@
 
 Estado: NOVA Server `0.3.0-dev`. Implementação de laboratório; M3 ainda não concluída. A entrega M2 `0.2.0-lab` e a sua imagem por digest continuam identificadas no guia M2. Não substituir a instalação M2 por esta revisão sem backup offline e plano de restauro: o schema passa de 1 para 2.
 
+Cliente Android de laboratório implementado no incremento seguinte: [M3_CLIENTE_ANDROID.md](M3_CLIENTE_ANDROID.md). A confirmação inicial usa ficheiro público e impressão digital por canal de confiança; Directory e renovação integrada de certificados continuam pendentes.
+
 ## O que já funciona
 
 - Identidade UUID persistente do NOVA Server, distinta da identidade Jellyfin. Não é ainda uma chave de assinatura nem registo no Directory.
@@ -23,6 +25,7 @@ O processo administrativo existente continua em loopback. A API cliente é outro
 | `POST /api/v1/device/token` | JSON `device_code`; aguarda aprovação ou entrega credenciais uma única vez |
 | `POST /api/v1/device/refresh` | JSON `refresh_token`; troca atómica e deteção de reutilização |
 | `GET /api/v1/device/me` | Bearer do dispositivo; devolve identidade, âmbito e descriptor |
+| `POST /api/v1/device/logout` | Bearer do dispositivo; revoga apenas a sua própria associação |
 
 No Control: `POST /api/v1/admin/devices/inspect`, `POST /api/v1/admin/devices/decision`, `GET /api/v1/admin/devices` e `DELETE /api/v1/admin/devices/{id}` exigem sessão do proprietário. A decisão inclui código e identificador do pedido consultado. O nome do dispositivo é texto não confiável; o proprietário deve comparar também o código apresentado pelo seu dispositivo.
 
@@ -44,8 +47,8 @@ Para iniciar manualmente o serviço experimental, fornecer `NOVA_STATE_DIR` igua
 
 ## Estado de validação e limites
 
-Resultados locais Windows: suíte Python e ensaios reais HTTPS/Edge aprovados; consultar a execução CI associada ao commit para Linux, matriz Python e Docker. A CI executa HTTPS e navegador em Python 3.12/3.13, Linux/Windows. O ensaio Docker inclui backup/restauro de uma associação e de um pedido aprovado ainda não consumido, verificando que ambos perdem autorização. Os relatórios não contêm códigos ou tokens.
+Resultados locais Windows: suíte Python e ensaios reais HTTPS/Edge aprovados; consultar a execução CI associada ao commit para Linux, matriz Python e Docker. A CI executa HTTPS e navegador em Python 3.12/3.13, Linux/Windows. O ensaio Docker inclui backup/restauro de uma associação e de um pedido aprovado ainda não consumido, verificando que ambos perdem autorização. Os relatórios JSON não contêm códigos ou tokens.
 
-Ainda por implementar na M3: conta/servidor no Directory com prova de posse, descoberta autenticada, bootstrap/renovação TLS na TV, UI Android de associação e armazenamento protegido, permissões por utilizador/biblioteca Jellyfin e descriptor com autorização de media. Não foram executados testes em TV física ou no TrueNAS.
+Ainda por implementar na M3: conta/servidor no Directory com prova de posse, descoberta autenticada, bootstrap/renovação TLS integrados com descoberta na TV, permissões por utilizador/biblioteca Jellyfin e descriptor com autorização de media. Não foram executados testes em TV física ou no TrueNAS.
 
-Próxima sequência: cliente Android e confiança inicial → Directory e permissões → ensaio de associação completo → M4, catálogo e primeiro filme. WireGuard/Tailscale/NetBird continuam nativos no plano M0/M5; esta associação não cria túneis.
+Próxima sequência: validar o cliente Android de laboratório → Directory e permissões → associação com descoberta e confiança integradas → M4, catálogo e primeiro filme. WireGuard/Tailscale/NetBird continuam nativos no plano M0/M5; esta associação não cria túneis.

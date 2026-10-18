@@ -239,6 +239,18 @@ def test_no_device_grants_before_owner_setup(tmp_path):
         assert client.post('/api/v1/device/authorize', json={'label':'TV'}).status_code == 409
 
 
+def test_device_logout_revokes_only_itself_and_rejects_admin_token(pair):
+    _, first = tokens(pair)
+    _, second = tokens(pair)
+    admin, client, service, _ = pair
+    assert client.post('/api/v1/device/logout', headers=dict(admin.headers)).status_code == 401
+    result = client.post('/api/v1/device/logout', headers={'Authorization':'Bearer '+first['access_token']})
+    assert result.status_code == 200 and result.json()['revoked'] is True
+    with pytest.raises(DeviceError):
+        service.refresh(first['refresh_token'])
+    assert service.authenticate(second['access_token'])['device_id'] == second['device_id']
+
+
 def test_restore_revokes_pending_grants_and_all_device_credentials(pair, tmp_path):
     grant, issued = tokens(pair)
     service = pair[2]

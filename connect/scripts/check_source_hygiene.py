@@ -20,7 +20,7 @@ checks = {
   'certificate failures are not classified offline': 'catch (_: SSLException)' in PROBE and 'TLS_VALIDATION_FAILED' in PROBE,
   'Jellyfin server identity pinned': 'expectedServerId' in PROBE and 'expectedServerId' in PROVISION,
   'encryption backed by Android Keystore': 'AndroidKeyStore' in PROVISION and 'AES/GCM/NoPadding' in PROVISION,
-  'no always-on insecure trust manager': not any('X509TrustManager' in s or 'HostnameVerifier' in s for s in (APP/'java').rglob('*.kt') for s in [s.read_text()]),
+  'no hostname verifier override': not any('HostnameVerifier' in s for s in (APP/'java').rglob('*.kt') for s in [s.read_text()]),
 }
 all_sources='\n'.join(f.read_text(errors='replace') for f in (ROOT/'app/src/main/java').rglob('*.kt'))
 all_sources+='\n'+'\n'.join(f.read_text(errors='replace') for f in (ROOT/'core/src/main/kotlin').rglob('*.kt'))

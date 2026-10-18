@@ -128,6 +128,7 @@ object POCTest {
         test("allow fully authorized session") { check(AuthorizationPolicy.mayIssuePlaybackSession(SessionAuthorization(true,true,true,true))) }
         val networkTests = JellyfinTransportTest.run()
         val providerTests = ProviderContractTest.run()
-        println("NOVA Connect: $executed policy tests PASS; $networkTests HTTP transport tests PASS; $providerTests provider tests PASS; total ${executed + networkTests + providerTests}")
+        val pairingTests = DevicePairingTest.run()
+        println("NOVA Connect: $executed policy tests PASS; $networkTests HTTP transport tests PASS; $providerTests provider tests PASS; $pairingTests pairing tests PASS; total ${executed + networkTests + providerTests + pairingTests}")
     }
 }

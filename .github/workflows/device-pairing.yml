@@ -1,0 +1,47 @@
+name: Android device pairing TLS
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'connect/**'
+      - 'server/**'
+      - '.github/workflows/device-pairing.yml'
+permissions:
+  contents: read
+jobs:
+  pairing:
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 35]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --require-hashes -r server/requirements.txt
+      - name: Build app and isolated instrumentation
+        working-directory: connect
+        run: bash gradlew :app:assembleDebug :app:assembleDebugAndroidTest --no-daemon --console plain
+      - name: Enable emulator acceleration on disposable runner
+        run: |
+          sudo chown "$(id -u):$(id -g)" /dev/kvm
+          test -r /dev/kvm && test -w /dev/kvm
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: ${{ matrix.api }}
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: python connect/scripts/smoke_pairing_android.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: android-pairing-api-${{ matrix.api }}
+          path: connect/test-results/pairing/

@@ -81,3 +81,7 @@ docs/           Matriz Jellyfin, segurança, gates de build, changelog
 ```
 
 **Não é a interface Premium NOVA Cinema final nem uma prova de túnel funcional.** Acesso remoto e configuração da UniFi ficam inalterados.
+
+## Associação Android M3 · 0.5-pairing-lab
+
+A APK normal inclui agora a interface de associação por código ao NOVA Server, confirmação da identidade importada, HTTPS com certificado fixado e sessão cifrada com Android Keystore. Seguir [o guia de laboratório](../docs/M3_CLIENTE_ANDROID.md). Não disponibiliza ainda filmes, Directory ou ligação VPN automática. O workflow Android device pairing TLS verifica API 26/35 contra o servidor real.

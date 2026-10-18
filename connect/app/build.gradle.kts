@@ -3,7 +3,11 @@ val nativeProofAar = providers.gradleProperty("novaNativeProofAar").orNull
 android {
     namespace = "com.novacinema.connect"
     compileSdk = 35
-    defaultConfig { applicationId = "com.novacinema.connect.poc"; minSdk = 26; targetSdk = 35; versionCode = 4; versionName = "0.4-phase1" }
+    defaultConfig {
+        applicationId = "com.novacinema.connect.poc"; minSdk = 26; targetSdk = 35
+        versionCode = 5; versionName = "0.5-pairing-lab"
+        testInstrumentationRunner = "com.novacinema.connect.DevicePairingInstrumentation"
+    }
     if (nativeProofAar != null) {
         defaultConfig {
             testInstrumentationRunner = "com.novacinema.connect.NativeEngineSmokeInstrumentation"
