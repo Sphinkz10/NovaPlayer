@@ -1,5 +1,6 @@
 import io
 import json
+import os
 import sqlite3
 import tarfile
 from pathlib import Path
@@ -76,6 +77,14 @@ def test_restore_never_overwrites_existing_directory(tmp_path):
 def test_backup_requires_stopped_services(tmp_path):
     with pytest.raises(ValueError,match='Parar'):
         backup(tmp_path,tmp_path/'out','age1test',deployment='unused')
+
+
+def test_hard_link_backup_refused(tmp_path):
+    state_fixture(tmp_path)
+    original = tmp_path/'nova/file'; original.write_text('private')
+    os.link(original,tmp_path/'nova/alias')
+    with pytest.raises(ValueError,match='links'):
+        files_for_backup(tmp_path)
 
 
 def test_container_bootstrap_is_idempotent(tmp_path):

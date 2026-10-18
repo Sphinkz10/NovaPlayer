@@ -25,8 +25,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 4489,
-      "sha256": "78716cc5ee17a94a59dbf0965f504f63e127211329386b1d2fd3c106f3275116"
+      "bytes": 4814,
+      "sha256": "a0033b40c3def63408146d2dd512727b2be04780585c39919789e75a2d908b6f"
     },
     {
       "path": ".gitignore",
@@ -375,8 +375,8 @@
     },
     {
       "path": "server/Dockerfile",
-      "bytes": 821,
-      "sha256": "61789df2252b52d91d4683d4adc62984e502f9001c24b94ec1f3087a5ed6f10d"
+      "bytes": 1032,
+      "sha256": "371e413c4f4134bc27a466ac0fccea56176649cf30137457b4a526789b290a80"
     },
     {
       "path": "server/README.md",
@@ -400,8 +400,8 @@
     },
     {
       "path": "server/nova_server/app.py",
-      "bytes": 8730,
-      "sha256": "c21c529188419b6ec1491e3155350ffd1fe8bdee2d5f7cea44fb1dd95e5c8918"
+      "bytes": 8734,
+      "sha256": "506b843cce1776d6016b4dc5528037d823ec9ec3a9279dc9acb6317a2447ce86"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -425,8 +425,8 @@
     },
     {
       "path": "server/nova_server/setup.py",
-      "bytes": 11415,
-      "sha256": "efdb2e5ef4eab1b80bacfea583d366acdca4a8bddadf7d321fb9c0ec0968a561"
+      "bytes": 11419,
+      "sha256": "21f4a0cd8372f8e5d1d8a0aa739e443c7c65084923350eb987e157e7bdcfa62d"
     },
     {
       "path": "server/nova_server/static/control.css",
@@ -474,6 +474,11 @@
       "sha256": "680e562679c6f87fc6007232d57bced97f9cbac821ac87baa8bf5ddd3b5956ff"
     },
     {
+      "path": "server/scripts/acceptance.py",
+      "bytes": 3780,
+      "sha256": "9fdf8ae004c9bf18ce2808564020ca9349603ae3ffb340f7faba17fe3ed0421c"
+    },
+    {
       "path": "server/scripts/first_run.py",
       "bytes": 1631,
       "sha256": "4ad428a05b73226042fc403fe9411919e5aa37ae752daac3874e55ec36f27e7e"
@@ -495,8 +500,8 @@
     },
     {
       "path": "server/scripts/recovery.py",
-      "bytes": 10107,
-      "sha256": "eb954b1cb99542a087bee089767f1d8f65ea41c329a3767367ed050d32f91a41"
+      "bytes": 10392,
+      "sha256": "fd64f88111729ad9829c45207935f6a719cf2323e00d71ad45cc6cb3714f3f78"
     },
     {
       "path": "server/scripts/smoke_browser.py",
@@ -505,8 +510,8 @@
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 14139,
-      "sha256": "41c10fb4c11f8c4063358359aadd618fe545d01bfc7ced11b3114b45625234c4"
+      "bytes": 15375,
+      "sha256": "2f94f6e1f6c02d2a49e9b6df61f2a7eb089d618ca432f116387040f692b8094e"
     },
     {
       "path": "server/scripts/smoke_http.py",
@@ -550,8 +555,8 @@
     },
     {
       "path": "server/tests/test_recovery.py",
-      "bytes": 5343,
-      "sha256": "15291bc18bf0ed83624d0a09818a44455a7ad3b7e394f30d2603da03acb42c03"
+      "bytes": 5625,
+      "sha256": "fbc80a3d96c17302a6248a393565c4758af608319a21379c878b8137ecd92c3c"
     },
     {
       "path": "server/tests/test_regressions.py",

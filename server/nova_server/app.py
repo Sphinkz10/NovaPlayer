@@ -84,7 +84,7 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
 
     @api.get('/api/v1/status')
     def status():
-        return {'product':'NOVA Server','version':'0.1.1',
+        return {'product':'NOVA Server','version':'0.2.0-lab',
                 'owner_setup_required':not store.has_admin(),
                 'remote_access_enabled':False,
                 'directory_enabled':False,

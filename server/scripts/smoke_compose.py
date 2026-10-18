@@ -15,6 +15,7 @@ from pathlib import Path
 
 import httpx
 from install import install
+from acceptance import inspect_container, summarize
 
 
 def run():
@@ -36,7 +37,8 @@ def run():
             directory.mkdir()
             (directory/'read-only-fixture.txt').write_text('NOVA synthetic fixture', encoding='utf8')
         install(str(a), str(b), root=root)
-        bootstrap = (root/'state/nova/bootstrap.token').read_text().strip()
+        # TrueNAS Apps starts from empty state, without the host installer token.
+        (root/'state/nova/bootstrap.token').unlink()
         project = 'nova-test-' + uuid.uuid4().hex[:12]
         def compose(*args, check=True):
             return subprocess.run(['docker','compose','-p',project,*args], cwd=root, check=check)
@@ -56,6 +58,7 @@ def run():
             compose('up','--build','-d')
             with httpx.Client(trust_env=False, timeout=5) as client:
                 await_services(client)
+                bootstrap = (root/'state/nova/bootstrap.token').read_text().strip()
                 for name in ('source-a', 'source-b'):
                     compose('exec','-T','jellyfin','sh','-c',
                             f'test -r /media/{name}/read-only-fixture.txt && ! touch /media/{name}/must-not-write')
@@ -190,11 +193,27 @@ def run():
                 assert verification.status_code == 200, verification.text
                 assert verification.json()['libraries'][0]['indexed_items'] == 2
                 assert verification.json()['server_id'] == persisted['server_id']
-                print(json.dumps({'compose':'passed','read_only_sources':2,'restart_persistence':True,
+                container_ids = {service:subprocess.check_output(
+                    ['docker','compose','-p',project,'ps','-q',service],cwd=root,text=True).strip()
+                    for service in ('nova-core','jellyfin')}
+                for _ in range(60):
+                    snapshot = summarize(inspect_container(container_ids['nova-core']),
+                                         inspect_container(container_ids['jellyfin']))
+                    if snapshot['snapshot_checks_passed']:
+                        break
+                    time.sleep(2)
+                else:
+                    raise AssertionError(snapshot['checks'])
+                report = {'compose':'passed','read_only_sources':2,'restart_persistence':True,
                                   'nova_jellyfin_setup':True,'indexed_media_sources':2,'duplicate_libraries':0,
                                   'missing_source_refused':True,'container_recreation':True,
                                   'encrypted_backup_restore':True,'tampered_backup_rejected':True,
-                                  'nova_and_jellyfin_sessions_revoked':True}))
+                                  'nova_and_jellyfin_sessions_revoked':True,'snapshot':snapshot,
+                                  'physical_truenas_test':False}
+                if os.environ.get('NOVA_EVIDENCE_DIR'):
+                    evidence = Path(os.environ['NOVA_EVIDENCE_DIR']); evidence.mkdir(parents=True,exist_ok=True)
+                    (evidence/'compose-recovery.json').write_text(json.dumps(report,indent=2),encoding='utf8')
+                print(json.dumps(report))
         except Exception:
             # Only this disposable CI project; never dump credentials or the environment.
             compose('ps', '--all', check=False)

@@ -57,9 +57,13 @@ def files_for_backup(state):
     files = []
     for folder in ('nova', 'jellyfin/config'):
         root = state/folder
+        for component in (state/'nova', state/'jellyfin', state/'jellyfin/config'):
+            if component.is_symlink():
+                raise ValueError('Cópia recusada: links nos diretórios de estado.')
         for path in sorted(root.rglob('*')):
             mode = path.lstat().st_mode
-            if stat.S_ISLNK(mode) or not (stat.S_ISREG(mode) or stat.S_ISDIR(mode)):
+            if stat.S_ISLNK(mode) or not (stat.S_ISREG(mode) or stat.S_ISDIR(mode)) or \
+                    (stat.S_ISREG(mode) and path.stat().st_nlink != 1):
                 raise ValueError('Cópia recusada: links ou ficheiros especiais no estado.')
             if path.name == 'bootstrap.token' or 'log' in path.relative_to(state).parts:
                 continue
