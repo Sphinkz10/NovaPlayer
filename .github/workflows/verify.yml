@@ -28,6 +28,8 @@ jobs:
         working-directory: server
       - run: python scripts/smoke_http.py
         working-directory: server
+      - run: python scripts/smoke_devices_tls.py --output test-results/devices
+        working-directory: server
       - run: python -m playwright install --with-deps chromium
       - run: python scripts/smoke_browser.py --output test-results/browser
         working-directory: server
@@ -116,8 +118,9 @@ jobs:
           cp server/scripts/truenas.py server-image/
           cp server/scripts/acceptance.py server-image/
           cp docs/M2_TRUENAS_RECUPERACAO.md server-image/
+          cp docs/M3_ASSOCIACAO_DISPOSITIVOS.md server-image/
           docker logout ghcr.io
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: nova-server-m2-install
+          name: nova-server-lab-install
           path: server-image/

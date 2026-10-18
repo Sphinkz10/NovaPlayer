@@ -2,6 +2,8 @@
 
 **Atualização:** 18 outubro 2026, M2 técnica com imagem de instalação e recuperação cifrada aprovadas em Docker; aceitação física TrueNAS pendente.
 
+As fontes atuais incluem o primeiro incremento M3 (`0.3.0-dev`): [associação de dispositivos](M3_ASSOCIACAO_DISPOSITIVOS.md). A entrega M2 por digest permanece identificada no seu guia.
+
 ## Como usar este arquivo
 
 1. Ler [M2_SERVIDOR_LAB.md](M2_SERVIDOR_LAB.md), [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md) e [ESTADO_REAL.md](ESTADO_REAL.md).

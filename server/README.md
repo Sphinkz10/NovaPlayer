@@ -142,3 +142,7 @@ Os testes unitários usam `httpx.MockTransport` e FastAPI `TestClient`. O teste 
 5. **SEC:** testes das 12 barreiras de segurança, isolamento entre duas instalações, backup cifrado e auditoria externa antes de disponibilizar a familiares.
 
 **Referências:** [Jellyfin — Docker e múltiplos volumes](https://jellyfin.org/docs/general/installation/container/), [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/), [OWASP MASVS](https://mas.owasp.org/MASVS/).
+
+## Incremento M3 de laboratório
+
+As fontes atuais incluem associação por código, aprovação/revogação no Control e API HTTPS separada. Consultar [M3](../docs/M3_ASSOCIACAO_DISPOSITIVOS.md). O serviço cliente exige ativação explícita e não é iniciado pelo Compose M2. O schema passa para 2: preservar backup para regressar à imagem M2.

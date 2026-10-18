@@ -18,6 +18,8 @@ from .storage import Store
 from .jellyfin import probe_jellyfin
 from .connect import ConnectDraft, provider_catalog
 from .setup import JellyfinSetup, SetupRequest, Credentials, SetupError
+from .devices import Devices, DeviceError
+from .device_api import UserCode, DeviceDecision, device_error
 
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z][a-zA-Z0-9_.-]{2,39}$')
 DUMMY_HASH = '$argon2id$v=19$m=65536,t=3,p=2$bsLfU/8cH1R+4e68utTSNQ$8Tk5/U5Y6zx5/ZrURl0G7DtU5y3EXazaQ+3mifoBRLI'
@@ -38,6 +40,9 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     store=Store(state_dir)
     api=FastAPI(title='NOVA Core (local bootstrap)', docs_url=None, redoc_url=None,openapi_url=None)
     api.state.store=store
+    devices = Devices(store)
+    api.state.devices = devices
+    api.add_exception_handler(DeviceError, device_error)
     api.state.jellyfin_url=jellyfin_url
     jellyfin_server_id = jellyfin_server_id or os.environ.get('NOVA_JELLYFIN_SERVER_ID')
     api.state.jellyfin_setup = JellyfinSetup(store, jellyfin_url, jellyfin_server_id)
@@ -84,7 +89,7 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
 
     @api.get('/api/v1/status')
     def status():
-        return {'product':'NOVA Server','version':'0.2.0-lab',
+        return {'product':'NOVA Server','version':'0.3.0-dev',
                 'owner_setup_required':not store.has_admin(),
                 'remote_access_enabled':False,
                 'directory_enabled':False,
@@ -173,6 +178,24 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     @api.get('/',response_class=HTMLResponse)
     def home():
         return (Path(__file__).parent/'static'/'index.html').read_text(encoding='utf-8')
+
+    @api.post('/api/v1/admin/devices/inspect')
+    def inspect_device(payload:UserCode, token:str=Depends(owner)):
+        devices.limit('owner.inspect', 'owner', 20, 20)
+        return devices.inspect(payload.user_code)
+
+    @api.post('/api/v1/admin/devices/decision')
+    def decide_device(payload:DeviceDecision, token:str=Depends(owner)):
+        devices.limit('owner.decision', 'owner', 20, 20)
+        return devices.decide(payload.user_code, payload.request_id, payload.approve)
+
+    @api.get('/api/v1/admin/devices')
+    def list_devices(token:str=Depends(owner)):
+        return {'server_id': devices.identity(), 'devices': devices.list()}
+
+    @api.delete('/api/v1/admin/devices/{device_id}')
+    def revoke_device(device_id:str, token:str=Depends(owner)):
+        return devices.revoke(device_id)
 
     api.mount('/static',StaticFiles(directory=str(Path(__file__).parent/'static')),name='static')
     return api

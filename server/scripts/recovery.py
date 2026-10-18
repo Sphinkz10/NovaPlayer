@@ -34,7 +34,7 @@ def validate_state(state):
         raise ValueError('Falta a base NOVA; não é um estado inicializado.')
     check_sqlite(nova)
     with sqlite3.connect(nova) as db:
-        if db.execute('PRAGMA user_version').fetchone()[0] > 1:
+        if db.execute('PRAGMA user_version').fetchone()[0] > 2:
             raise ValueError('Schema NOVA mais recente que esta ferramenta.')
         if db.execute('SELECT COUNT(*) FROM admin').fetchone()[0] != 1:
             raise ValueError('Conclui primeiro a criação do proprietário.')
@@ -89,7 +89,9 @@ def backup(state, destination, recipient, *, deployment, stopped=False, age='age
     if destination == state or state in destination.parents:
         raise ValueError('Guardar a cópia fora do estado de execução.')
     # Record deployment data inside encryption, never execute it during restore.
-    manifest = json.dumps({'format': FORMAT, 'nova_schema': 1,
+    with sqlite3.connect(state/'nova/nova.sqlite3') as db:
+        schema = db.execute('PRAGMA user_version').fetchone()[0]
+    manifest = json.dumps({'format': FORMAT, 'nova_schema': schema,
                            'deployment': Path(deployment).read_text(encoding='utf8')}).encode()
     fd = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     try:
@@ -134,7 +136,7 @@ def extract_checked(stream, staging):
                 if member.size > 1024*1024:
                     raise ValueError('Manifesto demasiado grande.')
                 manifest = json.load(source)
-                if not isinstance(manifest, dict) or manifest.get('format') != FORMAT or manifest.get('nova_schema') != 1:
+                if not isinstance(manifest, dict) or manifest.get('format') != FORMAT or manifest.get('nova_schema') not in (0, 1, 2):
                     raise ValueError('Versão de cópia não suportada.')
                 continue
             if not (member.name.startswith('state/nova/') or member.name.startswith('state/jellyfin/config/')):
@@ -158,6 +160,11 @@ def revoke_restored_sessions(state):
     nova, jf = validate_state(state)
     with sqlite3.connect(nova) as db:
         db.execute('DELETE FROM sessions')
+        if db.execute('PRAGMA user_version').fetchone()[0] >= 2:
+            db.execute('DELETE FROM device_access')
+            db.execute('DELETE FROM device_refresh')
+            db.execute('DELETE FROM device_requests')
+            db.execute('UPDATE devices SET revoked=1')
         db.execute('UPDATE jellyfin_setup SET lease=NULL,lease_until=0,report=NULL')
         db.execute("INSERT INTO audit(event,created_at) VALUES('recovery.sessions_revoked',strftime('%s','now'))")
     with sqlite3.connect(jf) as db:

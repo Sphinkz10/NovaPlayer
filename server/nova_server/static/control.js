@@ -20,6 +20,7 @@ async function loadOverview(){
  el('overview').replaceChildren(d);
  await loadConnect();
  await loadSetup();
+ await loadDevices();
 }
 function showSetupReport(report){
  if(!report){write(el('setupReport'),'Ainda não existe uma verificação de instalação.');return;}
@@ -105,3 +106,55 @@ el('login').addEventListener('submit',async ev=>{
 });
 el('logout').addEventListener('click',async()=>{if(token){await fetch('/api/v1/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}}).catch(()=>{});}token=null;el('ownerPanel').hidden=true;});
 el('refresh').addEventListener('click',loadOverview);status();
+
+// Explicit review before approval. Client labels are untrusted text, never HTML.
+let deviceReview = null;
+let deviceReviewGeneration = 0;
+const deviceHeaders=()=>({Authorization:'Bearer '+token,'Content-Type':'application/json'});
+function clearDeviceReview(){deviceReviewGeneration++;deviceReview=null;el('deviceReview').hidden=true;}
+async function loadDevices(){
+ if(!token)return;
+ const r=await fetch('/api/v1/admin/devices',{headers:deviceHeaders(),cache:'no-store'});
+ if(!r.ok){write(el('deviceMessage'),'Sessão expirada ou dispositivos indisponíveis.');return;}
+ const devices=(await r.json()).devices;el('deviceList').replaceChildren();
+ if(!devices.length){write(el('deviceList'),'Ainda não existem dispositivos associados.');return;}
+ for(const device of devices){
+  const row=document.createElement('p');const label=document.createElement('span');
+  label.textContent=device.label+' · '+(device.revoked?'Revogado':'Autorizado para identificação')+' ';
+  row.append(label);
+  if(!device.revoked){const button=document.createElement('button');button.type='button';button.textContent='Revogar';
+   button.addEventListener('click',async()=>{button.disabled=true;
+    try{const result=await fetch('/api/v1/admin/devices/'+encodeURIComponent(device.device_id),{method:'DELETE',headers:deviceHeaders()});
+     write(el('deviceMessage'),result.ok?'Dispositivo revogado. As credenciais anteriores deixam de funcionar.':'Não foi possível revogar. Volta a entrar e tenta novamente.');
+     await loadDevices();
+    }catch{write(el('deviceMessage'),'Ligação interrompida. Atualiza para confirmar o estado.');}
+    finally{button.disabled=false;}
+   });row.append(button);}
+  el('deviceList').append(row);
+ }
+}
+el('deviceLookup').addEventListener('submit',async event=>{
+ event.preventDefault();clearDeviceReview();if(!token)return;
+ const code=new FormData(event.currentTarget).get('user_code');const generation=deviceReviewGeneration;
+ const button=event.currentTarget.querySelector('button');button.disabled=true;
+ try{const r=await fetch('/api/v1/admin/devices/inspect',{method:'POST',headers:deviceHeaders(),body:JSON.stringify({user_code:code})});
+  if(!r.ok){write(el('deviceMessage'),r.status===429?'Demasiadas tentativas. Aguarda dez minutos.':'Código inválido, expirado ou sessão terminada.');return;}
+  const data=await r.json();if(!token||generation!==deviceReviewGeneration)return;deviceReview={code,requestId:data.request_id};
+  write(el('deviceDescription'),data.label+' · Código '+code.toUpperCase()+' · Válido até '+new Date(data.expires_at*1000).toLocaleTimeString('pt-PT'));
+  el('deviceReview').hidden=false;write(el('deviceMessage'),'Confirma os dados no teu dispositivo antes de aprovar.');
+ }catch{write(el('deviceMessage'),'Não foi possível consultar o código.');}
+ finally{button.disabled=false;}
+});
+// Editing the code cancels the previous review, including pasted replacements.
+el('deviceLookup').elements.user_code.addEventListener('input',clearDeviceReview);
+async function decideDevice(approve){
+ if(!token||!deviceReview)return;const reviewed=deviceReview;clearDeviceReview();
+ try{const r=await fetch('/api/v1/admin/devices/decision',{method:'POST',headers:deviceHeaders(),body:JSON.stringify({user_code:reviewed.code,request_id:reviewed.requestId,approve})});
+  write(el('deviceMessage'),r.ok?(approve?'Aprovado. Aguarda a confirmação no dispositivo e atualiza a lista.':'Pedido recusado.'):'Pedido expirado ou sessão inválida. Consulta novamente o código.');
+  await loadDevices();
+ }catch{write(el('deviceMessage'),'Ligação interrompida. Consulta o estado antes de repetir.');}
+}
+el('deviceApprove').addEventListener('click',()=>decideDevice(true));
+el('deviceDeny').addEventListener('click',()=>decideDevice(false));
+el('deviceRefresh').addEventListener('click',()=>loadDevices().catch(()=>write(el('deviceMessage'),'Servidor indisponível.')));
+el('logout').addEventListener('click',()=>{clearDeviceReview();el('deviceLookup').reset();el('deviceList').replaceChildren();});

@@ -6,7 +6,7 @@ import tarfile
 from pathlib import Path
 
 import pytest
-from nova_server.storage import Store
+from nova_server.storage import Store, SCHEMA_VERSION
 from nova_server.launch import initialize
 from scripts.recovery import extract_checked, revoke_restored_sessions, backup, restore, files_for_backup
 from scripts.truenas import render
@@ -105,7 +105,7 @@ def test_schema_forward_guard_and_legacy_upgrade(tmp_path):
         db.execute('PRAGMA user_version=0')
     Store(tmp_path)
     with sqlite3.connect(store.path) as db:
-        assert db.execute('PRAGMA user_version').fetchone()[0] == 1
+        assert db.execute('PRAGMA user_version').fetchone()[0] == SCHEMA_VERSION
         db.execute('PRAGMA user_version=99')
     with pytest.raises(RuntimeError,match='mais recente'):
         Store(tmp_path)

@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from .security import token_hash
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 SCHEMA = """
 PRAGMA journal_mode=WAL;
@@ -36,6 +36,29 @@ CREATE TABLE IF NOT EXISTS jellyfin_setup (
  lease TEXT, lease_until INTEGER NOT NULL DEFAULT 0
 );
 INSERT OR IGNORE INTO jellyfin_setup(id) VALUES(1);
+CREATE TABLE IF NOT EXISTS server_identity (
+ id INTEGER PRIMARY KEY CHECK(id=1), server_id TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS device_requests (
+ id TEXT PRIMARY KEY, device_digest TEXT NOT NULL UNIQUE, user_digest TEXT NOT NULL UNIQUE,
+ label TEXT NOT NULL, expires_at INTEGER NOT NULL, next_poll INTEGER NOT NULL,
+ poll_interval INTEGER NOT NULL DEFAULT 5, state TEXT NOT NULL DEFAULT 'pending'
+ CHECK(state IN ('pending','approved','denied','consumed'))
+);
+CREATE TABLE IF NOT EXISTS devices (
+ id TEXT PRIMARY KEY, label TEXT NOT NULL, created_at INTEGER NOT NULL,
+ expires_at INTEGER NOT NULL, revoked INTEGER NOT NULL DEFAULT 0 CHECK(revoked IN (0,1))
+);
+CREATE TABLE IF NOT EXISTS device_access (
+ digest TEXT PRIMARY KEY, device_id TEXT NOT NULL REFERENCES devices(id), expires_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS device_refresh (
+ digest TEXT PRIMARY KEY, device_id TEXT NOT NULL REFERENCES devices(id),
+ used INTEGER NOT NULL DEFAULT 0 CHECK(used IN (0,1))
+);
+CREATE TABLE IF NOT EXISTS device_limits (
+ bucket TEXT PRIMARY KEY, starts_at INTEGER NOT NULL, count INTEGER NOT NULL
+);
 """
 
 class Store:
@@ -48,9 +71,11 @@ class Store:
             version = conn.execute('PRAGMA user_version').fetchone()[0]
             if version > SCHEMA_VERSION:
                 raise RuntimeError('Base de dados de uma versão mais recente; restaurar uma cópia compatível.')
-            # Version 0 is the original P01 schema. All v1 additions are additive.
+            # Versions 1/2 only add tables; existing owners and media setup survive.
             conn.executescript(SCHEMA)
-            conn.execute('PRAGMA user_version=1')
+            from uuid import uuid4
+            conn.execute('INSERT OR IGNORE INTO server_identity(id,server_id) VALUES(1,?)', (str(uuid4()),))
+            conn.execute(f'PRAGMA user_version={SCHEMA_VERSION}')
             conn.commit()
         try:
             self.path.chmod(0o600)

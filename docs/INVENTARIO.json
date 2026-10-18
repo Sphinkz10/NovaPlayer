@@ -25,8 +25,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 5103,
-      "sha256": "d09a18c15311c1cda4d5f336fcd420b2fd9f803edc19506ca0bb20d3f07adae3"
+      "bytes": 5405,
+      "sha256": "72f32db989744b8c2ac2da748621287aeea82c86b99307a20d2ee3e7b4091c84"
     },
     {
       "path": ".gitignore",
@@ -300,8 +300,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2271,
-      "sha256": "fac8d18b335f23d507407e33c16185c0e32e9dc161724d1aba37c7341f505403"
+      "bytes": 2655,
+      "sha256": "d7875e5acdc0ebc8c788e88925efd67770ea5dfa78132d9177ad274ba4dd3f37"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -310,8 +310,8 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 2162,
-      "sha256": "098f3b9dbeda7e9e8dbb40360e3f90040735f39cdecec8926eda7bf5d1980bdc"
+      "bytes": 2353,
+      "sha256": "2980766e431708247d377414a2f0afdf5f1549b3f54ad3694ddae119dd6e793b"
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
@@ -322,6 +322,11 @@
       "path": "docs/M2_TRUENAS_RECUPERACAO.md",
       "bytes": 10650,
       "sha256": "b03f8659bc9d67ccf3eaf0e921f4ecd5ad986b90df00452406b4a6314eb36d0e"
+    },
+    {
+      "path": "docs/M3_ASSOCIACAO_DISPOSITIVOS.md",
+      "bytes": 6391,
+      "sha256": "53797afbd7056e105d4b5c71e6ec67c033b0cfa435a7a933a6201bc5cb623051"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -345,8 +350,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 25274,
-      "sha256": "ddd594797439e3ab7a30ff6d7c34f75438d10f242e763f4d01ebb8b7d96e9ed9"
+      "bytes": 25794,
+      "sha256": "3c63467a41f66574e292aeb04782c0f42cc236897d81e3d187b7df3228c2ddc1"
     },
     {
       "path": "scripts/inventory.py",
@@ -380,8 +385,8 @@
     },
     {
       "path": "server/README.md",
-      "bytes": 10825,
-      "sha256": "5d1c33e965fbfffd02a128dfcaf85ac94f85a1bb283dac382d68138d954009cd"
+      "bytes": 11323,
+      "sha256": "bdad24ed86cee9bdb5317333b59dbe84db1a23165cf3b589792bae638f2f687c"
     },
     {
       "path": "server/compose.yaml",
@@ -400,13 +405,28 @@
     },
     {
       "path": "server/nova_server/app.py",
-      "bytes": 8734,
-      "sha256": "506b843cce1776d6016b4dc5528037d823ec9ec3a9279dc9acb6317a2447ce86"
+      "bytes": 9766,
+      "sha256": "20c108d3e32549e894ec29262868d858209dccf8aab52e5a77379f144f5cd053"
+    },
+    {
+      "path": "server/nova_server/client_api.py",
+      "bytes": 6206,
+      "sha256": "b557b6bd8d801c8acd633165fd5fe0ff2563eda419e900e5cc00d63a5344e1d5"
     },
     {
       "path": "server/nova_server/connect.py",
       "bytes": 3165,
       "sha256": "987fbcbb5eeb08bb896934b6ede4295bf1b9b8aa04403e1de0dda1693f83fb6c"
+    },
+    {
+      "path": "server/nova_server/device_api.py",
+      "bytes": 1437,
+      "sha256": "1123adce24609aff2e711c260a0a261e80e46cf2e75170ee38734b6da42d7d67"
+    },
+    {
+      "path": "server/nova_server/devices.py",
+      "bytes": 10645,
+      "sha256": "6e1c4525789b5f29334ca9018127542a2292e7e3ac2fd3e605f8c4b2aa7b1613"
     },
     {
       "path": "server/nova_server/jellyfin.py",
@@ -425,8 +445,8 @@
     },
     {
       "path": "server/nova_server/setup.py",
-      "bytes": 11419,
-      "sha256": "21f4a0cd8372f8e5d1d8a0aa739e443c7c65084923350eb987e157e7bdcfa62d"
+      "bytes": 11632,
+      "sha256": "b5950116a7f027aaafbe6dd1e958ee90de22dfb10b9307a095f7125af5ffae2b"
     },
     {
       "path": "server/nova_server/static/control.css",
@@ -435,18 +455,18 @@
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 9245,
-      "sha256": "976c371f59ad84c6dadda26c2a5f8399eaa41d74d6a905adff7e71c044116f2d"
+      "bytes": 13469,
+      "sha256": "219f7998c1d6059796a8ca683aa9700b666724758a366afbcb5c5c98dda15d8b"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 5073,
-      "sha256": "bced284bbd79036c587ae268f7cf0ae55144c2a6b6b7bab0cf7960a09814fb0c"
+      "bytes": 5943,
+      "sha256": "2aede677e74523c5c1073b99fbbbf022b4973e7440e9bb37cf13cbce91449c56"
     },
     {
       "path": "server/nova_server/storage.py",
-      "bytes": 7437,
-      "sha256": "013a67a4a35f9c5597cb533b77c67e63a5566985d4ba42f234115e0ce32c9256"
+      "bytes": 8722,
+      "sha256": "161c861ce00bb177b7c9a7dfa9da7d11be09fe2f10a04e0b775cabd6a4d78093"
     },
     {
       "path": "server/pytest.ini",
@@ -500,18 +520,23 @@
     },
     {
       "path": "server/scripts/recovery.py",
-      "bytes": 10626,
-      "sha256": "742281d19dc606d706ce8b7e69f73cbc29c9558a5215754903269de4b9d9bfb6"
+      "bytes": 11046,
+      "sha256": "46c68326d74a53a0a026590e70aff089ae4070be83385b6ea26d9c6e6fe50c7e"
     },
     {
       "path": "server/scripts/smoke_browser.py",
-      "bytes": 7487,
-      "sha256": "f738c815bc9ca223df72696f846e6fed17d9af71d9b03b48af22626d5c0ed502"
+      "bytes": 10724,
+      "sha256": "01a6110c4d2ed547791e51b9453c71c7bd4f090c60aa47f9429e1c9a25084707"
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 15923,
-      "sha256": "35ebda5d543faa056166aff3b6c91ef99422c6ee913692f3378c0cb900e7ebb6"
+      "bytes": 17980,
+      "sha256": "9900debd5e92bd38b8edfda0d3c92ca120cc7aa3914552297c6978bf5b890e33"
+    },
+    {
+      "path": "server/scripts/smoke_devices_tls.py",
+      "bytes": 8222,
+      "sha256": "07eb5bfdeb5ae40dc63830982a2d2e0c65cf10e15b6ea3d1c82adda15e246a2d"
     },
     {
       "path": "server/scripts/smoke_http.py",
@@ -544,6 +569,11 @@
       "sha256": "55699dde4bf884a630c42d54e563dd58bd9d41d3e1be13e4aabc3c4dca3524cc"
     },
     {
+      "path": "server/tests/test_devices.py",
+      "bytes": 13873,
+      "sha256": "2ddb32e2d6d478cb9e96302c66898eb9bbe4e9ecefd4db2a55171645cfeee40d"
+    },
+    {
       "path": "server/tests/test_installer.py",
       "bytes": 2881,
       "sha256": "51847848406eaa8e56b391f78ddd915ae314547ebd9a5ea6b6dc3b6a72ab3cc3"
@@ -555,8 +585,8 @@
     },
     {
       "path": "server/tests/test_recovery.py",
-      "bytes": 5671,
-      "sha256": "f1bfa28532642b8c9b32612fd30aa3e41ea4e0ca60014646ecad0169db5fa133"
+      "bytes": 5700,
+      "sha256": "477422253192443aacfacd720315af4a61c100a8e2f94bdeace802907cc54cb0"
     },
     {
       "path": "server/tests/test_regressions.py",

@@ -68,7 +68,7 @@ class JellyfinSetup:
                         follow_redirects=False, trust_env=False, transport=self.transport,
                         headers={'Accept-Encoding': 'identity', 'Authorization':
                                  'MediaBrowser Client="NOVA Control", Device="Server", '
-                                 'DeviceId="nova-setup-'+lease+'", Version="0.2.0-lab"'}) as client:
+                                 'DeviceId="nova-setup-'+lease+'", Version="0.3.0-dev"'}) as client:
                     try:
                         report = await self._run(client, payload, configure, lease)
                     finally:

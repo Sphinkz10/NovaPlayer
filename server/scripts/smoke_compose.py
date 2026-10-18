@@ -145,6 +145,26 @@ def run():
                 result = client.post(base+'/api/v1/admin/setup/jellyfin/verify', headers=headers,
                                      json=credentials, timeout=55)
                 assert result.status_code == 200 and result.json()['libraries'][0]['indexed_items'] == 2
+                # Seed only disposable device grants through the domain layer. HTTPS is tested separately.
+                def core_python(code, payload=None):
+                    result = subprocess.run(['docker','compose','-p',project,'exec','-T','nova-core','python','-c',code],
+                        cwd=root, input=json.dumps(payload), capture_output=True, text=True)
+                    if result.returncode:
+                        raise RuntimeError('Device recovery fixture/check failed (output withheld to protect tokens)')
+                    return json.loads(result.stdout)
+                old_devices = core_python("""
+import json
+from nova_server.storage import Store
+from nova_server.devices import Devices
+service=Devices(Store('/data'))
+def grant():
+    value=service.start('Recovery fixture TV')
+    review=service.inspect(value['user_code'])
+    service.decide(value['user_code'],review['request_id'],True)
+    return value
+issued=service.poll(grant()['device_code'])
+print(json.dumps({'issued':issued,'pending':grant()['device_code'],'server_id':service.identity()}))
+""")
                 # Encryption and recovery use the same packaged maintenance tools as installation.
                 image = subprocess.check_output(['docker','compose','-p',project,'images','-q','nova-core'],
                                                 cwd=root, text=True).strip()
@@ -200,6 +220,20 @@ def run():
                 assert verification.status_code == 200, verification.text
                 assert verification.json()['libraries'][0]['indexed_items'] == 2
                 assert verification.json()['server_id'] == persisted['server_id']
+                assert core_python("""
+import json,sys
+from nova_server.storage import Store
+from nova_server.devices import Devices,DeviceError
+service=Devices(Store('/data')); old=json.load(sys.stdin)
+assert service.identity()==old['server_id']
+for fn,secret in ((service.authenticate,old['issued']['access_token']),
+                  (service.refresh,old['issued']['refresh_token']),(service.poll,old['pending'])):
+    try: fn(secret)
+    except DeviceError: pass
+    else: raise AssertionError('Restored credential remained valid')
+assert service.list()[0]['revoked']==1
+print(json.dumps({'revoked':True}))
+""", old_devices)['revoked']
                 container_ids = {service:subprocess.check_output(
                     ['docker','compose','-p',project,'ps','-q',service],cwd=root,text=True).strip()
                     for service in ('nova-core','jellyfin')}
@@ -215,7 +249,7 @@ def run():
                                   'nova_jellyfin_setup':True,'indexed_media_sources':2,'duplicate_libraries':0,
                                   'missing_source_refused':True,'container_recreation':True,
                                   'encrypted_backup_restore':True,'tampered_backup_rejected':True,
-                                  'nova_and_jellyfin_sessions_revoked':True,'snapshot':snapshot,
+                                  'nova_and_jellyfin_sessions_revoked':True,'device_credentials_and_pending_grants_revoked':True,'snapshot':snapshot,
                                   'physical_truenas_test':False}
                 if os.environ.get('NOVA_EVIDENCE_DIR'):
                     evidence = Path(os.environ['NOVA_EVIDENCE_DIR']); evidence.mkdir(parents=True,exist_ok=True)

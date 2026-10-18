@@ -15,6 +15,11 @@ import time
 from pathlib import Path
 
 import httpx
+
+# Explicit fixture setup; the browser still performs the authenticated owner decisions.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from nova_server.devices import Devices, DeviceError
+from nova_server.storage import Store
 from playwright.sync_api import sync_playwright, expect
 
 
@@ -92,6 +97,44 @@ def run(channel=None, output=None):
                             page.locator('#connectDraft button').click()
                         assert result.value.status == 200
                         expect(page.locator('#connectMessage')).to_contain_text('Rascunho guardado')
+                    device_service = Devices(Store(folder))
+                    device_label = '<img src=x onerror=alert(1)> TV'
+                    grant = device_service.start(device_label)
+                    def stale_review(route):
+                        response = route.fetch()
+                        page.evaluate("const input=document.querySelector('[name=user_code]'); input.value='INVALIDX'; input.dispatchEvent(new Event('input', {bubbles:true}));")
+                        route.fulfill(response=response)
+                    page.route('**/api/v1/admin/devices/inspect', stale_review)
+                    page.locator('[name=user_code]').fill(grant['user_code'])
+                    with page.expect_response(lambda r: '/devices/inspect' in r.url):
+                        page.locator('#deviceLookup button').click()
+                    expect(page.locator('#deviceLookup button')).to_be_enabled()
+                    expect(page.locator('#deviceReview')).to_be_hidden()
+                    page.unroute('**/api/v1/admin/devices/inspect', stale_review)
+                    page.locator('[name=user_code]').fill(grant['user_code'])
+                    page.locator('#deviceLookup button').click()
+                    expect(page.locator('#deviceReview')).to_be_visible()
+                    expect(page.locator('#deviceDescription')).to_contain_text(device_label)
+                    assert page.locator('#deviceReview img').count() == 0
+                    # Changing the code invalidates the review instead of approving stale data.
+                    page.locator('[name=user_code]').fill('INVALIDX')
+                    expect(page.locator('#deviceReview')).to_be_hidden()
+                    page.locator('[name=user_code]').fill(grant['user_code'])
+                    page.locator('#deviceLookup button').click()
+                    expect(page.locator('#deviceReview')).to_be_visible()
+                    page.locator('#deviceApprove').click()
+                    expect(page.locator('#deviceMessage')).to_contain_text('Aprovado')
+                    device_tokens = device_service.poll(grant['device_code'])
+                    page.locator('#deviceRefresh').click()
+                    expect(page.locator('#deviceList')).to_contain_text(device_label)
+                    page.locator('#deviceList button').click()
+                    expect(page.locator('#deviceList')).to_contain_text('Revogado')
+                    try:
+                        device_service.authenticate(device_tokens['access_token'])
+                    except DeviceError:
+                        pass
+                    else:
+                        raise AssertionError('Browser revocation did not invalidate the token')
                     # Refresh re-reads persisted drafts through the authenticated API.
                     page.locator('#refresh').click()
                     expect(page.locator('#connectMessage')).to_contain_text('Acesso remoto desativado')
@@ -109,7 +152,7 @@ def run(channel=None, output=None):
                     assert not errors, errors
                     report = {'result':'passed', 'browser':channel or 'chromium',
                               'checks':['bootstrap_invalid_code','bootstrap_in_browser','invalid_login','login_panel','form_reset','unverified_media','setup_offline_password_cleared',
-                                        'three_provider_drafts','reload_persistence','no_local_storage',
+                                        'three_provider_drafts','device_review_approval_revocation','device_label_xss_blocked','stale_device_review_discarded','reload_persistence','no_local_storage',
                                         'no_cookies','logout','no_page_errors']}
                     if output:
                         (output/'browser.json').write_text(json.dumps(report, indent=2), encoding='utf8')
