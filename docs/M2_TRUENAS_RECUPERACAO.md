@@ -1,12 +1,20 @@
 # M2 — instalação TrueNAS e recuperação
 
-Estado em 18-10-2026: implementação pronta para validação; o primeiro ensaio de recuperação Docker passou. Consultar a execução final 39124765714 para as evidências da revisão 8117529. O proprietário confirmou que ainda não tem SSH disponível. Nenhum teste no seu NAS foi executado.
+Estado em 18-10-2026: implementação e ensaios automatizados concluídos na revisão `39fb5874a53ba375a68d54f91bae2b3c64cead3a`, com os oito jobs da [CI 39125165626](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39125165626) aprovados. A imagem publicada passou o ensaio completo de recuperação antes da publicação. O proprietário confirmou que ainda não tem SSH disponível. **Nenhum teste no seu NAS foi executado; a aceitação física M2 permanece pendente.**
 
 ## Pacote para Apps
 
 Alvo de empacotamento: TrueNAS Community/SCALE **24.10 ou posterior**, Linux x86_64, com Apps Docker. A versão exata tem de ser registada no ensaio. O gerador recusa versões anteriores, caminhos sobrepostos e UID/GID root. Uma versão aceite pelo gerador não é certificação de compatibilidade.
 
 A CI publica uma imagem `ghcr.io/sphinkz10/nova-core:git-COMMIT` apenas depois de os testes do servidor, dependências e Docker passarem. O artefacto `nova-server-m2-install` contém `IMAGE.txt` com o digest imutável, `SOURCE_COMMIT.txt` e o gerador. Não usar `latest`. A primeira imagem é linux/amd64; Linux arm64 continua a poder ser compilado a partir das fontes, sem validação deste pacote binário.
+
+Digest validado desta entrega (leitura anónima do registry confirmada em 18-10-2026):
+
+```text
+ghcr.io/sphinkz10/nova-core@sha256:5ba33012d87746792acc4f220dc3dc7e2985d974e71d7f960028056ea1aca16a
+```
+
+No ZIP de instalação, o gerador está diretamente na pasta extraída: usar `python truenas.py ...`. O comando abaixo usa o caminho do pacote de fontes.
 
 1. No TrueNAS, preparar um dataset privado para o estado e duas origens de media separadas. Criar as pastas `nova`, `jellyfin/config` e `jellyfin/cache` dentro do estado. O utilizador/grupo escolhido para os contentores necessita leitura/escrita no estado e leitura/travessia nos media. Aplicar ACL pela interface TrueNAS; não usar `chmod -R 777`, nem alterar as ACL dos filmes indiscriminadamente. Registar o UID/GID real; `568` é apenas exemplo.
 2. No PC, gerar o ficheiro para as Apps com Python, substituindo versão, caminhos e imagem pelo digest de `IMAGE.txt`:

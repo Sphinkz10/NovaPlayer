@@ -26,19 +26,27 @@ Uma listagem acessível não prova leitura de todos os ficheiros, montagem read-
 
 ## Validação
 
-Revisão de código `04fb3cfc4fc97979adc109506c411b105fd7441b`: 109 testes Python aprovados em Linux, incluindo as duas novas regressões de instalação. Teste HTTP real e navegador Chromium aprovados na CI; HTTP e Edge também aprovados localmente em Windows.
+Revisão executável final `39fb5874a53ba375a68d54f91bae2b3c64cead3a`: **oito jobs aprovados** na [CI 39125165626](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39125165626).
 
-O primeiro ensaio Docker encontrou uma diferença concreta da API atual: `X-Emby-Token` já depende de autenticação legada. A integração foi corrigida para incluir `Token` no cabeçalho `Authorization: MediaBrowser`, sem ativar autenticação legada no servidor. Referência: [implementação oficial Jellyfin](https://github.com/jellyfin/jellyfin/blob/master/Jellyfin.Server.Implementations/Security/AuthorizationContext.cs).
+- Python 3.12 e 3.13: **133 testes aprovados por versão em Linux**; **127 aprovados e seis específicos Linux omitidos por versão em Windows**.
+- HTTP real e Chromium aprovados nas quatro combinações; build/testes Android e auditoria das dependências também aprovados.
+- Docker: criação do proprietário, configuração Jellyfin pelo Control, dois MP4 indexados em origens distintas, ausência de duplicados, mounts read-only e persistência após reinício.
+- Recuperação: origem ausente recusada sem criar pasta vazia, recriação dos contentores, backup cifrado, recusa de cópia adulterada, restauro em pasta nova e rejeição das sessões/tokens anteriores.
+- A imagem de instalação foi submetida novamente ao ensaio Docker completo **antes da publicação**. O digest publicado e a identidade da imagem ensaiada foram conferidos; leitura anónima do registry confirmada em 18-10-2026.
 
-O teste Docker exige arranque, configuração via NOVA, dois MP4 sintéticos indexados com caminhos independentes, uma única biblioteca após repetição, escrita bloqueada nos mounts e persistência após reinício. Este teste passou na [CI 39123507587](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39123507587), job `compose-lab` / `117663780157`: duas origens indexadas, zero bibliotecas duplicadas e persistência após reinício.
+Imagem Linux amd64 validada:
+
+```text
+ghcr.io/sphinkz10/nova-core@sha256:5ba33012d87746792acc4f220dc3dc7e2985d974e71d7f960028056ea1aca16a
+```
+
+Estes resultados validam o laboratório automatizado. Não demonstram instalação, ACL, atualização, reinício físico ou restauro no TrueNAS do proprietário. Revisões posteriores exclusivamente documentais não alteram a imagem acima.
 
 ## Como ensaiar
 
 Seguir [server/README.md](../server/README.md) num Linux de laboratório com Docker/Compose, usando duas pastas de media de teste. O pacote é código-fonte e configuração Compose; ainda não é uma App de catálogo TrueNAS.
 
 No TrueNAS Community, começar pela recolha da versão/build e pela verificação de pré-requisitos, sem instalar pacotes no sistema base. A passagem para instalação depende do método suportado pela versão, permissões/ACL dos datasets e armazenamento persistente. Aprovação Docker genérica não certifica TrueNAS.
-
-Os testes Docker foram ampliados para origem ausente, recriação dos contentores, backup cifrado, recusa de cópia alterada, restauro e rejeição dos tokens anteriores. O primeiro ensaio passou no commit eab3eed, CI 39124579105. A revisão final é 8117529, CI 39124765714; consultar o estado e artefactos dessa execução. No Windows local: 126 testes aprovados, seis específicos Linux omitidos, HTTP real aprovado.
 
 Continuam por executar no NAS: instalação Apps na versão concreta, ACL/datasets, reinício físico, falha de origem, atualização e restauro. Não há resultado físico deste TrueNAS registado nesta entrega.
 

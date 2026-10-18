@@ -310,18 +310,18 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 1908,
-      "sha256": "e4c5c09cb3e7fcf98076a5f515ae4b28aaffe44b01203694305c519b1ec55994"
+      "bytes": 2162,
+      "sha256": "098f3b9dbeda7e9e8dbb40360e3f90040735f39cdecec8926eda7bf5d1980bdc"
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
-      "bytes": 6538,
-      "sha256": "763b626d210424658c63adeea3f5b362e179660c2b655318b1634ca0fbe387a7"
+      "bytes": 6515,
+      "sha256": "8094a7b435ca2a4776e8b0ad5e553b0e6d1698cf8d7343cf2a801af80ae470d6"
     },
     {
       "path": "docs/M2_TRUENAS_RECUPERACAO.md",
-      "bytes": 10017,
-      "sha256": "cf74a2d5761ab8d39df6388479749932e03ed828c581320c36b69dd8dea00c52"
+      "bytes": 10650,
+      "sha256": "b03f8659bc9d67ccf3eaf0e921f4ecd5ad986b90df00452406b4a6314eb36d0e"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
