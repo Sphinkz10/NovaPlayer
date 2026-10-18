@@ -67,6 +67,8 @@ def files_for_backup(state):
                 raise ValueError('Cópia recusada: links ou ficheiros especiais no estado.')
             if path.name == 'bootstrap.token' or 'log' in path.relative_to(state).parts:
                 continue
+            if ':' in path.relative_to(state).as_posix() or '\\' in path.relative_to(state).as_posix():
+                raise ValueError('Nome de ficheiro não suportado num arquivo de recuperação portátil.')
             if path.is_file():
                 files.append(path)
     if sum(path.stat().st_size for path in files) > MAX_BYTES:
@@ -118,7 +120,7 @@ def extract_checked(stream, staging):
     with tarfile.open(fileobj=stream, mode='r|') as archive:
         for member in archive:
             path = PurePosixPath(member.name)
-            if not member.isfile() or path.is_absolute() or '..' in path.parts or '\\' in member.name or \
+            if not member.isfile() or path.is_absolute() or '..' in path.parts or '\\' in member.name or ':' in member.name or \
                     str(path) != member.name or member.name in seen:
                 raise ValueError('Membro inseguro ou repetido no arquivo.')
             seen.add(member.name)

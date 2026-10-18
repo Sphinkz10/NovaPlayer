@@ -500,8 +500,8 @@
     },
     {
       "path": "server/scripts/recovery.py",
-      "bytes": 10392,
-      "sha256": "fd64f88111729ad9829c45207935f6a719cf2323e00d71ad45cc6cb3714f3f78"
+      "bytes": 10626,
+      "sha256": "742281d19dc606d706ce8b7e69f73cbc29c9558a5215754903269de4b9d9bfb6"
     },
     {
       "path": "server/scripts/smoke_browser.py",
@@ -555,8 +555,8 @@
     },
     {
       "path": "server/tests/test_recovery.py",
-      "bytes": 5625,
-      "sha256": "fbc80a3d96c17302a6248a393565c4758af608319a21379c878b8137ecd92c3c"
+      "bytes": 5671,
+      "sha256": "f1bfa28532642b8c9b32612fd30aa3e41ea4e0ca60014646ecad0169db5fa133"
     },
     {
       "path": "server/tests/test_regressions.py",

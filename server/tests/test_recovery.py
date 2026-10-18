@@ -46,7 +46,8 @@ def test_recovery_refuses_multiple_jellyfin_accounts(tmp_path):
     ('/absolute',tarfile.REGTYPE),('state/nova/link',tarfile.SYMTYPE),
     ('state/nova/hard',tarfile.LNKTYPE),('state/nova/pipe',tarfile.FIFOTYPE),
     ('state/nova/../outside',tarfile.REGTYPE),('state/nova/bootstrap.token',tarfile.REGTYPE),
-    ('state/jellyfin/cache/data',tarfile.REGTYPE),('state\\nova\\file',tarfile.REGTYPE)])
+    ('state/jellyfin/cache/data',tarfile.REGTYPE),('state\\nova\\file',tarfile.REGTYPE),
+    ('state/nova/C:/escape',tarfile.REGTYPE)])
 def test_reject_malicious_archive(tmp_path, name, kind):
     stream = io.BytesIO()
     with tarfile.open(fileobj=stream,mode='w') as archive:
