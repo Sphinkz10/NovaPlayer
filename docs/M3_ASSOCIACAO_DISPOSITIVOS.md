@@ -51,4 +51,4 @@ Resultados locais Windows: suíte Python e ensaios reais HTTPS/Edge aprovados; c
 
 Ainda por implementar na M3: conta/servidor no Directory com prova de posse, descoberta autenticada, bootstrap/renovação TLS integrados com descoberta na TV, permissões por utilizador/biblioteca Jellyfin e descriptor com autorização de media. Não foram executados testes em TV física ou no TrueNAS.
 
-Próxima sequência: validar o cliente Android de laboratório → Directory e permissões → associação com descoberta e confiança integradas → M4, catálogo e primeiro filme. WireGuard/Tailscale/NetBird continuam nativos no plano M0/M5; esta associação não cria túneis.
+Cliente Android de laboratório aprovado em emuladores API 26/35; ver as evidências no guia Android. Próxima sequência: Directory e permissões → associação com descoberta e confiança integradas → M4, catálogo e primeiro filme. WireGuard/Tailscale/NetBird continuam nativos no plano M0/M5; esta associação não cria túneis.

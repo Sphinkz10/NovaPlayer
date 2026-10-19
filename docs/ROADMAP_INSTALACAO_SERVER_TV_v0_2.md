@@ -111,6 +111,8 @@ Definir storage persistente e permissões por dataset, recursos mínimos medidos
 
 **Incremento implementado:** associação no servidor com aprovação no Control, API HTTPS isolada, credenciais rotativas e revogação. [Estado e ensaio M3](M3_ASSOCIACAO_DISPOSITIVOS.md). O cliente Android de laboratório agora inclui associação, Keystore e confirmação de identidade importada ([guia](M3_CLIENTE_ANDROID.md)). Directory, bootstrap/renovação TLS integrados e permissões de media permanecem pendentes; não considerar o marco concluído.
 
+**Prova de 19-10-2026:** associação Android aprovada em emuladores API 26 e 35, com 11 etapas cada. Já existe APK para ensaiar associação em laboratório com o PC; não liga automaticamente ao NAS nem reproduz filmes. A primeira utilização local com biblioteca e vídeo continua a ser M4. Aceitação física das boxes e do TrueNAS permanece pendente.
+
 O Directory autentica, associa conta e servidor e fornece descoberta autenticada; não recebe biblioteca, histórico, vídeo ou segredos administrativos dos fornecedores. Registar servidor com chave própria e prova de posse. Desenhar disponibilidade e recuperação do Directory; reprodução local já associada deve ter uma política explícita para indisponibilidade do serviço.
 
 A TV apresenta código/QR com validade curta. A aprovação verifica conta, servidor e dispositivo. Implementar proteção contra repetição, polling limitado, códigos expirados, refresh rotativo e revogação. Cada chamada privada continua sujeita às permissões do utilizador e do Jellyfin.

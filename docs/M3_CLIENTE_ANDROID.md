@@ -40,12 +40,16 @@ O serviço cliente continua limitado a loopback e não é publicado pelo Compose
 
 ## Verificação
 
+Resultado de 19-10-2026: código `abe56f0a1881314752e0555520dbbf4d8ce286b5`, [CI Android 39220853687](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39220853687), API 26 e 35 aprovadas, com 11 etapas em cada emulador. Cada artefacto conserva a APK exata e o seu SHA-256 no relatório. Os jobs compilam separadamente e usam assinaturas debug próprias; não são o mesmo binário. A APK entregue corresponde à execução API 35.
+
+O ensaio sincroniza apenas o relógio dos emuladores descartáveis e coloca a interação em modo de comando. Isto corrigiu falhas da preparação do ensaio sem relaxar as verificações de prazo/certificado da app. A recolha de logs não bloqueia o teste se um Android antigo recusar limpar um buffer.
+
 - Núcleo JVM: políticas, transporte e máquina de estados, incluindo escrita antes de refresh, respostas perdidas, concorrência, identidade, expiração e TLS real.
 - Android: build da APK e instrumentação, lint e prova em emuladores API 26/35. O teste usa aprovação pelo servidor real, TLS, confirmação com D-pad, armazenamento cifrado/Keystore, force-stop/reabertura, renovação, revogação, interrupção e adulteração do ciphertext.
 - A importação de ficheiro no ensaio automatizado injeta os mesmos bytes na revisão da Activity; não automatiza o seletor de documentos do fabricante. Hardware Xiaomi Box S2/Chromecast e outros Android TV continuam por testar.
 - `connect/scripts/smoke_pairing_android.py` recusa aparelhos físicos e execução fora da CI. A credencial do proprietário fica no processo de teste do PC; não entra na APK nem nos relatórios.
 
-Não existem resultados físicos da TV ou NAS. Consultar o PR/execução CI do commit para resultados efetivamente concluídos. A APK é debug de laboratório, não uma release assinada para utilização familiar. A APK normal mantém WireGuard; os três motores juntos continuam a ser uma compilação experimental separada.
+Não existem resultados físicos da TV ou NAS. A APK é debug de laboratório, não uma release assinada para utilização familiar. A APK normal mantém WireGuard; os três motores juntos continuam a ser uma compilação experimental separada.
 
 ## Próximo marco
 

@@ -345,8 +345,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2761,
-      "sha256": "d2282c97108d15e77fbe4e5b2b8c3a8afbfbd745f23d1607a762d571f73476f0"
+      "bytes": 2745,
+      "sha256": "76e92646f67f55e32cbb54df66e80f7c378d4be3b78dddb354a389231aff682e"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -370,13 +370,13 @@
     },
     {
       "path": "docs/M3_ASSOCIACAO_DISPOSITIVOS.md",
-      "bytes": 6777,
-      "sha256": "ef0f8777ee70ac6a2ff5a667ef96aec8dc407d140f3c43c65efebb6fbd65e949"
+      "bytes": 6833,
+      "sha256": "29c1a997675ded6a084258c8c566bf791a286b114eaa65bf6b2e27c780767698"
     },
     {
       "path": "docs/M3_CLIENTE_ANDROID.md",
-      "bytes": 7026,
-      "sha256": "87b812a9d774c189f7a515b7eb255512ff747b3a82a6593825dd844ae93b1400"
+      "bytes": 7689,
+      "sha256": "c0988805329e62d191530f6e35e3e15cafb8770bcccd404c458c3913bc0e979d"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -400,8 +400,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 25932,
-      "sha256": "925a7b73287f42267b052c6a8e912d53823e848d5e1a07683349f66388562289"
+      "bytes": 26294,
+      "sha256": "4c391c0f1ef2a36ce5a1a4b32c4cf902f32d3bd7badd34024735abf90fd1d4f7"
     },
     {
       "path": "scripts/inventory.py",
