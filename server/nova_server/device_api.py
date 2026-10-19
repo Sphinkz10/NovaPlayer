@@ -9,6 +9,7 @@ class Payload(BaseModel):
 
 class StartDevice(Payload):
     label: str = Field(min_length=1, max_length=64)
+    assertion: dict | None = None
 
     @field_validator('label')
     @classmethod

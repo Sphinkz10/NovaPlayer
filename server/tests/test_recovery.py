@@ -38,8 +38,32 @@ def test_recovery_refuses_multiple_jellyfin_accounts(tmp_path):
     state_fixture(tmp_path)
     with sqlite3.connect(tmp_path/'jellyfin/config/data/jellyfin.db') as db:
         db.execute('INSERT INTO Users VALUES("extra-user")')
-    with pytest.raises(ValueError, match='único'):
+    with pytest.raises(ValueError, match='geridos'):
         revoke_restored_sessions(tmp_path)
+
+
+def test_restore_managed_members_disables_grants_and_renewal(tmp_path):
+    store=state_fixture(tmp_path)
+    with store._db() as db:
+        db.execute("INSERT INTO member_accounts(subject,username,jellyfin_user,credential,disabled,revision) VALUES('member','alice','managed',?,0,2)",(b'old-sealed-token',))
+        db.execute("INSERT INTO identity_assertions VALUES('used-proof',9999999999)")
+    with sqlite3.connect(tmp_path/'jellyfin/config/data/jellyfin.db') as db:db.execute("INSERT INTO Users VALUES('managed')")
+    with sqlite3.connect(tmp_path/'nova/directory-control.sqlite3') as db:
+        db.execute('CREATE TABLE publication(renewal_credential BLOB,renewal_expires_at INTEGER)')
+        db.execute('INSERT INTO publication VALUES(?,9999999999)',(b'old-agent',))
+    revoke_restored_sessions(tmp_path)
+    with store._db() as db:
+        assert db.execute('SELECT disabled,credential,revision FROM member_accounts').fetchone()==(1,None,3)
+        assert db.execute('SELECT COUNT(*) FROM identity_assertions').fetchone()[0]==0
+    with sqlite3.connect(tmp_path/'nova/directory-control.sqlite3') as db:
+        assert db.execute('SELECT renewal_credential,renewal_expires_at FROM publication').fetchone()==(None,None)
+
+
+def test_recovery_checks_managed_identity_not_only_user_count(tmp_path):
+    store=state_fixture(tmp_path)
+    with store._db() as db:db.execute("INSERT INTO member_accounts(subject,username,jellyfin_user) VALUES('member','alice','missing-managed')")
+    with sqlite3.connect(tmp_path/'jellyfin/config/data/jellyfin.db') as db:db.execute("INSERT INTO Users VALUES('unmanaged')")
+    with pytest.raises(ValueError,match='geridos'):revoke_restored_sessions(tmp_path)
 
 
 @pytest.mark.parametrize('name,kind', [('../escape', tarfile.REGTYPE),

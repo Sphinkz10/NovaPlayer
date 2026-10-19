@@ -1,6 +1,7 @@
 // Token stays only in browser memory, never localStorage/cookies.
 let token = null;
 let connectDrafts = {};
+let libraryChoices=[];
 const el=id=>document.getElementById(id);
 const write=(target,message)=>{target.textContent=message};
 async function status(){
@@ -21,9 +22,12 @@ async function loadOverview(){
  await loadConnect();
  await loadSetup();
  await loadDevices();
+ await loadMembers();
  await loadDirectory();
 }
 function showSetupReport(report){
+ libraryChoices=report?.libraries||[];
+ showMemberLibraries();
  if(!report){write(el('setupReport'),'Ainda não existe uma verificação de instalação.');return;}
  write(el('setupReport'),'Última verificação: '+new Date(report.observed_at*1000).toLocaleString('pt-PT')+
   '. Diretórios acessíveis para listagem. '+report.libraries.map(lib=>lib.name+': '+lib.indexed_items+' itens indexados').join(' · ')+
@@ -141,8 +145,11 @@ el('deviceLookup').addEventListener('submit',async event=>{
  try{const r=await fetch('/api/v1/admin/devices/inspect',{method:'POST',headers:deviceHeaders(),body:JSON.stringify({user_code:code})});
   if(!r.ok){write(el('deviceMessage'),r.status===429?'Demasiadas tentativas. Aguarda dez minutos.':'Código inválido, expirado ou sessão terminada.');return;}
   const data=await r.json();if(!token||generation!==deviceReviewGeneration)return;deviceReview={code,requestId:data.request_id};
-  write(el('deviceDescription'),data.label+' · Código '+code.toUpperCase()+' · Válido até '+new Date(data.expires_at*1000).toLocaleTimeString('pt-PT'));
+  write(el('deviceDescription'),data.label+' · Código '+code.toUpperCase()+(data.account_id?' · Conta Directory verificada: '+data.account_name+' · '+data.account_id:'')+' · Válido até '+new Date(data.expires_at*1000).toLocaleTimeString('pt-PT'));
+  el('deviceApprove').disabled=Boolean(data.account_id&&!data.member_configured);
   el('deviceReview').hidden=false;write(el('deviceMessage'),'Confirma os dados no teu dispositivo antes de aprovar.');
+  if(data.account_id){await loadMembers();if(!token||generation!==deviceReviewGeneration)return;el('memberForm').elements.member_subject.value=data.account_id;
+   if(!data.member_configured)write(el('deviceMessage'),'Configura primeiro as bibliotecas desta conta na secção Permissões dos familiares. Depois consulta o código novamente e aprova a TV.');}
  }catch{write(el('deviceMessage'),'Não foi possível consultar o código.');}
  finally{button.disabled=false;}
 });
@@ -164,19 +171,23 @@ el('logout').addEventListener('click',()=>{clearDeviceReview();el('deviceLookup'
 let directoryGeneration=0;
 let directoryBusy=false;
 let directoryReady=false;
+let directoryCanRenew=false;
 function directoryButtons(){
  el('directoryIdentity').disabled=directoryBusy||directoryReady;
+ el('directoryRenew').disabled=directoryBusy||!directoryCanRenew;
  for(const button of el('directoryForm').querySelectorAll('button'))button.disabled=directoryBusy||!directoryReady;
 }
 function showDirectory(data){
  el('directoryActions').hidden=!data.enabled;
- directoryReady=data.identity==='ready';directoryButtons();
+ directoryReady=data.identity==='ready';directoryCanRenew=Boolean(data.renewal_available);directoryButtons();
  if(!data.enabled){write(el('directoryStatus'),'Directory desativado. O operador deve configurar o serviço e a confiança TLS localmente.');return;}
- const states={not_checked:'Ainda não verificado',published_at_check:'Publicação aceite na última operação',listed_at_check:'Encontrado na última verificação',not_listed_at_check:'Ausente na última verificação',expired:'Última publicação expirada',invalid_receipt:'Não foi possível validar a publicação guardada',identity_error:'Identidade local inválida'};
+ const states={not_checked:'Ainda não verificado',published_at_check:'Publicação aceite na última operação',renewed_at_check:'Renovado na última operação',listed_at_check:'Encontrado na última verificação',not_listed_at_check:'Ausente na última verificação',expired:'Última publicação expirada',invalid_receipt:'Não foi possível validar a publicação guardada',identity_error:'Identidade local inválida'};
  let text=data.origin+' · '+(states[data.state]||'Estado por verificar')+'.';
  if(data.fingerprint)text+=' Identidade: '+data.fingerprint+'.';
  if(data.checked_at)text+=' Observado em '+new Date(data.checked_at*1000).toLocaleString('pt-PT')+'.';
  if(data.expires_at)text+=' Prazo da última publicação: '+new Date(data.expires_at*1000).toLocaleString('pt-PT')+'.';
+ if(data.automatic_renewal)text+=' Renovação automática ativa.';
+ if(data.renewal_expires_at)text+=' Credencial limitada válida até '+new Date(data.renewal_expires_at*1000).toLocaleString('pt-PT')+'.';
  write(el('directoryStatus'),text+' Este estado é uma observação anterior; não confirma disponibilidade atual nem autoriza media.');
 }
 async function loadDirectory(){
@@ -189,7 +200,7 @@ async function loadDirectory(){
 async function directoryAction(action){
  if(!token||directoryBusy)return;
  const form=el('directoryForm');let payload;
- if(action!=='identity'){
+ if(!['identity','renew'].includes(action)){
   if(!form.reportValidity())return;
   payload={username:form.elements.directory_username.value,password:form.elements.directory_password.value};
   if(action==='publish')payload.name=form.elements.directory_name.value;
@@ -202,11 +213,51 @@ async function directoryAction(action){
   const data=await r.json();if(token!==session||generation!==directoryGeneration)return;
   if(!r.ok){const messages={directory_busy:'Já existe uma operação em curso.',directory_account_changed:'Usa a conta Directory originalmente associada a este servidor.',directory_revision_changed:'A revisão do servidor mudou. Verifica a identidade antes de continuar.',directory_identity_restore_required:'Falta a chave de uma identidade já associada. Recupera a chave original antes de continuar.'};
    write(el('directoryMessage'),r.status===401?'Sessão NOVA expirada. Volta a entrar.':r.status===429?'Demasiadas operações. Aguarda antes de repetir.':messages[data.detail]||'Operação recusada. Confirma a conta, a palavra-passe, a identidade e a disponibilidade do Directory.');return;}
-  showDirectory(data);write(el('directoryMessage'),action==='identity'?'Identidade inicializada. Já podes publicar.':action==='publish'?'Publicação aceite. Renova antes de uma hora; a TV ainda não usa esta descoberta.':'Verificação concluída.');
+  showDirectory(data);write(el('directoryMessage'),action==='identity'?'Identidade inicializada. Já podes publicar.':action==='publish'?'Publicação aceite. A renovação usa uma credencial limitada; verifica o estado acima.':action==='renew'?'Renovação confirmada sem palavra-passe administrativa.':'Verificação concluída.');
  }catch{if(token===session&&generation===directoryGeneration)write(el('directoryMessage'),'Ligação interrompida. Verifica o estado antes de repetir.');}
  finally{payload=null;if(generation===directoryGeneration){directoryBusy=false;directoryButtons();}}
 }
 el('directoryForm').addEventListener('submit',event=>{event.preventDefault();directoryAction('publish');});
 el('directoryCheck').addEventListener('click',()=>directoryAction('check'));
 el('directoryIdentity').addEventListener('click',()=>directoryAction('identity'));
-el('logout').addEventListener('click',()=>{directoryGeneration++;directoryBusy=false;directoryReady=false;el('directoryForm').reset();el('directoryActions').hidden=true;write(el('directoryStatus'),'');write(el('directoryMessage'),'');});
+el('directoryRenew').addEventListener('click',()=>directoryAction('renew'));
+el('logout').addEventListener('click',()=>{directoryGeneration++;directoryBusy=false;directoryReady=false;directoryCanRenew=false;el('directoryForm').reset();el('directoryActions').hidden=true;write(el('directoryStatus'),'');write(el('directoryMessage'),'');});
+
+function showMemberLibraries(){
+ const target=el('memberLibraries');target.replaceChildren();
+ for(const library of libraryChoices){const label=document.createElement('label');const input=document.createElement('input');
+  input.type='checkbox';input.name='member_libraries';input.value=library.id;label.append(input,document.createTextNode(' '+library.name));target.append(label);}
+ if(!libraryChoices.length)write(target,'Conclui e verifica a configuração Jellyfin para escolher bibliotecas.');
+}
+async function loadMembers(){
+ if(!token)return;const session=token;
+ const r=await fetch('/api/v1/admin/members',{headers:{Authorization:'Bearer '+session},cache:'no-store'});
+ if(!r.ok||token!==session)return;const data=await r.json();if(token!==session)return;
+ const select=el('memberForm').elements.member_subject;const selected=select.value;select.replaceChildren();el('memberList').replaceChildren();
+ for(const member of data.members){
+  const option=document.createElement('option');option.value=member.subject;option.textContent=member.username+' · '+member.subject;select.append(option);
+  const row=document.createElement('p');row.textContent=member.username+' · '+(member.disabled?'Sem autorização ativa':member.libraries.map(lib=>lib.name).join(' · '));
+  if(!member.disabled){const button=document.createElement('button');button.type='button';button.textContent='Revogar conta e dispositivos';
+   button.addEventListener('click',async()=>{button.disabled=true;
+    try{const result=await fetch('/api/v1/admin/members/'+encodeURIComponent(member.subject),{method:'DELETE',headers:{Authorization:'Bearer '+token}});
+     write(el('memberMessage'),result.ok?'Conta revogada. Os dispositivos perdem autorização.':'Não foi possível revogar.');await loadMembers();await loadDevices();
+    }catch{write(el('memberMessage'),'Ligação interrompida. Atualiza o estado.');}finally{button.disabled=false;}
+   });row.append(' ',button);}
+  el('memberList').append(row);
+ }
+ if([...select.options].some(option=>option.value===selected))select.value=selected;
+}
+el('memberForm').addEventListener('submit',async event=>{
+ event.preventDefault();if(!token)return;const form=event.currentTarget;const data=new FormData(form);
+ const payload={subject:data.get('member_subject'),libraries:data.getAll('member_libraries'),username:data.get('member_admin'),password:data.get('member_password')};
+ form.elements.member_password.value='';if(!payload.subject||!payload.libraries.length){write(el('memberMessage'),'Seleciona a conta e pelo menos uma biblioteca.');return;}
+ const session=token;const button=form.querySelector('button');button.disabled=true;
+ write(el('memberMessage'),'A criar/verificar o utilizador Jellyfin limitado…');
+ try{const result=await fetch('/api/v1/admin/members',{method:'POST',headers:{Authorization:'Bearer '+session,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(token!==session)return;
+  if(!result.ok){write(el('memberMessage'),'Permissões não aplicadas. Verifica a conta administrativa Jellyfin, as bibliotecas e o estado do serviço. O acesso fica bloqueado até concluir.');return;}
+  clearDeviceReview();write(el('memberMessage'),'Permissões verificadas. Consulta novamente o código da TV e aprova o dispositivo.');await loadMembers();
+ }catch{if(token===session)write(el('memberMessage'),'Ligação interrompida. Verifica o estado antes de repetir.');}
+ finally{payload.password='';button.disabled=false;}
+});
+el('logout').addEventListener('click',()=>{el('memberForm').reset();el('memberList').replaceChildren();el('memberForm').elements.member_subject.replaceChildren();write(el('memberMessage'),'');});

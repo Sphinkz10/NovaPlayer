@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from .security import token_hash
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 SCHEMA = """
 PRAGMA journal_mode=WAL;
@@ -59,6 +59,14 @@ CREATE TABLE IF NOT EXISTS device_refresh (
 CREATE TABLE IF NOT EXISTS device_limits (
  bucket TEXT PRIMARY KEY, starts_at INTEGER NOT NULL, count INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS identity_assertions (
+ id TEXT PRIMARY KEY, expires_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS member_accounts (
+ subject TEXT PRIMARY KEY, username TEXT NOT NULL, jellyfin_user TEXT,
+ server_id TEXT, policy TEXT, credential BLOB, disabled INTEGER NOT NULL DEFAULT 1,
+ revision INTEGER NOT NULL DEFAULT 0
+);
 """
 
 class Store:
@@ -73,6 +81,11 @@ class Store:
                 raise RuntimeError('Base de dados de uma versão mais recente; restaurar uma cópia compatível.')
             # Versions 1/2 only add tables; existing owners and media setup survive.
             conn.executescript(SCHEMA)
+            for table in ('device_requests','devices'):
+                columns={row[1] for row in conn.execute('PRAGMA table_info('+table+')')}
+                for name in ('account_id','account_name','directory_entry'):
+                    if name not in columns:
+                        conn.execute('ALTER TABLE '+table+' ADD COLUMN '+name+' TEXT')
             from uuid import uuid4
             conn.execute('INSERT OR IGNORE INTO server_identity(id,server_id) VALUES(1,?)', (str(uuid4()),))
             conn.execute(f'PRAGMA user_version={SCHEMA_VERSION}')

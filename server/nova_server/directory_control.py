@@ -7,10 +7,13 @@ import sqlite3
 import time
 
 import httpx
-from cryptography.exceptions import InvalidSignature
+from cryptography.exceptions import InvalidSignature,InvalidTag
+import re
 
 from nova_directory.client import DirectoryClient, server_identity
 from nova_directory.protocol import Descriptor, encode, private_origin, verify_record
+from .storage import Store
+from .secret_vault import SecretVault
 
 
 class ControlError(Exception):
@@ -21,6 +24,8 @@ class ControlError(Exception):
 class DirectoryControl:
     def __init__(self, state, origin, ca, client_origin, certificate):
         self.state = Path(state)
+        self.vault=SecretVault(Store(state))
+        self.worker_active=False
         self.origin = private_origin(origin)
         self.client_origin = private_origin(client_origin)
         self.ca, self.certificate = Path(ca), Path(certificate)
@@ -35,6 +40,11 @@ class DirectoryControl:
                 raise ValueError('Newer Directory Control schema')
             db.execute('CREATE TABLE IF NOT EXISTS publication (id INTEGER PRIMARY KEY CHECK(id=1), '
                        'origin TEXT NOT NULL, account TEXT, record TEXT, checked_at INTEGER, observation TEXT)')
+            if 'issuer_public' not in {row[1] for row in db.execute('PRAGMA table_info(publication)')}:
+                db.execute('ALTER TABLE publication ADD COLUMN issuer_public TEXT')
+            columns={row[1] for row in db.execute('PRAGMA table_info(publication)')}
+            for name,kind in (('renewal_credential','BLOB'),('renewal_expires_at','INTEGER')):
+                if name not in columns:db.execute('ALTER TABLE publication ADD COLUMN '+name+' '+kind)
             db.execute('INSERT OR IGNORE INTO publication(id,origin) VALUES(1,?)', (self.origin,))
             if db.execute('SELECT origin FROM publication WHERE id=1').fetchone()[0] != self.origin:
                 raise ValueError('Directory identity is already bound to another origin')
@@ -70,8 +80,11 @@ class DirectoryControl:
         except (ValueError, OSError, sqlite3.Error):
             return {**result, 'identity':'invalid', 'state':'identity_error'}
         with self.db() as db:
-            record, checked, observation = db.execute(
-                'SELECT record,checked_at,observation FROM publication WHERE id=1').fetchone()
+            record, checked, observation,renewal,renewal_expiry = db.execute(
+                'SELECT record,checked_at,observation,renewal_credential,renewal_expires_at FROM publication WHERE id=1').fetchone()
+        result.update(automatic_renewal=bool(self.worker_active and renewal and renewal_expiry>time.time()),
+                      renewal_available=bool(renewal and renewal_expiry>time.time()),
+                      renewal_expires_at=renewal_expiry)
         result.update(checked_at=checked, state=observation or 'not_checked')
         if record:
             record = json.loads(record)
@@ -104,10 +117,13 @@ class DirectoryControl:
             client = DirectoryClient(self.origin, self.ca)
             try:
                 client.login(username, password)
-                pinned = db.execute('SELECT account FROM publication WHERE id=1').fetchone()[0]
+                issuer=client.issuer()
+                pinned,old_issuer=db.execute('SELECT account,issuer_public FROM publication WHERE id=1').fetchone()
                 if pinned and pinned != client.account:
                     raise ControlError('directory_account_changed')
-                db.execute('UPDATE publication SET account=? WHERE id=1', (client.account,))
+                if old_issuer and issuer!=old_issuer:
+                    raise ControlError('directory_issuer_changed')
+                db.execute('UPDATE publication SET account=?,issuer_public=? WHERE id=1', (client.account,issuer))
                 # Persist account continuity BEFORE a remote mutation, even if its response is lost.
                 db.commit()
                 db.execute('BEGIN IMMEDIATE')
@@ -119,6 +135,15 @@ class DirectoryControl:
                     previous = db.execute('SELECT record FROM publication WHERE id=1').fetchone()[0]
                     record = client.register(descriptor, key,
                         previous=json.loads(previous)['payload'] if previous else None)
+                    credential=client.request('POST','servers/'+record['payload']['entry_id']+'/renewal-credential')
+                    if not isinstance(credential,dict) or credential.get('scope')!='registration:renew':raise ValueError('Invalid renewal scope')
+                    if not isinstance(credential.get('credential'),str) or not re.fullmatch(r'[A-Za-z0-9_-]{40,128}',credential['credential']):
+                        raise ValueError('Invalid renewal credential')
+                    if type(credential.get('expires_at')) is not int or not time.time()<credential['expires_at']<=time.time()+30*86400:
+                        raise ValueError('Invalid renewal lifetime')
+                    sealed=self.vault.seal(credential['credential'],'directory-renewal:'+self.origin+':'+sid)
+                    db.execute('UPDATE publication SET renewal_credential=?,renewal_expires_at=? WHERE id=1',
+                               (sealed,credential['expires_at']))
                     observation = 'published_at_check'
                 else:
                     matches = [entry['record'] for entry in client.discover()['servers']
@@ -143,12 +168,35 @@ class DirectoryControl:
                 client.close()
         return self.status()
 
+    def renew_if_due(self,force=False):
+        sid,key,public,_=self.identity()
+        with self.db(write=True) as db:
+            raw,sealed,expiry,issuer=db.execute('SELECT record,renewal_credential,renewal_expires_at,issuer_public FROM publication WHERE id=1').fetchone()
+            if not raw or not sealed or not expiry or expiry<=time.time():
+                if force:raise ControlError('directory_renewal_required')
+                return self.status()
+            previous=json.loads(raw)['payload']
+            if not force and previous['expires_at']-time.time()>900:return self.status()
+            token=self.vault.open(sealed,'directory-renewal:'+self.origin+':'+sid)
+            client=DirectoryClient(self.origin,self.ca)
+            try:
+                if client.issuer()!=issuer:raise ControlError('directory_issuer_changed')
+                if self.certificate.stat().st_size>6000:raise ValueError('Invalid certificate')
+                descriptor=Descriptor(server_id=sid,name=previous['descriptor']['name'],client_origin=self.client_origin,
+                                      certificate_pem=self.certificate.read_text(encoding='ascii'))
+                record=client.register(descriptor,key,previous=previous,agent=token)
+                verify_record(record,self.origin,expected_key=public)
+                db.execute('UPDATE publication SET record=?,checked_at=?,observation=? WHERE id=1',
+                           (json.dumps(record),int(time.time()),'renewed_at_check'))
+            finally:client.close()
+        return self.status()
+
 
 def safe_operation(operation):
     try:
         return operation()
     except ControlError:
         raise
-    except (ValueError, OSError, sqlite3.Error, httpx.HTTPError, InvalidSignature, KeyError, TypeError):
+    except (ValueError, OSError, sqlite3.Error, httpx.HTTPError, InvalidSignature, InvalidTag, KeyError, TypeError):
         # No remote error, path, password, token, or certificate is reflected to the browser.
         raise ControlError('directory_operation_refused', 502) from None

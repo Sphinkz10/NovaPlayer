@@ -29,7 +29,8 @@ class DeviceSessionStore(context: Context) : DeviceVault {
         return generator.generateKey()
     }
     @Synchronized override fun save(value: SavedDevice) {
-        val json = JSONObject().put("version", 1).put("origin", value.trust.origin).put("server_id", value.trust.serverId)
+        val json = JSONObject().put("version", 2).put("origin", value.trust.origin).put("server_id", value.trust.serverId)
+            .put("account_id",value.accountId ?: JSONObject.NULL)
             .put("certificate", Base64.encodeToString(value.trust.certificateDer, Base64.NO_WRAP))
             .put("access", value.tokens.access).put("refresh", value.tokens.refresh).put("device_id", value.tokens.deviceId)
             .put("expires_in", value.tokens.expiresIn).put("refresh_expires_in", value.tokens.refreshExpiresIn)
@@ -49,10 +50,11 @@ class DeviceSessionStore(context: Context) : DeviceVault {
             cipher.init(Cipher.DECRYPT_MODE, key(create = false), GCMParameterSpec(128, sealed.copyOfRange(0, 12)))
             cipher.updateAAD(aad)
             val json = JSONObject(String(cipher.doFinal(sealed.copyOfRange(12, sealed.size)), Charsets.UTF_8))
-            require(json.integer("version") == 1)
-            SavedDevice(ServerTrust(json.string("origin"), json.string("server_id"), Base64.decode(json.string("certificate"), Base64.NO_WRAP)),
+            require(json.integer("version") in 1..2)
+            val account=if(json.isNull("account_id"))null else json.string("account_id").also { require(ServerTrust.validId(it)) }
+            SavedDevice(ServerTrust.restore(json.string("origin"), json.string("server_id"), Base64.decode(json.string("certificate"), Base64.NO_WRAP)),
                 DeviceTokens(json.string("access"), json.string("refresh"), json.string("device_id"), json.integer("expires_in"), json.integer("refresh_expires_in")),
-                json.getLong("refresh_deadline"), json.getBoolean("refresh_pending"))
+                json.getLong("refresh_deadline"), json.getBoolean("refresh_pending"),account)
         } catch (_: Exception) {
             clear(); null // Never log decrypted state, JSON exceptions or credentials.
         }

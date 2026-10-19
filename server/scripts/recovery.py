@@ -34,7 +34,8 @@ def validate_state(state):
         raise ValueError('Falta a base NOVA; não é um estado inicializado.')
     check_sqlite(nova)
     with sqlite3.connect(nova) as db:
-        if db.execute('PRAGMA user_version').fetchone()[0] > 2:
+        schema=db.execute('PRAGMA user_version').fetchone()[0]
+        if schema > 3:
             raise ValueError('Schema NOVA mais recente que esta ferramenta.')
         if db.execute('SELECT COUNT(*) FROM admin').fetchone()[0] != 1:
             raise ValueError('Conclui primeiro a criação do proprietário.')
@@ -47,8 +48,12 @@ def validate_state(state):
         tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         if not {'Users', 'Devices', 'ApiKeys'}.issubset(tables):
             raise ValueError('Schema Jellyfin não suportado para recuperação segura.')
-        if db.execute('SELECT COUNT(*) FROM Users').fetchone()[0] != 1:
-            raise ValueError('M2 suporta recuperação de uma instalação com um único proprietário Jellyfin.')
+        users={str(row[0]).replace('-','').lower() for row in db.execute('SELECT Id FROM Users')}
+    with sqlite3.connect(nova) as db:
+        managed={str(row[0]).replace('-','').lower() for row in db.execute(
+            'SELECT DISTINCT jellyfin_user FROM member_accounts WHERE jellyfin_user IS NOT NULL')} if schema>=3 else set()
+    if not managed.issubset(users) or len(users-managed)!=1:
+        raise ValueError('Recuperação exige o proprietário e apenas utilizadores Jellyfin geridos pela NOVA.')
     return nova, jf
 
 
@@ -136,7 +141,7 @@ def extract_checked(stream, staging):
                 if member.size > 1024*1024:
                     raise ValueError('Manifesto demasiado grande.')
                 manifest = json.load(source)
-                if not isinstance(manifest, dict) or manifest.get('format') != FORMAT or manifest.get('nova_schema') not in (0, 1, 2):
+                if not isinstance(manifest, dict) or manifest.get('format') != FORMAT or manifest.get('nova_schema') not in (0, 1, 2, 3):
                     raise ValueError('Versão de cópia não suportada.')
                 continue
             if not (member.name.startswith('state/nova/') or member.name.startswith('state/jellyfin/config/')):
@@ -165,11 +170,20 @@ def revoke_restored_sessions(state):
             db.execute('DELETE FROM device_refresh')
             db.execute('DELETE FROM device_requests')
             db.execute('UPDATE devices SET revoked=1')
+        if db.execute('PRAGMA user_version').fetchone()[0] >= 3:
+            db.execute('DELETE FROM identity_assertions')
+            db.execute('UPDATE member_accounts SET disabled=1,credential=NULL,revision=revision+1')
         db.execute('UPDATE jellyfin_setup SET lease=NULL,lease_until=0,report=NULL')
         db.execute("INSERT INTO audit(event,created_at) VALUES('recovery.sessions_revoked',strftime('%s','now'))")
     with sqlite3.connect(jf) as db:
         db.execute('DELETE FROM Devices')
         db.execute('DELETE FROM ApiKeys')
+    control=state/'nova/directory-control.sqlite3'
+    if control.is_file():
+        with sqlite3.connect(control) as db:
+            columns={row[1] for row in db.execute('PRAGMA table_info(publication)')}
+            if 'renewal_credential' in columns:
+                db.execute('UPDATE publication SET renewal_credential=NULL,renewal_expires_at=NULL')
     # Volatile Jellyfin cache is deliberately rebuilt.
     (state/'jellyfin/cache').mkdir(mode=0o700, parents=True, exist_ok=True)
 

@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.13'
-      - run: python -m pip install --require-hashes -r server/requirements.txt
+      - run: python -m pip install --require-hashes -r server/requirements-directory.txt
       - name: Build app and isolated instrumentation
         working-directory: connect
         run: bash gradlew :app:assembleDebug :app:assembleDebugAndroidTest --no-daemon --console plain
@@ -39,11 +39,14 @@ jobs:
           arch: x86_64
           target: google_apis
           disable-animations: true
-          script: python connect/scripts/smoke_pairing_android.py
+          script: |
+            python connect/scripts/smoke_pairing_android.py
+            python connect/scripts/smoke_m3_android.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: android-pairing-api-${{ matrix.api }}
           path: |
             connect/test-results/pairing/
+            connect/test-results/m3/
             connect/app/build/outputs/apk/debug/app-debug.apk

@@ -104,7 +104,13 @@ class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
             json.integer("expires_in"), json.integer("refresh_expires_in"))
     }
     override fun authorize(label: String): DeviceGrant {
-        val json = request("authorize", JSONObject().put("label", label))
+        return grant(request("authorize", JSONObject().put("label", label)))
+    }
+    override fun authorizeBound(label:String,assertion:String):DeviceGrant {
+        require(assertion.length<=4096)
+        return grant(request("authorize",JSONObject().put("label",label).put("assertion",JSONObject(assertion))))
+    }
+    private fun grant(json:JSONObject):DeviceGrant {
         if (json.string("scope") != "device:read") throw DeviceProtocolFailure()
         return DeviceGrant(json.string("device_code"), json.string("user_code"), json.string("server_id"),
             json.integer("expires_in"), json.integer("interval"))
@@ -116,9 +122,23 @@ class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
         val descriptor = json.getJSONObject("descriptor")
         if (json.string("scope") != "device:read" || descriptor.integer("schema_version") != 1 ||
             descriptor.string("server_id") != json.string("server_id") ||
-            listOf("media_enabled", "directory_enabled", "remote_access_enabled").any { descriptor.get(it) != false })
+            listOf("media_enabled", "remote_access_enabled").any { descriptor.get(it) != false } ||
+            descriptor.get("directory_enabled") !is Boolean)
             throw DeviceProtocolFailure()
-        return DeviceIdentity(json.string("server_id"), json.string("device_id"), descriptor.string("client_origin"))
+        val account=if(json.isNull("account_id"))null else json.string("account_id").also { require(ServerTrust.validId(it)) }
+        if(descriptor.getBoolean("directory_enabled")!=(account!=null))throw DeviceProtocolFailure()
+        return DeviceIdentity(json.string("server_id"), json.string("device_id"), descriptor.string("client_origin"),account)
+    }
+    fun permissions(saved:SavedDevice):List<Pair<String,String>> {
+        val data=request("libraries",access=saved.tokens.access)
+        require(data.string("server_id")==trust.serverId && data.string("device_id")==saved.tokens.deviceId &&
+            data.string("account_id")==saved.accountId && data.get("media_enabled")==false && data.get("catalog_enabled")==false)
+        val values=data.getJSONArray("libraries");require(values.length()<=2)
+        return (0 until values.length()).map { i ->
+            val lib=values.getJSONObject(i);val id=lib.string("id");val name=lib.string("name")
+            require(id.matches(Regex("[a-f0-9]{32}")) && name.length in 1..80 && name.none { it.isISOControl() })
+            id to name
+        }.also { require(it.map { lib -> lib.first }.distinct().size==it.size) }
     }
     override fun logout(access: String) { request("logout", JSONObject(), access) }
 }

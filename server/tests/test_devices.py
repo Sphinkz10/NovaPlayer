@@ -285,4 +285,4 @@ def test_migrate_v1_retains_owner(tmp_path):
     assert store.get_admin('owner') == (1,'hash')
     assert Devices(store).identity()
     with sqlite3.connect(path) as db:
-        assert db.execute('PRAGMA user_version').fetchone()[0] == 2
+        assert db.execute('PRAGMA user_version').fetchone()[0] == 3

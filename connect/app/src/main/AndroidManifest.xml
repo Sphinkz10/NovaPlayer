@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DevicePairingActivity" android:exported="false" />
+        <activity android:name=".DirectoryActivity" android:exported="false" />
         <!-- The official WireGuard tunnel AAR merges GoBackend.VpnService into this manifest. -->
     </application>
 </manifest>

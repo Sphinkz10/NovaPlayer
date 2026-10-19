@@ -52,8 +52,11 @@ class MainActivity : Activity() {
             startActivity(Intent(this@MainActivity, DevicePairingActivity::class.java))
         } }
         root.addView(pair)
+        val directory=Button(this).apply { text="Entrar na NOVA · Directory";setOnClickListener {
+            startActivity(Intent(this@MainActivity,DirectoryActivity::class.java))
+        } };root.addView(directory)
         setContentView(ScrollView(this).apply { addView(root) })
-        pair.requestFocus()
+        directory.requestFocus()
     }
 
     override fun onStart() {

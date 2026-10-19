@@ -6,6 +6,8 @@ from __future__ import annotations
 import os
 import re
 import threading
+import asyncio
+from contextlib import asynccontextmanager,suppress
 from pathlib import Path
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.exceptions import RequestValidationError
@@ -21,6 +23,7 @@ from .setup import JellyfinSetup, SetupRequest, Credentials, SetupError
 from .devices import Devices, DeviceError
 from .device_api import Payload, UserCode, DeviceDecision, device_error
 from .client_api import SmallBody
+from .members import MemberConfiguration
 
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z][a-zA-Z0-9_.-]{2,39}$')
 DUMMY_HASH = '$argon2id$v=19$m=65536,t=3,p=2$bsLfU/8cH1R+4e68utTSNQ$8Tk5/U5Y6zx5/ZrURl0G7DtU5y3EXazaQ+3mifoBRLI'
@@ -61,6 +64,24 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
         from .directory_control import DirectoryControl, ControlError, safe_operation
         directory_control = DirectoryControl(state_dir, **directory_options)
     api.state.directory_control = directory_control
+    @asynccontextmanager
+    async def directory_runtime(app):
+        task=None
+        if directory_control:
+            directory_control.worker_active=True
+            async def renew():
+                while True:
+                    await asyncio.sleep(60)
+                    try:await asyncio.to_thread(safe_operation,lambda:directory_control.renew_if_due())
+                    except Exception:pass # Retry bounded renewal; never log credentials or raw remote failures.
+            task=asyncio.create_task(renew())
+        try:yield
+        finally:
+            if directory_control:directory_control.worker_active=False
+            if task:
+                task.cancel()
+                with suppress(asyncio.CancelledError):await task
+    api.router.lifespan_context=directory_runtime
     api.add_exception_handler(DeviceError, device_error)
     api.state.jellyfin_url=jellyfin_url
     jellyfin_server_id = jellyfin_server_id or os.environ.get('NOVA_JELLYFIN_SERVER_ID')
@@ -209,6 +230,10 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     def directory_check(payload:DirectoryCredentials, token:str=Depends(owner)):
         return directory_call(lambda control: control.operate('check', payload.username, payload.password))
 
+    @api.post('/api/v1/admin/directory/renew')
+    def directory_renew(token:str=Depends(owner)):
+        return directory_call(lambda control:control.renew_if_due(force=True))
+
     @api.post('/api/v1/admin/setup/jellyfin')
     async def setup_jellyfin(payload:SetupRequest, token:str=Depends(owner)):
         return await api.state.jellyfin_setup.run(payload, configure=True)
@@ -240,6 +265,22 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     @api.get('/api/v1/admin/devices')
     def list_devices(token:str=Depends(owner)):
         return {'server_id': devices.identity(), 'devices': devices.list()}
+
+    @api.get('/api/v1/admin/members')
+    def list_members(token:str=Depends(owner)):
+        from .members import Members
+        return {'members':Members(store,jellyfin_url).list()}
+
+    @api.post('/api/v1/admin/members')
+    async def configure_member(payload:MemberConfiguration,token:str=Depends(owner)):
+        from .members import Members
+        devices.limit('owner.members','owner',10,10)
+        return await Members(store,jellyfin_url).configure(payload)
+
+    @api.delete('/api/v1/admin/members/{subject}')
+    def revoke_member(subject:str,token:str=Depends(owner)):
+        from .members import Members
+        return Members(store,jellyfin_url).revoke(subject)
 
     @api.delete('/api/v1/admin/devices/{device_id}')
     def revoke_device(device_id:str, token:str=Depends(owner)):

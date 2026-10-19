@@ -99,7 +99,13 @@ def make_client_app(state_dir=None, origin=None):
     @api.post('/api/v1/device/authorize', status_code=201)
     def authorize(payload: StartDevice, request: Request):
         limit(request, 'authorize', 10, 64, 600)
-        return devices.start(payload.label)
+        identity=None
+        if payload.assertion is not None:
+            from .directory_proof import verify_device_assertion
+            identity=verify_device_assertion(store.dir,devices.identity(),payload.assertion)
+        elif (store.dir/'directory-control.sqlite3').exists():
+            raise DeviceError('directory_identity_required',403)
+        return devices.start(payload.label,identity)
 
     @api.post('/api/v1/device/token')
     def token(payload: DeviceCode, request: Request):
@@ -120,8 +126,28 @@ def make_client_app(state_dir=None, origin=None):
         result = devices.authenticate(bearer[7:])
         result['descriptor'] = {'schema_version': 1, 'server_id': result['server_id'],
                                 'client_origin': origin, 'media_enabled': False,
-                                'directory_enabled': False, 'remote_access_enabled': False}
+                                'directory_enabled': result['account_id'] is not None, 'remote_access_enabled': False}
         return result
+
+    @api.get('/api/v1/device/libraries')
+    async def libraries(request:Request):
+        limit(request,'libraries')
+        bearer=request.headers.get('Authorization','')
+        if not bearer.startswith('Bearer ') or not 40<=len(bearer[7:])<=128:
+            raise DeviceError('invalid_token',401)
+        from .members import Members
+        from .setup import SetupError
+        try:
+            return await Members(store,os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096')).authorization(bearer[7:])
+        except SetupError:
+            raise DeviceError('member_authorization_unavailable',503) from None
+
+    @api.get('/api/v1/device/libraries/{library_id}/authorization')
+    async def library_authorization(library_id:str,request:Request):
+        result=await libraries(request)
+        permitted=[lib for lib in result['libraries'] if lib['id']==library_id]
+        if not permitted:raise DeviceError('unknown_library',404)
+        return {'authorized':True,'server_id':result['server_id'],'library':permitted[0],'media_enabled':False}
 
     @api.post('/api/v1/device/logout')
     def logout(request: Request):

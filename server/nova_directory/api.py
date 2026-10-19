@@ -9,7 +9,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from nova_server.client_api import SmallBody
 from nova_server.device_api import Payload, invalid_device_payload, device_error
-from .protocol import USERNAME, ChallengeRequest, Proof, private_origin
+from .protocol import ID, USERNAME, Descriptor, ChallengeRequest, Proof, private_origin
 from .store import Registry, DirectoryError
 
 
@@ -21,6 +21,10 @@ class Login(Payload):
 class Membership(Payload):
     username: str = Field(pattern=USERNAME)
     allowed: bool = Field(strict=True)
+
+
+class AssertionRequest(Payload):
+    entry_id: str = Field(pattern=ID)
 
 
 def make_directory(state, origin):
@@ -54,9 +58,35 @@ def make_directory(state, origin):
             raise DirectoryError('invalid_session', 401)
         return registry.authenticate(header[7:]), header[7:]
 
+    def renewal_token(request:Request):
+        header=request.headers.get('Authorization','')
+        if not header.startswith('Bearer ') or not 40<=len(header[7:])<=128:
+            raise DirectoryError('invalid_renewal_credential',401)
+        return header[7:]
+
     @app.get('/api/v1/directory/health')
     def health():
         return {'status':'up','component':'nova-directory','laboratory':True}
+
+    @app.get('/api/v1/directory/identity')
+    def issuer():
+        return {'issuer':origin,'public_key':registry.identity_public,'purpose':'associate-v1'}
+
+    @app.post('/api/v1/directory/assertions')
+    def assertion(payload:AssertionRequest,auth=Depends(identity)):
+        return registry.assertion(auth[0],payload.entry_id)
+
+    @app.post('/api/v1/directory/servers/{entry}/renewal-credential')
+    def create_renewal_credential(entry:str,auth=Depends(identity)):
+        return registry.renewal_credential(auth[0],entry)
+
+    @app.post('/api/v1/directory/renewals/challenges',status_code=201)
+    def renewal_challenge(payload:Descriptor,request:Request):
+        return registry.agent_challenge(renewal_token(request),payload)
+
+    @app.post('/api/v1/directory/renewals/registrations',status_code=201)
+    def renewal_register(payload:Proof,request:Request):
+        return registry.agent_register(renewal_token(request),payload)
 
     @app.post('/api/v1/directory/login')
     def login(payload: Login, request: Request):

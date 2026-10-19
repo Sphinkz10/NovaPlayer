@@ -7,19 +7,22 @@ import java.security.cert.X509Certificate
 import java.io.ByteArrayInputStream
 
 /** Public trust material imported and explicitly confirmed by the owner, not a login token. */
-class ServerTrust(val origin: String, val serverId: String, certificateDer: ByteArray) {
+class ServerTrust private constructor(val origin: String, val serverId: String, certificateDer: ByteArray, stored: Boolean) {
+    constructor(origin: String, serverId: String, certificateDer: ByteArray):this(origin,serverId,certificateDer,false)
     private val certificateBytes = certificateDer.copyOf()
     val certificateDer: ByteArray get() = certificateBytes.copyOf()
     init {
         require(validOrigin(origin)) { "Invalid private HTTPS origin" }
         require(validId(serverId)) { "Invalid server identity" }
         require(certificateBytes.size in 128..8192) { "Invalid certificate size" }
-        certificate().checkValidity()
+        if(!stored)certificate().checkValidity() else certificate()
     }
     fun certificate(): X509Certificate = CertificateFactory.getInstance("X.509")
         .generateCertificate(ByteArrayInputStream(certificateBytes)) as X509Certificate
     override fun toString() = "ServerTrust(public identity)"
     companion object {
+        // Only authenticated local storage uses this; network TLS still checks certificate dates.
+        fun restore(origin:String,serverId:String,certificateDer:ByteArray)=ServerTrust(origin,serverId,certificateDer,true)
         fun validId(value: String) = value.matches(Regex("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"))
         fun validOrigin(value: String): Boolean = runCatching {
             val uri = URI(value)
@@ -52,12 +55,13 @@ class DeviceTokens(val access: String, val refresh: String, val deviceId: String
 }
 
 fun validToken(value: String) = value.matches(Regex("[A-Za-z0-9_-]{40,128}"))
-data class DeviceIdentity(val serverId: String, val deviceId: String, val origin: String)
+data class DeviceIdentity(val serverId: String, val deviceId: String, val origin: String, val accountId:String?=null)
 class DeviceApiFailure(val status: Int, val code: String, val retryAfter: Int = 0) : Exception("Device request refused")
 class DeviceProtocolFailure : Exception("Device response invalid")
 
 interface DeviceTransport {
     fun authorize(label: String): DeviceGrant
+    fun authorizeBound(label:String,assertion:String):DeviceGrant=throw DeviceProtocolFailure()
     fun poll(secret: String): DeviceTokens
     fun refresh(secret: String): DeviceTokens
     fun identity(access: String): DeviceIdentity
@@ -65,7 +69,7 @@ interface DeviceTransport {
 }
 
 class SavedDevice(val trust: ServerTrust, val tokens: DeviceTokens, val refreshDeadline: Long,
-                  val refreshPending: Boolean = false) {
+                  val refreshPending: Boolean = false, val accountId:String?=null) {
     override fun toString() = "SavedDevice(redacted)"
 }
 interface DeviceVault {
@@ -82,18 +86,20 @@ data class PairingView(val state: PairingState, val userCode: String? = null, va
  */
 class DevicePairing(private val vault: DeviceVault, private val transport: (ServerTrust) -> DeviceTransport,
                     private val clock: () -> Long = System::currentTimeMillis) {
-    private class Pending(val trust: ServerTrust, val grant: DeviceGrant, val deadline: Long,
+    private class Pending(val trust: ServerTrust, val grant: DeviceGrant, val deadline: Long, val accountId:String?,
                           var interval: Int, var nextPoll: Long)
     private var pending: Pending? = null
 
-    @Synchronized fun begin(trust: ServerTrust, label: String): PairingView {
+    @Synchronized fun begin(trust: ServerTrust, label: String, assertion:String?=null, accountId:String?=null): PairingView {
         require(label.isNotBlank() && label.length <= 64 && label.none { it.isISOControl() })
         require(vault.load() == null) { "Forget the existing association first" }
         pending = null
-        val grant = transport(trust).authorize(label)
+        require((assertion==null && accountId==null) || (assertion!=null && accountId!=null && ServerTrust.validId(accountId)))
+        val client=transport(trust)
+        val grant = if(assertion==null)client.authorize(label) else client.authorizeBound(label,assertion)
         if (grant.serverId != trust.serverId) throw DeviceProtocolFailure()
         val now = clock()
-        pending = Pending(trust, grant, now + grant.expiresIn * 1000L, grant.interval, now + grant.interval * 1000L)
+        pending = Pending(trust, grant, now + grant.expiresIn * 1000L, accountId, grant.interval, now + grant.interval * 1000L)
         return waiting(pending!!)
     }
 
@@ -110,7 +116,7 @@ class DevicePairing(private val vault: DeviceVault, private val transport: (Serv
             val tokens = transport(p.trust).poll(p.grant.secret)
             pending = null
             // Save immediately after a single-use exchange, then validate the protected descriptor.
-            vault.save(SavedDevice(p.trust, tokens, clock() + tokens.refreshExpiresIn * 1000L))
+            vault.save(SavedDevice(p.trust, tokens, clock() + tokens.refreshExpiresIn * 1000L,accountId=p.accountId))
             return check()
         } catch (failure: DeviceApiFailure) {
             if (failure.code == "authorization_pending" || failure.code == "slow_down") {
@@ -131,7 +137,7 @@ class DevicePairing(private val vault: DeviceVault, private val transport: (Serv
     private fun verified(saved: SavedDevice): PairingView {
         val identity = transport(saved.trust).identity(saved.tokens.access)
         if (identity.serverId != saved.trust.serverId || identity.deviceId != saved.tokens.deviceId ||
-            identity.origin != saved.trust.origin) throw DeviceProtocolFailure()
+            identity.origin != saved.trust.origin || (saved.accountId!=null && identity.accountId!=saved.accountId)) throw DeviceProtocolFailure()
         return PairingView(PairingState.ASSOCIATED)
     }
 
@@ -148,18 +154,20 @@ class DevicePairing(private val vault: DeviceVault, private val transport: (Serv
             vault.clear(); return PairingView(PairingState.SECURITY_ERROR)
         } catch (_: javax.net.ssl.SSLException) {
             return PairingView(PairingState.SECURITY_ERROR)
+        } catch (_: java.security.cert.CertificateException) {
+            return PairingView(PairingState.SECURITY_ERROR)
         } catch (_: Exception) {
             return PairingView(PairingState.OFFLINE)
         }
         // A durable marker is written before the refresh leaves this process.
-        vault.save(SavedDevice(saved.trust, saved.tokens, saved.refreshDeadline, refreshPending = true))
+        vault.save(SavedDevice(saved.trust, saved.tokens, saved.refreshDeadline, refreshPending = true,accountId=saved.accountId))
         val renewed: SavedDevice
         try {
             val tokens = transport(saved.trust).refresh(saved.tokens.refresh)
             if (tokens.deviceId != saved.tokens.deviceId || tokens.refresh == saved.tokens.refresh ||
                 tokens.access == saved.tokens.access) throw DeviceProtocolFailure()
             renewed = SavedDevice(saved.trust, tokens,
-                minOf(saved.refreshDeadline, clock() + tokens.refreshExpiresIn * 1000L))
+                minOf(saved.refreshDeadline, clock() + tokens.refreshExpiresIn * 1000L),accountId=saved.accountId)
             vault.save(renewed)
         } catch (_: Exception) {
             vault.clear(); return PairingView(PairingState.REASSOCIATE)
@@ -170,6 +178,7 @@ class DevicePairing(private val vault: DeviceVault, private val transport: (Serv
             if (error.status == 401) { vault.clear(); PairingView(PairingState.REASSOCIATE) }
             else PairingView(PairingState.OFFLINE)
         } catch (_: javax.net.ssl.SSLException) { PairingView(PairingState.SECURITY_ERROR) }
+        catch (_: java.security.cert.CertificateException) { PairingView(PairingState.SECURITY_ERROR) }
         catch (_: Exception) { PairingView(PairingState.OFFLINE) }
     }
 
@@ -179,5 +188,12 @@ class DevicePairing(private val vault: DeviceVault, private val transport: (Serv
         // Erase locally even if the server is offline. Owner can revoke remotely in Control.
         vault.clear()
         if (saved != null && !saved.refreshPending) runCatching { transport(saved.trust).logout(saved.tokens.access) }
+    }
+
+    @Synchronized fun updateTrust(trust:ServerTrust,accountId:String) {
+        val saved=vault.load() ?: throw DeviceProtocolFailure()
+        require(saved.accountId==accountId && saved.trust.serverId==trust.serverId && saved.trust.origin==trust.origin)
+        trust.certificate().checkValidity()
+        vault.save(SavedDevice(trust,saved.tokens,saved.refreshDeadline,saved.refreshPending,saved.accountId))
     }
 }

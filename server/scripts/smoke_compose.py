@@ -150,6 +150,12 @@ def run():
                     result = subprocess.run(['docker','compose','-p',project,'exec','-T','nova-core','python','-c',code],
                         cwd=root, input=json.dumps(payload), capture_output=True, text=True)
                     if result.returncode:
+                        try:
+                            diagnostic=json.loads(result.stdout)
+                            if (set(diagnostic)=={'m3_failure','line'} and isinstance(diagnostic['m3_failure'],str) and
+                                    diagnostic['m3_failure'].isidentifier() and isinstance(diagnostic['line'],int)):
+                                raise RuntimeError('M3 fixture '+diagnostic['m3_failure']+' at line '+str(diagnostic['line']))
+                        except (ValueError,TypeError):pass
                         raise RuntimeError('Device recovery fixture/check failed (output withheld to protect tokens)')
                     return json.loads(result.stdout)
                 old_devices = core_python("""
@@ -245,15 +251,28 @@ print(json.dumps({'revoked':True}))
                     time.sleep(2)
                 else:
                     raise AssertionError(snapshot['checks'])
+                m3=core_python("""
+import json,os,sys
+os.environ['NOVA_M3_DISPOSABLE_TEST']='1'
+from scripts.smoke_m3_server import run
+try:
+    print(json.dumps(run('/data','http://jellyfin:8096',**json.load(sys.stdin))))
+except Exception as error:
+    frame=next((frame for frame in reversed(__import__('traceback').extract_tb(error.__traceback__)) if 'smoke_m3_server' in frame.filename),None)
+    print(json.dumps({'m3_failure':type(error).__name__,'line':frame.lineno if frame else None}))
+    raise SystemExit(1)
+""", {'owner':account,'jellyfin_credentials':credentials})
                 report = {'compose':'passed','read_only_sources':2,'restart_persistence':True,
                                   'nova_jellyfin_setup':True,'indexed_media_sources':2,'duplicate_libraries':0,
                                   'missing_source_refused':True,'container_recreation':True,
                                   'encrypted_backup_restore':True,'tampered_backup_rejected':True,
                                   'nova_and_jellyfin_sessions_revoked':True,'device_credentials_and_pending_grants_revoked':True,'snapshot':snapshot,
                                   'physical_truenas_test':False}
+                report['m3']=m3
                 if os.environ.get('NOVA_EVIDENCE_DIR'):
                     evidence = Path(os.environ['NOVA_EVIDENCE_DIR']); evidence.mkdir(parents=True,exist_ok=True)
                     (evidence/'compose-recovery.json').write_text(json.dumps(report,indent=2),encoding='utf8')
+                    (evidence/'m3-server.json').write_text(json.dumps(m3,indent=2),encoding='utf8')
                 print(json.dumps(report))
         except Exception:
             # Only this disposable CI project; never dump credentials or the environment.

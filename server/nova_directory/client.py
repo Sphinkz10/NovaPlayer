@@ -13,7 +13,7 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from .protocol import ID, Descriptor, encode, private_origin, message, validate_payload, verify_record
+from .protocol import ID, Descriptor, decode, encode, private_origin, message, validate_payload, verify_record
 
 
 def server_identity(state, *, create_key=False):
@@ -75,9 +75,13 @@ class DirectoryClient:
             raise ValueError('Invalid Directory session')
         self.token, self.account = token, result['account_id']
 
-    def register(self, descriptor, key, *, previous=None):
+    def register(self, descriptor, key, *, previous=None, agent=None):
         public = encode(key.public_key().public_bytes_raw())
-        payload = self.request('POST','challenges',{'public_key':public,'descriptor':descriptor.model_dump()})
+        if agent:
+            if not previous:raise ValueError('Renewal requires prior identity')
+            self.token,self.account=agent,previous['owner_id']
+        payload = self.request('POST','renewals/challenges' if agent else 'challenges',
+                               descriptor.model_dump() if agent else {'public_key':public,'descriptor':descriptor.model_dump()})
         validate_payload(payload, self.origin, expected_key=public)
         if (payload['owner_id'] != self.account or payload['descriptor'] != descriptor.model_dump() or
                 payload['proof_expires_at'] <= time.time()):
@@ -86,7 +90,7 @@ class DirectoryClient:
                          payload['version'] <= previous['version']):
             raise ValueError('Registration continuity changed')
         signature = encode(key.sign(message(payload)))
-        record = self.request('POST','registrations',{'challenge_id':payload['challenge_id'],'signature':signature})
+        record = self.request('POST','renewals/registrations' if agent else 'registrations',{'challenge_id':payload['challenge_id'],'signature':signature})
         verify_record(record, self.origin, expected_key=public)
         if record != {'payload':payload,'signature':signature}:
             raise ValueError('Registration response changed')
@@ -97,6 +101,14 @@ class DirectoryClient:
         for entry in result['servers']:
             verify_record(entry['record'], self.origin)
         return result
+
+    def issuer(self):
+        value=self.request('GET','identity')
+        if (not isinstance(value,dict) or set(value)!={'issuer','public_key','purpose'} or
+                value['issuer']!=self.origin or value['purpose']!='associate-v1'):
+            raise ValueError('Invalid Directory issuer')
+        decode(value['public_key'],32)
+        return value['public_key']
 
     def close(self):
         try:

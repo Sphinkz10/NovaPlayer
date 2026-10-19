@@ -12,6 +12,7 @@ from pathlib import Path
 from cryptography.exceptions import InvalidSignature
 from nova_server.security import hash_password, verify_password, token_hash
 from .protocol import USERNAME, LEASE, encode, verify_record
+from .identity import issuer_key, message as identity_message
 
 DUMMY = '$argon2id$v=19$m=65536,t=3,p=2$bsLfU/8cH1R+4e68utTSNQ$8Tk5/U5Y6zx5/ZrURl0G7DtU5y3EXazaQ+3mifoBRLI'
 PASSWORD_SLOTS = threading.BoundedSemaphore(2)
@@ -33,6 +34,9 @@ CREATE TABLE IF NOT EXISTS members(
 CREATE TABLE IF NOT EXISTS challenges(
  id TEXT PRIMARY KEY, owner_id TEXT NOT NULL REFERENCES accounts(id), payload TEXT NOT NULL,
  expires_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS identity_metadata(id INTEGER PRIMARY KEY CHECK(id=1), public_key TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS registration_agents(
+ digest TEXT PRIMARY KEY,entry_id TEXT NOT NULL REFERENCES entries(id),expires_at INTEGER NOT NULL);
 '''
 
 
@@ -52,8 +56,32 @@ class Registry:
             if version > 1:
                 raise RuntimeError('Newer Directory schema')
             db.executescript(SCHEMA)
+            if 'agent_digest' not in {row[1] for row in db.execute('PRAGMA table_info(challenges)')}:
+                db.execute('ALTER TABLE challenges ADD COLUMN agent_digest TEXT')
             db.execute('PRAGMA user_version=1')
         self.path.chmod(0o600)
+        with self.db() as db:
+            db.execute('BEGIN IMMEDIATE')
+            previous=db.execute('SELECT public_key FROM identity_metadata WHERE id=1').fetchone()
+            self.identity_key,self.identity_public=issuer_key(self.root,previous[0] if previous else None)
+            db.execute('INSERT OR IGNORE INTO identity_metadata VALUES(1,?)',(self.identity_public,))
+
+    def assertion(self, account, entry):
+        now=int(self.clock())
+        with self.db() as db:
+            db.execute('BEGIN IMMEDIATE');self._enabled(db,account)
+            row=db.execute('SELECT e.record FROM entries e JOIN accounts a ON a.id=e.owner_id '
+                'WHERE e.id=? AND e.disabled=0 AND a.disabled=0 AND e.expires_at>? AND '
+                '(e.owner_id=? OR EXISTS(SELECT 1 FROM members m WHERE m.entry_id=e.id AND m.account_id=?))',
+                (entry,now,account,account)).fetchone()
+            if not row:raise DirectoryError('unknown_entry',404)
+            record=json.loads(row[0]);verify_record(record,self.audience,now=now)
+            row=db.execute('SELECT username FROM accounts WHERE id=? AND disabled=0',(account,)).fetchone()
+            if not row:raise DirectoryError('invalid_session',401)
+            p={'purpose':'associate-v1','issuer':self.audience,'audience':record['payload']['descriptor']['server_id'],
+               'entry_id':entry,'subject':account,'username':row[0],'assertion_id':str(uuid.uuid4()),
+               'issued_at':now,'expires_at':now+90}
+            return {'payload':p,'signature':encode(self.identity_key.sign(identity_message(p)))}
 
     @contextmanager
     def db(self):
@@ -174,17 +202,20 @@ class Registry:
                  'nonce':encode(secrets.token_bytes(32)), 'public_key':request.public_key,
                  'descriptor':request.descriptor.model_dump(), 'version':old['version']+1 if old else 1,
                  'issued_at':now, 'proof_expires_at':now+60, 'expires_at':now+LEASE}
-            db.execute('INSERT INTO challenges VALUES(?,?,?,?)',
+            db.execute('INSERT INTO challenges(id,owner_id,payload,expires_at) VALUES(?,?,?,?)',
                        (p['challenge_id'], owner, json.dumps(p), now+60))
         return p
 
-    def register(self, owner, proof):
+    def register(self, owner, proof, *, agent=None):
         now = int(self.clock()); error = None; record = None
         with self.db() as db:
             db.execute('BEGIN IMMEDIATE')
             self._enabled(db, owner)
-            row = db.execute('SELECT payload FROM challenges WHERE id=? AND owner_id=? AND expires_at>?',
-                             (proof.challenge_id, owner, now)).fetchone()
+            if agent and not db.execute('SELECT 1 FROM registration_agents r JOIN entries e ON e.id=r.entry_id '
+                    'WHERE r.digest=? AND r.expires_at>? AND e.owner_id=? AND e.disabled=0',(agent,now,owner)).fetchone():
+                raise DirectoryError('invalid_renewal_credential',401)
+            row = db.execute('SELECT payload FROM challenges WHERE id=? AND owner_id=? AND expires_at>? '
+                             'AND agent_digest IS ?', (proof.challenge_id,owner,now,agent)).fetchone()
             if not row:
                 raise DirectoryError('invalid_challenge', 409)
             # Every submission consumes the challenge, including an invalid signature.
@@ -214,6 +245,38 @@ class Registry:
         if error:
             raise error
         return record
+
+    def renewal_credential(self,owner,entry):
+        token=secrets.token_urlsafe(48);expiry=int(self.clock())+30*86400
+        with self.db() as db:
+            db.execute('BEGIN IMMEDIATE');self._enabled(db,owner)
+            if not db.execute('SELECT 1 FROM entries WHERE id=? AND owner_id=? AND disabled=0',(entry,owner)).fetchone():
+                raise DirectoryError('unknown_entry',404)
+            db.execute('DELETE FROM registration_agents WHERE entry_id=?',(entry,))
+            db.execute('INSERT INTO registration_agents VALUES(?,?,?)',(token_hash(token),entry,expiry))
+        return {'credential':token,'expires_at':expiry,'scope':'registration:renew'}
+
+    def _agent(self,token):
+        with self.db() as db:
+            row=db.execute('SELECT e.owner_id,e.id,e.server_id,e.public_key FROM registration_agents r '
+                'JOIN entries e ON e.id=r.entry_id JOIN accounts a ON a.id=e.owner_id '
+                'WHERE r.digest=? AND r.expires_at>? AND e.disabled=0 AND a.disabled=0',
+                (token_hash(token),int(self.clock()))).fetchone()
+        if not row:raise DirectoryError('invalid_renewal_credential',401)
+        return row
+
+    def agent_challenge(self,token,descriptor):
+        from .protocol import ChallengeRequest
+        owner,entry,server,public=self._agent(token)
+        if descriptor.server_id!=server:raise DirectoryError('invalid_renewal_target',403)
+        payload=self.challenge(owner,ChallengeRequest(public_key=public,descriptor=descriptor))
+        with self.db() as db:
+            db.execute('UPDATE challenges SET agent_digest=? WHERE id=?',(token_hash(token),payload['challenge_id']))
+        return payload
+
+    def agent_register(self,token,proof):
+        owner,_,_,_=self._agent(token)
+        return self.register(owner,proof,agent=token_hash(token))
 
     def discover(self, account):
         now = int(self.clock())

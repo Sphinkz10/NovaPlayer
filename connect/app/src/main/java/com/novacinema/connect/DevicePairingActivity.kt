@@ -21,6 +21,7 @@ class DevicePairingActivity : Activity() {
     private lateinit var status: TextView
     private lateinit var code: TextView
     private lateinit var review: TextView
+    private lateinit var permissions:TextView
     private lateinit var confirm: Button
     private lateinit var importButton: Button
     private lateinit var refresh: Button
@@ -28,12 +29,14 @@ class DevicePairingActivity : Activity() {
     private var invitation: DeviceInvitation? = null
     private var foreground = false
     private var generation = 0
+    private var selection:DirectorySelection?=null
     private val poll = Runnable { work { manager.poll() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         manager = DeviceAssociationRuntime.get(this)
+        if(intent.getBooleanExtra("directory_selection",false))selection=runCatching { DirectorySelectionRuntime.take() }.getOrNull()
         val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(44, 36, 44, 36) }
         fun text(value: String, size: Float = 20f) = TextView(this).apply { text = value; textSize = size; root.addView(this) }
         fun button(label: String, action: () -> Unit) = Button(this).apply {
@@ -54,6 +57,7 @@ class DevicePairingActivity : Activity() {
             }
         }
         review = text("")
+        permissions=text("")
         confirm = button("Confirmei a impressão digital com o proprietário") {
             val selected = invitation ?: return@button
             invitation = null; review.text = ""; confirm.visibility = android.view.View.GONE
@@ -70,9 +74,25 @@ class DevicePairingActivity : Activity() {
         button("Voltar") { finish() }
         setContentView(ScrollView(this).apply { addView(root) })
         importButton.requestFocus()
+        if(selection!=null) {
+            importButton.visibility=android.view.View.GONE
+            status.text="Conta confirmada pelo Directory. A pedir a associação deste servidor…"
+        }
     }
 
-    override fun onStart() { super.onStart(); foreground = true; work { manager.resume() } }
+    override fun onStart() {
+        super.onStart();foreground=true
+        val chosen=selection;selection=null
+        if(chosen==null)work { manager.resume() } else work {
+            val saved=DeviceSessionStore(this).load()
+            if(saved!=null && saved.accountId==chosen.account && saved.trust.serverId==chosen.entry.trust.serverId) {
+                manager.updateTrust(chosen.entry.trust,chosen.account);manager.check()
+            } else {
+                if(saved!=null)manager.forget()
+                manager.begin(chosen.entry.trust,"Android TV NOVA",chosen.assertion,chosen.account)
+            }
+        }
+    }
     override fun onStop() {
         foreground = false; generation++; handler.removeCallbacks(poll)
         super.onStop()
@@ -116,9 +136,18 @@ class DevicePairingActivity : Activity() {
     private fun work(operation: () -> PairingView) {
         handler.removeCallbacks(poll)
         val current = ++generation
+        permissions.text=""
         listOf(importButton, refresh, forget, confirm).forEach { it.isEnabled = false }
         io.execute {
-            val value = try { operation() }
+            var allowed:List<Pair<String,String>>?=null
+            val value = try {
+                val result=operation()
+                if(result.state==PairingState.ASSOCIATED) {
+                    val saved=DeviceSessionStore(this).load()
+                    if(saved?.accountId!=null)allowed=runCatching { DeviceClient(saved.trust).permissions(saved) }.getOrNull()
+                }
+                result
+            }
             catch (_: javax.net.ssl.SSLException) { PairingView(PairingState.SECURITY_ERROR) }
             catch (_: DeviceProtocolFailure) { PairingView(PairingState.SECURITY_ERROR) }
             catch (_: Exception) { PairingView(PairingState.REASSOCIATE) }
@@ -126,6 +155,9 @@ class DevicePairingActivity : Activity() {
                 if (!foreground || current != generation || isDestroyed) return@runOnUiThread
                 listOf(importButton, refresh, forget, confirm).forEach { it.isEnabled = true }
                 render(value)
+                if(value.state==PairingState.ASSOCIATED && DeviceSessionStore(this).load()?.accountId!=null)
+                    permissions.text=allowed?.let { "Bibliotecas autorizadas: "+it.joinToString(" · ") { lib -> lib.second }+". Catálogo e reprodução chegam na M4." }
+                        ?: "Permissões de biblioteca indisponíveis. Pede ao proprietário para verificar a conta e o Jellyfin."
             }
         }
     }

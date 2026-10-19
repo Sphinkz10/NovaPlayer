@@ -80,6 +80,12 @@ def run(output=None, channel=None):
                     assert page.locator('#directoryPanel img').count()==0
                     directory_password();page.locator('#directoryForm button[type=submit]').click()
                     expect(page.locator('#directoryMessage')).to_contain_text('Publicação aceite')
+                    with registry.db() as db:
+                        assert db.execute('SELECT COUNT(*) FROM sessions').fetchone()[0]==0
+                    with page.expect_request('**/api/v1/admin/directory/renew') as renewal:
+                        page.locator('#directoryRenew').click()
+                    assert not renewal.value.post_data
+                    expect(page.locator('#directoryMessage')).to_contain_text('Renovação confirmada sem palavra-passe')
                     directory_password();page.locator('#directoryCheck').click()
                     expect(page.locator('#directoryStatus')).to_contain_text('Encontrado na última verificação')
                     directory_password('another');page.locator('#directoryCheck').click()
@@ -113,7 +119,7 @@ def run(output=None, channel=None):
             with closing(sqlite3.connect(store.dir/'directory-control.sqlite3')) as db:
                 retained=str(db.execute('SELECT * FROM publication').fetchall())
                 record=json.loads(db.execute('SELECT record FROM publication').fetchone()[0])
-            assert record['payload']['version']==2
+            assert record['payload']['version']==3
             assert password not in retained and owner_password not in retained and 'PRIVATE KEY' not in retained
             with registry.db() as db:
                 assert db.execute('SELECT COUNT(*) FROM sessions').fetchone()[0]==0
@@ -122,8 +128,8 @@ def run(output=None, channel=None):
                     'password_input_cleared','signed_publication','same_identity_renewal',
                     'authenticated_verification','account_change_rejected','no_html_injection',
                     'late_response_after_logout_discarded','core_restart_receipt_persistence',
-                    'no_browser_storage','no_saved_password_or_private_key_in_receipt','directory_sessions_logged_out'],
-                'automatic_renewal':False,'android_directory':False,'media':False,'physical_nas':False}
+                    'no_browser_storage','no_saved_password_or_private_key_in_receipt','directory_sessions_logged_out','scoped_renewal_without_password'],
+                'automatic_renewal':True,'android_directory':False,'media':False,'physical_nas':False}
             if output:
                 (Path(output)/'directory-control.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
             print(json.dumps(report))

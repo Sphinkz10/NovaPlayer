@@ -37,6 +37,8 @@ jobs:
         working-directory: server
       - run: python scripts/smoke_directory_control.py --output test-results/directory-control
         working-directory: server
+      - run: python scripts/smoke_m3_control.py --output test-results/m3-control
+        working-directory: server
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
