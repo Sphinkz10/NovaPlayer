@@ -13,6 +13,7 @@ import javax.crypto.spec.GCMParameterSpec
 
 /** Public pins are authenticated/encrypted too: damaged state never becomes a fresh first lookup. */
 class DirectoryPins(context:Context) {
+    companion object { private val lock=Any() }
     private val prefs=context.getSharedPreferences("nova_directory_pins",Context.MODE_PRIVATE)
     private val alias="nova-directory-pins-v1"
     private val aad=(context.packageName+":directory-pins-v1").toByteArray(Charsets.UTF_8)
@@ -26,7 +27,7 @@ class DirectoryPins(context:Context) {
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE).setRandomizedEncryptionRequired(true).build())
         }.generateKey()
     }
-    @Synchronized fun accept(profile:DirectoryProfile,entry:DirectoryEntry) {
+    fun accept(profile:DirectoryProfile,entry:DirectoryEntry):Unit = synchronized(lock) {
         val sealed=prefs.getString("sealed",null)
         val state=if(sealed==null)JSONObject().put("version",1).put("profile",profile.binding).put("entries",JSONObject()) else {
             require(sealed.length<=262144);val raw=Base64.decode(sealed,Base64.NO_WRAP);require(raw.size in 29..196608)
