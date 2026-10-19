@@ -21,6 +21,7 @@ async function loadOverview(){
  await loadConnect();
  await loadSetup();
  await loadDevices();
+ await loadDirectory();
 }
 function showSetupReport(report){
  if(!report){write(el('setupReport'),'Ainda não existe uma verificação de instalação.');return;}
@@ -158,3 +159,54 @@ el('deviceApprove').addEventListener('click',()=>decideDevice(true));
 el('deviceDeny').addEventListener('click',()=>decideDevice(false));
 el('deviceRefresh').addEventListener('click',()=>loadDevices().catch(()=>write(el('deviceMessage'),'Servidor indisponível.')));
 el('logout').addEventListener('click',()=>{clearDeviceReview();el('deviceLookup').reset();el('deviceList').replaceChildren();});
+
+// Directory passwords are transient; no destination, path or TLS exception comes from this form.
+let directoryGeneration=0;
+let directoryBusy=false;
+let directoryReady=false;
+function directoryButtons(){
+ el('directoryIdentity').disabled=directoryBusy||directoryReady;
+ for(const button of el('directoryForm').querySelectorAll('button'))button.disabled=directoryBusy||!directoryReady;
+}
+function showDirectory(data){
+ el('directoryActions').hidden=!data.enabled;
+ directoryReady=data.identity==='ready';directoryButtons();
+ if(!data.enabled){write(el('directoryStatus'),'Directory desativado. O operador deve configurar o serviço e a confiança TLS localmente.');return;}
+ const states={not_checked:'Ainda não verificado',published_at_check:'Publicação aceite na última operação',listed_at_check:'Encontrado na última verificação',not_listed_at_check:'Ausente na última verificação',expired:'Última publicação expirada',invalid_receipt:'Não foi possível validar a publicação guardada',identity_error:'Identidade local inválida'};
+ let text=data.origin+' · '+(states[data.state]||'Estado por verificar')+'.';
+ if(data.fingerprint)text+=' Identidade: '+data.fingerprint+'.';
+ if(data.checked_at)text+=' Observado em '+new Date(data.checked_at*1000).toLocaleString('pt-PT')+'.';
+ if(data.expires_at)text+=' Prazo da última publicação: '+new Date(data.expires_at*1000).toLocaleString('pt-PT')+'.';
+ write(el('directoryStatus'),text+' Este estado é uma observação anterior; não confirma disponibilidade atual nem autoriza media.');
+}
+async function loadDirectory(){
+ if(!token)return;const session=token;const generation=directoryGeneration;
+ const r=await fetch('/api/v1/admin/directory',{headers:{Authorization:'Bearer '+session},cache:'no-store'});
+ const data=await r.json();
+ if(token!==session||generation!==directoryGeneration)return;
+ if(r.ok)showDirectory(data);else write(el('directoryMessage'),'Não foi possível consultar o Directory.');
+}
+async function directoryAction(action){
+ if(!token||directoryBusy)return;
+ const form=el('directoryForm');let payload;
+ if(action!=='identity'){
+  if(!form.reportValidity())return;
+  payload={username:form.elements.directory_username.value,password:form.elements.directory_password.value};
+  if(action==='publish')payload.name=form.elements.directory_name.value;
+ }
+ form.elements.directory_password.value='';
+ const session=token;const generation=++directoryGeneration;directoryBusy=true;directoryButtons();
+ write(el('directoryMessage'),'A executar operação no Directory…');
+ try{
+  const r=await fetch('/api/v1/admin/directory/'+action,{method:'POST',headers:{Authorization:'Bearer '+session,'Content-Type':'application/json'},body:payload?JSON.stringify(payload):undefined});
+  const data=await r.json();if(token!==session||generation!==directoryGeneration)return;
+  if(!r.ok){const messages={directory_busy:'Já existe uma operação em curso.',directory_account_changed:'Usa a conta Directory originalmente associada a este servidor.',directory_revision_changed:'A revisão do servidor mudou. Verifica a identidade antes de continuar.',directory_identity_restore_required:'Falta a chave de uma identidade já associada. Recupera a chave original antes de continuar.'};
+   write(el('directoryMessage'),r.status===401?'Sessão NOVA expirada. Volta a entrar.':r.status===429?'Demasiadas operações. Aguarda antes de repetir.':messages[data.detail]||'Operação recusada. Confirma a conta, a palavra-passe, a identidade e a disponibilidade do Directory.');return;}
+  showDirectory(data);write(el('directoryMessage'),action==='identity'?'Identidade inicializada. Já podes publicar.':action==='publish'?'Publicação aceite. Renova antes de uma hora; a TV ainda não usa esta descoberta.':'Verificação concluída.');
+ }catch{if(token===session&&generation===directoryGeneration)write(el('directoryMessage'),'Ligação interrompida. Verifica o estado antes de repetir.');}
+ finally{payload=null;if(generation===directoryGeneration){directoryBusy=false;directoryButtons();}}
+}
+el('directoryForm').addEventListener('submit',event=>{event.preventDefault();directoryAction('publish');});
+el('directoryCheck').addEventListener('click',()=>directoryAction('check'));
+el('directoryIdentity').addEventListener('click',()=>directoryAction('identity'));
+el('logout').addEventListener('click',()=>{directoryGeneration++;directoryBusy=false;directoryReady=false;el('directoryForm').reset();el('directoryActions').hidden=true;write(el('directoryStatus'),'');write(el('directoryMessage'),'');});

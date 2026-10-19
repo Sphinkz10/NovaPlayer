@@ -113,7 +113,7 @@ Definir storage persistente e permissões por dataset, recursos mínimos medidos
 
 **Prova de 19-10-2026:** associação Android aprovada em emuladores API 26 e 35, com 11 etapas cada. Já existe APK para ensaiar associação em laboratório com o PC; não liga automaticamente ao NAS nem reproduz filmes. A primeira utilização local com biblioteca e vídeo continua a ser M4. Aceitação física das boxes e do TrueNAS permanece pendente.
 
-**Incremento Directory:** [serviço privado executável](M3_DIRECTORY_LAB.md), com contas, registo assinado, descoberta por conta e partilha/revogação. CLI e percurso HTTPS real implementados. Falta integrar estes fluxos no Control e na TV, preservar continuidade de confiança e ligar permissões Jellyfin. O serviço é separado e não foi publicado na Internet.
+**Incremento Directory:** [serviço privado executável](M3_DIRECTORY_LAB.md), com contas, registo assinado, descoberta por conta e partilha/revogação. CLI e percurso HTTPS real implementados. O Control já permite inicializar identidade, publicar/renovar manualmente e verificar o registo ([guia](M3_DIRECTORY_CONTROL.md)). Falta integrar a TV, automatizar renovação com credenciais adequadas, preservar continuidade de confiança e ligar permissões Jellyfin. O serviço é separado e não foi publicado na Internet.
 
 O Directory autentica, associa conta e servidor e fornece descoberta autenticada; não recebe biblioteca, histórico, vídeo ou segredos administrativos dos fornecedores. Registar servidor com chave própria e prova de posse. Desenhar disponibilidade e recuperação do Directory; reprodução local já associada deve ter uma política explícita para indisponibilidade do serviço.
 

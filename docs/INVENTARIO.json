@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 5674,
-      "sha256": "73c4475481af8b9de99fb443446b9afccedd5dec55dfc35bf4130fa93c203aa2"
+      "bytes": 5805,
+      "sha256": "9a61e16f4d168df341f6586f5b2d457c908d5ce5d8304613cd3b341a1b132fc7"
     },
     {
       "path": ".gitignore",
@@ -345,8 +345,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2975,
-      "sha256": "c9939786243b96984a348c1ac3b5cfda8deb2801f6fabe9cdc56d7b49ae9e7de"
+      "bytes": 3027,
+      "sha256": "ae0dfd25efefd18130106f376034739c4829f39e2128ee2d7bdcbb664fd07d02"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -355,8 +355,8 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 2500,
-      "sha256": "db96f2b3cf2351c4e43e252bc19a1237098ed8c0aaaea438c8bcaace27aa4f1d"
+      "bytes": 2515,
+      "sha256": "5d93630b588a3936b7aa617694e472ae165a0ba899280f1376f5832fdb180c2c"
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
@@ -370,8 +370,8 @@
     },
     {
       "path": "docs/M3_ASSOCIACAO_DISPOSITIVOS.md",
-      "bytes": 7067,
-      "sha256": "0bc7b34367679461c4dde37b1236b75242236f44aa2c1f6c67bb708275b242de"
+      "bytes": 7160,
+      "sha256": "fb7e442ceaaf05c7fc69d714dedcc37363ec8a494866ecca36a7f88c50d43600"
     },
     {
       "path": "docs/M3_CLIENTE_ANDROID.md",
@@ -379,9 +379,14 @@
       "sha256": "a91475982036c091ad3bc1a70479e95323c0d63da1079e9b0a7b8a8ce1086735"
     },
     {
+      "path": "docs/M3_DIRECTORY_CONTROL.md",
+      "bytes": 5970,
+      "sha256": "fa0fb27057a9c6c680dab149eaacd8170e3b67b63f14d0b2a7e5d3b337c47aaa"
+    },
+    {
       "path": "docs/M3_DIRECTORY_LAB.md",
-      "bytes": 9214,
-      "sha256": "c78393f6d6c3f21ec1934e95575905ae8b2bad486506a192724f3b40906cc7db"
+      "bytes": 9455,
+      "sha256": "ba58c224c2031ab132f08aac95e1be021b31998a43321e0a8e000dd55f305f69"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -405,8 +410,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 26502,
-      "sha256": "4a94cffbf5e412ad08c7522cafd39432ee09ae8d20c73bbf3a397c1e97e45fd6"
+      "bytes": 26658,
+      "sha256": "ea7e44d9469fd1ea6a5457189992f14f2f70455958d95c2891dd75787fc189e0"
     },
     {
       "path": "scripts/inventory.py",
@@ -435,13 +440,13 @@
     },
     {
       "path": "server/Dockerfile",
-      "bytes": 1032,
-      "sha256": "371e413c4f4134bc27a466ac0fccea56176649cf30137457b4a526789b290a80"
+      "bytes": 1106,
+      "sha256": "469032599fd90b4b71d3e356601bd466822cb44474057363f6eb3cd08e5058b1"
     },
     {
       "path": "server/README.md",
-      "bytes": 11433,
-      "sha256": "012345f8cd73d7df0caa2d3c101dba8009378c5843097a34feafcc4a85668657"
+      "bytes": 11765,
+      "sha256": "2e6f895a926cd8a7f7720e2d9a2e9e946f109a415dad1d100313a0af51a22bc6"
     },
     {
       "path": "server/compose.yaml",
@@ -470,8 +475,8 @@
     },
     {
       "path": "server/nova_directory/client.py",
-      "bytes": 8000,
-      "sha256": "6cdd0549b5d79cdfc1258ee924d479a5bab5f2713be2716f6a6381f754b3d69b"
+      "bytes": 8421,
+      "sha256": "6c89a68bdaf73a066b382f960465f457c09845fac31f749f4b5001f8032887fb"
     },
     {
       "path": "server/nova_directory/protocol.py",
@@ -490,8 +495,8 @@
     },
     {
       "path": "server/nova_server/app.py",
-      "bytes": 9766,
-      "sha256": "20c108d3e32549e894ec29262868d858209dccf8aab52e5a77379f144f5cd053"
+      "bytes": 12210,
+      "sha256": "b4c5c35135abf1fffc43d26b581a7958c470a5efac94d30dc07ea22d0b0dd1e9"
     },
     {
       "path": "server/nova_server/client_api.py",
@@ -512,6 +517,11 @@
       "path": "server/nova_server/devices.py",
       "bytes": 10645,
       "sha256": "6e1c4525789b5f29334ca9018127542a2292e7e3ac2fd3e605f8c4b2aa7b1613"
+    },
+    {
+      "path": "server/nova_server/directory_control.py",
+      "bytes": 8017,
+      "sha256": "968a582b9ddffd4c51f6e7257abdc56e80e3b7b05c2ba8504576caa89b6a0e7c"
     },
     {
       "path": "server/nova_server/jellyfin.py",
@@ -535,18 +545,18 @@
     },
     {
       "path": "server/nova_server/static/control.css",
-      "bytes": 2252,
-      "sha256": "2f4ec6afbad26557932c7a5bd1f438077eecdeccddd1050602e6733c17dfe6a6"
+      "bytes": 2386,
+      "sha256": "67f4e0fa02b61d540a755eb69e8d3cc7b5dbf563fb09507a7c887320443a7ccd"
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 13469,
-      "sha256": "219f7998c1d6059796a8ca683aa9700b666724758a366afbcb5c5c98dda15d8b"
+      "bytes": 18113,
+      "sha256": "c8360e7ac6b6123dd38d2d1dbe6356ae45ecf483292ecca124fdd9c2d4d999ff"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 5943,
-      "sha256": "2aede677e74523c5c1073b99fbbbf022b4973e7440e9bb37cf13cbce91449c56"
+      "bytes": 7198,
+      "sha256": "6fbdc613ba978cc86fb454743c0cb66108a81a4ee26a2d2c5aa7cf81a3c36bc6"
     },
     {
       "path": "server/nova_server/storage.py",
@@ -639,6 +649,11 @@
       "sha256": "07eb5bfdeb5ae40dc63830982a2d2e0c65cf10e15b6ea3d1c82adda15e246a2d"
     },
     {
+      "path": "server/scripts/smoke_directory_control.py",
+      "bytes": 8757,
+      "sha256": "0fa00f98395da709211eb4599bc4e0b8c4d778130cc31bf65399277513c37a8a"
+    },
+    {
       "path": "server/scripts/smoke_directory_tls.py",
       "bytes": 8650,
       "sha256": "492e03619cc68b33603d112a3e1dff2108c81a927be61af48c52fa788a1e5b74"
@@ -665,8 +680,8 @@
     },
     {
       "path": "server/tests/test_compose.py",
-      "bytes": 1474,
-      "sha256": "05e204d344a82bf60a63a7a8d7e2952e5726677fac1977e14c665418a13ca535"
+      "bytes": 1684,
+      "sha256": "e7c175e0a0d8a7fd280c1b71aab030e268a3008620b11dafd99edaf43e6c4e6b"
     },
     {
       "path": "server/tests/test_connect.py",
@@ -687,6 +702,11 @@
       "path": "server/tests/test_directory.py",
       "bytes": 18034,
       "sha256": "1ddc26c83a0decb5a43f46ed0c71b5cb4bf4d8bb9be113913b253059d7b34369"
+    },
+    {
+      "path": "server/tests/test_directory_control.py",
+      "bytes": 10063,
+      "sha256": "bab39412635ee69f7f8dbdd1007e4967e4c661a8cc822057383f75b0a94efabf"
     },
     {
       "path": "server/tests/test_installer.py",

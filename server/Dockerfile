@@ -6,9 +6,10 @@ FROM python:3.13.7-slim
 LABEL org.opencontainers.image.source="https://github.com/Sphinkz10/NovaPlayer"
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
 WORKDIR /app
-COPY requirements.txt ./
-RUN pip install --no-cache-dir --require-hashes -r requirements.txt
+COPY requirements.txt requirements-directory.txt ./
+RUN pip install --no-cache-dir --require-hashes -r requirements-directory.txt
 COPY nova_server ./nova_server
+COPY nova_directory ./nova_directory
 COPY scripts ./scripts
 COPY --from=age-build /out/age /out/age-keygen /usr/local/bin/
 COPY --from=age-build /licenses /usr/share/nova/licenses/

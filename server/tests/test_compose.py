@@ -35,7 +35,10 @@ def test_no_remote_edge_or_direct_jellyfin():
     assert 'network_mode: host' not in text
     assert 'NOVA_CONNECT_ENABLED: true' not in text
 
-def test_public_default_status_off():
-    src=(ROOT/'nova_server/app.py').read_text()
-    assert "'remote_access_enabled':False" in src
-    assert "'directory_enabled':False" in src
+def test_public_default_status_off(tmp_path):
+    from fastapi.testclient import TestClient
+    from nova_server.app import make_app
+    with TestClient(make_app(tmp_path,directory_options={}),base_url='http://127.0.0.1') as client:
+        status=client.get('/api/v1/status').json()
+        assert status['remote_access_enabled'] is False
+        assert status['directory_enabled'] is False

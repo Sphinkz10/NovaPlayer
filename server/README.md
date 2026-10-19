@@ -146,3 +146,7 @@ Os testes unitários usam `httpx.MockTransport` e FastAPI `TestClient`. O teste 
 ## Incremento M3 de laboratório
 
 As fontes atuais incluem associação por código, aprovação/revogação no Control e API HTTPS separada. Consultar [M3](../docs/M3_ASSOCIACAO_DISPOSITIVOS.md). O serviço cliente exige ativação explícita e não é iniciado pelo Compose M2. O schema passa para 2: preservar backup para regressar à imagem M2.
+
+## Directory no NOVA Control
+
+A integração opcional permite inicializar identidade, publicar/renovar manualmente e verificar a publicação. Configurar origem e confiança TLS no processo local; credenciais não são guardadas. A nova imagem inclui as dependências/código, mas não inicia o Directory separado nem altera o Compose por defeito. Ver [guia e ensaio](../docs/M3_DIRECTORY_CONTROL.md). Android, renovação automática e permissões de media continuam pendentes.

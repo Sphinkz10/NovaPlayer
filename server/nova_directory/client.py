@@ -13,7 +13,7 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from .protocol import Descriptor, encode, private_origin, message, validate_payload, verify_record
+from .protocol import ID, Descriptor, encode, private_origin, message, validate_payload, verify_record
 
 
 def server_identity(state, *, create_key=False):
@@ -68,18 +68,23 @@ class DirectoryClient:
 
     def login(self, username, password):
         result = self.request('POST','login',{'username':username,'password':password})
+        if not isinstance(result, dict) or not isinstance(result.get('account_id'), str) or not re.fullmatch(ID, result['account_id']):
+            raise ValueError('Invalid Directory account')
         token = result.get('access_token')
         if not isinstance(token, str) or not re.fullmatch(r'[A-Za-z0-9_-]{40,128}', token):
             raise ValueError('Invalid Directory session')
         self.token, self.account = token, result['account_id']
 
-    def register(self, descriptor, key):
+    def register(self, descriptor, key, *, previous=None):
         public = encode(key.public_key().public_bytes_raw())
         payload = self.request('POST','challenges',{'public_key':public,'descriptor':descriptor.model_dump()})
         validate_payload(payload, self.origin, expected_key=public)
         if (payload['owner_id'] != self.account or payload['descriptor'] != descriptor.model_dump() or
                 payload['proof_expires_at'] <= time.time()):
             raise ValueError('Registration challenge changed')
+        if previous and (payload['entry_id'] != previous['entry_id'] or
+                         payload['version'] <= previous['version']):
+            raise ValueError('Registration continuity changed')
         signature = encode(key.sign(message(payload)))
         record = self.request('POST','registrations',{'challenge_id':payload['challenge_id'],'signature':signature})
         verify_record(record, self.origin, expected_key=public)

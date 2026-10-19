@@ -1,6 +1,6 @@
 # M3 — Directory privado, primeiro serviço executável
 
-O Directory já tem um serviço de laboratório independente: contas, sessões, registo de servidores com prova de posse de chave Ed25519, descoberta por conta, partilha explícita e revogação. Não está integrado no ecrã da TV nem no assistente NOVA Control. Não fecha a M3 nem disponibiliza login universal na APK atual.
+O Directory já tem um serviço de laboratório independente: contas, sessões, registo de servidores com prova de posse de chave Ed25519, descoberta por conta, partilha explícita e revogação. O [NOVA Control](M3_DIRECTORY_CONTROL.md) já permite inicializar identidade, publicar/renovar manualmente e verificar a publicação. A integração no ecrã da TV continua pendente. Não fecha a M3 nem disponibiliza login universal na APK atual.
 
 ## O percurso implementado
 
@@ -15,7 +15,7 @@ A identidade da entrada é própria e vinculada à conta do proprietário. Duas 
 
 ## Fronteiras e limites
 
-- Serviço e base `directory.sqlite3` separados do NOVA Core e Jellyfin. Não são iniciados pelo Compose/gerador TrueNAS nem incorporados na imagem NOVA Core existente.
+- Serviço e base `directory.sqlite3` separados do NOVA Core e Jellyfin. Não são iniciados pelo Compose/gerador TrueNAS. A nova imagem Core inclui o código e as dependências para a integração opcional no Control, mas não arranca o serviço Directory separado.
 - Launcher limitado a `127.0.0.1`, sem proxy headers nem access logs. HTTPS TLS 1.3 obrigatório; sem HTTP, redirecionamentos, `verify=False` ou alteração da trust store do sistema.
 - Contas de laboratório independentes da conta NOVA. Sessões de 15 minutos, apenas hashes no Directory, máximo de oito por conta; logout e desativação invalidam autorização.
 - Descriptor admite apenas versão, UUID, nome, origem HTTPS IPv4 privada/overlay e certificado público com SAN correspondente. Não aceita campos de biblioteca, histórico, tokens Jellyfin ou chaves VPN. Nenhum pedido ao endpoint publicado é feito pelo Directory.
@@ -62,7 +62,7 @@ python -m nova_directory.client discover --directory https://127.0.0.1:9443 --ca
 
 ## Próximo incremento
 
-Ligar registo/renovação ao Control, implementar login/descoberta e continuidade de confiança na TV e ligar a autorização às contas/bibliotecas Jellyfin. Depois M4: catálogo e primeiro filme. A aceitação física TrueNAS/Xiaomi/Chromecast e os três percursos VPN completos permanecem pendentes.
+Automatizar renovação com um mecanismo de credenciais próprio; implementar login/descoberta e continuidade de confiança na TV e ligar a autorização às contas/bibliotecas Jellyfin. Depois M4: catálogo e primeiro filme. A aceitação física TrueNAS/Xiaomi/Chromecast e os três percursos VPN completos permanecem pendentes.
 
 ## Evidência de 19-10-2026
 

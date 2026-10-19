@@ -19,7 +19,8 @@ from .jellyfin import probe_jellyfin
 from .connect import ConnectDraft, provider_catalog
 from .setup import JellyfinSetup, SetupRequest, Credentials, SetupError
 from .devices import Devices, DeviceError
-from .device_api import UserCode, DeviceDecision, device_error
+from .device_api import Payload, UserCode, DeviceDecision, device_error
+from .client_api import SmallBody
 
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z][a-zA-Z0-9_.-]{2,39}$')
 DUMMY_HASH = '$argon2id$v=19$m=65536,t=3,p=2$bsLfU/8cH1R+4e68utTSNQ$8Tk5/U5Y6zx5/ZrURl0G7DtU5y3EXazaQ+3mifoBRLI'
@@ -34,7 +35,16 @@ class LoginPayload(BaseModel):
     password: str = Field(min_length=1,max_length=1024)
 
 
-def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_server_id=None):
+class DirectoryCredentials(Payload):
+    username: str = Field(min_length=3, max_length=40, pattern=r'^[a-z][a-z0-9_.-]{2,39}$')
+    password: str = Field(min_length=1, max_length=1024)
+
+
+class DirectoryPublication(DirectoryCredentials):
+    name: str = Field(min_length=1, max_length=64)
+
+
+def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_server_id=None, directory_options=None):
     state_dir=Path(state_dir or os.environ.get('NOVA_STATE_DIR','./state/nova'))
     jellyfin_url=jellyfin_url or os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096')
     store=Store(state_dir)
@@ -42,12 +52,22 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     api.state.store=store
     devices = Devices(store)
     api.state.devices = devices
+    if directory_options is None and os.environ.get('NOVA_DIRECTORY_ORIGIN'):
+        directory_options = dict(origin=os.environ['NOVA_DIRECTORY_ORIGIN'],
+            ca=os.environ.get('NOVA_DIRECTORY_CA',''), client_origin=os.environ.get('NOVA_CLIENT_ORIGIN',''),
+            certificate=os.environ.get('NOVA_CLIENT_CERT',''))
+    directory_control = None
+    if directory_options:
+        from .directory_control import DirectoryControl, ControlError, safe_operation
+        directory_control = DirectoryControl(state_dir, **directory_options)
+    api.state.directory_control = directory_control
     api.add_exception_handler(DeviceError, device_error)
     api.state.jellyfin_url=jellyfin_url
     jellyfin_server_id = jellyfin_server_id or os.environ.get('NOVA_JELLYFIN_SERVER_ID')
     api.state.jellyfin_setup = JellyfinSetup(store, jellyfin_url, jellyfin_server_id)
     hosts = allowed_hosts if allowed_hosts is not None else ['127.0.0.1', 'localhost']
     api.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts, www_redirect=False)
+    api.add_middleware(SmallBody, maximum=16384)
 
     @api.exception_handler(RequestValidationError)
     async def invalid_payload(request, exc):
@@ -92,7 +112,7 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
         return {'product':'NOVA Server','version':'0.3.0-dev',
                 'owner_setup_required':not store.has_admin(),
                 'remote_access_enabled':False,
-                'directory_enabled':False,
+                'directory_enabled':directory_control is not None,
                 'jellyfin_installed_as_compose_service':True}
 
     @api.post('/api/v1/admin/bootstrap',status_code=201)
@@ -149,7 +169,7 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
                                   'readable':None, 'read_only':None, 'indexed':None}
                                  for name in ('source-a', 'source-b')],
                 'connect':{'state':'disabled','reason':'P03 pending secure remote design'},
-                'directory':{'state':'not_implemented'},
+                'directory':{'state':'configured' if directory_control else 'disabled'},
                 'admin_interface':{'exposure':'loopback_only_required'}}
 
     @api.get('/api/v1/admin/connect')
@@ -160,6 +180,34 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     @api.get('/api/v1/admin/setup')
     def setup_status(token:str=Depends(owner)):
         return store.setup_state()
+
+    def directory_call(action, *, limited=True):
+        if directory_control is None:
+            raise HTTPException(503, 'directory_not_configured')
+        if limited:
+            devices.limit('owner.directory', 'owner', 10, 10)
+        try:
+            return safe_operation(lambda: action(directory_control))
+        except ControlError as error:
+            raise HTTPException(error.status, error.code) from None
+
+    @api.get('/api/v1/admin/directory')
+    def directory_status(token:str=Depends(owner)):
+        if directory_control is None:
+            return {'enabled':False, 'state':'disabled', 'media_authorized':False}
+        return directory_call(lambda control: control.status(), limited=False)
+
+    @api.post('/api/v1/admin/directory/identity')
+    def directory_identity(token:str=Depends(owner)):
+        return directory_call(lambda control: control.initialize())
+
+    @api.post('/api/v1/admin/directory/publish')
+    def directory_publish(payload:DirectoryPublication, token:str=Depends(owner)):
+        return directory_call(lambda control: control.operate('publish', payload.username, payload.password, payload.name))
+
+    @api.post('/api/v1/admin/directory/check')
+    def directory_check(payload:DirectoryCredentials, token:str=Depends(owner)):
+        return directory_call(lambda control: control.operate('check', payload.username, payload.password))
 
     @api.post('/api/v1/admin/setup/jellyfin')
     async def setup_jellyfin(payload:SetupRequest, token:str=Depends(owner)):
