@@ -109,6 +109,15 @@ def run():
                 for port in (client_port,wrong_port): adb('reverse',f'tcp:{port}',f'tcp:{port}')
                 invitation=root/'invitation.json';export(state,origin,cert,invitation)
                 wrong=root/'wrong-invitation.json';export(state,wrong_origin,wrong_cert,wrong)
+                # Invitations use the full 24-hour lifetime. Even a one-second
+                # device lag makes that exceed the parser's strict upper bound.
+                # Wait for fixture issue time; do not relax product validation.
+                issued_through = int(time.time())
+                deadline = time.monotonic()+15
+                while int(adb('shell','date','+%s').strip()) < issued_through:
+                    if time.monotonic() >= deadline:
+                        raise SystemExit('Emulator clock did not reach fixture issue time')
+                    time.sleep(0.25)
                 provision_file('pairing-invitation.json',invitation.read_bytes())
                 provision_file('wrong-host-invitation.json',wrong.read_bytes())
                 provision_file('untrusted-certificate.der',ssl.PEM_cert_to_DER_cert(wrong_cert.read_text()))

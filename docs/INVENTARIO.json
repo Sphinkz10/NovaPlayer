@@ -325,8 +325,8 @@
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
-      "bytes": 11840,
-      "sha256": "484b43b88f23c775b7ea117e8ac61c77e22df4377e234a3696777251eef8bd21"
+      "bytes": 12437,
+      "sha256": "4840403ca763e584ce23d39abc6f74a005712c5dc50da9e94c0728033faae5df"
     },
     {
       "path": "connect/settings.gradle.kts",
