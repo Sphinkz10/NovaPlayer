@@ -1,6 +1,6 @@
 # NOVA — Roadmap até à instalação no servidor e na TV
 
-**Versão:** 0.2, atualização M2 · **Data:** 18-10-2026 · **Estado:** execução parcial; consultar os marcos e evidências abaixo.
+**Versão:** 0.2, atualização M3 Directory · **Data:** 19-10-2026 · **Estado:** execução parcial; consultar os marcos e evidências abaixo.
 
 **Requisito incorporado:** WireGuard, Tailscale e NetBird são opções nativas do NOVA Connect. O proprietário configura a ligação no NOVA Control. A TV instala a NOVA Cinema e recebe a configuração autorizada através da associação de dispositivo. Instalar outra app VPN na TV não satisfaz o objetivo de integração nativa deste roadmap.
 
@@ -109,7 +109,7 @@ Definir storage persistente e permissões por dataset, recursos mínimos medidos
 
 ### M3 — Identidade independente da VPN
 
-**Incremento implementado:** associação no servidor com aprovação no Control, API HTTPS isolada, credenciais rotativas e revogação. [Estado e ensaio M3](M3_ASSOCIACAO_DISPOSITIVOS.md). O cliente Android de laboratório agora inclui associação, Keystore e confirmação de identidade importada ([guia](M3_CLIENTE_ANDROID.md)). Directory, bootstrap/renovação TLS integrados e permissões de media permanecem pendentes; não considerar o marco concluído.
+**Incremento implementado:** associação no servidor com aprovação no Control, API HTTPS isolada, credenciais rotativas e revogação. [Estado e ensaio M3](M3_ASSOCIACAO_DISPOSITIVOS.md). O cliente Android de laboratório agora inclui associação, Keystore e confirmação de identidade importada ([guia](M3_CLIENTE_ANDROID.md)). A integração Directory na TV, o bootstrap/renovação TLS integrados e as permissões de media permanecem pendentes; não considerar o marco concluído.
 
 **Prova de 19-10-2026:** associação Android aprovada em emuladores API 26 e 35, com 11 etapas cada. Já existe APK para ensaiar associação em laboratório com o PC; não liga automaticamente ao NAS nem reproduz filmes. A primeira utilização local com biblioteca e vídeo continua a ser M4. Aceitação física das boxes e do TrueNAS permanece pendente.
 

@@ -10,7 +10,7 @@ A app importa o ficheiro através do seletor de documentos Android, sem pedir ac
 
 A ligação exige HTTPS, origem IPv4 privada/overlay ou loopback explícita com porta, certificado exato confirmado, cadeia e validade aceites e hostname correspondente. Não há aceitação automática de certificados, troca de pin, redirecionamentos ou fallback HTTP. DNS e IPv6 ainda não fazem parte deste bootstrap de laboratório. O certificado confiado é local a esta ligação; a app não altera a trust store do Android.
 
-A descoberta e o bootstrap sem transferência de ficheiros fazem parte do Directory, ainda pendente. Este procedimento não é a experiência final para familiares.
+A descoberta e o bootstrap sem transferência de ficheiros dependem da integração Android com o [Directory de laboratório](M3_DIRECTORY_LAB.md), cujo serviço já existe. Essa integração continua pendente. Este procedimento não é a experiência final para familiares.
 
 ## Sessão e revogação
 
@@ -53,6 +53,6 @@ Não existem resultados físicos da TV ou NAS. A APK é debug de laboratório, n
 
 ## Próximo marco
 
-Fechar Directory com registo/prova de posse e descoberta autenticada, confiança TLS inicial/renovação integrada e permissões por utilizador/biblioteca. Depois, M4: catálogo, navegação e primeiro filme local. A aceitação física M2 no TrueNAS permanece pendente.
+Integrar na TV o Directory, que já implementa registo/prova de posse e descoberta autenticada; concluir confiança TLS inicial/renovação integrada e permissões por utilizador/biblioteca. Depois, M4: catálogo, navegação e primeiro filme local. A aceitação física M2 no TrueNAS permanece pendente.
 
 Referências de implementação: [Android Keystore](https://developer.android.com/privacy-and-security/keystore), [criptografia Android](https://developer.android.com/privacy-and-security/cryptography), [Storage Access Framework](https://developer.android.com/training/data-storage/shared/documents-files).

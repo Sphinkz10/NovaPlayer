@@ -10,7 +10,7 @@ a jornada instalar → associar → biblioteca → vídeo ainda não existe.
 | NOVA Connect 0.5-pairing-lab | 198 testes Kotlin; associação HTTPS aprovada em API 26/35, 11 etapas por emulador; os três motores compilaram numa APK experimental e carregaram em processos separados | Pontes funcionais VPN, handshake e HTTPS pelos túneis; ARM/TV físicos |
 | NOVA Cinema | Designs e políticas de reprodução corrigidas | UI TV, biblioteca Jellyfin e player Media3 |
 | Identidade/dispositivos M3 | Servidor e cliente Android de laboratório: associação, confirmação de identidade importada, Keystore, refresh e revogação aprovados nos emuladores | Hardware; Directory, renovação TLS integrada e permissões Jellyfin |
-| Directory | Serviço separado de laboratório: contas Argon2id, prova Ed25519, descoberta autenticada, partilha/revogação e TLS 1.3; 42 testes específicos e ensaio HTTPS real local aprovados | Integração Control/Android, renovação automática, continuidade de confiança e recuperação |
+| Directory | Serviço separado de laboratório: contas Argon2id, prova Ed25519, descoberta autenticada, partilha/revogação e TLS 1.3; 42 testes específicos e ensaio HTTPS real aprovados em Linux/Windows, Python 3.12/3.13 | Integração Control/Android, renovação automática, continuidade de confiança e recuperação |
 | CI | Linux/Windows, HTTP, navegador, Docker, Android e runtime nativo em emulador aprovados | Ligação real dos três fornecedores e execução em hardware; ver relatório |
 | Segurança | Correções locais verificadas e análise Python sem avisos conhecidos | SEC-01…12 continuam sem validação final |
 

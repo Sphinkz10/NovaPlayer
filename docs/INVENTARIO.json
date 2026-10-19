@@ -325,8 +325,8 @@
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
-      "bytes": 11005,
-      "sha256": "cecef9a08d4c9610f9edadea7ed35f2f97502b54bfa4e292ba5bb1591cd374bb"
+      "bytes": 11840,
+      "sha256": "484b43b88f23c775b7ea117e8ac61c77e22df4377e234a3696777251eef8bd21"
     },
     {
       "path": "connect/settings.gradle.kts",
@@ -345,8 +345,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2946,
-      "sha256": "3f413e92ddbcf570672b2d40ae530baac6dadffb5f00df88902e918c63f256b6"
+      "bytes": 2975,
+      "sha256": "c9939786243b96984a348c1ac3b5cfda8deb2801f6fabe9cdc56d7b49ae9e7de"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -370,18 +370,18 @@
     },
     {
       "path": "docs/M3_ASSOCIACAO_DISPOSITIVOS.md",
-      "bytes": 6833,
-      "sha256": "29c1a997675ded6a084258c8c566bf791a286b114eaa65bf6b2e27c780767698"
+      "bytes": 7067,
+      "sha256": "0bc7b34367679461c4dde37b1236b75242236f44aa2c1f6c67bb708275b242de"
     },
     {
       "path": "docs/M3_CLIENTE_ANDROID.md",
-      "bytes": 7689,
-      "sha256": "c0988805329e62d191530f6e35e3e15cafb8770bcccd404c458c3913bc0e979d"
+      "bytes": 7834,
+      "sha256": "a91475982036c091ad3bc1a70479e95323c0d63da1079e9b0a7b8a8ce1086735"
     },
     {
       "path": "docs/M3_DIRECTORY_LAB.md",
-      "bytes": 8086,
-      "sha256": "67fed135e0ee2758078e1332f1b12d87eb257b56e7a5f2ec9b0a58af3b86a3e6"
+      "bytes": 9214,
+      "sha256": "c78393f6d6c3f21ec1934e95575905ae8b2bad486506a192724f3b40906cc7db"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -405,8 +405,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 26664,
-      "sha256": "d2d351bb751d2f3bba33255f954e8f4f6b44b43a7bb113dfae7f9043ef6a25df"
+      "bytes": 26502,
+      "sha256": "4a94cffbf5e412ad08c7522cafd39432ee09ae8d20c73bbf3a397c1e97e45fd6"
     },
     {
       "path": "scripts/inventory.py",

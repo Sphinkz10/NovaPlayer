@@ -44,8 +44,23 @@ def run():
         raise SystemExit('Only the disposable GitHub Actions emulator is permitted.')
     # Older emulator images can start with a stale RTC. Keep certificate/expiry
     # checks strict in the product; synchronise only this disposable test device.
-    adb('root'); adb('wait-for-device')
-    adb('shell','date','-u',datetime.now(timezone.utc).strftime('%m%d%H%M%Y.%S'))
+    if abs(int(adb('shell','date','+%s').strip())-time.time()) >= 5:
+        # adbd may close its transport while restarting as root. Its command
+        # exit status is not the readiness check: verify the resulting UID.
+        root_result = subprocess.run(['adb','root'], text=True, stdout=subprocess.PIPE,
+                                     stderr=subprocess.STDOUT, timeout=30)
+        adb('wait-for-device')
+        deadline = time.monotonic()+20
+        while True:
+            try:
+                if adb('shell','id','-u',timeout=5).strip() == '0':
+                    break
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+                pass
+            if time.monotonic() >= deadline:
+                raise SystemExit('Disposable emulator clock correction unavailable: '+root_result.stdout.strip())
+            time.sleep(1)
+        adb('shell','date','-u',datetime.now(timezone.utc).strftime('%m%d%H%M%Y.%S'))
     assert abs(int(adb('shell','date','+%s').strip())-time.time()) < 5
     OUT.mkdir(parents=True,exist_ok=True)
     for path in ('app/build/outputs/apk/debug/app-debug.apk',

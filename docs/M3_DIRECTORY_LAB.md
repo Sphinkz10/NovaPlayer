@@ -64,4 +64,12 @@ python -m nova_directory.client discover --directory https://127.0.0.1:9443 --ca
 
 Ligar registo/renovação ao Control, implementar login/descoberta e continuidade de confiança na TV e ligar a autorização às contas/bibliotecas Jellyfin. Depois M4: catálogo e primeiro filme. A aceitação física TrueNAS/Xiaomi/Chromecast e os três percursos VPN completos permanecem pendentes.
 
+## Evidência de 19-10-2026
+
+Revisão funcional `1f7757168da12e5fe68b543bc807b1ab33492a07`: [CI do servidor](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39260515012). Python 3.12 e 3.13 aprovados em Linux (204 testes) e Windows (198 aprovados, seis específicos de POSIX ignorados). Inclui 42 testes Directory e 16 verificações do percurso HTTPS real em cada combinação. HTTP, associação HTTPS, navegador e Compose/recuperação também aprovados. Análise das dependências Python de produção e Directory sem vulnerabilidades conhecidas reportadas nessa execução.
+
+A primeira execução revelou uma ligação SQLite de leitura que não era fechada explicitamente, impedindo a limpeza em Windows/Python 3.13. A revisão acima corrige o ciclo de vida da ligação e inclui regressão que mantém referências às ligações para não depender do garbage collector. Os resultados de Linux não foram usados para ocultar essa falha em Windows.
+
+Estes resultados validam o serviço e a CLI em laboratório. Não demonstram descoberta na TV, media, VPN, recuperação Directory ou segurança final da plataforma.
+
 Primitiva utilizada: [Ed25519 em PyCA cryptography](https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/). O protocolo próprio é de laboratório; não se apresenta como OAuth/OIDC nem como validação final de segurança.

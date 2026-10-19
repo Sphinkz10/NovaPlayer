@@ -2,11 +2,11 @@
 
 Estado: NOVA Server `0.3.0-dev`. Implementação de laboratório; M3 ainda não concluída. A entrega M2 `0.2.0-lab` e a sua imagem por digest continuam identificadas no guia M2. Não substituir a instalação M2 por esta revisão sem backup offline e plano de restauro: o schema passa de 1 para 2.
 
-Cliente Android de laboratório implementado no incremento seguinte: [M3_CLIENTE_ANDROID.md](M3_CLIENTE_ANDROID.md). A confirmação inicial usa ficheiro público e impressão digital por canal de confiança; Directory e renovação integrada de certificados continuam pendentes.
+Cliente Android de laboratório implementado no incremento seguinte: [M3_CLIENTE_ANDROID.md](M3_CLIENTE_ANDROID.md). A confirmação inicial usa ficheiro público e impressão digital por canal de confiança. O [serviço Directory](M3_DIRECTORY_LAB.md) já existe; a integração na TV e a renovação integrada de certificados continuam pendentes.
 
 ## O que já funciona
 
-- Identidade UUID persistente do NOVA Server, distinta da identidade Jellyfin. Não é ainda uma chave de assinatura nem registo no Directory.
+- Identidade UUID persistente do NOVA Server, distinta da identidade Jellyfin. O incremento [Directory](M3_DIRECTORY_LAB.md) acrescenta uma chave Ed25519 inicializada explicitamente e registo pela CLI; a associação descrita aqui ainda usa o ficheiro público.
 - Cliente pede associação e apresenta código de oito caracteres. O proprietário introduz o código no Control, consulta nome/código e aprova ou recusa explicitamente.
 - Código visível e segredo de polling independentes; apenas hashes na base. Pedido expira em dez minutos, só pode ser consumido uma vez e tem polling limitado (cinco segundos inicialmente; pedidos antecipados aumentam o intervalo).
 - Credenciais opacas de dispositivo com âmbito exclusivo `device:read`: identificam a associação e permitem obter um descriptor pelo canal HTTPS validado. Não autorizam administração, Jellyfin, biblioteca, streaming ou configuração VPN.
@@ -29,7 +29,7 @@ O processo administrativo existente continua em loopback. A API cliente é outro
 
 No Control: `POST /api/v1/admin/devices/inspect`, `POST /api/v1/admin/devices/decision`, `GET /api/v1/admin/devices` e `DELETE /api/v1/admin/devices/{id}` exigem sessão do proprietário. A decisão inclui código e identificador do pedido consultado. O nome do dispositivo é texto não confiável; o proprietário deve comparar também o código apresentado pelo seu dispositivo.
 
-O protocolo JSON próprio segue os princípios de [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628) e da [rotação de refresh tokens em RFC 9700](https://www.rfc-editor.org/rfc/rfc9700); não é anunciado como servidor OAuth/OIDC compatível. A obtenção de confiança inicial e a descoberta via Directory ainda não estão implementadas. Não usar códigos enviados por terceiros para autorizar dispositivos.
+O protocolo JSON próprio segue os princípios de [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628) e da [rotação de refresh tokens em RFC 9700](https://www.rfc-editor.org/rfc/rfc9700); não é anunciado como servidor OAuth/OIDC compatível. A confiança inicial usa confirmação manual; a integração da descoberta via Directory na associação Android ainda não está implementada. Não usar códigos enviados por terceiros para autorizar dispositivos.
 
 ## Ensaiar no PC
 
@@ -49,6 +49,6 @@ Para iniciar manualmente o serviço experimental, fornecer `NOVA_STATE_DIR` igua
 
 Resultados locais Windows: suíte Python e ensaios reais HTTPS/Edge aprovados; consultar a execução CI associada ao commit para Linux, matriz Python e Docker. A CI executa HTTPS e navegador em Python 3.12/3.13, Linux/Windows. O ensaio Docker inclui backup/restauro de uma associação e de um pedido aprovado ainda não consumido, verificando que ambos perdem autorização. Os relatórios JSON não contêm códigos ou tokens.
 
-Ainda por implementar na M3: conta/servidor no Directory com prova de posse, descoberta autenticada, bootstrap/renovação TLS integrados com descoberta na TV, permissões por utilizador/biblioteca Jellyfin e descriptor com autorização de media. Não foram executados testes em TV física ou no TrueNAS.
+O serviço Directory já implementa conta/servidor com prova de posse e descoberta autenticada. Ainda por implementar na M3: integração no Control/TV, bootstrap/renovação TLS integrados com descoberta na TV, permissões por utilizador/biblioteca Jellyfin e descriptor com autorização de media. Não foram executados testes em TV física ou no TrueNAS.
 
 Cliente Android de laboratório aprovado em emuladores API 26/35; ver as evidências no guia Android. Próxima sequência: Directory e permissões → associação com descoberta e confiança integradas → M4, catálogo e primeiro filme. WireGuard/Tailscale/NetBird continuam nativos no plano M0/M5; esta associação não cria túneis.
