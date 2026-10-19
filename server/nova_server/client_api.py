@@ -38,8 +38,9 @@ def client_origin(url):
 
 class SmallBody:
     """Bound streamed JSON before parsing, including absent/incorrect Content-Length."""
-    def __init__(self, app):
+    def __init__(self, app, maximum=4096):
         self.app = app
+        self.maximum = maximum
 
     async def __call__(self, scope, receive, send):
         if scope['type'] != 'http':
@@ -50,7 +51,7 @@ class SmallBody:
             if message['type'] == 'http.disconnect':
                 return
             size += len(message.get('body', b''))
-            if size > 4096:
+            if size > self.maximum:
                 return await JSONResponse({'error': 'request_too_large'}, status_code=413,
                                           headers={'Cache-Control': 'no-store'})(scope, receive, send)
             chunks.append(message.get('body', b''))

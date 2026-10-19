@@ -2,7 +2,7 @@
 
 **Atualização:** 18 outubro 2026, M2 técnica com imagem de instalação e recuperação cifrada aprovadas em Docker; aceitação física TrueNAS pendente.
 
-As fontes atuais incluem o primeiro incremento M3 (`0.3.0-dev`): [associação de dispositivos](M3_ASSOCIACAO_DISPOSITIVOS.md). A entrega M2 por digest permanece identificada no seu guia.
+As fontes atuais incluem M3 (`0.3.0-dev`): [associação de dispositivos](M3_ASSOCIACAO_DISPOSITIVOS.md), [cliente Android de laboratório](M3_CLIENTE_ANDROID.md) e [Directory privado](M3_DIRECTORY_LAB.md). A entrega M2 por digest permanece identificada no seu guia.
 
 ## Como usar este arquivo
 
@@ -18,7 +18,7 @@ As fontes atuais incluem o primeiro incremento M3 (`0.3.0-dev`): [associação d
 
 - **Não** é uma única instalação pronta a usar: são fontes de código e documentos.
 - **Não** contém ficheiro `.fig` editável offline; o original reside no Figma.
-- O build produz uma APK de diagnóstico; NOVA Directory, associação e vídeo ainda não estão implementados.
+- O build produz uma APK de laboratório com associação. O Directory é um serviço separado ainda sem integração Android/Control; catálogo e vídeo não estão implementados.
 - O pacote servidor é apenas uma primeira prova local, **não instalar em produção nem expor na Internet**.
 - WireGuard, Tailscale e NetBird compilaram juntos numa APK experimental. A APK normal ainda inclui apenas WireGuard; nenhum dos três tem a jornada remota completa aprovada.
 

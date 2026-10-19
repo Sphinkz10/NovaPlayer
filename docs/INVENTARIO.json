@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 5460,
-      "sha256": "c7883c1068f61cb6f946b71e2405f95379bf07147e239942df58d42a1958d243"
+      "bytes": 5674,
+      "sha256": "73c4475481af8b9de99fb443446b9afccedd5dec55dfc35bf4130fa93c203aa2"
     },
     {
       "path": ".gitignore",
@@ -345,8 +345,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2745,
-      "sha256": "76e92646f67f55e32cbb54df66e80f7c378d4be3b78dddb354a389231aff682e"
+      "bytes": 2946,
+      "sha256": "3f413e92ddbcf570672b2d40ae530baac6dadffb5f00df88902e918c63f256b6"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -355,8 +355,8 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 2353,
-      "sha256": "2980766e431708247d377414a2f0afdf5f1549b3f54ad3694ddae119dd6e793b"
+      "bytes": 2500,
+      "sha256": "db96f2b3cf2351c4e43e252bc19a1237098ed8c0aaaea438c8bcaace27aa4f1d"
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
@@ -377,6 +377,11 @@
       "path": "docs/M3_CLIENTE_ANDROID.md",
       "bytes": 7689,
       "sha256": "c0988805329e62d191530f6e35e3e15cafb8770bcccd404c458c3913bc0e979d"
+    },
+    {
+      "path": "docs/M3_DIRECTORY_LAB.md",
+      "bytes": 8086,
+      "sha256": "67fed135e0ee2758078e1332f1b12d87eb257b56e7a5f2ec9b0a58af3b86a3e6"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -400,8 +405,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 26294,
-      "sha256": "4c391c0f1ef2a36ce5a1a4b32c4cf902f32d3bd7badd34024735abf90fd1d4f7"
+      "bytes": 26664,
+      "sha256": "d2d351bb751d2f3bba33255f954e8f4f6b44b43a7bb113dfae7f9043ef6a25df"
     },
     {
       "path": "scripts/inventory.py",
@@ -435,8 +440,8 @@
     },
     {
       "path": "server/README.md",
-      "bytes": 11323,
-      "sha256": "bdad24ed86cee9bdb5317333b59dbe84db1a23165cf3b589792bae638f2f687c"
+      "bytes": 11433,
+      "sha256": "012345f8cd73d7df0caa2d3c101dba8009378c5843097a34feafcc4a85668657"
     },
     {
       "path": "server/compose.yaml",
@@ -447,6 +452,36 @@
       "path": "server/docs/DELIVERY_STATUS.md",
       "bytes": 1941,
       "sha256": "56d85536f09de44a068152f40ad9eb9442ac5e69fd1b9d449c835b476db4eff2"
+    },
+    {
+      "path": "server/nova_directory/__init__.py",
+      "bytes": 76,
+      "sha256": "9b8c16ae534be537569837685828a7bb9a77bf635488ec6dcbf2af719e521727"
+    },
+    {
+      "path": "server/nova_directory/__main__.py",
+      "bytes": 2228,
+      "sha256": "b582b7cd0293b72af55ee50d7aa0b522945edf0f8e33278f00e1356055635607"
+    },
+    {
+      "path": "server/nova_directory/api.py",
+      "bytes": 3952,
+      "sha256": "d93a310120788279b572df965f66ea35421d208001b24c44bc80c8d80c4c35da"
+    },
+    {
+      "path": "server/nova_directory/client.py",
+      "bytes": 7960,
+      "sha256": "b4475d196d202498cbdb36b421b7d5c55050a05d69746cc23884b75be031f989"
+    },
+    {
+      "path": "server/nova_directory/protocol.py",
+      "bytes": 5848,
+      "sha256": "8338bcf154f986549920f77b060fef7a8e434b8ba846e313ec89a13236c4a43f"
+    },
+    {
+      "path": "server/nova_directory/store.py",
+      "bytes": 13999,
+      "sha256": "3ca576d02fb10a368baa6207459c692c9160db9db943a5e1d27db89b47db8d2d"
     },
     {
       "path": "server/nova_server/__init__.py",
@@ -460,8 +495,8 @@
     },
     {
       "path": "server/nova_server/client_api.py",
-      "bytes": 6614,
-      "sha256": "5ed01d3445104d22ed9dbdfdc4ea3063422eedb0cc391cd4f2abb78e2b29e9a3"
+      "bytes": 6668,
+      "sha256": "d01f6f8e532954fd01b2b0670d3fec121285d32ff2600a4c95444296d293e9b4"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -525,13 +560,23 @@
     },
     {
       "path": "server/requirements-dev.in",
-      "bytes": 88,
-      "sha256": "1f8d7c59ebcd6e27cbd43e9c02aa71dccec9170af36d706554b8b4a08bf57a4b"
+      "bytes": 98,
+      "sha256": "ef5f43a071bb49dadf368fdf1792a9c4231dfe3f530a876aeb119eb9bfa57999"
     },
     {
       "path": "server/requirements-dev.txt",
-      "bytes": 43502,
-      "sha256": "31a6d7bd1da67d731036f9f4b94c3387c0709a388c041d1d9daafd895526107f"
+      "bytes": 48606,
+      "sha256": "6ca5d66827ce31852636cf77a12106fa9a78a3dadc3aa41ecf05c1eb641604db"
+    },
+    {
+      "path": "server/requirements-directory.in",
+      "bytes": 40,
+      "sha256": "af3d15e85a85a06b6d0932437625318cd45cd97637c156ad3768f5e884bc0f01"
+    },
+    {
+      "path": "server/requirements-directory.txt",
+      "bytes": 33155,
+      "sha256": "6f2dd3b59be6380973126daad9e9db500f183a984e4f4a3da9294bd136d0bd93"
     },
     {
       "path": "server/requirements.in",
@@ -565,8 +610,8 @@
     },
     {
       "path": "server/scripts/lock_dependencies.py",
-      "bytes": 599,
-      "sha256": "3df32a4e9ab7a68e58fceeeeb05a9593819f48709a7ea5f9a185db2265e40333"
+      "bytes": 625,
+      "sha256": "365712949cb4508652aa3ad3ea0856cad839bfc7dabf8640de27b5d486e16f74"
     },
     {
       "path": "server/scripts/preflight.py",
@@ -592,6 +637,11 @@
       "path": "server/scripts/smoke_devices_tls.py",
       "bytes": 8222,
       "sha256": "07eb5bfdeb5ae40dc63830982a2d2e0c65cf10e15b6ea3d1c82adda15e246a2d"
+    },
+    {
+      "path": "server/scripts/smoke_directory_tls.py",
+      "bytes": 8650,
+      "sha256": "492e03619cc68b33603d112a3e1dff2108c81a927be61af48c52fa788a1e5b74"
     },
     {
       "path": "server/scripts/smoke_http.py",
@@ -632,6 +682,11 @@
       "path": "server/tests/test_devices.py",
       "bytes": 14511,
       "sha256": "9cd0f6771e8e8c294d4177cecf63e1ac3207b2b84b8d94a95760a085f255554e"
+    },
+    {
+      "path": "server/tests/test_directory.py",
+      "bytes": 17503,
+      "sha256": "4d343e94fabfb7155901fbf7d050a13837ea57da8349f8355d85e921349b9e52"
     },
     {
       "path": "server/tests/test_installer.py",

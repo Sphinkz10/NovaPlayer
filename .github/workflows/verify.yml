@@ -30,6 +30,8 @@ jobs:
         working-directory: server
       - run: python scripts/smoke_devices_tls.py --output test-results/devices
         working-directory: server
+      - run: python scripts/smoke_directory_tls.py --output test-results/directory
+        working-directory: server
       - run: python -m playwright install --with-deps chromium
       - run: python scripts/smoke_browser.py --output test-results/browser
         working-directory: server
@@ -48,6 +50,7 @@ jobs:
           python-version: '3.13'
       - run: python -m pip install pip-audit==2.10.1
       - run: python -m pip_audit -r server/requirements.txt --no-deps --disable-pip
+      - run: python -m pip_audit -r server/requirements-directory.txt --no-deps --disable-pip
   android:
     runs-on: ubuntu-latest
     timeout-minutes: 25

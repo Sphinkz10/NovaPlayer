@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-for name in ('requirements', 'requirements-dev'):
+for name in ('requirements', 'requirements-directory', 'requirements-dev'):
     subprocess.run([
         sys.executable, '-m', 'piptools', 'compile', '--generate-hashes',
         '--resolver=backtracking', '--strip-extras', '--no-emit-index-url',

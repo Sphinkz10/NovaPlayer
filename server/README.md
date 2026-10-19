@@ -10,7 +10,7 @@ Novo incremento: [assistente M2](../docs/M2_SERVIDOR_LAB.md). Criação do propr
 
 Testes e limitações anteriores: [fase 1](../docs/FASE_1_RESULTADOS.md). O restante percurso de instalação abaixo continua destinado a laboratório; não foi executado neste TrueNAS.
 
-> **Estado:** primeira entrega funcional **de código**, NÃO uma versão pronta para famílias, nem uma instalação validada no TrueNAS. Não há ainda VPN, NOVA Directory, login universal nem APK NOVA Cinema. **Não publicar estas portas na Internet.**
+> **Estado:** entrega funcional de laboratório, não uma versão pronta para famílias nem uma instalação validada no TrueNAS. Associação Android e [Directory privado separado](../docs/M3_DIRECTORY_LAB.md) já têm implementação; login universal na TV, permissões de media, player e VPN completa permanecem pendentes. Não publicar estas portas na Internet.
 
 ## Para que serve
 
