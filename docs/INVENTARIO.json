@@ -470,8 +470,8 @@
     },
     {
       "path": "server/nova_directory/client.py",
-      "bytes": 7960,
-      "sha256": "b4475d196d202498cbdb36b421b7d5c55050a05d69746cc23884b75be031f989"
+      "bytes": 8000,
+      "sha256": "6cdd0549b5d79cdfc1258ee924d479a5bab5f2713be2716f6a6381f754b3d69b"
     },
     {
       "path": "server/nova_directory/protocol.py",
@@ -685,8 +685,8 @@
     },
     {
       "path": "server/tests/test_directory.py",
-      "bytes": 17503,
-      "sha256": "4d343e94fabfb7155901fbf7d050a13837ea57da8349f8355d85e921349b9e52"
+      "bytes": 18034,
+      "sha256": "1ddc26c83a0decb5a43f46ed0c71b5cb4bf4d8bb9be113913b253059d7b34369"
     },
     {
       "path": "server/tests/test_installer.py",

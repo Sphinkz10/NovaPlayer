@@ -5,6 +5,7 @@ import re
 import sqlite3
 import ssl
 import time
+from contextlib import closing
 from pathlib import Path
 
 import httpx
@@ -18,7 +19,7 @@ from .protocol import Descriptor, encode, private_origin, message, validate_payl
 def server_identity(state, *, create_key=False):
     state = Path(state).resolve(strict=True)
     # Refuse to create a new NOVA database accidentally.
-    with sqlite3.connect((state/'nova.sqlite3').as_uri()+'?mode=ro', uri=True) as db:
+    with closing(sqlite3.connect((state/'nova.sqlite3').as_uri()+'?mode=ro', uri=True)) as db:
         if db.execute('SELECT COUNT(*) FROM admin WHERE id=1').fetchone()[0] != 1:
             raise ValueError('NOVA owner setup required')
         server_id = db.execute('SELECT server_id FROM server_identity WHERE id=1').fetchone()[0]

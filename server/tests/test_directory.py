@@ -299,8 +299,15 @@ def test_api_https_auth_separation_validation_no_secret_echo_and_limits(tmp_path
         assert client.get('/api/v1/directory/servers').status_code == 401
 
 
-def test_server_key_explicit_creation_persistence_and_separation(tmp_path):
+def test_server_key_explicit_creation_persistence_and_separation(tmp_path, monkeypatch):
     store = Store(tmp_path/'nova'); store.bootstrap('owner','unused')
+    connections = []
+    connect = sqlite3.connect
+    def tracked_connect(*args, **kwargs):
+        connection = connect(*args, **kwargs)
+        connections.append(connection)
+        return connection
+    monkeypatch.setattr('nova_directory.client.sqlite3.connect', tracked_connect)
     with pytest.raises(FileNotFoundError): server_identity(store.dir)
     sid, key = server_identity(store.dir,create_key=True)
     again, other = server_identity(store.dir)
@@ -310,6 +317,10 @@ def test_server_key_explicit_creation_persistence_and_separation(tmp_path):
     assert not (store.dir/'directory.sqlite3').exists()
     (store.dir/'directory-signing.key').write_bytes(b'corrupted')
     with pytest.raises(ValueError): server_identity(store.dir,create_key=True)
+    # Retaining references prevents garbage collection from hiding a leaked handle.
+    for connection in connections:
+        with pytest.raises(sqlite3.ProgrammingError, match='closed'):
+            connection.execute('SELECT 1')
 
 
 def test_refuse_future_directory_schema(tmp_path):
