@@ -99,7 +99,10 @@ def run():
                 provision_file('untrusted-certificate.der',ssl.PEM_cert_to_DER_cert(wrong_cert.read_text()))
                 def phase(name):
                     adb('shell','am','force-stop',PACKAGE)
-                    adb('logcat','-c')
+                    # API 26 may reject clearing a log buffer after adbd restarts.
+                    # Diagnostics must not prevent the actual security test.
+                    subprocess.run(['adb','logcat','-b','crash','-c'],stdout=subprocess.DEVNULL,
+                                   stderr=subprocess.DEVNULL,timeout=20,check=False)
                     command=['adb','shell','am','instrument','-w','-r','-e','phase',name,
                              PACKAGE+'.test/com.novacinema.connect.DevicePairingInstrumentation']
                     process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
@@ -125,7 +128,8 @@ def run():
                     (OUT/(str(len(results))+'-'+name+'.txt')).write_text(output,encoding='utf8')
                     if 'INSTRUMENTATION_RESULT: nova_pairing=passed' not in output:
                         # Preserve class/line diagnostics, never exception messages or app data.
-                        crash=adb('logcat','-d','-b','crash','-v','brief')
+                        crash=subprocess.run(['adb','logcat','-d','-b','crash','-v','brief'],
+                            capture_output=True,text=True,timeout=20,check=False).stdout
                         frames=re.findall(r'\bat ([A-Za-z0-9_.$]+\([A-Za-z0-9_. :]+\))',crash)
                         types=re.findall(r'\b([A-Za-z0-9_.$]+(?:Exception|Error)):',crash)
                         (OUT/(str(len(results))+'-crash.json')).write_text(

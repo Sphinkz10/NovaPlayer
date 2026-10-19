@@ -35,8 +35,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 205,
-      "sha256": "5dd4a247666dc11dede32d5eefc9f05bac7bcd2f232d4dc1962312ead3db314e"
+      "bytes": 214,
+      "sha256": "61a08380eb11c1b568665057783c0195330b2c9300035996c3cd44ed99ef0553"
     },
     {
       "path": "README.md",
@@ -325,8 +325,8 @@
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
-      "bytes": 10594,
-      "sha256": "71b6e1aac19604a127ec57f91956ae7985811e4da91c5192848d9170383924b7"
+      "bytes": 11005,
+      "sha256": "cecef9a08d4c9610f9edadea7ed35f2f97502b54bfa4e292ba5bb1591cd374bb"
     },
     {
       "path": "connect/settings.gradle.kts",
@@ -345,8 +345,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2696,
-      "sha256": "39d09843e01bcc362fe4f680bd58769afbc5fc8d84bd982cb117578dc61b4eae"
+      "bytes": 2761,
+      "sha256": "d2282c97108d15e77fbe4e5b2b8c3a8afbfbd745f23d1607a762d571f73476f0"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",

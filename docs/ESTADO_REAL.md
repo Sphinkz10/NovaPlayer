@@ -7,7 +7,7 @@ a jornada instalar → associar → biblioteca → vídeo ainda não existe.
 |---|---|---|
 | NOVA Server 0.2.0-lab | Assistente, bibliotecas, gerador Apps, healthchecks, schema versionado e recuperação cifrada; Docker aprovou origem ausente e restauro com revogação | Aceitação física TrueNAS: instalação, ACL, reboot, atualização/restauro |
 | Configuração Connect | Rascunhos autenticados de WireGuard/Tailscale/NetBird no Control e SQLite | Inscrição, agentes e aplicação da configuração real |
-| NOVA Connect 0.4-phase1 | 166 testes Kotlin; os três motores compilaram numa APK experimental; carregamento em processos separados passou em API 26/35 x86_64 | Pontes funcionais, associação, handshake e HTTPS reais; ARM/TV físicos |
+| NOVA Connect 0.5-pairing-lab | 198 testes Kotlin; cliente de associação na APK normal; os três motores compilaram numa APK experimental e carregaram em processos separados em API 26/35 x86_64 | Prova Android de associação; pontes funcionais VPN, handshake e HTTPS pelos túneis; ARM/TV físicos |
 | NOVA Cinema | Designs e políticas de reprodução corrigidas | UI TV, biblioteca Jellyfin e player Media3 |
 | Identidade/dispositivos M3 | Servidor e cliente Android de laboratório: associação, confirmação de identidade importada, Keystore, refresh e revogação | Prova emuladores/hardware; Directory, renovação TLS integrada e permissões Jellyfin |
 | Directory | Contratos documentados; serviço ainda não implementado | Contas, registo com prova de posse e descoberta autenticada |
