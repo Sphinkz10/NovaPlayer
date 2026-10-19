@@ -62,6 +62,8 @@ def run():
             time.sleep(1)
         adb('shell','date','-u',datetime.now(timezone.utc).strftime('%m%d%H%M%Y.%S'))
     assert abs(int(adb('shell','date','+%s').strip())-time.time()) < 5
+    adb('shell','input','keyevent','KEYCODE_WAKEUP')
+    adb('shell','wm','dismiss-keyguard')
     OUT.mkdir(parents=True,exist_ok=True)
     for path in ('app/build/outputs/apk/debug/app-debug.apk',
                  'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk'):

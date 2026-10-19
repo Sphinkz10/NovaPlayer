@@ -117,6 +117,13 @@ class DevicePairingInstrumentation : Instrumentation() {
             waitForIdleSync()
             setInTouchMode(false)
             onMainChecked { activity.reviewInvitation(raw) }
+            val focusDeadline=android.os.SystemClock.uptimeMillis()+15000
+            var windowFocused=false
+            while(!windowFocused && android.os.SystemClock.uptimeMillis()<focusDeadline) {
+                onMainChecked { windowFocused=activity.hasWindowFocus() }
+                if(!windowFocused) android.os.SystemClock.sleep(100)
+            }
+            check(windowFocused) { "Pairing activity did not receive window focus" }
             onMainChecked {
                 val button=views(activity.window.decorView).filterIsInstance<Button>().first { it.text.toString().startsWith("Confirmei") }
                 check(button.isFocusable && button.isEnabled)
