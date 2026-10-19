@@ -28,10 +28,10 @@ def run():
     with tempfile.TemporaryDirectory(prefix='nova-compose-') as folder:
         root = Path(folder)/'package'
         root.mkdir()
-        for name in ('compose.yaml', 'Dockerfile', 'requirements.txt', '.dockerignore'):
+        for name in ('compose.yaml', 'Dockerfile', 'requirements.txt', 'requirements-directory.txt', '.dockerignore'):
             shutil.copy2(source/name, root/name)
-        shutil.copytree(source/'nova_server', root/'nova_server', ignore=shutil.ignore_patterns('__pycache__'))
-        shutil.copytree(source/'scripts', root/'scripts', ignore=shutil.ignore_patterns('__pycache__'))
+        for name in ('nova_server', 'nova_directory', 'scripts'):
+            shutil.copytree(source/name, root/name, ignore=shutil.ignore_patterns('__pycache__'))
         a, b = Path(folder)/'media-a', Path(folder)/'media-b'
         for directory in (a, b):
             directory.mkdir()

@@ -640,8 +640,8 @@
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 17980,
-      "sha256": "9900debd5e92bd38b8edfda0d3c92ca120cc7aa3914552297c6978bf5b890e33"
+      "bytes": 17958,
+      "sha256": "7169193fc643536fbcb012705c2768c33580872a43d835ac986dd74571751604"
     },
     {
       "path": "server/scripts/smoke_devices_tls.py",
