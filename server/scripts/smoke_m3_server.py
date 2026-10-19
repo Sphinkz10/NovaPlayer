@@ -74,7 +74,7 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
                     assert own.status_code==200 and len(own.json()['Items'])==1, 'Jellyfin own library access failed'
                     other=jf.get('/Items',headers=restricted,params={'UserId':uid,'ParentId':libraries[1-index]['id'],
                                  'Recursive':'true','IncludeItemTypes':'Movie'})
-                    assert other.status_code in (403,404) or (other.status_code==200 and not other.json()['Items']), 'Jellyfin cross-library access was not denied'
+                    assert other.status_code in (401,403,404) or (other.status_code==200 and not other.json()['Items']), 'Jellyfin cross-library access was not denied'
                     system=jf.get('/System/Configuration',headers=restricted)
                     assert system.status_code in (401,403), 'Restricted Jellyfin user retained administrative access'
             replay=lab.tv.post('/api/v1/device/authorize',json={'label':'replay','assertion':assertion_a})

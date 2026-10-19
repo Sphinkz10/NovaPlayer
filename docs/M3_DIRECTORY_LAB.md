@@ -1,5 +1,7 @@
 # M3 — Directory privado, primeiro serviço executável
 
+> Histórico de incremento. Para o estado, comportamento e instalação atuais, consultar [M3_FECHO.md](M3_FECHO.md). As limitações descritas abaixo referem-se à revisão histórica indicada neste guia.
+
 O Directory já tem um serviço de laboratório independente: contas, sessões, registo de servidores com prova de posse de chave Ed25519, descoberta por conta, partilha explícita e revogação. O [NOVA Control](M3_DIRECTORY_CONTROL.md) já permite inicializar identidade, publicar/renovar manualmente e verificar a publicação. A integração no ecrã da TV continua pendente. Não fecha a M3 nem disponibiliza login universal na APK atual.
 
 ## O percurso implementado

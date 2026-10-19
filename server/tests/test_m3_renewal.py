@@ -68,3 +68,27 @@ def test_agent_proof_replay_and_scope_binding(control):
 def test_renewal_requires_prior_credential(control):
     initialize(control)
     assert control.post('/api/v1/admin/directory/renew').status_code==409
+
+
+def test_due_window_renews_without_owner_session(control,monkeypatch):
+    import time
+    from types import SimpleNamespace
+    published(control)
+    assert control.control.renew_if_due()['version']==1
+    now=time.time()
+    monkeypatch.setattr('nova_server.directory_control.time',SimpleNamespace(time=lambda:now+2800))
+    assert control.control.renew_if_due()['version']==2
+
+
+def test_application_lifespan_runs_and_stops_renewal_worker(control,monkeypatch):
+    import asyncio
+    import threading
+    called=threading.Event();original_sleep=asyncio.sleep
+    async def short_interval(delay,*args):
+        return await original_sleep(0.01 if delay==60 else delay,*args)
+    monkeypatch.setattr('nova_server.app.asyncio.sleep',short_interval)
+    monkeypatch.setattr(control.control,'renew_if_due',lambda:called.set())
+    with control:
+        assert control.control.worker_active
+        assert called.wait(3)
+    assert not control.control.worker_active

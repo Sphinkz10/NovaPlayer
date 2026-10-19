@@ -113,3 +113,13 @@ def test_missing_key_cannot_replace_encryption_identity(members):
     assert not path.exists()
     with pytest.raises(SetupError):configure(members,1)
     assert not path.exists()
+
+
+def test_concurrent_revocation_cannot_be_overwritten_by_provisioning(members):
+    original=members.vault.seal
+    def revoke_before_commit(*args):
+        sealed=original(*args);members.revoke(members.fixture_subjects[0]);return sealed
+    members.vault.seal=revoke_before_commit
+    with pytest.raises(SetupError,match='member_permissions_changed'):configure(members)
+    with members.store._db() as db:
+        assert db.execute('SELECT disabled,credential FROM member_accounts').fetchone()==(1,None)

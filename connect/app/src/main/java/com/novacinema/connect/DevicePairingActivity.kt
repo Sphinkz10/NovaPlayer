@@ -43,7 +43,8 @@ class DevicePairingActivity : Activity() {
             text = label; isFocusable = true; setOnClickListener { action() }; root.addView(this)
         }
         text("Associar ao NOVA Server · Laboratório", 28f)
-        text("Importa o ficheiro de ligação fornecido pelo proprietário. A biblioteca e a reprodução chegam numa próxima fase.")
+        text(if(selection!=null)"Confirma esta TV com o proprietário. As bibliotecas atribuídas aparecem após a aprovação."
+             else "Para entrar com a tua conta, usa Entrar na NOVA no ecrã inicial. A importação de ficheiro serve para diagnóstico.")
         status = text("A verificar associação…")
         code = text("", 36f).apply { contentDescription = "Código de associação" }
         importButton = button("Importar ligação do proprietário") {
@@ -53,7 +54,7 @@ class DevicePairingActivity : Activity() {
                     addCategory(Intent.CATEGORY_OPENABLE); type = "*/*"
                 }, 702)
             } catch (_: android.content.ActivityNotFoundException) {
-                status.text = "Este aparelho não disponibiliza seleção de ficheiros. O ensaio requer um fornecedor de documentos; a descoberta automática ainda não está disponível."
+                status.text = "Este aparelho não disponibiliza seleção de ficheiros. Volta ao ecrã inicial e usa Entrar na NOVA com o Directory configurado pelo proprietário."
             }
         }
         review = text("")
@@ -167,7 +168,7 @@ class DevicePairingActivity : Activity() {
         status.text = when (value.state) {
             PairingState.EMPTY -> "Sem associação. Se esqueceste a TV enquanto estava offline, o proprietário pode revogá-la no Control."
             PairingState.WAITING -> "No NOVA Control, introduz este código e confirma este dispositivo. Aguarda a aprovação."
-            PairingState.ASSOCIATED -> "Dispositivo associado e identidade confirmada. Biblioteca, filmes e ligação VPN ainda não estão disponíveis neste percurso."
+            PairingState.ASSOCIATED -> "Dispositivo associado e identidade confirmada. Catálogo, filmes e ligação VPN chegam nas próximas fases."
             PairingState.OFFLINE -> "Servidor indisponível. A associação foi preservada; volta a verificar quando houver ligação."
             PairingState.EXPIRED -> "Código expirado. Importa a ligação para pedir um novo código."
             PairingState.DENIED -> "O proprietário recusou este pedido."

@@ -1,5 +1,7 @@
 # NOVA Connect — Laboratório v0.4 / fase 1
 
+> Atualização M3 (20-10-2026): login Directory na TV, conta verificada e bibliotecas limitadas estão implementados e em validação consolidada. Começar por [M3_FECHO.md](../docs/M3_FECHO.md); os parágrafos abaixo preservam instruções de incrementos anteriores.
+
 **17 outubro 2026 · APK debug compilada; diagnóstico e lógica de domínio testados. Rede VPN e reprodução ainda não aprovadas.**
 
 Esta fase acrescenta deteção de SDK/ABIs/Leanback, contratos WireGuard/Tailscale/NetBird e estados que não confundem túnel UP com serviço autorizado. Não há restrição a Xiaomi/Chromecast: Android API 26+ e ABIs compatíveis definem a base. Tailscale e NetBird são explicitamente não implementados; o motor WireGuard conserva a prova existente.

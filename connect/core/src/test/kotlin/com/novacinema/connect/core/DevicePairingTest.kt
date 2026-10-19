@@ -37,6 +37,7 @@ object DevicePairingTest {
     }
     private class Api : DeviceTransport {
         var refreshes = 0
+        var assertions = 0
         var polls = 0
         var expires = false
         var current = tokens()
@@ -45,6 +46,9 @@ object DevicePairingTest {
         var identityFailure: Exception? = null
         var refreshAction: (() -> DeviceTokens)? = null
         override fun authorize(label: String) = DeviceGrant("secret-"+"s".repeat(48), "ABCD-EFGH", SERVER, 600, 5)
+        override fun authorizeBound(label:String,assertion:String):DeviceGrant {
+            check(assertion=="signed-fixture");assertions++;return authorize(label)
+        }
         override fun poll(secret: String): DeviceTokens { polls++; pollFailure?.let { throw it }; return current }
         override fun identity(access: String): DeviceIdentity {
             identityFailure?.let { throw it }
@@ -167,6 +171,32 @@ object DevicePairingTest {
             } }
             test("forget removes local state even if logout fails") { fixture { manager,vault,_,clock ->
                 vault.save(SavedDevice(trust,tokens(),clock[0]+3600000));manager.forget();check(vault.value==null)
+            } }
+            test("Directory proof binds the saved account after polling") { fixture { manager,vault,api,clock ->
+                api.descriptor=api.descriptor.copy(accountId=DEVICE)
+                manager.begin(trust,"TV","signed-fixture",DEVICE);clock[0]+=5000
+                check(manager.poll().state==PairingState.ASSOCIATED && vault.value!!.accountId==DEVICE && api.assertions==1)
+            } }
+            test("Directory account mismatch erases the association") { fixture { manager,vault,api,clock ->
+                manager.begin(trust,"TV","signed-fixture",DEVICE);clock[0]+=5000
+                check(manager.poll().state==PairingState.SECURITY_ERROR && vault.value==null && api.refreshes==0)
+            } }
+            test("refresh retains the bound account") { fixture { manager,vault,api,clock ->
+                api.descriptor=api.descriptor.copy(accountId=DEVICE);api.expires=true
+                vault.save(SavedDevice(trust,tokens(),clock[0]+3600000,accountId=DEVICE))
+                check(manager.check().state==PairingState.ASSOCIATED && vault.value!!.accountId==DEVICE)
+            } }
+            test("certificate update cannot move account server or origin") { fixture { manager,vault,_,clock ->
+                vault.save(SavedDevice(trust,tokens(),clock[0]+3600000,accountId=DEVICE))
+                rejects { manager.updateTrust(trust,SERVER) }
+                rejects { manager.updateTrust(ServerTrust(ORIGIN,DEVICE,trust.certificateDer),DEVICE) }
+                rejects { manager.updateTrust(ServerTrust("https://127.0.0.1:8921",SERVER,trust.certificateDer),DEVICE) }
+                manager.updateTrust(trust,DEVICE);check(vault.value!!.tokens.deviceId==DEVICE)
+            } }
+            test("account and signed assertion are required together") { fixture { manager,_,api,_ ->
+                rejects { manager.begin(trust,"TV",accountId=DEVICE) }
+                rejects { manager.begin(trust,"TV",assertion="signed-fixture") }
+                check(api.assertions==0)
             } }
             tlsTest(trust,keystore)
         } finally {

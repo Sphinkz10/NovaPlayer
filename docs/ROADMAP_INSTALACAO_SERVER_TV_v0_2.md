@@ -1,6 +1,15 @@
 # NOVA — Roadmap até à instalação no servidor e na TV
 
-**Versão:** 0.2, atualização M3 Directory · **Data:** 19-10-2026 · **Estado:** execução parcial; consultar os marcos e evidências abaixo.
+**Atualização:** 20-10-2026. Acompanhamento único da M3: [M3_FECHO.md](M3_FECHO.md).
+
+| Quando instalar/testar | O que permite |
+|---|---|
+| Servidor de teste — M2 | Configurar proprietário, Jellyfin e duas origens; imagem Docker e recuperação já ensaiadas. TrueNAS físico continua pendente |
+| APK de laboratório — M3 | Login Directory, aprovação e bibliotecas atribuídas; sem reprodução. Fecho condicionado às provas consolidadas |
+| Primeiro filme nas boxes — M4 | Catálogo e player local, com ensaio separado em Xiaomi Box S2 e Chromecast |
+| Fora de casa — M5 | Jornadas nativas WireGuard, Tailscale e NetBird; cada fornecedor precisa da própria prova |
+
+Não há data de calendário confirmada para M4/M5. O próximo resultado depois da M3 é um filme local reproduzido nos dois aparelhos.
 
 **Requisito incorporado:** WireGuard, Tailscale e NetBird são opções nativas do NOVA Connect. O proprietário configura a ligação no NOVA Control. A TV instala a NOVA Cinema e recebe a configuração autorizada através da associação de dispositivo. Instalar outra app VPN na TV não satisfaz o objetivo de integração nativa deste roadmap.
 

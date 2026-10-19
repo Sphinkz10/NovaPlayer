@@ -1,5 +1,7 @@
 # M3 — associação de dispositivos, primeiro incremento
 
+> Histórico de incremento. Para o estado, comportamento e instalação atuais, consultar [M3_FECHO.md](M3_FECHO.md). As limitações descritas abaixo referem-se à revisão histórica indicada neste guia.
+
 Estado: NOVA Server `0.3.0-dev`. Implementação de laboratório; M3 ainda não concluída. A entrega M2 `0.2.0-lab` e a sua imagem por digest continuam identificadas no guia M2. Não substituir a instalação M2 por esta revisão sem backup offline e plano de restauro: o schema passa de 1 para 2.
 
 Cliente Android de laboratório implementado no incremento seguinte: [M3_CLIENTE_ANDROID.md](M3_CLIENTE_ANDROID.md). A confirmação inicial usa ficheiro público e impressão digital por canal de confiança. O [serviço Directory](M3_DIRECTORY_LAB.md) já existe; a integração na TV e a renovação integrada de certificados continuam pendentes.

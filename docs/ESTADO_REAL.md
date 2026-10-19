@@ -1,28 +1,16 @@
-# Estado real — NOVA Platform (19-10-2026, Directory M3)
+# Estado atual — 20 outubro 2026
 
-A base está em desenvolvimento. O servidor local e a APK de diagnóstico compilam;
-a jornada instalar → associar → biblioteca → vídeo ainda não existe.
+O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias M3 anteriores são registos de incrementos; não devem ser usados para decidir o estado atual.
 
-| Componente | Estado atual | Próxima prova |
-|---|---|---|
-| NOVA Server 0.2.0-lab | Assistente, bibliotecas, gerador Apps, healthchecks, schema versionado e recuperação cifrada; Docker aprovou origem ausente e restauro com revogação | Aceitação física TrueNAS: instalação, ACL, reboot, atualização/restauro |
-| Configuração Connect | Rascunhos autenticados de WireGuard/Tailscale/NetBird no Control e SQLite | Inscrição, agentes e aplicação da configuração real |
-| NOVA Connect 0.5-pairing-lab | 198 testes Kotlin; associação HTTPS aprovada em API 26/35, 11 etapas por emulador; os três motores compilaram numa APK experimental e carregaram em processos separados | Pontes funcionais VPN, handshake e HTTPS pelos túneis; ARM/TV físicos |
-| NOVA Cinema | Designs e políticas de reprodução corrigidas | UI TV, biblioteca Jellyfin e player Media3 |
-| Identidade/dispositivos M3 | Servidor e cliente Android de laboratório: associação, confirmação de identidade importada, Keystore, refresh e revogação aprovados nos emuladores | Hardware; Directory, renovação TLS integrada e permissões Jellyfin |
-| Directory | Serviço separado de laboratório: contas Argon2id, prova Ed25519, descoberta autenticada, partilha/revogação e TLS 1.3; serviço validado em Linux/Windows e integração opcional Control com publicação/renovação manual, estado e verificação | Integração Android, renovação automática, continuidade de confiança e recuperação |
-| CI | Linux/Windows, HTTP, navegador, Docker, Android e runtime nativo em emulador aprovados | Ligação real dos três fornecedores e execução em hardware; ver relatório |
-| Segurança | Correções locais verificadas e análise Python sem avisos conhecidos | SEC-01…12 continuam sem validação final |
+| Marco | Estado e limite |
+|---|---|
+| M1 — base | Implementada e testada |
+| M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. Aceitação no TrueNAS físico pendente |
+| M3 — identidade e permissões | Implementação integrada: login Directory na TV, prova assinada de conta, aprovação, bibliotecas Jellyfin limitadas, renovação e revogação. Validação consolidada em curso; ver critérios e evidências no documento único |
+| M4 — primeiro filme local | Por implementar: catálogo, navegação TV, player, faixas e progresso |
+| M5 — ligação remota | WireGuard, Tailscale e NetBird nativos continuam obrigatórios. Compilação experimental dos três motores não prova túneis funcionais |
+| M6/M7 — utilização familiar | Exigem matriz física, rede externa e validações finais de segurança |
 
-Alvos: TrueNAS Community e vários Android TV/Google TV. Xiaomi Box S2 e Chromecast
-Android TV são aparelhos iniciais de aceitação, sem restrição da aplicação a essas
-marcas. Android API 26+ e ABIs disponíveis são requisitos técnicos; não garantem
-codec, HDR, 4K ou desempenho sem medição.
+Alvos: TrueNAS Community e Android TV/Google TV API 26+, incluindo Xiaomi Box S2 e Chromecast. Os emuladores não certificam os aparelhos físicos, codecs, HDR ou desempenho.
 
-O proprietário configura o NOVA Server. O familiar deverá instalar só NOVA Cinema
-e associar a conta/dispositivo, sem introduzir IPs ou perfis VPN. Apps VPN externas
-não satisfazem o requisito de integração nativa dos três fornecedores.
-
-Incremento atual: [Directory no Control](M3_DIRECTORY_CONTROL.md), [Directory privado](M3_DIRECTORY_LAB.md), [cliente Android](M3_CLIENTE_ANDROID.md) e [servidor M3](M3_ASSOCIACAO_DISPOSITIVOS.md). Entrega M2: [M2_SERVIDOR_LAB.md](M2_SERVIDOR_LAB.md). Histórico: [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md).
-Decisões: [ADR_001_CONNECT_NATIVO.md](ADR_001_CONNECT_NATIVO.md).
-Etapas de instalação: [roadmap](ROADMAP_INSTALACAO_SERVER_TV_v0_2.md).
+A M3 permite ensaiar identidade e permissões. A primeira instalação para ver um filme é a M4. A utilização remota com escolha dos três fornecedores depende da M5. O NAS e as boxes ainda não foram usados nesta sessão.

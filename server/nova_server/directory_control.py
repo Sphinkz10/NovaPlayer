@@ -1,4 +1,4 @@
-"""Optional owner-only Directory integration. No background renewal or saved credentials."""
+"""Owner Directory publication with encrypted, scoped renewal credentials."""
 from contextlib import contextmanager
 import hashlib
 import json

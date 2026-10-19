@@ -1,5 +1,7 @@
 # M3 — publicação no Directory através do NOVA Control
 
+> Histórico de incremento. Para o estado, comportamento e instalação atuais, consultar [M3_FECHO.md](M3_FECHO.md). As limitações descritas abaixo referem-se à revisão histórica indicada neste guia.
+
 O proprietário já pode inicializar a identidade, publicar/renovar por uma hora e verificar a publicação no Control. O serviço Directory continua separado; a integração é opcional e está desativada no Compose/gerador TrueNAS por defeito. Não há ainda login Directory na TV, autorização de media ou renovação automática.
 
 ## Configuração local de laboratório

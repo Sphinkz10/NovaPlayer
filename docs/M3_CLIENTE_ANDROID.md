@@ -1,5 +1,7 @@
 # M3 — cliente Android de associação, laboratório 0.5
 
+> Histórico de incremento. Para o estado, comportamento e instalação atuais, consultar [M3_FECHO.md](M3_FECHO.md). As limitações descritas abaixo referem-se à revisão histórica indicada neste guia.
+
 O cliente Android agora importa a identidade pública de um NOVA Server, apresenta um código, aguarda aprovação no Control e conserva uma sessão cifrada entre aberturas. Este incremento não entrega ainda catálogo, reprodução, Directory ou túneis VPN reais.
 
 ## Confiança inicial neste ensaio

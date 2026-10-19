@@ -79,6 +79,7 @@ class Members:
                     raise SetupError('member_limit',409)
                 db.execute('INSERT INTO member_accounts(subject,username) VALUES(?,?) '
                            'ON CONFLICT(subject) DO UPDATE SET disabled=1', (subject,choices[subject]['username']))
+                revision=db.execute('SELECT revision FROM member_accounts WHERE subject=?',(subject,)).fetchone()[0]
             async with asyncio.timeout(50):
                 async with self._client(self._headers(subject)) as admin:
                     try:
@@ -119,8 +120,9 @@ class Members:
                             sealed=self.vault.seal(access,'member:'+subject+':'+observed['server_id'])
                         selected=[available[identity] for identity in sorted(wanted)]
                         with self.store._db() as db:
-                            db.execute('UPDATE member_accounts SET policy=?,credential=?,disabled=0,revision=revision+1 WHERE subject=?',
-                                       (json.dumps(selected),sealed,subject))
+                            if not db.execute('UPDATE member_accounts SET policy=?,credential=?,disabled=0,revision=revision+1 WHERE subject=? AND revision=?',
+                                              (json.dumps(selected),sealed,subject,revision)).rowcount:
+                                raise SetupError('member_permissions_changed',409)
                         return {'subject':subject,'username':choices[subject]['username'],'libraries':selected,
                                 'jellyfin_policy_verified':True,'administrator':False}
                     finally:

@@ -1,5 +1,7 @@
 # NOVA Server 0.2.0-lab — M2
 
+> Atualização M3 (20-10-2026): login Directory na TV, conta verificada e bibliotecas limitadas estão implementados e em validação consolidada. Começar por [M3_FECHO.md](../docs/M3_FECHO.md); os parágrafos abaixo preservam instruções de incrementos anteriores.
+
 Base de segurança implementada em 17-10-2026: login Control corrigido, diagnóstico Jellyfin limitado a 16 KiB/4 s com validação de produto/wizard/identidade opcional, limite de login atómico, duas verificações Argon2 simultâneas por processo, dependências transitivas fixadas com hashes. Cinco falhas/tentativas em curso por origem durante 15 minutos; sucesso retira apenas a própria reserva e não apaga outras falhas. A administração aceita Host `localhost`/`127.0.0.1`.
 
 O Control guarda **rascunhos** WireGuard/Tailscale/NetBird sem segredos nem ativação de rede. As origens mostram permissões/leitura/indexação ainda não verificadas. Para comparar a identidade Jellyfin com uma associação aprovada, definir `NOVA_JELLYFIN_SERVER_ID` no ambiente do Core; sem isso o diagnóstico devolve `identity_verified=false`.
