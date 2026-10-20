@@ -194,6 +194,7 @@ def run():
     def ip(*args, check=True): return command('sudo', 'ip', *args, check=check)
     def ns(*args, check=True): return command('sudo', 'ip', 'netns', 'exec', namespace, *args, check=check)
     created = False; link_created = False; server = None; relay = None; bootstrap = None
+    worker = None; owner = None
     handshake = {}; checks = []
     with tempfile.TemporaryDirectory(prefix='nova-wireguard-network-') as folder:
         root = Path(folder)
@@ -201,7 +202,11 @@ def run():
         from nova_server.devices import Devices
         from nova_server.security import hash_password
         from nova_server.wireguard import WireGuardEnrollments
-        from nova_server.wireguard_gateway import GatewayPolicy, KernelWireGuard, reconcile
+        from dataclasses import asdict
+        from fastapi.testclient import TestClient
+        from nova_server.app import make_app
+        from nova_server.gateway_channel import atomic_private
+        from nova_server.wireguard_gateway import GatewayPolicy
         store = Store(root/'state'); assert store.bootstrap('owner', hash_password(secrets.token_urlsafe(32)))
         devices = Devices(store); request = devices.start('Disposable WireGuard TV')
         review = devices.inspect(request['user_code']); devices.decide(request['user_code'], review['request_id'], True)
@@ -224,7 +229,48 @@ def run():
             ns('ip', 'link', 'set', 'wg0', 'up'); ns('ip', 'route', 'add', CLIENT+'/32', 'dev', 'wg0')
             ns('ip', 'link', 'set', 'dev', 'wg0', 'alias', 'nova-wireguard-v1:'+devices.identity())
             gateway_policy=GatewayPolicy(devices.identity(),public,'10.222.0.0/24',GW)
-            gateway_adapter=KernelWireGuard(ns,'wg0')
+            channel_directory=root/'channel'; channel_directory.mkdir(mode=0o700)
+            lease_directory=root/'leases'; lease_directory.mkdir(mode=0o700)
+            secret_file=root/'channel.key'; atomic_private(secret_file,secrets.token_bytes(32))
+            config_file=root/'gateway.json'
+            atomic_private(config_file,json.dumps({'schema_version':1,'policy':asdict(gateway_policy),
+                'namespace':namespace,'interface':'wg0','channel_directory':str(channel_directory),
+                'secret_file':str(secret_file),'lease_directory':str(lease_directory)}).encode())
+            owner_access=secrets.token_urlsafe(48); store.save_session(owner_access)
+            owner=TestClient(make_app(store.dir,allowed_hosts=['testserver'],gateway_options={
+                'directory':channel_directory,'secret_file':secret_file}))
+            owner.__enter__(); owner.headers['Authorization']='Bearer '+owner_access
+            def start_worker():
+                return subprocess.Popen(['sudo','env','PYTHONPATH='+str(ROOT/'server'),sys.executable,
+                    '-m','nova_server.gateway_service','--config',str(config_file)],
+                    stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            def stop_worker():
+                if worker is not None:
+                    command('sudo','kill','-TERM',str(worker.pid),check=False)
+                    try: worker.wait(timeout=12)
+                    except subprocess.TimeoutExpired:
+                        command('sudo','kill','-KILL',str(worker.pid),check=False);worker.wait(timeout=5)
+                        raise RuntimeError('Gateway worker did not stop cleanly')
+                    # sudo may return the forwarded signal status even when the
+                    # Python worker handles SIGTERM; kernel cleanup is asserted.
+                    assert worker.returncode in (0,-15,143)
+            def wait_gateway(empty=False):
+                deadline=time.monotonic()+20
+                while time.monotonic()<deadline:
+                    if worker.poll() is not None: raise RuntimeError('Gateway worker exited')
+                    response=owner.get('/api/v1/admin/connect/wireguard/gateway')
+                    assert response.status_code==200
+                    result=response.json()
+                    kernel=ns('wg','show','wg0','allowed-ips').stdout.decode().split()
+                    matches=not kernel if empty else kernel==[client_public,CLIENT+'/32']
+                    if result['configuration_observed'] and (bool(result['peers']) != empty) and matches:
+                        assert not result['handshake_verified'] and not result['remote_access_enabled']
+                        return result
+                    time.sleep(.2)
+                raise RuntimeError('No fresh gateway observation')
+            worker=start_worker()
+            assert wait_gateway(empty=True)['peers']==[]
+            checks.append('standalone gateway worker consumes authenticated local Core plans without admin credentials')
             ns('sysctl', '-q', '-w', 'net.ipv4.ip_forward=0')
             for chain in ('INPUT', 'OUTPUT', 'FORWARD'): ns('iptables', '-P', chain, 'DROP')
             ns('iptables', '-A', 'INPUT', '-i', 'lo', '-j', 'ACCEPT')
@@ -269,7 +315,7 @@ def run():
                        'certificate_pem': pem, 'wrong_certificate_pem': wrong}
             push_private('wireguard-fixture.json', json.dumps(fixture).encode())
             def callback(stage):
-                nonlocal client_public
+                nonlocal client_public,worker
                 if stage == 'consent': consent()
                 elif stage == 'enrolled':
                     pending = WireGuardEnrollments(store).list()
@@ -277,25 +323,35 @@ def run():
                     client_public = pending[0]['public_key']
                     # Exercise the actual owner API; it records approval, never an
                     # installed claim. The disposable lab installs/readbacks separately.
-                    from fastapi.testclient import TestClient
-                    from nova_server.app import make_app
-                    owner_access = secrets.token_urlsafe(48); store.save_session(owner_access)
-                    with TestClient(make_app(store.dir, allowed_hosts=['testserver'])) as owner:
-                        decision = owner.post('/api/v1/admin/connect/wireguard/enrollments/'+tokens['device_id'],
-                            headers={'Authorization':'Bearer '+owner_access}, json={'revision':1,'approve':True})
-                        assert decision.status_code == 200 and decision.json()['gateway_state'] == 'not_verified'
+                    decision = owner.post('/api/v1/admin/connect/wireguard/enrollments/'+tokens['device_id'],
+                        json={'revision':1,'approve':True})
+                    assert decision.status_code == 200 and decision.json()['gateway_state'] == 'not_verified'
                     stale_private=command('wg','genkey').stdout.strip()
                     stale_public=command('wg','pubkey',data=stale_private+b'\n').stdout.decode().strip()
                     ns('wg','set','wg0','peer',stale_public,'allowed-ips','192.0.2.123/32')
                     ns('wg','set','wg0','peer',client_public,'allowed-ips','0.0.0.0/0')
-                    plan=WireGuardEnrollments(store).gateway_plan()
-                    configured=reconcile(plan,gateway_policy,gateway_adapter)
-                    assert configured['configuration_observed'] and not configured['handshake_verified']
+                    configured=wait_gateway()
                     assert configured['peers'][0]['address']==CLIENT+'/32'
                     assert ns('wg', 'show', 'wg0', 'allowed-ips').stdout.decode().split() == [client_public, CLIENT+'/32']
                     checks.append('restricted adapter removes stale and broad peers before applying approved per-device host route')
-                    assert reconcile(WireGuardEnrollments(store).gateway_plan(),gateway_policy,gateway_adapter)['changed_operations']==0
-                    checks.append('kernel readback and repeated reconciliation are idempotent without claiming handshake')
+                    # Rebuild the interface peer set via clean worker shutdown,
+                    # restart the real process, and verify its durable /32 lease.
+                    stop_worker()
+                    assert not ns('wg','show','wg0','peers').stdout.strip()
+                    assert owner.get('/api/v1/admin/connect/wireguard/gateway').json()['state']=='not_verified'
+                    worker=start_worker()
+                    assert wait_gateway()['peers'][0]['address']==CLIENT+'/32'
+                    checks.append('process restart restores durable per-device lease after confirmed peer cleanup')
+                    checks.append('Control accepts only fresh authenticated kernel observations and never claims handshake')
+                    from nova_server.gateway_channel import GatewayChannel
+                    channel=GatewayChannel(channel_directory,secret_file)
+                    deadline=time.monotonic()+5
+                    while time.monotonic()<deadline:
+                        observation=channel.read('observation')
+                        if observation.get('result',{}).get('changed_operations')==0:break
+                        time.sleep(.2)
+                    else:raise RuntimeError('Repeated worker reconciliation was not idempotent')
+                    checks.append('repeated live worker tick performs zero kernel writes')
                     push_private('wireguard-gate.txt', b'approved')
                 elif stage == 'connected':
                     values = ns('wg', 'show', 'wg0', 'latest-handshakes').stdout.decode().split()
@@ -306,11 +362,19 @@ def run():
                     count = int(re.search(r'policy DROP (\d+) packets', drops).group(1)); assert count > 0
                     handshake.update({'observed': True, 'received_bytes': int(transfer[1]),
                                       'sent_bytes': int(transfer[2]), 'firewall_dropped_packets': count})
-                    devices.revoke(tokens['device_id'])
-                    assert WireGuardEnrollments(store).list()[0]['state'] == 'revoked'
+                    # Check HTTP credential denial independently from automatic
+                    # peer removal. A continuously running worker must not be
+                    # paused to keep a revoked device's tunnel routable.
+                    from nova_server.security import token_hash
+                    with store._db() as db:
+                        db.execute('DELETE FROM device_access WHERE digest=?',(token_hash(tokens['access_token']),))
                     push_private('wireguard-gate.txt', b'device-revoked')
                 elif stage == 'device-revoked':
-                    removed=reconcile(WireGuardEnrollments(store).gateway_plan(),gateway_policy,gateway_adapter)
+                    devices.revoke(tokens['device_id'])
+                    assert WireGuardEnrollments(store).list()[0]['state']=='revoked'
+                    assert owner.get('/api/v1/admin/connect/wireguard/gateway').json()['state']=='not_verified'
+                    checks.append('device revocation invalidates the previous Control observation immediately')
+                    removed=wait_gateway(empty=True)
                     assert removed['configuration_observed'] and removed['peers']==[]
                     assert not ns('wg', 'show', 'wg0', 'peers').stdout.strip()
                     push_private('wireguard-gate.txt', b'peer-removed')
@@ -323,13 +387,25 @@ def run():
                       'tls': 'TLS 1.3, exact certificate and hostname validation', 'gateway': 'isolated Linux kernel WireGuard namespace',
                       'client': 'official embedded Android GoBackend', 'consent': 'actual system dialog, no appops bypass',
                       'private_profile_delivery': 'Android-generated private key never leaves app; public key enrolled over pinned LAN HTTPS',
-                      'gateway_installation': 'restricted reconciliation adapter in disposable namespace; product installer/daemon not implemented',
+                      'gateway_installation': 'standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending',
                       'physical_nas': False, 'physical_tv': False, 'production_remote_access_enabled': False,
                       'apk_sha256': hashlib.sha256((ROOT/'connect/app/build/outputs/apk/debug/app-debug.apk').read_bytes()).hexdigest(),
                       'source_commit': command('git', '-C', ROOT, 'rev-parse', 'HEAD').stdout.decode().strip()}
             (OUT/'wireguard-network.json').write_text(json.dumps(report, indent=2)+'\n')
             print(json.dumps({'result': 'passed', 'api': report['api'], 'checks': len(checks)}))
         finally:
+            if worker:
+                command('sudo','kill','-TERM',str(worker.pid),check=False)
+                try:worker.wait(timeout=12)
+                except subprocess.TimeoutExpired:
+                    command('sudo','kill','-KILL',str(worker.pid),check=False);worker.wait(timeout=5)
+            if owner:owner.__exit__(None,None,None)
+            # The host root worker owns its lease database; remove only its
+            # fixed files inside this disposable, resolved temporary directory.
+            for name in ('leases/leases.sqlite3','leases/leases.sqlite3-journal','channel/worker.lock'):
+                path=(root/name).resolve()
+                assert path.is_relative_to(root.resolve())
+                command('sudo','rm','-f','--',path,check=False)
             if bootstrap:
                 bootstrap.terminate()
                 try: bootstrap.wait(timeout=5)

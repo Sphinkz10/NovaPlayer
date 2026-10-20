@@ -73,14 +73,14 @@ def _current(snapshot, policy, now):
         raise GatewayError('gateway_snapshot_expired_or_mismatched')
 
 
-def reconcile(payload, policy, backend, *, clock=time.time):
+def reconcile(payload, policy, backend, *, clock=time.time, assignments=None):
     """One exclusive caller, one short-lived authoritative snapshot, full readback.
 
     Retain valid addresses already observed on this dedicated interface; new peers
     use free /32s from the local policy. Unknown or broad peers are removed before
     adding any desired peer. Success confirms configuration, not connectivity.
-    A daemon, durable address leases across gateway rebuilds and installation are
-    separate work; never call this against an existing shared VPN interface.
+    A trusted service may supply durable assignments. Never call this against an
+    existing shared VPN interface.
     """
     snapshot = GatewaySnapshot.model_validate(payload)
     _current(snapshot, policy, int(clock()))
@@ -92,7 +92,15 @@ def reconcile(payload, policy, backend, *, clock=time.time):
     network = ipaddress.IPv4Network(policy.pool)
     available = [str(ip)+'/32' for ip in network.hosts() if str(ip) != policy.gateway]
     assigned, used = {}, set()
+    if assignments is not None:
+        if (set(assignments) != set(desired) or len(set(assignments.values())) != len(assignments)
+                or any(address not in available for address in assignments.values())):
+            raise GatewayError('gateway_invalid_leases')
+        assigned = {public: (address,) for public, address in assignments.items()}
+        used = set(assignments.values())
     for public in sorted(desired):
+        if public in assigned:
+            continue
         routes = observed.get(public, ())
         if len(routes) == 1 and routes[0] in available and routes[0] not in used:
             assigned[public] = routes
@@ -131,6 +139,16 @@ def reconcile(payload, policy, backend, *, clock=time.time):
     return {'configuration_observed': True, 'handshake_verified': False, 'changed_operations': changed,
             'server_id': policy.server_id, 'peers': [{'device_id': desired[public], 'public_key': public,
                                                      'address': routes[0]} for public, routes in sorted(actual.items())]}
+
+
+def clear_owned(policy, backend):
+    """Confirm removal only if identity/scope still match and readback is empty."""
+    backend.verify_scope(policy)
+    for public in backend.peers():
+        backend.remove(public)
+    backend.verify_scope(policy)
+    if backend.peers():
+        raise GatewayError('gateway_cleanup_unconfirmed')
 
 
 class KernelWireGuard:

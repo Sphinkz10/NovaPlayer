@@ -186,18 +186,33 @@ el('deviceDeny').addEventListener('click',()=>decideDevice(false));
 el('deviceRefresh').addEventListener('click',()=>loadDevices().catch(()=>write(el('deviceMessage'),'Servidor indisponível.')));
 
 let wireguardGeneration=0;
+let wireguardExpiry=null;
 async function loadWireGuardEnrollments(){
  const session=token;const generation=++wireguardGeneration;if(!session)return;
+ clearTimeout(wireguardExpiry);
+ for(const title of el('wireguardEnrollments').querySelectorAll('[data-unverified-text]'))title.textContent=title.dataset.unverifiedText;
+ write(el('wireguardGateway'),'Gateway por confirmar.');
  const r=await fetch('/api/v1/admin/connect/wireguard/enrollments',{headers:{Authorization:'Bearer '+session},cache:'no-store'});
  if(token!==session||generation!==wireguardGeneration)return;
  if(!r.ok){write(el('wireguardMessage'),'Pedidos indisponíveis. Volta a entrar e atualiza.');return;}
  const data=await r.json();if(token!==session||generation!==wireguardGeneration)return;
+ let gateway={state:'not_verified',peers:[]};
+ try{const result=await fetch('/api/v1/admin/connect/wireguard/gateway',{headers:{Authorization:'Bearer '+session},cache:'no-store'});
+  if(result.ok)gateway=await result.json();
+ }catch{}
+ if(token!==session||generation!==wireguardGeneration)return;
+ const observed=gateway.state==='configuration_observed'&&gateway.configuration_observed===true;
+ const observedIds=new Set(observed?gateway.peers.map(peer=>peer.device_id):[]);
+ write(el('wireguardGateway'),observed?'Configuração observada no gateway em '+new Date(gateway.observed_at*1000).toLocaleTimeString('pt-PT')+'. Handshake e acesso remoto ainda por confirmar.':gateway.state==='disabled'?'Serviço de gateway não configurado.':'Sem observação válida do gateway. Acesso remoto desativado.');
  const list=el('wireguardEnrollments');list.replaceChildren();
  const states={pending:'A aguardar aprovação',approved:'Aprovado · gateway por confirmar',revoked:'Revogado'};
  if(!data.enrollments.length)write(list,'Ainda não existem pedidos WireGuard.');
  for(const item of data.enrollments){
   const row=document.createElement('article');const title=document.createElement('p');
-  title.textContent=item.label+' · '+(item.account_name||'Associação de laboratório')+' · '+states[item.state];row.append(title);
+  const titleText=item.label+' · '+(item.account_name||'Associação de laboratório')+' · '+states[item.state];
+  title.textContent=item.state==='approved'&&observedIds.has(item.device_id)?titleText.replace('gateway por confirmar','configuração observada'):titleText;
+  if(item.state==='approved'&&observedIds.has(item.device_id))title.dataset.unverifiedText=titleText;
+  row.append(title);
   const identity=document.createElement('p');identity.textContent='TV: '+item.device_id+' · SHA-256: '+item.fingerprint;row.append(identity);
   for(const approve of item.state==='pending'?[true,false]:item.state==='approved'?[false]:[]){
    const button=document.createElement('button');button.type='button';button.textContent=approve?'Aprovar esta chave':'Revogar pedido WireGuard';
@@ -214,7 +229,15 @@ async function loadWireGuardEnrollments(){
   }
   list.append(row);
  }
+ if(observed){
+  wireguardExpiry=setTimeout(()=>{
+   if(token!==session||generation!==wireguardGeneration)return;
+   write(el('wireguardGateway'),'Observação do gateway expirada. Atualiza para verificar novamente.');
+   for(const title of list.querySelectorAll('[data-unverified-text]'))title.textContent=title.dataset.unverifiedText;
+  },Math.max(0,gateway.expires_at*1000-Date.now()));
+ }
 }
+el('logout').addEventListener('click',()=>{wireguardGeneration++;clearTimeout(wireguardExpiry);write(el('wireguardGateway'),'Gateway por confirmar.');el('wireguardEnrollments').replaceChildren();});
 el('wireguardRefresh').addEventListener('click',()=>loadWireGuardEnrollments().catch(()=>write(el('wireguardMessage'),'Servidor indisponível.')));
 el('logout').addEventListener('click',()=>{clearDeviceReview();el('deviceLookup').reset();el('deviceList').replaceChildren();});
 

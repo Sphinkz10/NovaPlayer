@@ -184,7 +184,7 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 check(ProviderRegistry.evaluate(ProviderId.WIREGUARD, AndroidCapabilities.read(targetContext),
                     ProviderObservation(provisioned = true, consentGranted = true, tunnelUp = true,
                         privateHttpsReachable = true, serverIdentityMatches = true)) != ProviderState.CONNECTED)
-                checks.add("revoked device refused even while tunnel remains UP")
+                checks.add("revoked access credential refused even while tunnel remains UP")
                 stage("device-revoked"); gate("peer-removed")
                 networkRefused { client.identity(access) }
                 checks.add("gateway peer removal prevents further private traffic")

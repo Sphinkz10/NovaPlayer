@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "server_id": "00000000-0000-4000-8000-000000000001",
+    "public_key": "REPLACE_WITH_THE_EXISTING_GATEWAY_PUBLIC_KEY",
+    "pool": "10.222.0.0/24",
+    "gateway": "10.222.0.1"
+  },
+  "namespace": "nova-wg-example",
+  "interface": "wg0",
+  "channel_directory": "/var/lib/nova-gateway/channel",
+  "secret_file": "/etc/nova-gateway/channel.key",
+  "lease_directory": "/var/lib/nova-gateway/leases"
+}

@@ -42,3 +42,15 @@ def test_public_default_status_off(tmp_path):
         status=client.get('/api/v1/status').json()
         assert status['remote_access_enabled'] is False
         assert status['directory_enabled'] is False
+
+
+def test_optional_gateway_channel_adds_only_private_binds_and_local_settings():
+    overlay=yaml.safe_load((ROOT/'gateway/compose.channel.yaml').read_text())
+    assert set(overlay['services'])=={'nova-core'}
+    core=overlay['services']['nova-core']
+    assert set(core)=={'environment','volumes'}
+    assert set(core['environment'])=={'NOVA_WIREGUARD_CHANNEL_DIR','NOVA_WIREGUARD_CHANNEL_KEY_FILE'}
+    assert len(core['volumes'])==2
+    assert all(volume['bind']['create_host_path'] is False for volume in core['volumes'])
+    assert core['volumes'][1]['read_only'] is True
+    assert 'docker.sock' not in str(overlay)

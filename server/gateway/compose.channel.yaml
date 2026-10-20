@@ -1,0 +1,19 @@
+# Explicit development overlay for the Core mailbox only. No host privileges or
+# Docker socket are granted. The separate Linux host worker is opt-in.
+services:
+  nova-core:
+    environment:
+      NOVA_WIREGUARD_CHANNEL_DIR: /run/nova-gateway
+      NOVA_WIREGUARD_CHANNEL_KEY_FILE: /run/nova-gateway.key
+    volumes:
+      - type: bind
+        source: ${NOVA_GATEWAY_CHANNEL_DIR:?}
+        target: /run/nova-gateway
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${NOVA_GATEWAY_CHANNEL_KEY_FILE:?}
+        target: /run/nova-gateway.key
+        read_only: true
+        bind:
+          create_host_path: false

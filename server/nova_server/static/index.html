@@ -26,7 +26,8 @@
 <form id="connectDraft"><label>Fornecedor<select name="provider" id="provider"><option value="wireguard">WireGuard</option><option value="tailscale">Tailscale</option><option value="netbird">NetBird</option></select></label>
 <label>Endereço HTTPS privado do serviço NOVA<input name="gateway_url" type="url" placeholder="https://10.90.0.1:8920" required maxlength="512"></label>
 <div id="providerFields"></div><button>Guardar rascunho</button></form><p id="connectMessage" role="status" aria-live="polite"></p>
-<h3>Pedidos WireGuard das TVs · laboratório</h3><p>A TV gera e guarda a própria chave privada. Compara a impressão digital completa apresentada na TV antes de aprovar. Aprovar guarda a tua decisão; a instalação do peer no gateway ainda exige implementação. O acesso remoto continua desativado.</p>
+<h3>Pedidos WireGuard das TVs · laboratório</h3><p>A TV gera e guarda a própria chave privada. Compara a impressão digital completa apresentada na TV antes de aprovar. O serviço de gateway, quando configurado localmente, aplica os pedidos aprovados e comunica a configuração observada. O acesso remoto continua desativado até concluir o percurso remoto.</p>
+<p id="wireguardGateway" role="status" aria-live="polite">Gateway por confirmar.</p>
 <button id="wireguardRefresh" type="button">Atualizar pedidos WireGuard</button><p id="wireguardMessage" role="status" aria-live="polite"></p><div id="wireguardEnrollments"></div></section>
 <footer>JELLYFIN · NOVA CORE · LIGAÇÃO REMOTA BLOQUEADA ATÉ VALIDAÇÃO</footer></main>
 <script src="/static/control.js" defer></script></body></html>

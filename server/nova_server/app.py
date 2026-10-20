@@ -53,7 +53,8 @@ class DirectoryNewAccount(DirectoryCredentials):
     member_password:str=Field(min_length=14,max_length=1024)
 
 
-def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_server_id=None, directory_options=None):
+def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_server_id=None, directory_options=None,
+             gateway_options=None):
     state_dir=Path(state_dir or os.environ.get('NOVA_STATE_DIR','./state/nova'))
     jellyfin_url=jellyfin_url or os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096')
     store=Store(state_dir)
@@ -70,9 +71,47 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
         from .directory_control import DirectoryControl, ControlError, safe_operation
         directory_control = DirectoryControl(state_dir, **directory_options)
     api.state.directory_control = directory_control
+    if gateway_options is None and os.environ.get('NOVA_WIREGUARD_CHANNEL_DIR'):
+        gateway_options = {'directory': os.environ['NOVA_WIREGUARD_CHANNEL_DIR'],
+                           'secret_file': os.environ.get('NOVA_WIREGUARD_CHANNEL_KEY_FILE', '')}
+    gateway_publisher = None
+    if gateway_options:
+        from .gateway_channel import GatewayChannel, GatewayPublisher
+        gateway_publisher = GatewayPublisher(WireGuardEnrollments(store), GatewayChannel(**gateway_options))
+    api.state.gateway_publisher = gateway_publisher
     @asynccontextmanager
     async def directory_runtime(app):
         task=None
+        gateway_task=None
+        gateway_lock=None
+        async def emit_gateway_plan():
+            emission=asyncio.create_task(asyncio.to_thread(gateway_publisher.publish))
+            try:await asyncio.shield(emission)
+            except asyncio.CancelledError:
+                # A cancelled to_thread keeps running. Join it before withdrawing
+                # the plan and releasing the publisher lock.
+                with suppress(Exception):await emission
+                raise
+        if gateway_publisher:
+            from .gateway_service import exclusive
+            # Exactly one Core process publishes authoritative plans per volume.
+            gateway_lock=exclusive(gateway_publisher.channel.directory, 'publisher')
+            gateway_lock.__enter__()
+            try:
+                await emit_gateway_plan()
+                gateway_publisher.active=True
+            except BaseException:
+                gateway_lock.__exit__(None,None,None)
+                raise
+            async def publish_gateway():
+                while True:
+                    await asyncio.sleep(2)
+                    try:
+                        await emit_gateway_plan()
+                        gateway_publisher.active=True
+                    except Exception:
+                        gateway_publisher.active=False
+            gateway_task=asyncio.create_task(publish_gateway())
         if directory_control:
             directory_control.worker_active=True
             async def renew():
@@ -83,6 +122,15 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
             task=asyncio.create_task(renew())
         try:yield
         finally:
+            if gateway_publisher:
+                gateway_publisher.active=False
+                if gateway_task:
+                    gateway_task.cancel()
+                    with suppress(asyncio.CancelledError):await gateway_task
+                # Missing transport causes removal on the worker's next tick;
+                # never delete the durable address database on a Core restart.
+                with suppress(OSError):(gateway_publisher.channel.directory/'plan.json').unlink(missing_ok=True)
+                gateway_lock.__exit__(None,None,None)
             if directory_control:directory_control.worker_active=False
             if task:
                 task.cancel()
@@ -220,6 +268,13 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     @api.get('/api/v1/admin/connect/wireguard/plan')
     def wireguard_plan(token:str=Depends(owner)):
         return WireGuardEnrollments(store).gateway_plan()
+
+    @api.get('/api/v1/admin/connect/wireguard/gateway')
+    def wireguard_gateway_status(token:str=Depends(owner)):
+        if gateway_publisher is None:
+            return {'state':'disabled', 'configuration_observed':False, 'handshake_verified':False,
+                    'remote_access_enabled':False, 'peers':[]}
+        return gateway_publisher.status()
 
     @api.post('/api/v1/admin/connect/wireguard/enrollments/{device_id}')
     def wireguard_decision(device_id:str, payload:EnrollmentDecision, token:str=Depends(owner)):

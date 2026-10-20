@@ -1,6 +1,6 @@
 # M5 — Adaptador restrito WireGuard e capturas das apps
 
-Incremento seguinte à [inscrição por TV](M5_INSCRICAO_WIREGUARD.md). A inscrição e a aprovação continuam separadas da configuração do gateway e de uma ligação autenticada. A instalação LAN disponível mantém a APK 0.9 e a imagem corrigida da entrega anterior.
+Registo do incremento seguinte à [inscrição por TV](M5_INSCRICAO_WIREGUARD.md). O desenvolvimento posterior acrescenta o [serviço, canal autenticado e leases duráveis](M5_SERVICO_GATEWAY.md). Os resultados abaixo identificam a revisão histórica do adaptador e das capturas.
 
 ## Adaptador implementado
 
