@@ -46,6 +46,13 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
     private fun noTcp(host: String, port: Int) = networkRefused {
         Socket().use { it.connect(InetSocketAddress(host, port), 1800) }
     }
+    private fun association(fixture: JSONObject): SavedDevice {
+        val cert = CertificateFactory.getInstance("X.509")
+            .generateCertificate(fixture.string("certificate_pem").byteInputStream())
+        return SavedDevice(ServerTrust(fixture.string("enrollment_origin"), fixture.string("server_id"), cert.encoded),
+            DeviceTokens(fixture.string("access_token"), fixture.string("refresh_token"), fixture.string("device_id"),300,2592000),
+            System.currentTimeMillis()+2592000_000L)
+    }
     override fun onStart() {
         val report = Bundle()
         var bridge: WireGuardBridge? = null
@@ -53,10 +60,33 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
             val raw = File(targetContext.filesDir, "wireguard-fixture.json").readText()
             val fixture = JSONObject(raw)
             val vault = ProvisioningStore(targetContext)
+            val enrollmentKeys = WireGuardEnrollmentStore(targetContext)
+            val saved = association(fixture)
             if (mode == "restart") {
                 check(vault.load()?.expectedServerId == fixture.string("server_id"))
                 check(VpnService.prepare(targetContext) == null)
                 checks.add("encrypted profile survives process restart")
+                val localPublic = enrollmentKeys.publicKey(saved)
+                val parsed = com.wireguard.config.Config.parse(vault.load()!!.config.byteInputStream())
+                check(localPublic == parsed.`interface`.keyPair.publicKey.toBase64())
+                checks.add("Android-generated enrollment key survives process restart")
+                val enrollmentPrefs = targetContext.getSharedPreferences("nova_wireguard_enrollment", 0)
+                val original = enrollmentPrefs.getString("sealed", null)!!
+                val damaged = android.util.Base64.decode(original, android.util.Base64.NO_WRAP)
+                damaged[damaged.lastIndex] = (damaged.last().toInt() xor 1).toByte()
+                check(enrollmentPrefs.edit().putString("sealed", android.util.Base64.encodeToString(damaged, android.util.Base64.NO_WRAP)).commit())
+                check(runCatching { enrollmentKeys.publicKey(saved) }.isFailure)
+                check(enrollmentPrefs.getString("sealed", null) != original)
+                checks.add("enrollment tampering fails closed without replacing key")
+                check(enrollmentPrefs.edit().putString("sealed", original).commit())
+                val keyStore = java.security.KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+                keyStore.deleteEntry("nova-wireguard-enrollment-v1")
+                check(runCatching { enrollmentKeys.publicKey(saved) }.isFailure)
+                check(!keyStore.containsAlias("nova-wireguard-enrollment-v1"))
+                checks.add("missing wrapping key never regenerates enrollment identity")
+                DeviceSessionStore(targetContext).clear()
+                check(enrollmentPrefs.all.isEmpty())
+                checks.add("forgetting NOVA association erases local WireGuard enrollment")
                 val prefs = targetContext.getSharedPreferences("nova_connect_secure", 0)
                 val sealed = android.util.Base64.decode(prefs.getString("sealed", null), android.util.Base64.NO_WRAP)
                 sealed[sealed.lastIndex] = (sealed.last().toInt() xor 1).toByte()
@@ -75,11 +105,29 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 val access = fixture.string("access_token")
                 networkRefused { client.identity(access) }
                 checks.add("private service unreachable before VPN")
-                vault.provisionAdminOnly(fixture.string("config"), origin, trust.serverId)
+                val publicKey = enrollmentKeys.publicKey(saved)
+                check(publicKey == WireGuardEnrollmentStore(targetContext).publicKey(saved))
+                val enrollClient = DeviceClient(saved.trust)
+                check(enrollClient.enrollWireGuard(saved, publicKey) == "pending")
+                check(enrollClient.enrollWireGuard(saved, publicKey) == "pending")
+                checks.add("Android-generated public key enrolled idempotently over pinned LAN HTTPS")
+                val foreign = SavedDevice(saved.trust, DeviceTokens(saved.tokens.access, saved.tokens.refresh,
+                    java.util.UUID.randomUUID().toString(),300,2592000), saved.refreshDeadline)
+                check(runCatching { enrollmentKeys.publicKey(foreign) }.isFailure)
+                checks.add("encrypted enrollment key bound to NOVA server origin and device")
+                stage("enrolled"); gate("approved")
+                check(enrollClient.wireGuardStatus(saved, publicKey) == "approved")
+                checks.add("owner approval checked before constructing local lab tunnel profile")
+                val localConfig = "[Interface]\nPrivateKey = ${enrollmentKeys.keys(saved).privateKey.toBase64()}\n" +
+                    "Address = 10.222.0.2/32\nMTU = 1280\nIncludedApplications = ${targetContext.packageName}\n\n" +
+                    "[Peer]\nPublicKey = ${fixture.string("gateway_public_key")}\nEndpoint = 10.0.2.2:${fixture.integer("endpoint_port")}\n" +
+                    "AllowedIPs = 10.222.0.1/32\nPersistentKeepalive = 25\n"
+                check(!raw.contains(enrollmentKeys.keys(saved).privateKey.toBase64()))
+                vault.provisionAdminOnly(localConfig, origin, trust.serverId)
                 val stored = targetContext.getSharedPreferences("nova_connect_secure", 0).getString("sealed", null)!!
                 val decoded = android.util.Base64.decode(stored, android.util.Base64.NO_WRAP).toString(Charsets.UTF_8)
-                check(!decoded.contains("PrivateKey") && !decoded.contains(fixture.string("config")))
-                check(vault.load()?.config == fixture.string("config"))
+                check(!decoded.contains("PrivateKey") && !decoded.contains(localConfig))
+                check(vault.load()?.config == localConfig)
                 checks.add("WireGuard profile encrypted by Android Keystore")
                 check(VpnService.prepare(targetContext) != null)
                 val activity = startActivitySync(Intent(targetContext, WireGuardConsentActivity::class.java)

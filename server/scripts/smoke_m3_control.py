@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+import base64
+from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
 
 SERVER=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(SERVER),str(SERVER/'tests')]
@@ -52,18 +54,33 @@ def run(output=None,channel=None):
                     auth={'Authorization':'Bearer '+tokens['access_token']}
                     allowed=lab.tv.get('/api/v1/device/libraries',headers=auth)
                     assert allowed.status_code==200 and allowed.json()['libraries']==[libs[0]]
+                    public=base64.b64encode(X25519PrivateKey.generate().public_key().public_bytes_raw()).decode()
+                    enrolled=lab.tv.post('/api/v1/device/wireguard',headers=auth,json={'public_key':public})
+                    assert enrolled.status_code==200
+                    page.locator('#wireguardRefresh').click()
+                    expect(page.locator('#wireguardEnrollments')).to_contain_text(enrolled.json()['fingerprint'])
+                    expect(page.locator('#wireguardEnrollments')).to_contain_text('A aguardar aprovação')
+                    page.locator('#wireguardEnrollments').get_by_role('button',name='Aprovar esta chave').click()
+                    expect(page.locator('#wireguardEnrollments')).to_contain_text('Aprovado · gateway por confirmar')
+                    assert lab.tv.get('/api/v1/device/wireguard',headers=auth).json()['gateway_state']=='not_verified'
                     page.locator('#memberList button').click()
                     expect(page.locator('#memberMessage')).to_contain_text('Conta revogada')
                     assert lab.tv.get('/api/v1/device/libraries',headers=auth).status_code==401
+                    page.locator('#wireguardRefresh').click()
+                    expect(page.locator('#wireguardEnrollments')).to_contain_text('Revogado')
+                    expect(page.locator('#wireguardEnrollments button')).to_have_count(0)
                     assert page.evaluate('localStorage.length')==0 and page.evaluate('sessionStorage.length')==0
                     assert not page.context.cookies() and not errors
                     if output:
                         Path(output).mkdir(parents=True,exist_ok=True)
                         page.locator('#memberList').screenshot(path=str(Path(output)/'members.png'))
+                        page.locator('#wireguardEnrollments').screenshot(path=str(Path(output)/'wireguard-enrollment.png'))
                 finally:browser.close()
             report={'result':'passed','checks':['signed_account_review','approval_blocked_until_grant',
                 'owner_selects_library','admin_password_cleared','fresh_review_after_grant',
                 'owner_approves_tv','only_assigned_library','owner_revokes_account_and_device',
+                'wireguard_public_fingerprint_review','wireguard_owner_approval_without_gateway_claim',
+                'member_revocation_invalidates_wireguard_enrollment',
                 'no_browser_storage_or_errors'],'jellyfin':'HTTP fixture','physical_nas':False}
             if output:(Path(output)/'m3-control.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
             print(json.dumps(report))

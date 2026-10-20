@@ -24,6 +24,7 @@ from .devices import Devices, DeviceError
 from .device_api import Payload, UserCode, DeviceDecision, device_error
 from .client_api import SmallBody
 from .members import MemberConfiguration
+from .wireguard import WireGuardEnrollments, EnrollmentDecision
 
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z][a-zA-Z0-9_.-]{2,39}$')
 DUMMY_HASH = '$argon2id$v=19$m=65536,t=3,p=2$bsLfU/8cH1R+4e68utTSNQ$8Tk5/U5Y6zx5/ZrURl0G7DtU5y3EXazaQ+3mifoBRLI'
@@ -211,6 +212,15 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     def connect_settings(token:str=Depends(owner)):
         return {'schema_version':1, 'active_provider':None, 'remote_access_enabled':False,
                 'providers':provider_catalog(), 'drafts':store.connect_drafts()}
+
+    @api.get('/api/v1/admin/connect/wireguard/enrollments')
+    def wireguard_enrollments(token:str=Depends(owner)):
+        return {'enrollments':WireGuardEnrollments(store).list(), 'remote_access_enabled':False}
+
+    @api.post('/api/v1/admin/connect/wireguard/enrollments/{device_id}')
+    def wireguard_decision(device_id:str, payload:EnrollmentDecision, token:str=Depends(owner)):
+        devices.limit('owner.wireguard', 'owner', 60, 60, 60)
+        return WireGuardEnrollments(store).decide(device_id, payload.revision, payload.approve)
 
     @api.get('/api/v1/admin/lan')
     def lan_settings(token:str=Depends(owner)):

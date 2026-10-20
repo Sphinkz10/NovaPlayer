@@ -40,8 +40,8 @@
     },
     {
       "path": ".github/workflows/wireguard-network.yml",
-      "bytes": 1950,
-      "sha256": "00c5a48d7db20f6b9eccd599e60f2479c89337c453cd674b06f824d437784635"
+      "bytes": 1837,
+      "sha256": "17efad6412b24f11d8589d9fd0c919950a62ac17be87dacc8269bac13f8de0b4"
     },
     {
       "path": ".gitignore",
@@ -155,8 +155,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt",
-      "bytes": 8740,
-      "sha256": "f28d5abb19d24bf1676ca85ef950e14a1216bbc32aa65c8d91c4f93e6bb20f43"
+      "bytes": 10120,
+      "sha256": "8f89dcd02449da46ec946f6a82acf65b83b895d0ce3a253ac9406dcf7c0ccd69"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DevicePairingActivity.kt",
@@ -165,8 +165,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DeviceSessionStore.kt",
-      "bytes": 4581,
-      "sha256": "5653cdb09c98305d17e4e7d419aac528afe154246f2e7b0162b03795cfbc2310"
+      "bytes": 4643,
+      "sha256": "7572ec745e7cf8d14896c4c307585caf1e697dd880ad9b3d18e6c72e4f72a70d"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryActivity.kt",
@@ -200,8 +200,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MainActivity.kt",
-      "bytes": 7360,
-      "sha256": "b383d59702aa4607aff26d0c6fa750c24485505c867bc3d4fa6ab8cc0906bffb"
+      "bytes": 8721,
+      "sha256": "18d2b4eacea886a686eb82e22df552697c06d824b99f9140235245b146efce6e"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",
@@ -227,6 +227,11 @@
       "path": "connect/app/src/main/java/com/novacinema/connect/WireGuardBridge.kt",
       "bytes": 2375,
       "sha256": "e325767f15fe99446cabc75bca01684813f9c40ed98db6280bab42a7d5e68bad"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/WireGuardEnrollmentStore.kt",
+      "bytes": 4192,
+      "sha256": "79a7fa98303801b4ff81b0481cb3cc4771929718764e4a8d237f544298a3084d"
     },
     {
       "path": "connect/app/src/main/res/drawable/nova_banner.xml",
@@ -460,13 +465,13 @@
     },
     {
       "path": "connect/wireguard-proof/network.py",
-      "bytes": 17055,
-      "sha256": "0ec3c9ff13ccc9e15ec0ed4bcde81e20d693bc8eb6102e06c72b3b71215d6a19"
+      "bytes": 20536,
+      "sha256": "56f78afc203dc4c8a4081ea1636e2b780b6d71b0df6587cd864c0d91c8366e98"
     },
     {
       "path": "connect/wireguard-proof/src/androidTest/kotlin/com/novacinema/connect/WireGuardNetworkInstrumentation.kt",
-      "bytes": 9349,
-      "sha256": "547a482ef4af3b4805e7bd98fa112b14b6377c493ad77e03f2fc21122e3dd9b1"
+      "bytes": 13405,
+      "sha256": "3fd163331bbc021100bf78969cb5300dfc4492f81462897fb5eefb69d0ff3b5f"
     },
     {
       "path": "connect/wireguard-proof/src/debug/AndroidManifest.xml",
@@ -675,18 +680,18 @@
     },
     {
       "path": "server/nova_server/app.py",
-      "bytes": 15107,
-      "sha256": "032a4e2178f2fd86cbce9d09c1e9cccbe726f372d6b21edcb573ce3c315bcb90"
+      "bytes": 15715,
+      "sha256": "77f40a1dc4b46089412f273d3f557faafd982e1a628579bdb85d9b2a60837c51"
     },
     {
       "path": "server/nova_server/client_api.py",
-      "bytes": 8334,
-      "sha256": "5fa0bb0bb3295d53e2c4204349f5649ac57e8f656de10ed8f4e068d5bf0e277e"
+      "bytes": 8879,
+      "sha256": "8e7ab1f0ac4e1f7bbf7e71f7b6f1dd122ea5f92cc568703a53a50d619b757248"
     },
     {
       "path": "server/nova_server/connect.py",
-      "bytes": 3165,
-      "sha256": "987fbcbb5eeb08bb896934b6ede4295bf1b9b8aa04403e1de0dda1693f83fb6c"
+      "bytes": 3432,
+      "sha256": "adeb0f530176cf8cd63972aaf6afb4e40380e73049df772e589dc2c05353c273"
     },
     {
       "path": "server/nova_server/device_api.py",
@@ -695,8 +700,8 @@
     },
     {
       "path": "server/nova_server/devices.py",
-      "bytes": 13269,
-      "sha256": "e21c5037791cccd2baa2f81b15d33d7f8486b541c8828d8e373869864473eaad"
+      "bytes": 13364,
+      "sha256": "b96562ed03c103d0800ca6f3c676d099c9fcf1efd3c7cfa98502e05f79d7c11c"
     },
     {
       "path": "server/nova_server/directory_control.py",
@@ -760,18 +765,23 @@
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 24611,
-      "sha256": "e68e708c9694612fe7c08c6c45d81731e44799bb3fb076068ddc951d9fab45fd"
+      "bytes": 26938,
+      "sha256": "c419069eb0a54e4fe74f3511e7157acf567bc37531fc28dda87569ad6e0dd29b"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 9271,
-      "sha256": "5d5fdaabe7878e7b5aa9e7ecce261142a53763a5c33e6be1ca64b37305d5e7b5"
+      "bytes": 9728,
+      "sha256": "8ba94ebf01bcbb0afa1be308a0d4386a95d762d9445e3f444ac4d59d375cb10e"
     },
     {
       "path": "server/nova_server/storage.py",
-      "bytes": 9417,
-      "sha256": "8d49a4a4be9f7afe1215e6d04d16de2c3e0a361b90233a8cd3b613843a9dc339"
+      "bytes": 9759,
+      "sha256": "1a1990963618cf54c97e99b47e165066573c446fcc93401c4d5daa2d3997b869"
+    },
+    {
+      "path": "server/nova_server/wireguard.py",
+      "bytes": 6466,
+      "sha256": "4a1bcc0c91327afd7e6b4e031de07ef2c4131e1707f898defb07319c4a10d8b8"
     },
     {
       "path": "server/pytest.ini",
@@ -860,8 +870,8 @@
     },
     {
       "path": "server/scripts/recovery.py",
-      "bytes": 15963,
-      "sha256": "86d5cbdb8f8741a22dc9d31aa884fcaf983d32b8f37eda989d5999cfdb62936b"
+      "bytes": 16424,
+      "sha256": "2eacb4671d58aa1aa4588b93f84dbb80c5495c12256a4cf043c62f3ac31d1f80"
     },
     {
       "path": "server/scripts/smoke_browser.py",
@@ -905,8 +915,8 @@
     },
     {
       "path": "server/scripts/smoke_m3_control.py",
-      "bytes": 4984,
-      "sha256": "999410013e8de607fd3a3ed2c824aec7c84d45d107d57956518d8c66c4880043"
+      "bytes": 6532,
+      "sha256": "9d3f892e33696c056a28e430da2253ac19f82dc7302f943dc6179ae887c53556"
     },
     {
       "path": "server/scripts/smoke_m3_server.py",
@@ -1017,6 +1027,11 @@
       "path": "server/tests/test_setup.py",
       "bytes": 7283,
       "sha256": "2242982abc99507852acb99f51c46e8b49e1edd70a53dc5e7fbee0d41eebf0a3"
+    },
+    {
+      "path": "server/tests/test_wireguard_enrollment.py",
+      "bytes": 8278,
+      "sha256": "a341edb2458327d5c0b60c446fe502603bb42587ff8f448bc54b15a0969573bd"
     }
   ]
 }

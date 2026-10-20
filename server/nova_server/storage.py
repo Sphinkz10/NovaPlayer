@@ -67,6 +67,12 @@ CREATE TABLE IF NOT EXISTS member_accounts (
  server_id TEXT, policy TEXT, credential BLOB, disabled INTEGER NOT NULL DEFAULT 1,
  revision INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS wireguard_enrollments (
+ device_id TEXT PRIMARY KEY REFERENCES devices(id) ON DELETE CASCADE,
+ public_key TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL,
+ state TEXT NOT NULL DEFAULT 'pending' CHECK(state IN ('pending','approved','revoked')),
+ revision INTEGER NOT NULL DEFAULT 1, updated_at INTEGER NOT NULL
+);
 """
 
 class Store:

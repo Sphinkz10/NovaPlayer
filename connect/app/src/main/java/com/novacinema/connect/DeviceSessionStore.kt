@@ -13,7 +13,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 /** Separate from VPN provisioning. Backups/transfer are disabled in the application manifest. */
-class DeviceSessionStore(context: Context) : DeviceVault {
+class DeviceSessionStore(private val context: Context) : DeviceVault {
     private val prefs = context.getSharedPreferences("nova_device_session", Context.MODE_PRIVATE)
     private val alias = "nova-device-session-v1"
     private val aad = (context.packageName + ":device-session-v1").toByteArray(Charsets.UTF_8)
@@ -60,6 +60,7 @@ class DeviceSessionStore(context: Context) : DeviceVault {
         }
     }
     @Synchronized override fun clear() {
+        WireGuardEnrollmentStore(context).clear()
         check(prefs.edit().remove("sealed").commit())
         val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
         if (store.containsAlias(alias)) store.deleteEntry(alias)

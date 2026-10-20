@@ -196,6 +196,8 @@ def revoke_restored_sessions(state):
             db.execute('DELETE FROM device_refresh')
             db.execute('DELETE FROM device_requests')
             db.execute('UPDATE devices SET revoked=1')
+            if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='wireguard_enrollments'").fetchone():
+                db.execute("UPDATE wireguard_enrollments SET state='revoked',revision=revision+1,updated_at=strftime('%s','now')")
         if db.execute('PRAGMA user_version').fetchone()[0] >= 3:
             db.execute('DELETE FROM identity_assertions')
             db.execute('UPDATE member_accounts SET disabled=1,credential=NULL,revision=revision+1')
@@ -205,6 +207,8 @@ def revoke_restored_sessions(state):
         schema=db.execute('PRAGMA user_version').fetchone()[0]
         if schema>=2:checks+=['SELECT COUNT(*) FROM '+table for table in ('device_access','device_refresh','device_requests')]+['SELECT COUNT(*) FROM devices WHERE revoked=0']
         if schema>=3:checks+=['SELECT COUNT(*) FROM member_accounts WHERE disabled=0 OR credential IS NOT NULL']
+        if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='wireguard_enrollments'").fetchone():
+            checks+=['SELECT COUNT(*) FROM wireguard_enrollments WHERE state!=\'revoked\'']
         if any(db.execute(query).fetchone()[0] for query in checks):raise ValueError('Revogação NOVA incompleta.')
     with closing(sqlite3.connect(jf)) as db,db:
         db.execute('DELETE FROM Devices')

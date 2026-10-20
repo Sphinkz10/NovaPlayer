@@ -220,6 +220,8 @@ class Devices:
 
     @staticmethod
     def _revoke(db, device_id, now, event):
+        from .wireguard import revoke_enrollment
+        revoke_enrollment(db, device_id, now)
         db.execute('UPDATE devices SET revoked=1 WHERE id=?', (device_id,))
         db.execute('DELETE FROM device_access WHERE device_id=?', (device_id,))
         db.execute('DELETE FROM device_refresh WHERE device_id=?', (device_id,))

@@ -3,9 +3,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'connect/wireguard-proof/**'
-      - 'connect/app/build.gradle.kts'
-      - 'connect/app/src/main/java/com/novacinema/connect/WireGuardBridge.kt'
+      - 'connect/**'
+      - 'server/**'
       - '.github/workflows/wireguard-network.yml'
 permissions:
   contents: read

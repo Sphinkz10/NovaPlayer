@@ -20,6 +20,7 @@ async function loadOverview(){
  for(const [k,v] of entries){const dt=document.createElement('dt');dt.textContent=k;const dd=document.createElement('dd');dd.textContent=v;d.append(dt,dd);}
  el('overview').replaceChildren(d);
  await loadConnect();
+ await loadWireGuardEnrollments();
  await loadSetup();
  await loadDevices();
  await loadMembers();
@@ -183,6 +184,38 @@ async function decideDevice(approve){
 el('deviceApprove').addEventListener('click',()=>decideDevice(true));
 el('deviceDeny').addEventListener('click',()=>decideDevice(false));
 el('deviceRefresh').addEventListener('click',()=>loadDevices().catch(()=>write(el('deviceMessage'),'Servidor indisponível.')));
+
+let wireguardGeneration=0;
+async function loadWireGuardEnrollments(){
+ const session=token;const generation=++wireguardGeneration;if(!session)return;
+ const r=await fetch('/api/v1/admin/connect/wireguard/enrollments',{headers:{Authorization:'Bearer '+session},cache:'no-store'});
+ if(token!==session||generation!==wireguardGeneration)return;
+ if(!r.ok){write(el('wireguardMessage'),'Pedidos indisponíveis. Volta a entrar e atualiza.');return;}
+ const data=await r.json();if(token!==session||generation!==wireguardGeneration)return;
+ const list=el('wireguardEnrollments');list.replaceChildren();
+ const states={pending:'A aguardar aprovação',approved:'Aprovado · gateway por confirmar',revoked:'Revogado'};
+ if(!data.enrollments.length)write(list,'Ainda não existem pedidos WireGuard.');
+ for(const item of data.enrollments){
+  const row=document.createElement('article');const title=document.createElement('p');
+  title.textContent=item.label+' · '+(item.account_name||'Associação de laboratório')+' · '+states[item.state];row.append(title);
+  const identity=document.createElement('p');identity.textContent='TV: '+item.device_id+' · SHA-256: '+item.fingerprint;row.append(identity);
+  for(const approve of item.state==='pending'?[true,false]:item.state==='approved'?[false]:[]){
+   const button=document.createElement('button');button.type='button';button.textContent=approve?'Aprovar esta chave':'Revogar pedido WireGuard';
+   button.addEventListener('click',async()=>{
+    if(token!==session||generation!==wireguardGeneration)return;button.disabled=true;
+    try{const response=await fetch('/api/v1/admin/connect/wireguard/enrollments/'+encodeURIComponent(item.device_id),{
+      method:'POST',headers:{Authorization:'Bearer '+session,'Content-Type':'application/json'},body:JSON.stringify({revision:item.revision,approve})});
+     if(token!==session||generation!==wireguardGeneration)return;
+     write(el('wireguardMessage'),response.ok?(approve?'Chave aprovada. Gateway por confirmar; acesso remoto desativado.':'Pedido revogado. A associação LAN mantém as permissões existentes.'):'Decisão não confirmada. Atualiza e revê o estado do pedido.');
+     await loadWireGuardEnrollments();
+    }catch{if(token===session)write(el('wireguardMessage'),'Ligação interrompida. Atualiza para confirmar a decisão.');}
+    finally{button.disabled=false;}
+   });row.append(button);
+  }
+  list.append(row);
+ }
+}
+el('wireguardRefresh').addEventListener('click',()=>loadWireGuardEnrollments().catch(()=>write(el('wireguardMessage'),'Servidor indisponível.')));
 el('logout').addEventListener('click',()=>{clearDeviceReview();el('deviceLookup').reset();el('deviceList').replaceChildren();});
 
 // Directory passwords are transient; no destination, path or TLS exception comes from this form.

@@ -14,6 +14,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .storage import Store
 from .devices import Devices, DeviceError
 from .device_api import StartDevice, DeviceCode, RefreshDevice, device_error, invalid_device_payload
+from .wireguard import Enrollment, WireGuardEnrollments
 
 
 def client_origin(url):
@@ -157,6 +158,21 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False):
             raise DeviceError('invalid_token', 401)
         device = devices.authenticate(bearer[7:])
         return devices.revoke(device['device_id'])
+
+    def wireguard_access(request):
+        limit(request, 'wireguard', 20, 100, 60)
+        bearer = request.headers.get('Authorization', '')
+        if not bearer.startswith('Bearer ') or not 40 <= len(bearer[7:]) <= 128:
+            raise DeviceError('invalid_token', 401)
+        return bearer[7:]
+
+    @api.post('/api/v1/device/wireguard')
+    def enroll_wireguard(payload: Enrollment, request: Request):
+        return WireGuardEnrollments(store).request(wireguard_access(request), payload.public_key)
+
+    @api.get('/api/v1/device/wireguard')
+    def wireguard_status(request: Request):
+        return WireGuardEnrollments(store).status(wireguard_access(request))
 
     from .media import mount_media
     mount_media(api,store,os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096'))

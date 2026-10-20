@@ -78,6 +78,8 @@ def provider_catalog() -> list[dict]:
         {'id': provider.value, 'configuration': 'draft_only', 'can_activate': False,
          'server_adapter': 'not_implemented',
          'android_engine': 'compiled_poc' if provider == ProviderId.WIREGUARD else 'not_implemented',
-         'reason': 'Enrollment, transporte e isolamento ainda por validar.'}
+         'enrollment': 'owner_approval_only' if provider == ProviderId.WIREGUARD else 'not_implemented',
+         'reason': ('Inscrição e aprovação disponíveis em laboratório; instalação do gateway por implementar.'
+                    if provider == ProviderId.WIREGUARD else 'Enrollment, transporte e isolamento ainda por validar.')}
         for provider in ProviderId
     ]

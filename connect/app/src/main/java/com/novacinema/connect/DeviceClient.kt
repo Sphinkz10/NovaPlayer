@@ -142,4 +142,22 @@ class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
         }.also { require(it.map { lib -> lib.first }.distinct().size==it.size) }
     }
     override fun logout(access: String) { request("logout", JSONObject(), access) }
+
+    /** Only public material crosses the API; an approval is not tunnel activation. */
+    fun enrollWireGuard(saved: SavedDevice, publicKey: String): String = wireGuardResult(saved,
+        publicKey, request("wireguard", JSONObject().put("public_key", publicKey), saved.tokens.access))
+
+    fun wireGuardStatus(saved: SavedDevice, publicKey: String): String = wireGuardResult(saved,
+        publicKey, request("wireguard", access = saved.tokens.access))
+
+    private fun wireGuardResult(saved: SavedDevice, publicKey: String, result: JSONObject): String {
+        require(saved.trust.serverId == trust.serverId && saved.trust.origin == trust.origin)
+        require(result.integer("schema_version") == 1 && result.string("server_id") == trust.serverId &&
+            result.string("device_id") == saved.tokens.deviceId && result.string("public_key") == publicKey &&
+            (if (result.isNull("account_id")) null else result.string("account_id")) == saved.accountId &&
+            result.string("fingerprint") == ServerTrust.fingerprint(android.util.Base64.decode(publicKey, android.util.Base64.NO_WRAP)) &&
+            result.get("remote_access_enabled") == false && result.string("gateway_state") == "not_verified" &&
+            result.integer("revision") >= 1)
+        return result.string("state").also { require(it in setOf("pending", "approved", "revoked")) }
+    }
 }

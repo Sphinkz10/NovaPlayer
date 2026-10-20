@@ -53,6 +53,25 @@ class MainActivity : Activity() {
             startActivity(Intent(this@MainActivity, DevicePairingActivity::class.java))
         } }
         root.addView(pair)
+        // Development enrollment workflow. The distributed LAN release is unchanged.
+        if (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+            root.addView(Button(this).apply { text = "Pedir WireGuard · laboratório"; setOnClickListener {
+                io.execute {
+                    try {
+                        val checked = DeviceAssociationRuntime.get(this@MainActivity).check()
+                        check(checked.state == com.novacinema.connect.core.PairingState.ASSOCIATED)
+                        val saved = DeviceSessionStore(this@MainActivity).load() ?: error("No association")
+                        val keys = WireGuardEnrollmentStore(this@MainActivity)
+                        val state = DeviceClient(saved.trust).enrollWireGuard(saved, keys.publicKey(saved))
+                        note(when (state) {
+                            "pending" -> "Pedido WireGuard enviado. Compara esta impressão digital no NOVA Control:\n${keys.fingerprint(saved)}"
+                            "approved" -> "WireGuard aprovado. Falta instalação e confirmação no gateway; acesso remoto desativado."
+                            else -> "Pedido WireGuard revogado. O proprietário deve rever a associação."
+                        })
+                    } catch (_: Exception) { note("Pedido WireGuard não confirmado. Verifica a associação e a ligação LAN ao servidor.") }
+                }
+            } })
+        }
         val directory=Button(this).apply { text="Entrar na NOVA · Directory";setOnClickListener {
             startActivity(Intent(this@MainActivity,DirectoryActivity::class.java))
         } };root.addView(directory)
