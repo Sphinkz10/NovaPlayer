@@ -63,6 +63,12 @@ def run(output=None,channel=None):
                     page.locator('#wireguardEnrollments').get_by_role('button',name='Aprovar esta chave').click()
                     expect(page.locator('#wireguardEnrollments')).to_contain_text('Aprovado · gateway por confirmar')
                     assert lab.tv.get('/api/v1/device/wireguard',headers=auth).json()['gateway_state']=='not_verified'
+                    if output:
+                        Path(output).mkdir(parents=True,exist_ok=True)
+                        page.locator('#overview').scroll_into_view_if_needed()
+                        page.screenshot(path=str(Path(output)/'control-overview.png'))
+                        page.locator('#wireguardEnrollments').scroll_into_view_if_needed()
+                        page.screenshot(path=str(Path(output)/'control-wireguard-approved.png'))
                     page.locator('#memberList button').click()
                     expect(page.locator('#memberMessage')).to_contain_text('Conta revogada')
                     assert lab.tv.get('/api/v1/device/libraries',headers=auth).status_code==401

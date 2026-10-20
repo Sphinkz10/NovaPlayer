@@ -1,6 +1,7 @@
 package com.novacinema.connect
 
 import android.app.Instrumentation
+import android.app.Activity
 import android.content.Intent
 import android.view.KeyEvent
 import android.view.View
@@ -20,6 +21,15 @@ class LanSteps(private val runner:Instrumentation) {
         while(android.os.SystemClock.uptimeMillis()<deadline) { if(action())return;Thread.sleep(100) };error("LAN test timed out")
     }
     private fun reject(action:()->Unit) { try { action() } catch(_:Exception) { return };error("Expected rejection") }
+    private fun readyButton(activity:Activity, tag:String):Button {
+        var found:Button?=null
+        waitUntil { main { found=views(activity.window.decorView).filterIsInstance<Button>().firstOrNull { it.tag==tag && activity.hasWindowFocus() } };found!=null }
+        return found!!
+    }
+    private fun click(activity:Activity,tag:String) {
+        val button=readyButton(activity,tag);main { check(button.requestFocus()) }
+        runner.sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_CENTER)
+    }
     fun run() {
         val fixture=JSONObject(File(context.filesDir,"lan-fixture.json").readText())
         val origin=fixture.string("origin");val pin=fixture.string("fingerprint")
@@ -51,10 +61,21 @@ class LanSteps(private val runner:Instrumentation) {
         M3Steps(runner).run("login")
         val saved=DeviceSessionStore(context).load() ?: error("LAN association missing")
         val library=fixture.string("library");val item=MediaClient(context).page(library).items.single()
-        val player=runner.startActivitySync(Intent(context,PlayerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            .putExtra("library",library).putExtra("item",item.id)) as PlayerActivity
-        try { waitUntil { var rendered=false;main { rendered=player.renderedFrame && player.observedPosition>1000 };rendered } }
-        finally { main { player.finish() } }
+        val screens=LabScreenshots(runner)
+        val monitor=runner.addMonitor(PlayerActivity::class.java.name,null,false)
+        val cinema=runner.startActivitySync(Intent(context,CinemaActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        var player:PlayerActivity?=null
+        try {
+            readyButton(cinema,"cinema-library-$library");screens.capture(cinema,"tv-libraries")
+            click(cinema,"cinema-library-$library")
+            readyButton(cinema,"cinema-item-${item.id}");screens.capture(cinema,"tv-catalogue")
+            click(cinema,"cinema-item-${item.id}")
+            readyButton(cinema,"cinema-play");screens.capture(cinema,"tv-detail")
+            click(cinema,"cinema-play")
+            player=runner.waitForMonitorWithTimeout(monitor,30000) as? PlayerActivity ?: error("LAN player not opened")
+            waitUntil { var rendered=false;main { rendered=player!!.renderedFrame && player!!.observedPosition>1000 };rendered }
+            screens.capture(player!!,"tv-player")
+        } finally { main { player?.finish();cinema.finish() };runner.removeMonitor(monitor) }
         check(DeviceSessionStore(context).load()!!.tokens.deviceId==saved.tokens.deviceId)
         val prefs=context.getSharedPreferences("nova_directory_setup",0)
         val sealed=android.util.Base64.decode(prefs.getString("sealed",null),android.util.Base64.NO_WRAP)

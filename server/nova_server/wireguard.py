@@ -123,6 +123,20 @@ class WireGuardEnrollments:
                            ('wireguard.approved' if approve else 'wireguard.revoked', now))
             return self._view(db, device, now)
 
+    def gateway_plan(self):
+        """Public, atomic, short-lived desired set. No gateway credentials or routes."""
+        now = int(self.clock())
+        with self.store._db() as db:
+            db.execute('BEGIN')
+            server_id = db.execute('SELECT server_id FROM server_identity WHERE id=1').fetchone()[0]
+            rows = db.execute('SELECT e.device_id,e.public_key,d.expires_at FROM wireguard_enrollments e '
+                'JOIN devices d ON e.device_id=d.id WHERE e.state=\'approved\' AND d.revoked=0 AND d.expires_at>? '
+                'AND (d.account_id IS NULL OR EXISTS(SELECT 1 FROM member_accounts m '
+                'WHERE m.subject=d.account_id AND m.disabled=0)) ORDER BY e.device_id', (now,)).fetchall()
+            return {'schema_version':1, 'server_id':server_id, 'issued_at':now,
+                    'expires_at':min([now+15]+[row[2] for row in rows]),
+                    'peers':[{'device_id':row[0], 'public_key':row[1]} for row in rows]}
+
 
 def revoke_enrollment(db, device, now):
     db.execute("UPDATE wireguard_enrollments SET state='revoked',revision=revision+1,updated_at=? "

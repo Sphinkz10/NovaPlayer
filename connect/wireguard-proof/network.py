@@ -201,6 +201,7 @@ def run():
         from nova_server.devices import Devices
         from nova_server.security import hash_password
         from nova_server.wireguard import WireGuardEnrollments
+        from nova_server.wireguard_gateway import GatewayPolicy, KernelWireGuard, reconcile
         store = Store(root/'state'); assert store.bootstrap('owner', hash_password(secrets.token_urlsafe(32)))
         devices = Devices(store); request = devices.start('Disposable WireGuard TV')
         review = devices.inspect(request['user_code']); devices.decide(request['user_code'], review['request_id'], True)
@@ -221,6 +222,9 @@ def run():
             ns('ip', 'addr', 'add', GW+'/32', 'dev', 'wg0')
             ns('wg', 'set', 'wg0', 'listen-port', '51820', 'private-key', key_file)
             ns('ip', 'link', 'set', 'wg0', 'up'); ns('ip', 'route', 'add', CLIENT+'/32', 'dev', 'wg0')
+            ns('ip', 'link', 'set', 'dev', 'wg0', 'alias', 'nova-wireguard-v1:'+devices.identity())
+            gateway_policy=GatewayPolicy(devices.identity(),public,'10.222.0.0/24',GW)
+            gateway_adapter=KernelWireGuard(ns,'wg0')
             ns('sysctl', '-q', '-w', 'net.ipv4.ip_forward=0')
             for chain in ('INPUT', 'OUTPUT', 'FORWARD'): ns('iptables', '-P', chain, 'DROP')
             ns('iptables', '-A', 'INPUT', '-i', 'lo', '-j', 'ACCEPT')
@@ -280,9 +284,18 @@ def run():
                         decision = owner.post('/api/v1/admin/connect/wireguard/enrollments/'+tokens['device_id'],
                             headers={'Authorization':'Bearer '+owner_access}, json={'revision':1,'approve':True})
                         assert decision.status_code == 200 and decision.json()['gateway_state'] == 'not_verified'
-                    ns('wg', 'set', 'wg0', 'peer', client_public, 'allowed-ips', CLIENT+'/32')
+                    stale_private=command('wg','genkey').stdout.strip()
+                    stale_public=command('wg','pubkey',data=stale_private+b'\n').stdout.decode().strip()
+                    ns('wg','set','wg0','peer',stale_public,'allowed-ips','192.0.2.123/32')
+                    ns('wg','set','wg0','peer',client_public,'allowed-ips','0.0.0.0/0')
+                    plan=WireGuardEnrollments(store).gateway_plan()
+                    configured=reconcile(plan,gateway_policy,gateway_adapter)
+                    assert configured['configuration_observed'] and not configured['handshake_verified']
+                    assert configured['peers'][0]['address']==CLIENT+'/32'
                     assert ns('wg', 'show', 'wg0', 'allowed-ips').stdout.decode().split() == [client_public, CLIENT+'/32']
-                    checks.append('owner-approved Android-generated public key installed and read back only by disposable lab')
+                    checks.append('restricted adapter removes stale and broad peers before applying approved per-device host route')
+                    assert reconcile(WireGuardEnrollments(store).gateway_plan(),gateway_policy,gateway_adapter)['changed_operations']==0
+                    checks.append('kernel readback and repeated reconciliation are idempotent without claiming handshake')
                     push_private('wireguard-gate.txt', b'approved')
                 elif stage == 'connected':
                     values = ns('wg', 'show', 'wg0', 'latest-handshakes').stdout.decode().split()
@@ -297,7 +310,8 @@ def run():
                     assert WireGuardEnrollments(store).list()[0]['state'] == 'revoked'
                     push_private('wireguard-gate.txt', b'device-revoked')
                 elif stage == 'device-revoked':
-                    ns('wg', 'set', 'wg0', 'peer', client_public, 'remove')
+                    removed=reconcile(WireGuardEnrollments(store).gateway_plan(),gateway_policy,gateway_adapter)
+                    assert removed['configuration_observed'] and removed['peers']==[]
                     assert not ns('wg', 'show', 'wg0', 'peers').stdout.strip()
                     push_private('wireguard-gate.txt', b'peer-removed')
                 elif stage != 'disconnected': raise RuntimeError('Unknown instrumentation stage')
@@ -309,7 +323,7 @@ def run():
                       'tls': 'TLS 1.3, exact certificate and hostname validation', 'gateway': 'isolated Linux kernel WireGuard namespace',
                       'client': 'official embedded Android GoBackend', 'consent': 'actual system dialog, no appops bypass',
                       'private_profile_delivery': 'Android-generated private key never leaves app; public key enrolled over pinned LAN HTTPS',
-                      'gateway_installation': 'disposable lab only; product installer and reconciliation not implemented',
+                      'gateway_installation': 'restricted reconciliation adapter in disposable namespace; product installer/daemon not implemented',
                       'physical_nas': False, 'physical_tv': False, 'production_remote_access_enabled': False,
                       'apk_sha256': hashlib.sha256((ROOT/'connect/app/build/outputs/apk/debug/app-debug.apk').read_bytes()).hexdigest(),
                       'source_commit': command('git', '-C', ROOT, 'rev-parse', 'HEAD').stdout.decode().strip()}

@@ -217,6 +217,10 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     def wireguard_enrollments(token:str=Depends(owner)):
         return {'enrollments':WireGuardEnrollments(store).list(), 'remote_access_enabled':False}
 
+    @api.get('/api/v1/admin/connect/wireguard/plan')
+    def wireguard_plan(token:str=Depends(owner)):
+        return WireGuardEnrollments(store).gateway_plan()
+
     @api.post('/api/v1/admin/connect/wireguard/enrollments/{device_id}')
     def wireguard_decision(device_id:str, payload:EnrollmentDecision, token:str=Depends(owner)):
         devices.limit('owner.wireguard', 'owner', 60, 60, 60)

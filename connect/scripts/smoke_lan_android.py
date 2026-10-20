@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import struct
 
 import httpx
 
@@ -56,6 +57,10 @@ def run():
             (jf.sid,json.dumps({'server_id':jf.sid,'libraries':libraries})))
         context=ssl.create_default_context(cafile=str(bundle/'NOVA-LAN-CA.crt'));context.minimum_version=ssl.TLSVersion.TLSv1_3
         try:
+            # Landscape screenshots on the disposable phone emulator; this does
+            # not claim Android TV hardware/launcher certification.
+            adb('shell','wm','size','1280x720');adb('shell','wm','density','160')
+            adb('shell','input','keyevent','KEYCODE_WAKEUP');adb('shell','wm','dismiss-keyguard')
             for role in ('directory','admin','client'):
                 identity=nas/'identity'/role
                 processes.append(subprocess.Popen([sys.executable,'-m','nova_server.lan_launch',role,'--identity',str(identity),
@@ -103,14 +108,28 @@ def run():
                     if process.poll() is None:process.kill();process.wait(timeout=5)
                 text=''.join(sanitized);(out/'native-setup.txt').write_text(text,encoding='utf8')
                 assert 'INSTRUMENTATION_RESULT: nova_pairing=passed' in text,text
+                screenshots=[]
+                (out/'screenshots').mkdir(exist_ok=True)
+                for name in ('tv-libraries','tv-catalogue','tv-detail','tv-player'):
+                    raw=subprocess.run(['adb','exec-out','run-as',PACKAGE,'cat','files/lab-screenshots/'+name+'.png'],
+                        stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,timeout=30).stdout
+                    assert 1024<len(raw)<=10*1024*1024 and raw[:8]==b'\x89PNG\r\n\x1a\n'
+                    width,height=struct.unpack('>II',raw[16:24]);assert width>height
+                    (out/'screenshots'/(name+'.png')).write_bytes(raw)
+                    screenshots.append({'name':name+'.png','sha256':hashlib.sha256(raw).hexdigest(),'width':width,'height':height})
                 report={'result':'passed','api':int(adb('shell','getprop','ro.build.version.sdk').strip()),
                     'adb_reverse':False,'checks':['wrong_fingerprint_denied','http_denied','native_setup_dpad','persisted_authenticated_config',
                     'profile_replacement_denied','directory_login_and_owner_approval','first_video_frame_over_private_ip','tampered_config_fails_closed'],
                     'apk_sha256':hashlib.sha256((ROOT/'connect/app/build/outputs/apk/debug/app-debug.apk').read_bytes()).hexdigest(),
+                    'screenshots':screenshots,'screen_data':'synthetic disposable LAN fixture',
+                    'display':'landscape phone emulator; not physical Android TV',
+                    'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+                    'production_capture_policy':'FLAG_SECURE unchanged; temporarily cleared/restored only by debug test APK',
                     'jellyfin':'isolated fixture; real Jellyfin covered by generated Docker LAN gate','physical_tv':False}
                 (out/'lan-android.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8');print(json.dumps(report))
         finally:
             adb('shell','am','force-stop',PACKAGE)
+            adb('shell','wm','size','reset');adb('shell','wm','density','reset')
             for name in ('lan-fixture.json','mthree-fixture.json'):
                 adb('shell','run-as',PACKAGE,'rm','-f','files/'+name)
             for process in reversed(processes):stop(process)
