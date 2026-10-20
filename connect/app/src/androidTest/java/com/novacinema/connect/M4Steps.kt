@@ -21,8 +21,8 @@ class M4Steps(private val runner:Instrumentation) {
     }
     private fun views(root:View):List<View> = listOf(root)+if(root is ViewGroup)
         (0 until root.childCount).flatMap { views(root.getChildAt(it)) } else emptyList()
-    private fun waitUntil(action:()->Boolean) {
-        val end=android.os.SystemClock.uptimeMillis()+45000
+    private fun waitUntil(timeout:Long=45000,action:()->Boolean) {
+        val end=android.os.SystemClock.uptimeMillis()+timeout
         while(android.os.SystemClock.uptimeMillis()<end) { if(action())return;Thread.sleep(100) };error("M4 condition timed out")
     }
     private fun click(activity:Activity,tag:String) {
@@ -57,8 +57,9 @@ class M4Steps(private val runner:Instrumentation) {
             click(cinema,"cinema-library-$library");click(cinema,"cinema-item-$item");click(cinema,"cinema-play")
             playback=runner.waitForMonitorWithTimeout(monitor,30000) as? PlayerActivity ?: error("Player not opened")
             waitUntil { var ok=false;main { ok=playback!!.renderedFrame && playback!!.observedPosition>1000 };ok }
+            var before=0L;main { before=playback!!.observedPosition }
             runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD)
-            waitUntil { var ok=false;main { ok=playback!!.observedPosition>=10000 };ok }
+            waitUntil(5000) { var ok=false;main { ok=playback!!.observedPosition>=before+9000 };ok }
             runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PAUSE)
             main { playback!!.finish() };playback=null
             waitUntil { client.detail(library,item).position>=100000000 }
