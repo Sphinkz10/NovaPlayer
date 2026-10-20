@@ -29,6 +29,7 @@ def run():
     # Directory pins; production must continue to reject that state. Start a fresh
     # disposable app installation rather than adding a trust-reset path to the app.
     assert adb('shell','pm','clear',PACKAGE).strip()=='Success'
+    adb('shell','run-as',PACKAGE,'mkdir','-p','files')
     out=ROOT/'connect/test-results/lan';out.mkdir(parents=True,exist_ok=True)
     ip=socket.gethostbyname(socket.gethostname());processes=[]
     with tempfile.TemporaryDirectory(prefix='nova-lan-tv-') as folder,jellyfin_http() as (jf,jf_url):
