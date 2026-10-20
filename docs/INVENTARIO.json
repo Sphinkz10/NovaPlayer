@@ -800,8 +800,8 @@
     },
     {
       "path": "server/scripts/recovery.py",
-      "bytes": 15798,
-      "sha256": "53140448c5f78e1639c7ebc69b07dcec2249860b49f12853eaa810c0957b774e"
+      "bytes": 15963,
+      "sha256": "86d5cbdb8f8741a22dc9d31aa884fcaf983d32b8f37eda989d5999cfdb62936b"
     },
     {
       "path": "server/scripts/smoke_browser.py",
@@ -920,8 +920,8 @@
     },
     {
       "path": "server/tests/test_lan_recovery.py",
-      "bytes": 10124,
-      "sha256": "2694e7a1b0204f7ccee2c2041250fe494e6cc4d7a600463776944a9274aa7427"
+      "bytes": 10610,
+      "sha256": "d09db64a41a1e32fcd4f94950043337f70ac5c598f6b83f308d6bd9deaabde80"
     },
     {
       "path": "server/tests/test_m3_identity.py",

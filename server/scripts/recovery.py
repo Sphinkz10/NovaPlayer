@@ -101,6 +101,8 @@ def backup(state, destination, recipient, *, deployment, stopped=False, age='age
     validate_state(state)
     deployment_text=Path(deployment).read_text(encoding='utf8')
     profile=is_lan(state)
+    if not profile and 'nova_server.lan_launch' in deployment_text:
+        raise ValueError('Deployment LAN sem Directory/identidades completos; cópia recusada.')
     if profile:
         from scripts.lan_recovery import validate_lan,deployment_values
         validate_lan(state);deployment_values(state,deployment_text)

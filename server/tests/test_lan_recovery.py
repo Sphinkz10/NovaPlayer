@@ -13,7 +13,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from scripts.lan_install import prepare
 from scripts.lan_recovery import validate_lan,deployment_values,revoke_lan,write_restored_guidance
-from scripts.recovery import files_for_backup,extract_checked,revoke_restored_sessions
+from scripts.recovery import files_for_backup,extract_checked,revoke_restored_sessions,backup
 from nova_directory.store import Registry,DirectoryError
 from nova_directory.protocol import Descriptor,ChallengeRequest,Proof,encode,message
 from nova_directory.client import server_identity
@@ -166,3 +166,11 @@ def test_offline_recovery_preserves_expired_tls_and_reports_rotation(lan_state,m
         def now(cls,tz=None):return datetime(2030,1,1,tzinfo=timezone.utc)
     monkeypatch.setattr(recovery,'datetime',Future)
     assert recovery.validate_lan(lan_state[1])['tls_rotation_required']
+
+
+def test_an_incomplete_lan_copy_cannot_be_mislabelled_legacy(lan_state,tmp_path):
+    bundle,state,_,_=lan_state;partial=tmp_path/'partial'
+    shutil.copytree(state/'nova',partial/'nova');shutil.copytree(state/'jellyfin',partial/'jellyfin')
+    with pytest.raises(ValueError,match='LAN'):
+        backup(partial,tmp_path/'refused.age','age1fixture',deployment=bundle/'instalar-no-truenas.yaml',stopped=True,age='must-not-run')
+    assert not (tmp_path/'refused.age').exists()
