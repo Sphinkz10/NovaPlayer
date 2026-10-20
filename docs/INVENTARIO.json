@@ -39,6 +39,11 @@
       "sha256": "8c7f77ce6ce636850b48e42610b50e8e064d13851e0bcf68bf9be468ee06c228"
     },
     {
+      "path": ".github/workflows/wireguard-network.yml",
+      "bytes": 1950,
+      "sha256": "00c5a48d7db20f6b9eccd599e60f2479c89337c453cd674b06f824d437784635"
+    },
+    {
       "path": ".gitignore",
       "bytes": 226,
       "sha256": "dca00ae690b349f6d1f84d9371548ab365668ad94527bdb06ef9530ff1be5aee"
@@ -85,8 +90,8 @@
     },
     {
       "path": "connect/app/build.gradle.kts",
-      "bytes": 3584,
-      "sha256": "269cca83bf3f7c99813dac2d9347dfb8f6912adfade4eb08e4b96c627478e58c"
+      "bytes": 4194,
+      "sha256": "7d25cd16efd60c76a8f5f19db0c5c8c51602b096fa6f8316550c6d7da5474ce7"
     },
     {
       "path": "connect/app/gradle.lockfile",
@@ -452,6 +457,26 @@
       "path": "connect/settings.gradle.kts",
       "bytes": 300,
       "sha256": "2116b2d6bfb6277d1a2293336476b1ae6e012ad2e5892da91de0ad2ab3311413"
+    },
+    {
+      "path": "connect/wireguard-proof/network.py",
+      "bytes": 17055,
+      "sha256": "0ec3c9ff13ccc9e15ec0ed4bcde81e20d693bc8eb6102e06c72b3b71215d6a19"
+    },
+    {
+      "path": "connect/wireguard-proof/src/androidTest/kotlin/com/novacinema/connect/WireGuardNetworkInstrumentation.kt",
+      "bytes": 9349,
+      "sha256": "547a482ef4af3b4805e7bd98fa112b14b6377c493ad77e03f2fc21122e3dd9b1"
+    },
+    {
+      "path": "connect/wireguard-proof/src/debug/AndroidManifest.xml",
+      "bytes": 228,
+      "sha256": "3660aea211d3d82d60ed5ee92019123744d260b1879e48a1496e2b5dcf5c8508"
+    },
+    {
+      "path": "connect/wireguard-proof/src/debug/kotlin/com/novacinema/connect/WireGuardConsentActivity.kt",
+      "bytes": 1075,
+      "sha256": "a4c95392216d4f4664788481cddcafaa29fd8a304e9aaa5c2808d93c8b6c7be9"
     },
     {
       "path": "design/LINKS_FIGMA.md",
