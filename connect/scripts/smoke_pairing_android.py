@@ -161,6 +161,11 @@ def run():
                         (OUT/(str(len(results))+'-crash.json')).write_text(
                             json.dumps({'types':types,'frames':frames},indent=2)+'\n',encoding='utf8')
                         print(json.dumps({'phase':name,'types':types,'frames':frames}))
+                    if 'INSTRUMENTATION_RESULT: nova_pairing=passed' not in output:
+                        # Window ownership only; never dump hierarchy/auth fields.
+                        windows=adb('shell','dumpsys','window','windows',timeout=15)
+                        owners=re.findall(r'(?:mCurrentFocus|mFocusedApp)=[^\n]*',windows)
+                        (OUT/(name+'-window-focus.txt')).write_text('\n'.join(owners),encoding='utf8')
                     assert 'INSTRUMENTATION_RESULT: nova_pairing=passed' in output, output
                     assert 'INSTRUMENTATION_CODE: -1' in output, output
                     results.append({'phase':name,'result':'passed'})

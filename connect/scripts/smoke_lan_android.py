@@ -88,9 +88,22 @@ def run():
                 command=['adb','shell','am','instrument','-w','-r','-e','phase','lan-native',
                          PACKAGE+'.test/com.novacinema.connect.DevicePairingInstrumentation']
                 process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
-                timer=threading.Timer(240,process.kill);timer.start();sanitized=[]
+                timer=threading.Timer(240,process.kill);timer.start();sanitized=[];screenshots=[]
+                (out/'screenshots').mkdir(exist_ok=True)
                 try:
                     for line in process.stdout:
+                        image=re.search(r'INSTRUMENTATION_STATUS: screenshot_name=(tv-(?:libraries|catalogue|detail|player))',line)
+                        if image:
+                            name=image[1]
+                            raw=subprocess.run(['adb','exec-out','screencap','-p'],stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,check=True,timeout=30).stdout
+                            assert 1024<len(raw)<=10*1024*1024 and raw[:8]==b'\x89PNG\r\n\x1a\n'
+                            width,height=struct.unpack('>II',raw[16:24]);assert width>height
+                            (out/'screenshots'/(name+'.png')).write_bytes(raw)
+                            screenshots.append({'name':name+'.png','sha256':hashlib.sha256(raw).hexdigest(),'width':width,'height':height})
+                            subprocess.run(['adb','shell','-T','run-as',PACKAGE,'tee','files/lab-screenshot-gate.txt'],
+                                input=name.encode('ascii'),stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,check=True,timeout=10)
+                            continue
                         match=re.search(r'INSTRUMENTATION_STATUS: pair_code=([A-Z2-9]{4}-[A-Z2-9]{4})',line)
                         if match:
                             code=match[1]
@@ -108,15 +121,8 @@ def run():
                     if process.poll() is None:process.kill();process.wait(timeout=5)
                 text=''.join(sanitized);(out/'native-setup.txt').write_text(text,encoding='utf8')
                 assert 'INSTRUMENTATION_RESULT: nova_pairing=passed' in text,text
-                screenshots=[]
-                (out/'screenshots').mkdir(exist_ok=True)
-                for name in ('tv-libraries','tv-catalogue','tv-detail','tv-player'):
-                    raw=subprocess.run(['adb','exec-out','run-as',PACKAGE,'cat','files/lab-screenshots/'+name+'.png'],
-                        stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,timeout=30).stdout
-                    assert 1024<len(raw)<=10*1024*1024 and raw[:8]==b'\x89PNG\r\n\x1a\n'
-                    width,height=struct.unpack('>II',raw[16:24]);assert width>height
-                    (out/'screenshots'/(name+'.png')).write_bytes(raw)
-                    screenshots.append({'name':name+'.png','sha256':hashlib.sha256(raw).hexdigest(),'width':width,'height':height})
+                assert [image['name'] for image in screenshots]==[
+                    'tv-libraries.png','tv-catalogue.png','tv-detail.png','tv-player.png']
                 report={'result':'passed','api':int(adb('shell','getprop','ro.build.version.sdk').strip()),
                     'adb_reverse':False,'checks':['wrong_fingerprint_denied','http_denied','native_setup_dpad','persisted_authenticated_config',
                     'profile_replacement_denied','directory_login_and_owner_approval','first_video_frame_over_private_ip','tampered_config_fails_closed'],

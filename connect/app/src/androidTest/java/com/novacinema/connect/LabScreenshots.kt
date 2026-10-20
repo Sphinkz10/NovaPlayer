@@ -3,7 +3,8 @@ package com.novacinema.connect
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.pm.ApplicationInfo
-import android.graphics.Bitmap
+import android.os.Bundle
+import android.os.SystemClock
 import android.view.WindowManager
 import java.io.File
 
@@ -26,12 +27,16 @@ class LabScreenshots(private val runner: Instrumentation) {
         }
         try {
             runner.waitForIdleSync(); Thread.sleep(300)
-            val bitmap = runner.uiAutomation.takeScreenshot() ?: error("Screenshot unavailable")
-            try {
-                check(bitmap.width > bitmap.height)
-                val folder = File(runner.targetContext.filesDir, "lab-screenshots").apply { mkdirs() }
-                File(folder, "$name.png").outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
-            } finally { bitmap.recycle() }
+            // API 26 UiAutomation screenshots can return null after a display
+            // override. Let the disposable host use Android's screencap service,
+            // then acknowledge before restoring the secure window flag.
+            runner.sendStatus(1, Bundle().apply { putString("screenshot_name", name) })
+            val gate = File(runner.targetContext.filesDir, "lab-screenshot-gate.txt")
+            val deadline = SystemClock.elapsedRealtime()+30000
+            while (!gate.exists() || gate.readText() != name) {
+                check(SystemClock.elapsedRealtime()<deadline) { "Screenshot acknowledgement unavailable" }
+                Thread.sleep(50)
+            }
         } finally {
             runner.runOnMainSync {
                 if (wasSecure) activity.window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)

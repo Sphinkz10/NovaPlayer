@@ -105,8 +105,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/LabScreenshots.kt",
-      "bytes": 2035,
-      "sha256": "436bf763a8b8ba8f61a08e81d2c29940b791e6c9dbbf988f7bf5ae32154ab440"
+      "bytes": 2311,
+      "sha256": "779ee3575c1bce0f1a191e4d0f28bbf97fc4f332dbe7cf82c6d732a0849fc6b7"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/LanSteps.kt",
@@ -445,8 +445,8 @@
     },
     {
       "path": "connect/scripts/smoke_lan_android.py",
-      "bytes": 10086,
-      "sha256": "642b9c37e71d4fbac815f0644f73168cecb64c58f799c2c0d85fdc214fc97e6f"
+      "bytes": 10644,
+      "sha256": "3c903b24e4065ce52aaec9c270869935269d89253a3c81210eecb96f8f787a91"
     },
     {
       "path": "connect/scripts/smoke_m3_android.py",
@@ -460,8 +460,8 @@
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
-      "bytes": 12531,
-      "sha256": "31ff22055b65525b22db9e0cb2fc57f285c4b42a24bdfca39d9a32980adc1006"
+      "bytes": 12977,
+      "sha256": "8c78996aaca0c39d0b7274e95cbb1e0f8b5c856fad24978aae0632c2c698d4d3"
     },
     {
       "path": "connect/settings.gradle.kts",
