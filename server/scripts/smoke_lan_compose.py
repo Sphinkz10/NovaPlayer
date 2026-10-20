@@ -62,6 +62,11 @@ def run():
                 else:raise AssertionError('LAN services not ready')
                 logged=client.post(info['control']+'/api/v1/admin/login',json=owner);assert logged.status_code==200
                 admin={'Authorization':'Bearer '+logged.json()['access_token']}
+                for _ in range(180):
+                    overview=client.get(info['control']+'/api/v1/admin/overview',headers=admin)
+                    if overview.status_code==200 and overview.json()['jellyfin']['state'] in ('ready','setup_required'):break
+                    time.sleep(1)
+                else:raise AssertionError('Jellyfin did not become ready for LAN setup')
                 settings=client.get(info['control']+'/api/v1/admin/lan',headers=admin).json()
                 assert settings['fingerprint']==info['tv_fingerprint']
                 profile=client.get(info['tv_directory']+'/api/v1/directory/bootstrap').json()
@@ -73,7 +78,8 @@ def run():
                 setup=client.post(info['control']+'/api/v1/admin/setup/jellyfin',headers=admin,json={**credentials,
                     'server_name':'NOVA LAN fixture','libraries':[{'name':'Filmes A','collection_type':'movies','roots':['source-a']},
                     {'name':'Filmes B','collection_type':'movies','roots':['source-b']}]})
-                assert setup.status_code==200
+                # Setup errors use fixed public codes; do not dump credentials or upstream logs.
+                assert setup.status_code==200, 'LAN setup status '+str(setup.status_code)+' code '+str(setup.json().get('error','unknown'))
                 for _ in range(60):
                     checked=client.post(info['control']+'/api/v1/admin/setup/jellyfin/verify',headers=admin,json=credentials)
                     assert checked.status_code==200

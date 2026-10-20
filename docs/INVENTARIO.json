@@ -795,8 +795,8 @@
     },
     {
       "path": "server/scripts/smoke_browser.py",
-      "bytes": 10724,
-      "sha256": "01a6110c4d2ed547791e51b9453c71c7bd4f090c60aa47f9429e1c9a25084707"
+      "bytes": 10752,
+      "sha256": "afe1a2d63d741c494a39a5e83ccdb1f80e24343830ef9ba47e0ff88f2309f8d8"
     },
     {
       "path": "server/scripts/smoke_compose.py",
@@ -825,13 +825,13 @@
     },
     {
       "path": "server/scripts/smoke_lan_compose.py",
-      "bytes": 10127,
-      "sha256": "5f670127d07e351b794b2c798237cf79f0dd1c767d9b8593f92289c7b4da1be1"
+      "bytes": 10700,
+      "sha256": "d399cd37e41051fcb5bc8f023d309abc2b090fbc7c2bf0411bf912129bbeff7e"
     },
     {
       "path": "server/scripts/smoke_m3_control.py",
-      "bytes": 4960,
-      "sha256": "0705355500bd1de90307ee0cad415d14c099fcef5d2114b51673d8404c7f76d8"
+      "bytes": 4984,
+      "sha256": "999410013e8de607fd3a3ed2c824aec7c84d45d107d57956518d8c66c4880043"
     },
     {
       "path": "server/scripts/smoke_m3_server.py",
