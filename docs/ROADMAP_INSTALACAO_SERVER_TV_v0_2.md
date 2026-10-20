@@ -1,11 +1,11 @@
 # NOVA — Roadmap até à instalação no servidor e na TV
 
-**Atualização:** 20-10-2026. Acompanhamento único da M3: [M3_FECHO.md](M3_FECHO.md).
+**Atualização:** 20-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
 | Quando instalar/testar | O que permite |
 |---|---|
 | Servidor de teste — M2 | Configurar proprietário, Jellyfin e duas origens; imagem Docker e recuperação já ensaiadas. TrueNAS físico continua pendente |
-| APK de laboratório — M3 | Login Directory, aprovação e bibliotecas atribuídas; sem reprodução. Fecho condicionado às provas consolidadas |
+| APK de laboratório — M3 | Login Directory, aprovação e bibliotecas atribuídas; sem reprodução. M3 de software concluída: sete critérios e pacote verificados |
 | Primeiro filme nas boxes — M4 | Catálogo e player local, com ensaio separado em Xiaomi Box S2 e Chromecast |
 | Fora de casa — M5 | Jornadas nativas WireGuard, Tailscale e NetBird; cada fornecedor precisa da própria prova |
 

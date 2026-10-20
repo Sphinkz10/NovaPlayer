@@ -2,7 +2,7 @@
 
 Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
-**Estado atual:** [fecho consolidado da M3](docs/M3_FECHO.md). Servidor com configuração Jellyfin e cliente Android de laboratório com identidade, login Directory e permissões. A M3 está em validação integrada; o documento contém os critérios únicos e as provas exigidas.
+**Estado atual:** [fecho consolidado da M3](docs/M3_FECHO.md). Servidor com configuração Jellyfin e cliente Android de laboratório com identidade, login Directory e permissões. A M3 de software está concluída em laboratório; o documento reúne os sete critérios aprovados, evidências e instalação de teste.
 
 O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. Catálogo e reprodução chegam na M4; WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 

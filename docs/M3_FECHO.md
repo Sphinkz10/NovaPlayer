@@ -1,20 +1,49 @@
 # M3 — critérios únicos de conclusão
 
-Estado: EM EXECUÇÃO. Este documento é o ponto de acompanhamento da M3; os guias anteriores descrevem incrementos históricos, não marcos concluídos.
+**Estado: M3 CONCLUÍDA NO SOFTWARE DE LABORATÓRIO — 20-10-2026.** Os sete critérios abaixo passaram. TrueNAS e TVs físicos continuam sem ensaio. Este é o ponto único de acompanhamento; os guias anteriores preservam incrementos históricos.
 
 ## Aceitação do software
 
 | Gate | Resultado exigido | Estado |
 |---|---|---|
-| M3-01 | TV faz login no Directory configurado e só vê servidores autorizados | Pendente |
-| M3-02 | Escolha do servidor entrega prova de conta curta, verificável e não reutilizável; aprovação por código liga conta/TV/servidor | Pendente |
-| M3-03 | Proprietário atribui bibliotecas ao familiar; NOVA e utilizador Jellyfin limitado recusam acesso fora dessa atribuição | Pendente |
-| M3-04 | Reabertura, refresh, mudança de certificado sob a mesma identidade e recusa de regressão/chave alterada | Pendente |
-| M3-05 | Revogação de dispositivo/conta impede novas autorizações; isolamento entre contas e entre dois servidores | Pendente |
-| M3-06 | Publicação renova sem guardar palavra-passe administrativa; credencial de renovação tem âmbito limitado e é revogável | Pendente |
-| M3-07 | Percurso integrado aprovado em Android API 26/35, Linux/Windows e Jellyfin real em Docker; APK e servidor identificados por hashes | Pendente |
+| M3-01 | TV faz login no Directory configurado e só vê servidores autorizados | Aprovado |
+| M3-02 | Escolha do servidor entrega prova de conta curta, verificável e não reutilizável; aprovação por código liga conta/TV/servidor | Aprovado |
+| M3-03 | Proprietário atribui bibliotecas ao familiar; NOVA e utilizador Jellyfin limitado recusam acesso fora dessa atribuição | Aprovado |
+| M3-04 | Reabertura, refresh, mudança de certificado sob a mesma identidade e recusa de regressão/chave alterada | Aprovado |
+| M3-05 | Revogação de dispositivo/conta impede novas autorizações; isolamento entre contas e entre dois servidores | Aprovado |
+| M3-06 | Publicação renova sem guardar palavra-passe administrativa; credencial de renovação tem âmbito limitado e é revogável | Aprovado |
+| M3-07 | Percurso integrado aprovado em Android API 26/35, Linux/Windows e Jellyfin real em Docker; APK e servidor identificados por hashes | Aprovado |
 
 Catálogo, player e primeiro filme pertencem à M4. Os três túneis nativos pertencem à M5. Não aumentar o âmbito da M3 com esses módulos.
+
+## Evidências e pacote
+
+Revisão executável: `33346c41109062077b2339fc2711e6de44f0dad2`, na branch `codex/phase-one`, [PR #1 em rascunho](https://github.com/Sphinkz10/NovaPlayer/pull/1). O fecho técnico não implica merge ou lançamento para famílias.
+
+| Prova | Resultado |
+|---|---|
+| [CI principal 39344143882](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39344143882) | 8/8 jobs aprovados, incluindo repetição Docker da imagem exata antes de publicar |
+| Python 3.12 e 3.13, Linux | 257 testes aprovados em cada combinação |
+| Python 3.12 e 3.13, Windows | 251 aprovados + 6 específicos de POSIX ignorados em cada combinação |
+| Núcleo Kotlin | 203 testes aprovados; build e lint Android aprovados |
+| [Android 39344143896](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39344143896) | API 26 e 35: 11 etapas M3 + 11 regressões de associação em cada emulador |
+| Jellyfin real Docker | 13 verificações M3: duas contas/utilizadores restritos, isolamento de bibliotecas/servidores, âmbito, replay e revogação |
+| Control no navegador | 9 verificações de permissões e aprovação + 15 do Directory, nas quatro combinações Linux/Windows/Python |
+| Distribuição | ZIPs de CI verificados pelos seus digests; APK conferida contra o relatório, assinatura v2 válida; manifesto da imagem conferido no registry com leitura anónima |
+
+O Android usa um Jellyfin HTTP simulado isolado; o ensaio Docker separado usa o Jellyfin real. A prova envolve duas identidades NOVA e uma instância Jellyfin; não equivale a dois NAS físicos. A primeira tentativa final do API 26 falhou ao atribuir foco ao botão na instrumentação legada (`DevicePairingInstrumentation:130`), antes da associação. O mesmo código foi repetido e concluiu as 22 etapas. Esta instabilidade do ensaio fica registada; o comando físico ainda precisa de aceitação.
+
+APK entregue: `NOVA-M3-0.6-lab.apk`, pacote `com.novacinema.connect.poc`, versão `0.6-m3-lab`/6, mínimo API 26, target 35; ABIs arm64-v8a, armeabi-v7a, x86 e x86_64. É a APK exata da prova API 35. Cada job usa uma assinatura debug própria; a APK API 26 é outro binário e o respetivo hash permanece no relatório.
+
+```text
+APK SHA-256: f48221112870369756405a22e7c7c099eb9855a5c79351157b9f6b5e9593235d
+Imagem NOVA Core (linux/amd64):
+ghcr.io/sphinkz10/nova-core@sha256:9d916c138529cfc60dab38565f3d5d1fb216ee7dbe7af442a224c35cd687352b
+```
+
+O servidor mantém o identificador de desenvolvimento `0.3.0-dev`; o digest e a revisão acima identificam este marco. Para instalar esta revisão, usar esta imagem nos comandos M2. A imagem e o digest antigos no guia histórico identificam a entrega M2.
+
+A pasta de entrega local `NOVA_M3_2026-10-20` reúne `ABRIR_PRIMEIRO.md`, APK, fontes, gerador TrueNAS, imagem por digest e evidências. `M3_RESULTADOS.json` identifica commits e artefactos; `SHA256SUMS.txt` permite conferir os ficheiros. As fontes incluem a documentação consolidada posterior aos testes, com o código executável da revisão indicada acima.
 
 ## Aceitação física
 

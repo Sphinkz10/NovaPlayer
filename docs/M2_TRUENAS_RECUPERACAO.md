@@ -1,5 +1,7 @@
 # M2 — instalação TrueNAS e recuperação
 
+> Atualização: a revisão M3, o digest atual e a recuperação de utilizadores geridos estão em [M3_FECHO.md](M3_FECHO.md). Os comandos operacionais abaixo continuam aplicáveis com essa imagem; os resultados/digests M2 preservam o histórico.
+
 Estado em 18-10-2026: implementação e ensaios automatizados concluídos na revisão `39fb5874a53ba375a68d54f91bae2b3c64cead3a`, com os oito jobs da [CI 39125165626](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39125165626) aprovados. A imagem publicada passou o ensaio completo de recuperação antes da publicação. O proprietário confirmou que ainda não tem SSH disponível. **Nenhum teste no seu NAS foi executado; a aceitação física M2 permanece pendente.**
 
 ## Pacote para Apps
