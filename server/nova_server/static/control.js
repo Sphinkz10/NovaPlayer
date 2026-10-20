@@ -24,7 +24,25 @@ async function loadOverview(){
  await loadDevices();
  await loadMembers();
  await loadDirectory();
+ await loadLan();
 }
+async function loadLan(){
+ const r=await fetch('/api/v1/admin/lan',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+ el('lanPanel').hidden=!r.ok;
+ if(r.ok){const data=await r.json();write(el('lanConnection'),'Directory: '+data.directory+' · Impressão digital TLS: '+data.fingerprint);}
+}
+el('lanAccountForm').addEventListener('submit',async event=>{
+ event.preventDefault();if(!token)return;
+ const form=event.currentTarget;const payload=Object.fromEntries(new FormData(form));
+ form.elements.password.value='';form.elements.member_password.value='';
+ const session=token;const button=form.querySelector('button');button.disabled=true;
+ try{const r=await fetch('/api/v1/admin/directory/accounts',{method:'POST',headers:{Authorization:'Bearer '+session,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(token!==session)return;
+  write(el('lanAccountMessage'),r.ok?'Conta criada. O familiar já pode entrar e pedir a associação da TV.':'Conta não criada. Verifica a publicação, a conta proprietária e se o nome já existe.');
+ }catch{if(token===session)write(el('lanAccountMessage'),'Ligação interrompida. Verifica o estado antes de repetir.');}
+ finally{button.disabled=false;}
+});
+el('logout').addEventListener('click',()=>{el('lanPanel').hidden=true;el('lanAccountForm').reset();write(el('lanConnection'),'');write(el('lanAccountMessage'),'');});
 function showSetupReport(report){
  libraryChoices=report?.libraries||[];
  showMemberLibraries();

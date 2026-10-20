@@ -2,6 +2,8 @@
 
 Ponto único desta fase. **Catálogo e reprodução aprovados em laboratório em 20-10-2026. A M4 continua aberta para instalação LAN e aceitação física.** A M3 de identidade e permissões mantém-se fechada em laboratório: [M3_FECHO.md](M3_FECHO.md).
 
+**Novo trabalho LAN:** gerador de instalação nova e bootstrap nativo da TV implementados, em validação. [Instalação LAN](M4_INSTALACAO_LAN.md) descreve este perfil; a entrega 0.7 abaixo continua a identificar a prova anterior.
+
 ## Resultado implementado
 
 A APK 0.7-m4-lab acrescenta **Abrir NOVA Cinema** ao ecrã inicial e à associação. Uma conta Directory já aprovada escolhe uma biblioteca, consulta títulos, pesquisa, filtra filmes/episódios, abre a ficha e reproduz através do Media3. Há páginas de 24 títulos, comandos de reprodução, seleção de áudio/legendas incorporados e retoma da posição guardada no Jellyfin.

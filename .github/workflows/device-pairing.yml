@@ -45,6 +45,7 @@ jobs:
             python connect/scripts/smoke_pairing_android.py
             python connect/scripts/smoke_m3_android.py
             python connect/scripts/smoke_m4_android.py
+            python connect/scripts/smoke_lan_android.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -53,4 +54,5 @@ jobs:
             connect/test-results/pairing/
             connect/test-results/m3/
             connect/test-results/m4/
+            connect/test-results/lan/
             connect/app/build/outputs/apk/debug/app-debug.apk

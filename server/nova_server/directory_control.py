@@ -191,6 +191,20 @@ class DirectoryControl:
             finally:client.close()
         return self.status()
 
+    def create_account(self,username,password,member,member_password):
+        sid,_,public,_=self.identity()
+        with self.db() as db:
+            row=db.execute('SELECT record,account,issuer_public FROM publication WHERE id=1').fetchone()
+        if not row or not row[0] or not row[1] or not row[2]:raise ControlError('directory_publication_required',409)
+        record=json.loads(row[0]);verify_record(record,self.origin,expected_key=public)
+        entry=record['payload']['entry_id']
+        client=DirectoryClient(self.origin,self.ca)
+        try:
+            client.login(username,password)
+            if client.account!=row[1] or client.issuer()!=row[2]:raise ControlError('directory_account_changed')
+            return client.request('POST','operator/accounts',{'username':member,'password':member_password,'entry_id':entry})
+        finally:client.close()
+
 
 def safe_operation(operation):
     try:

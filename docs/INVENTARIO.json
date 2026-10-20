@@ -15,8 +15,8 @@
     },
     {
       "path": ".github/workflows/device-pairing.yml",
-      "bytes": 2078,
-      "sha256": "46264ce0771f7ffdac6d3f69100e693eed6da34e45dcb284b4242de1d433c330"
+      "bytes": 2172,
+      "sha256": "16c68799c586b031070e50ffbfd7124232fb3e61f6e534e6ec7a577b47f2dcfb"
     },
     {
       "path": ".github/workflows/native-engines.yml",
@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 5922,
-      "sha256": "0ed4bac5ba9314ace3cea252b2d59761f1ab13e0901a2034c3fb8b0b0226a044"
+      "bytes": 6255,
+      "sha256": "8a2ac4b7d7af4edea4394b0c3b3cd0842bbd078bd1aa3320f9ddd430ab277f84"
     },
     {
       "path": ".gitignore",
@@ -80,8 +80,8 @@
     },
     {
       "path": "connect/app/build.gradle.kts",
-      "bytes": 2886,
-      "sha256": "05b813b40fff612c475f27ceadbc1fb255ff717782a57a6c407573c6a9feb8d3"
+      "bytes": 2890,
+      "sha256": "075c96f210e213a5ae74713805bae797ee653d869483a910da88019f4e295e07"
     },
     {
       "path": "connect/app/gradle.lockfile",
@@ -90,8 +90,13 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/DevicePairingInstrumentation.kt",
-      "bytes": 8931,
-      "sha256": "315361d65fe20af9da20c68d8a911bbe504d19897a7812afd37a4bd5f49ee0d4"
+      "bytes": 8993,
+      "sha256": "38f86b300fc6605b817faabe66138c790eb49e91fbd2e24d2f29f2d6ed2d2b19"
+    },
+    {
+      "path": "connect/app/src/androidTest/java/com/novacinema/connect/LanSteps.kt",
+      "bytes": 4349,
+      "sha256": "4c6ee9ce69ac81d0d6ef69e42feddf7521b44b55536df07e20eec7366b2448e5"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M3Steps.kt",
@@ -105,8 +110,8 @@
     },
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
-      "bytes": 1774,
-      "sha256": "5cc2f17f3fbf02e863d0a90feb63dac4be0bc2d4de0bce377cb101ec724d1781"
+      "bytes": 1859,
+      "sha256": "f232381ddc8dfdd4d90be557bdc6e9f3d191e6790260ee18c988ce76dbe9a0c0"
     },
     {
       "path": "connect/app/src/main/assets/licenses/bouncycastle-1.86.html",
@@ -155,18 +160,28 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryActivity.kt",
-      "bytes": 6871,
-      "sha256": "fc9d242285a8161b454e5e4eae1e0c4eff54e7ba92e730ad83f73cc16324f038"
+      "bytes": 7240,
+      "sha256": "83dd89fa10638d8404a404a57743fbc764bd5390fc361bf497d68cf55fce6580"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryClient.kt",
-      "bytes": 10318,
-      "sha256": "1842934a06d162429e0a783786fde238ec1f5d92efdad2ee3b014ee77dea61b5"
+      "bytes": 10392,
+      "sha256": "f08efa7466c23298977ef891900b8b0d97b3c7cc58945045c83f554ca03a64cc"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryPins.kt",
       "bytes": 3799,
       "sha256": "d9886d6a7765edaa18c3771adb14a04fffd3948d0ce4b4c0fd0471061005d172"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DirectorySetup.kt",
+      "bytes": 5395,
+      "sha256": "ae5decaf8993cb9b6ac741c72b0c12f9475b8011d727c32bf4bc585c4fd63b34"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DirectorySetupActivity.kt",
+      "bytes": 3369,
+      "sha256": "4978cab7bff99df8d7d83a7e305aabcadf5945c9f0a847164dfc1586e6a73cb6"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/JellyfinHttpProbe.kt",
@@ -389,6 +404,11 @@
       "sha256": "26da91767b8bb5b31bc9687dc7a646ea17f650cb53eb47464434aa84f62fc5e5"
     },
     {
+      "path": "connect/scripts/smoke_lan_android.py",
+      "bytes": 8103,
+      "sha256": "48a1f4189d4ad12ad736e485ca8db080e2f502fde09a4a80481a1b67c279c243"
+    },
+    {
       "path": "connect/scripts/smoke_m3_android.py",
       "bytes": 6752,
       "sha256": "833020548b18911e414ed38c357d612331344c02b3e6ac970bda0f9303641dff"
@@ -470,8 +490,13 @@
     },
     {
       "path": "docs/M4_CINEMA_LOCAL.md",
-      "bytes": 7327,
-      "sha256": "441725b8a3f401448d4944ca0902b00fe2ca493f4ad0b8d753f744593d57b994"
+      "bytes": 7561,
+      "sha256": "1afbd8a2d9149b33b5a9c80bd0a026b441c0293b513416839204079dc91b6413"
+    },
+    {
+      "path": "docs/M4_INSTALACAO_LAN.md",
+      "bytes": 5945,
+      "sha256": "f41a8c63980291ee89db9f1c9e16593918bd5ff62ab2ad76ba188e069513b15f"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -555,8 +580,8 @@
     },
     {
       "path": "server/nova_directory/api.py",
-      "bytes": 5248,
-      "sha256": "e5e1c51fa67424c88336e902d63a86ecf45819358576d33890927181fe63cce1"
+      "bytes": 7516,
+      "sha256": "9f52060e50c18907134d19ad416d327e347d7914f346959c64f9cdeb43b2db98"
     },
     {
       "path": "server/nova_directory/client.py",
@@ -575,8 +600,8 @@
     },
     {
       "path": "server/nova_directory/store.py",
-      "bytes": 18304,
-      "sha256": "56bfbef5c5f6a8e8c6c78d86f92c75d5398eb845fbef4d4f314b8a7d24544740"
+      "bytes": 18925,
+      "sha256": "d05f2075d48df991eff11017a2361b6af9636c93cf0244b7542e1c72aaf591d5"
     },
     {
       "path": "server/nova_server/__init__.py",
@@ -585,8 +610,8 @@
     },
     {
       "path": "server/nova_server/app.py",
-      "bytes": 13973,
-      "sha256": "da0a6e74d00b7b8679b8175bbbac2d70fa6aebf57a669738f93d4cc2ee811aeb"
+      "bytes": 15107,
+      "sha256": "032a4e2178f2fd86cbce9d09c1e9cccbe726f372d6b21edcb573ce3c315bcb90"
     },
     {
       "path": "server/nova_server/client_api.py",
@@ -610,8 +635,8 @@
     },
     {
       "path": "server/nova_server/directory_control.py",
-      "bytes": 11702,
-      "sha256": "83bdc482d78dbba6076413c93ab6c2243e5fa992d7e88eaec5420c604cb2f7d5"
+      "bytes": 12577,
+      "sha256": "3b6745f7013765d9f93ec9244816a808c0bcdd06f6b34ffca077c2c8d82e9eb9"
     },
     {
       "path": "server/nova_server/directory_proof.py",
@@ -622,6 +647,16 @@
       "path": "server/nova_server/jellyfin.py",
       "bytes": 3309,
       "sha256": "5b0f7fb795e99f525cf0ed1a13fb9103ff8be9768dfae31e850167ef7030d221"
+    },
+    {
+      "path": "server/nova_server/lan.py",
+      "bytes": 1897,
+      "sha256": "4bf4ae97357289262b1baa9b966a7d5ea31a2b7eacaf4deb4b2141db696c623c"
+    },
+    {
+      "path": "server/nova_server/lan_launch.py",
+      "bytes": 3111,
+      "sha256": "0930b385493aa0c8ebe5fade6a3552cc99ac7b3e60dd03104d7597e1ca50a215"
     },
     {
       "path": "server/nova_server/launch.py",
@@ -660,13 +695,13 @@
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 23090,
-      "sha256": "8602259e317043c473bfdb45b428703a6a904c8fad347706786883c8af80cdc5"
+      "bytes": 24518,
+      "sha256": "1797818c0c63559f9a49a4cff190d1526b5b06586e9840b2b6bfd1e8ff76df16"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 8086,
-      "sha256": "7a1d23200597020f2d35ee51c6cf67166f4e44e49afa0a5d44183451c38f3cb3"
+      "bytes": 9271,
+      "sha256": "5d5fdaabe7878e7b5aa9e7ecce261142a53763a5c33e6be1ca64b37305d5e7b5"
     },
     {
       "path": "server/nova_server/storage.py",
@@ -734,6 +769,11 @@
       "sha256": "81220388108a443d7919228ab5aa90a5613b9624cf654a9bdab9e6f168983dca"
     },
     {
+      "path": "server/scripts/lan_install.py",
+      "bytes": 11039,
+      "sha256": "adc57aca228b5770a62c626662b4c44ed6efff7e0519232f7e527928646628e1"
+    },
+    {
       "path": "server/scripts/lock_dependencies.py",
       "bytes": 625,
       "sha256": "365712949cb4508652aa3ad3ea0856cad839bfc7dabf8640de27b5d486e16f74"
@@ -782,6 +822,11 @@
       "path": "server/scripts/smoke_http.py",
       "bytes": 2761,
       "sha256": "a5a5d0c578ca4ccc8cdc02cc0192a84e844c0e07dfae78b3176cab4382fefb9c"
+    },
+    {
+      "path": "server/scripts/smoke_lan_compose.py",
+      "bytes": 10127,
+      "sha256": "5f670127d07e351b794b2c798237cf79f0dd1c767d9b8593f92289c7b4da1be1"
     },
     {
       "path": "server/scripts/smoke_m3_control.py",
@@ -852,6 +897,11 @@
       "path": "server/tests/test_jellyfin.py",
       "bytes": 2699,
       "sha256": "cebaf231b1be65acc77e80ca16c1b8531f0512a5f3c915c35cc1a6fef998604d"
+    },
+    {
+      "path": "server/tests/test_lan.py",
+      "bytes": 6040,
+      "sha256": "6f8535c0e0cc4a52dbf7d0cfde49e27331eb1b6cf3aa18aa14520b87035243de"
     },
     {
       "path": "server/tests/test_m3_identity.py",

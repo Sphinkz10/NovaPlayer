@@ -27,7 +27,7 @@ class AssertionRequest(Payload):
     entry_id: str = Field(pattern=ID)
 
 
-def make_directory(state, origin):
+def make_directory(state, origin, *, operator_id=None, bootstrap_profile=None):
     private_origin(origin)
     registry = Registry(state, origin)
     app = FastAPI(title='NOVA Directory laboratory', docs_url=None, redoc_url=None, openapi_url=None)
@@ -36,6 +36,27 @@ def make_directory(state, origin):
     app.add_exception_handler(RequestValidationError, invalid_device_payload)
     app.add_middleware(SmallBody, maximum=8192)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=[urlsplit(origin).hostname], www_redirect=False)
+
+    if bootstrap_profile is not None:
+        import json
+        from pathlib import Path
+        profile_path=Path(bootstrap_profile)
+        if profile_path.stat().st_size>16384:raise ValueError('Bootstrap too large')
+        profile=json.loads(profile_path.read_text(encoding='utf8'))
+        if (set(profile)!={'version','purpose','origin','certificate_pem','public_key'} or profile['version']!=1 or
+                profile['purpose']!='nova-directory-bootstrap' or profile['origin']!=origin or
+                profile['public_key']!=registry.identity_public):raise ValueError('Bootstrap identity mismatch')
+        Descriptor(server_id='00000000-0000-4000-8000-000000000001',name='Directory',client_origin=origin,
+                   certificate_pem=profile['certificate_pem']).check_certificate(__import__('time').time())
+        @app.get('/api/v1/directory/bootstrap')
+        def bootstrap():return profile
+
+    if operator_id is not None:
+        import re
+        if not re.fullmatch(ID,operator_id):raise ValueError('Invalid Directory operator')
+        with registry.db() as db:
+            if not db.execute('SELECT 1 FROM accounts WHERE id=? AND disabled=0',(operator_id,)).fetchone():
+                raise ValueError('Directory operator missing')
 
     @app.middleware('http')
     async def boundary(request, call_next):
@@ -95,6 +116,21 @@ def make_directory(state, origin):
     @app.post('/api/v1/directory/logout')
     def logout(auth=Depends(identity)):
         registry.logout(auth[1]); return {'logged_out':True}
+
+    if operator_id is not None:
+        class CreateAccount(Payload):
+            username:str=Field(pattern=USERNAME)
+            password:str=Field(min_length=14,max_length=1024)
+            entry_id:str=Field(pattern=ID)
+
+        @app.post('/api/v1/directory/operator/accounts',status_code=201)
+        def operator_create(payload:CreateAccount,auth=Depends(identity)):
+            if auth[0]!=operator_id:raise DirectoryError('operator_required',403)
+            with registry.db() as db:
+                if not db.execute('SELECT 1 FROM entries WHERE id=? AND owner_id=? AND disabled=0',
+                                  (payload.entry_id,operator_id)).fetchone():raise DirectoryError('unknown_entry',404)
+            created=registry.create_account(payload.username,payload.password,share_entry=payload.entry_id,owner=operator_id)
+            return {'account_id':created,'username':payload.username,'discovery_allowed':True,'media_authorized':False}
 
     @app.post('/api/v1/directory/challenges', status_code=201)
     def challenge(payload: ChallengeRequest, auth=Depends(identity)):

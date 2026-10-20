@@ -6,7 +6,7 @@ android {
     compileSdk = 35
     defaultConfig {
         applicationId = "com.novacinema.connect.poc"; minSdk = 26; targetSdk = 35
-        versionCode = 7; versionName = "0.7-m4-lab"
+        versionCode = 8; versionName = "0.8-m4-lan-lab"
         testInstrumentationRunner = "com.novacinema.connect.DevicePairingInstrumentation"
     }
     if (nativeProofAar != null) {

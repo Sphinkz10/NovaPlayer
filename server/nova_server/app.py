@@ -47,6 +47,11 @@ class DirectoryPublication(DirectoryCredentials):
     name: str = Field(min_length=1, max_length=64)
 
 
+class DirectoryNewAccount(DirectoryCredentials):
+    member_username:str=Field(pattern=r'^[a-z][a-z0-9_.-]{2,39}$')
+    member_password:str=Field(min_length=14,max_length=1024)
+
+
 def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_server_id=None, directory_options=None):
     state_dir=Path(state_dir or os.environ.get('NOVA_STATE_DIR','./state/nova'))
     jellyfin_url=jellyfin_url or os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096')
@@ -191,12 +196,26 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
                                  for name in ('source-a', 'source-b')],
                 'connect':{'state':'disabled','reason':'P03 pending secure remote design'},
                 'directory':{'state':'configured' if directory_control else 'disabled'},
-                'admin_interface':{'exposure':'loopback_only_required'}}
+                'admin_interface':{'exposure':getattr(api.state,'admin_exposure','loopback_only_required')}}
+
+    @api.post('/api/v1/admin/directory/accounts',status_code=201)
+    def directory_account(payload:DirectoryNewAccount,token:str=Depends(owner)):
+        if directory_control is None:raise HTTPException(503,'directory_not_configured')
+        devices.limit('owner.directory.accounts','owner',10,10)
+        from .directory_control import safe_operation,ControlError
+        try:return safe_operation(lambda:directory_control.create_account(payload.username,payload.password,
+                                                                          payload.member_username,payload.member_password))
+        except ControlError as error:raise HTTPException(error.status,error.code) from None
 
     @api.get('/api/v1/admin/connect')
     def connect_settings(token:str=Depends(owner)):
         return {'schema_version':1, 'active_provider':None, 'remote_access_enabled':False,
                 'providers':provider_catalog(), 'drafts':store.connect_drafts()}
+
+    @api.get('/api/v1/admin/lan')
+    def lan_settings(token:str=Depends(owner)):
+        if not hasattr(api.state,'lan_configuration'):raise HTTPException(404,'lan_not_configured')
+        return api.state.lan_configuration
 
     @api.get('/api/v1/admin/setup')
     def setup_status(token:str=Depends(owner)):

@@ -59,6 +59,7 @@ class DirectoryProfile(val origin:String,val certificateDer:ByteArray,val public
             return DirectoryProfile(data.string("origin"),cert.encoded,data.string("public_key"))
         }
         fun load(context:Context):DirectoryProfile {
+            DirectorySetupStore(context).load()?.let { return parse(it) }
             // Release provisioning is public deployment configuration in the signed APK.
             // Only an ADB-authorized debug installation can use the private laboratory file.
             val debug=context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE!=0

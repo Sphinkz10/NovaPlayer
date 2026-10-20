@@ -94,20 +94,28 @@ class Registry:
         finally:
             db.close()
 
-    def create_account(self, username, password):
+    def create_account(self, username, password, *, share_entry=None, owner=None):
         """Operator CLI only. No anonymous signup or remote account enumeration."""
         if not re.fullmatch(USERNAME, username):
             raise ValueError('Username: 3–40 lowercase letters/digits/_.-, starting with a letter')
-        hashed = hash_password(password)
+        with PASSWORD_SLOTS:
+            hashed = hash_password(password)
         account = str(uuid.uuid4())
         with self.db() as db:
             db.execute('BEGIN IMMEDIATE')
+            if share_entry is not None:
+                self._enabled(db,owner)
+                if not db.execute('SELECT 1 FROM entries WHERE id=? AND owner_id=? AND disabled=0',(share_entry,owner)).fetchone():
+                    raise DirectoryError('unknown_entry',404)
+                if db.execute('SELECT COUNT(*) FROM members WHERE entry_id=?',(share_entry,)).fetchone()[0]>=50:
+                    raise DirectoryError('member_limit',409)
             if db.execute('SELECT COUNT(*) FROM accounts').fetchone()[0] >= 100:
                 raise DirectoryError('account_limit', 409)
             try:
                 db.execute('INSERT INTO accounts(id,username,password_hash) VALUES(?,?,?)', (account, username, hashed))
             except sqlite3.IntegrityError:
                 raise DirectoryError('account_exists', 409) from None
+            if share_entry is not None:db.execute('INSERT INTO members VALUES(?,?)',(share_entry,account))
         return account
 
     def disable_account(self, username):

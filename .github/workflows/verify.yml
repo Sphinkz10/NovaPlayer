@@ -89,6 +89,9 @@ jobs:
       - run: python server/scripts/smoke_compose.py
         env:
           NOVA_EVIDENCE_DIR: server/test-results/compose
+      - run: python server/scripts/smoke_lan_compose.py
+        env:
+          NOVA_EVIDENCE_DIR: server/test-results/compose
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -119,10 +122,12 @@ jobs:
           python3 -m venv /tmp/nova-image-test
           /tmp/nova-image-test/bin/python -m pip install --require-hashes -r server/requirements.txt
           NOVA_TEST_IMAGE="$image" NOVA_EVIDENCE_DIR=server-image/image-test /tmp/nova-image-test/bin/python server/scripts/smoke_compose.py
+          NOVA_TEST_IMAGE="$image" NOVA_EVIDENCE_DIR=server-image/image-test /tmp/nova-image-test/bin/python server/scripts/smoke_lan_compose.py
           docker push "$image"
           docker inspect --format '{{index .RepoDigests 0}}' "$image" > server-image/IMAGE.txt
           printf '%s\n' "$revision" > server-image/SOURCE_COMMIT.txt
           cp server/scripts/truenas.py server-image/
+          cp server/scripts/lan_install.py server-image/
           cp server/scripts/acceptance.py server-image/
           cp docs/M2_TRUENAS_RECUPERACAO.md server-image/
           cp docs/M3_ASSOCIACAO_DISPOSITIVOS.md server-image/

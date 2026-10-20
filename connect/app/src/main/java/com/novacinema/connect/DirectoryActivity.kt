@@ -43,6 +43,9 @@ class DirectoryActivity:Activity() {
         message=text("A verificar configuração do Directory…")
         servers=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL };root.addView(servers)
         root.addView(Button(this).apply { text="Voltar";setOnClickListener { finish() } })
+        root.addView(Button(this).apply { text="Configurar nesta TV";setOnClickListener {
+            startActivity(Intent(this@DirectoryActivity,DirectorySetupActivity::class.java))
+        } })
         setContentView(ScrollView(this).apply { addView(root) })
         profile=runCatching { DirectoryProfile.load(this) }.getOrNull()
         login.isEnabled=profile!=null
@@ -50,7 +53,10 @@ class DirectoryActivity:Activity() {
             else "Directory configurado. A palavra-passe é usada apenas nesta sessão."
         username.requestFocus()
     }
-    override fun onStart() { super.onStart();foreground=true;login.isEnabled=profile!=null }
+    override fun onStart() { super.onStart();foreground=true
+        profile=runCatching { DirectoryProfile.load(this) }.getOrNull();login.isEnabled=profile!=null
+        if(profile!=null)message.text="Directory configurado. Já podes entrar com a tua conta."
+    }
     override fun onStop() {
         foreground=false;generation++;password.text.clear();servers.removeAllViews()
         val previous=client;client=null;if(previous!=null)io.execute { previous.close() }
