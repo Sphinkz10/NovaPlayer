@@ -13,6 +13,7 @@ permissions:
 jobs:
   server:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
         python: ['3.12', '3.13']
@@ -33,11 +34,12 @@ jobs:
       - run: python scripts/smoke_directory_tls.py --output test-results/directory
         working-directory: server
       - run: python -m playwright install --with-deps chromium
-      - run: python scripts/smoke_browser.py --output test-results/browser
+        if: runner.os != 'Windows'
+      - run: python scripts/smoke_browser.py --output test-results/browser ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
         working-directory: server
-      - run: python scripts/smoke_directory_control.py --output test-results/directory-control
+      - run: python scripts/smoke_directory_control.py --output test-results/directory-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
         working-directory: server
-      - run: python scripts/smoke_m3_control.py --output test-results/m3-control
+      - run: python scripts/smoke_m3_control.py --output test-results/m3-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
         working-directory: server
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

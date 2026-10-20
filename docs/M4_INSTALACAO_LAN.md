@@ -54,3 +54,5 @@ Este gerador é para instalação NOVA; não migra estado M2/M3/M4 existente nem
 ## TrueNAS
 
 [Instalação de Custom Apps](https://apps.truenas.com/managing-apps/installing-custom-apps/) descreve a preparação prévia dos datasets e a opção Install via YAML. O gerador aceita a base Docker Apps 24.10+ e exige a versão concreta fornecida pelo proprietário; a aprovação Docker não certifica a versão instalada no NAS.
+
+Para o dataset de estado **novo**, preferir preset Generic/POSIX. O [editor de permissões TrueNAS 25.10](https://www.truenas.com/docs/scale/25.10/scaleuireference/datasets/editaclscreens/) permite escolher proprietário/grupo, confirmar Apply User/Group e aplicar permissões aos ficheiros/diretórios. Após a transferência, atribuir UID/GID ao serviço e limitar o acesso ao proprietário, preservando execução/travessia dos diretórios. Uma aplicação recursiva deve limitar-se ao dataset NOVO de estado; não alterar recursivamente as origens de media existentes. As chaves criadas no PC têm modo 600 e os diretórios privados 700 em POSIX. A confirmação destes modos/ACL no NAS faz parte da aceitação física.

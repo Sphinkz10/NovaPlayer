@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 6255,
-      "sha256": "8a2ac4b7d7af4edea4394b0c3b3cd0842bbd078bd1aa3320f9ddd430ab277f84"
+      "bytes": 6489,
+      "sha256": "f1f6a8bac35a6ce42de54fbc9178f465540c377536fb790f929962202e53f234"
     },
     {
       "path": ".gitignore",
@@ -495,8 +495,8 @@
     },
     {
       "path": "docs/M4_INSTALACAO_LAN.md",
-      "bytes": 5945,
-      "sha256": "f41a8c63980291ee89db9f1c9e16593918bd5ff62ab2ad76ba188e069513b15f"
+      "bytes": 6671,
+      "sha256": "6b1a2d81fa22bf06b2f5ee7b386c4f5733537f15283ef934911102d4d265cc91"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
