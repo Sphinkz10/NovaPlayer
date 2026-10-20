@@ -615,8 +615,8 @@
     },
     {
       "path": "server/nova_server/client_api.py",
-      "bytes": 8285,
-      "sha256": "4cb82a21feae5e1348d325e63e62032bc5bd8afc22752dc70f983a25be48031b"
+      "bytes": 8334,
+      "sha256": "5fa0bb0bb3295d53e2c4204349f5649ac57e8f656de10ed8f4e068d5bf0e277e"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -655,8 +655,8 @@
     },
     {
       "path": "server/nova_server/lan_launch.py",
-      "bytes": 3111,
-      "sha256": "0930b385493aa0c8ebe5fade6a3552cc99ac7b3e60dd03104d7597e1ca50a215"
+      "bytes": 3134,
+      "sha256": "9a6d3b2281aab11a44edbdb0c8f51fe26b62b1f4b07c33b8bd452f0038ee40d0"
     },
     {
       "path": "server/nova_server/launch.py",
@@ -900,8 +900,8 @@
     },
     {
       "path": "server/tests/test_lan.py",
-      "bytes": 6040,
-      "sha256": "6f8535c0e0cc4a52dbf7d0cfde49e27331eb1b6cf3aa18aa14520b87035243de"
+      "bytes": 6597,
+      "sha256": "4d9d0da1a321187334dcf837a76338e1b8d085537e7f44f8ab9285e519ecc8e9"
     },
     {
       "path": "server/tests/test_m3_identity.py",

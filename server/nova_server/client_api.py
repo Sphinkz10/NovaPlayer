@@ -68,7 +68,7 @@ class SmallBody:
         await self.app(scope, replay, send)
 
 
-def make_client_app(state_dir=None, origin=None):
+def make_client_app(state_dir=None, origin=None, *, require_directory=False):
     origin, host = client_origin(origin or os.environ.get('NOVA_CLIENT_ORIGIN', ''))
     store = Store(state_dir or os.environ.get('NOVA_STATE_DIR', '/data'))
     devices = Devices(store)
@@ -103,7 +103,7 @@ def make_client_app(state_dir=None, origin=None):
         if payload.assertion is not None:
             from .directory_proof import verify_device_assertion
             identity=verify_device_assertion(store.dir,devices.identity(),payload.assertion)
-        elif (store.dir/'directory-control.sqlite3').exists():
+        elif require_directory or (store.dir/'directory-control.sqlite3').exists():
             raise DeviceError('directory_identity_required',403)
         return devices.start(payload.label,identity)
 

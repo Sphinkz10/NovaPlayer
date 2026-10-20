@@ -63,6 +63,15 @@ def test_no_existing_installation_is_overwritten(deployment):
     assert (folder/'copiar-para-nas/nova/nova.sqlite3').read_bytes()==before
 
 
+def test_lan_refuses_anonymous_pairing_before_admin_or_publication(deployment):
+    folder,info=deployment;nas=folder/'copiar-para-nas';identity=nas/'identity/client'
+    assert not (nas/'nova/directory-control.sqlite3').exists()
+    api,_=application('client',identity/'deployment.json',identity,nas/'nova')
+    with TestClient(api,base_url=info['client']) as client:
+        response=client.post('/api/v1/device/authorize',json={'label':'Unbound TV'})
+        assert response.status_code==403 and response.json()['error']=='directory_identity_required'
+
+
 def test_public_bootstrap_matches_pinned_leaf_and_public_directory_only(deployment):
     folder,info=deployment;nas=folder/'copiar-para-nas';identity=nas/'identity/directory'
     api,_=application('directory',identity/'deployment.json',identity,nas/'directory')

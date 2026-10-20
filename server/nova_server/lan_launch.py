@@ -34,7 +34,7 @@ def application(role,config,identity,state):
         return api,config
     if role=='client':
         from .client_api import make_client_app
-        return make_client_app(state,origin(config,'client')),config
+        return make_client_app(state,origin(config,'client'),require_directory=True),config
     if role=='directory':
         from nova_directory.api import make_directory
         bootstrap=identity/'nova-directory.json'
