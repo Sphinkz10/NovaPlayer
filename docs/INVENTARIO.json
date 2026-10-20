@@ -45,8 +45,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2049,
-      "sha256": "381726a8f56a1ac1bd6419e1b10aeec2cd3ccfd6cfd6a6fde85f1849c616862f"
+      "bytes": 2105,
+      "sha256": "36e86c542ba72c6d7ee06c3f19c05e4a2bd1cc9d8ec2a8a5aef893b57036070e"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -80,8 +80,8 @@
     },
     {
       "path": "connect/README.md",
-      "bytes": 7955,
-      "sha256": "76c6c2a9d4d1f5f6e426c423fda73790410957bad33b26de4ec28f59fb442463"
+      "bytes": 8031,
+      "sha256": "7606814aeec818aef777a107ca3e848fbb40ab5cbf8729a57ca05d680633a329"
     },
     {
       "path": "connect/app/build.gradle.kts",
@@ -395,8 +395,8 @@
     },
     {
       "path": "connect/release-identity.json",
-      "bytes": 213,
-      "sha256": "6b8b8fd73cdf94fa0abd69040f0521d626b68bdb2def0e4f967ecba1a387635d"
+      "bytes": 206,
+      "sha256": "f20336501c31adf309ccfb6b7a6e7c80b416b475b064604166645e05b59db7ab"
     },
     {
       "path": "connect/scripts/check_distribution.py",
@@ -425,8 +425,8 @@
     },
     {
       "path": "connect/scripts/smoke_distribution_android.py",
-      "bytes": 4880,
-      "sha256": "238ff2842440f4f0b7b3dc62f2f3fb827d74cd4af4abdd3c3576501e08f1e3e8"
+      "bytes": 5201,
+      "sha256": "2a18dd4b4820d7689ebd4b39d19857bd55285912986387d18517d9378845f0f5"
     },
     {
       "path": "connect/scripts/smoke_lan_android.py",
@@ -465,8 +465,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 1911,
-      "sha256": "c3f018a782522114c019bde637627c2d5188962399446f0afb720e0c6a6e3c33"
+      "bytes": 1952,
+      "sha256": "4a3e3a33e66266f81e32eed42eea7a5db78047e7982f910a5844e4090b97237f"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -515,23 +515,23 @@
     },
     {
       "path": "docs/M4_CINEMA_LOCAL.md",
-      "bytes": 7715,
-      "sha256": "ae24a834e3b18d6fca316793f3cacd26890c88df0c6d95ddf863124657def461"
+      "bytes": 7801,
+      "sha256": "04236cad637c3c65867c63b74506f9701a9699e84345b103f628b85ecc64420a"
     },
     {
       "path": "docs/M4_DISTRIBUICAO_ANDROID.md",
-      "bytes": 5511,
-      "sha256": "9921b0f0154d58c6e638739bea0650dff2305c0f4d3ae1f5e6ed4b07ed339a56"
+      "bytes": 5610,
+      "sha256": "cf7eaaa265ec82af00d30c215d69e8723e1b78c9be8633c4c8a4483ae8346726"
     },
     {
       "path": "docs/M4_INSTALACAO_LAN.md",
-      "bytes": 9661,
-      "sha256": "4bba668ada918b52baa45a082d772bae3f55ecb84647d03f8a6a1662714aec54"
+      "bytes": 9784,
+      "sha256": "985593966493335bf7a6d0b2fb4c1a317c567ebe680ff41b654397e56e22173e"
     },
     {
       "path": "docs/M4_RECUPERACAO_LAN.md",
-      "bytes": 7805,
-      "sha256": "8f9ee4fd5c5af30c2322c9fde44a2693d68b87be430fbd0ca85f53594a9002b9"
+      "bytes": 7971,
+      "sha256": "b42660b3e1f3044110626213a90df28a03ce29a9d6457bc21f3d82d85e6e24ed"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -555,8 +555,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 27644,
-      "sha256": "9719c5d76bca72bffbb08471431b90a386868716939421932312ea6a44c75279"
+      "bytes": 27805,
+      "sha256": "23fae33126f27a4f5fcdcc93fe7b0120c6d14af6e9a7293dab6a1096d03b6248"
     },
     {
       "path": "scripts/inventory.py",
