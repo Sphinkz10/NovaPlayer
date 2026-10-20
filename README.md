@@ -10,6 +10,8 @@ O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própr
 
 **Servidor LAN atualizado:** usar as fontes/imagem do incremento M5 para obter a correção do arranque SQLite e `certifi` atualizado. A APK assinada 0.9 é reutilizada; as imagens/locks das entregas anteriores conservam as versões históricas.
 
+**Incremento seguinte:** [adaptador restrito WireGuard](docs/M5_GATEWAY_WIREGUARD.md), com planos curtos, remoção de peers indevidos e leitura de confirmação do kernel. É uma biblioteca de laboratório; o serviço/instalador do gateway e a confirmação no Control continuam pendentes. Os ensaios também geram capturas reais do Control e da Cinema com conteúdo sintético.
+
 - [Estado e limites](docs/ESTADO_REAL.md).
 - [Roadmap até instalar e ver filmes](docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md).
 - [Contrato de integração nativa](docs/ADR_001_CONNECT_NATIVO.md).

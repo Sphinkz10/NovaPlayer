@@ -50,8 +50,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2696,
-      "sha256": "ee6892888cbcb88e3777ea15c5823861c75a87f533c8776207690c0afc58b98a"
+      "bytes": 3077,
+      "sha256": "28500f32e63c4ed87fe6009bf5266672f514b300b2009adcc788fd5802d64308"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -500,8 +500,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2304,
-      "sha256": "71cb3c1b2c9e08cee9975122db3fdf6178484dea66f971510b4aa0e7dfc67b8f"
+      "bytes": 2342,
+      "sha256": "271267ad1d0919917d95617966351444c78e1b6be3c7048d8812b1ce4188edf0"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -570,13 +570,13 @@
     },
     {
       "path": "docs/M5_GATEWAY_WIREGUARD.md",
-      "bytes": 3717,
-      "sha256": "2ac5bc5bfc2ffc1935549106a4dd19effdf57f6d96ad530d674b2acbbb5ced7e"
+      "bytes": 5521,
+      "sha256": "d28155a48cd7a4f1fd09bb869e4b0ac3ba9082ba8220c65d65a88f7a0ac9b292"
     },
     {
       "path": "docs/M5_INSCRICAO_WIREGUARD.md",
-      "bytes": 10404,
-      "sha256": "d2c71449974cb4ae0e5249df06d8bb176a8e5c66d2e065d4c621982083ba8483"
+      "bytes": 10630,
+      "sha256": "0aa6de4ba3c5df06b93f848e2d75080fd430e7d9e9c3781d5e206ac7459cd2b1"
     },
     {
       "path": "docs/M5_WIREGUARD_REDE.md",
@@ -604,9 +604,69 @@
       "sha256": "e8ef755cb0e185fd9a7ecfae2b70c276a931535d47f2be7dd328e990ffeea689"
     },
     {
+      "path": "docs/PRINTS_APPS.md",
+      "bytes": 1720,
+      "sha256": "aaed91515bff463b6fc2dc505b0e07244fec27e1c55ca74479cd6c27a775fde8"
+    },
+    {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 28507,
-      "sha256": "cf3da7f0f4e19cb28140d3ecafa02ca758ead06f4dabd1bbdc3e88f61fcf35f1"
+      "bytes": 28947,
+      "sha256": "4f8675e90e0c00233862f76556382460f44ecc05976e610a9d4cb4f0ee50624a"
+    },
+    {
+      "path": "docs/screenshots/PROVENIENCIA.json",
+      "bytes": 9921,
+      "sha256": "021bd7104b11649cb6c74c3a89157988489c6349485f31fcf5b727c5fe8df982"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-catalogue.png",
+      "bytes": 13783,
+      "sha256": "7828633f98d378eb97eab001d9e9cea596f64a65a6eae0146d5d791910d0b905"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-detail.png",
+      "bytes": 12117,
+      "sha256": "38eaf3d666159859a0c7b5beb17a0ecadf08f9fd47b69b2b8b6442fbf26451de"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-libraries.png",
+      "bytes": 9696,
+      "sha256": "e92086196362633352942c26e883aa0362c19b24a9311b160156060520d53195"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-player.png",
+      "bytes": 50440,
+      "sha256": "af9806b31a961e81df6fef4fe7f7bc3bdd37a948cc0de27164413fba8407e942"
+    },
+    {
+      "path": "docs/screenshots/control-overview.png",
+      "bytes": 170704,
+      "sha256": "cef6acce69fb0724e2a627eb2e36abc505c46f2e0e546ad2b9fd029289ccc4ca"
+    },
+    {
+      "path": "docs/screenshots/control-wireguard-approved.png",
+      "bytes": 68583,
+      "sha256": "5799a34092ec352c3ec84eb89d20adb0787095832289679181da7c113a1b7b26"
+    },
+    {
+      "path": "docs/screenshots/tv-catalogue.png",
+      "bytes": 25724,
+      "sha256": "4987faf8cd6a6689f711b92ebdfe8d9d147aec09c2c661c2db7241862290e1a2"
+    },
+    {
+      "path": "docs/screenshots/tv-detail.png",
+      "bytes": 20915,
+      "sha256": "cc9ed983d7a955ec74e560cf2fe2a0db0b6ebcb169418de71c85d0f24f55f01e"
+    },
+    {
+      "path": "docs/screenshots/tv-libraries.png",
+      "bytes": 19184,
+      "sha256": "d5dfb4a4371c2e98779710c2d9edd28d6fcf3d1aab79e0d1ee6808bbf2eb9679"
+    },
+    {
+      "path": "docs/screenshots/tv-player.png",
+      "bytes": 160983,
+      "sha256": "7cd7d6f8ac88d4bb6683271543bf08fe382232db5f31691c3c1fb6c48d27da79"
     },
     {
       "path": "scripts/inventory.py",

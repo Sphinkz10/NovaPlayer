@@ -20,7 +20,18 @@ Os ensaios passam a guardar o Control com uma inscrição aprovada e a app Andro
 
 As Activities de produção conservam `FLAG_SECURE`. Só a instrumentação debug de ensaio o desativa temporariamente nos quatro ecrãs de conteúdo sintético e volta a ativá-lo em `finally`. Não são capturados ecrãs com palavras-passe, tokens ou material privado. O gerador de capturas só corre num emulador CI descartável e repõe as dimensões/densidade no fim.
 
-Resultados de rede, capturas e proveniência: a registar após a CI desta revisão.
+As [dez capturas originais](PRINTS_APPS.md) e a [proveniência com hashes](screenshots/PROVENIENCIA.json) acompanham esta revisão. A interface Cinema é provisória. No diagnóstico Control, a fixture Jellyfin devolve uma resposta incompleta; a captura não representa um servidor físico instalado.
+
+## Resultados verificados
+
+Código testado: `1b6402a2a40eefe995a528cecda9dc3064b4d793`. A CI executou o merge `71acb3dbb6ec47e6191082cab80b41890e4dc511`, cuja árvore é igual à do código testado. A atualização seguinte acrescenta apenas documentação, capturas e inventários.
+
+- [CI principal](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206346): 8/8 jobs aprovados. Servidor: 343 testes por versão Python em Linux; 337 aprovados e 6 exclusões POSIX por versão em Windows. Kotlin: 203 testes. Build/lint Android, dependências, Docker e imagem do servidor aprovados.
+- [WireGuard nativo](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206366): 25/25 verificações em API 26 e 35, incluindo remoção/correção de peers no kernel, idempotência, handshake real, HTTPS e revogação. API 26: RX 8452 B, TX 8700 B; API 35: RX 8340 B, TX 8700 B. O firewall registou 6 descartes em cada ensaio.
+- [Associação, catálogo, player e capturas](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206356): API 26 e 35 aprovadas. A primeira tentativa API 35 falhou porque a janela de associação não ganhou foco; foi repetido apenas o job falhado, com as mesmas verificações, e passou. Esta repetição está registada na proveniência.
+- [Distribuição e atualização](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206409): API 26 e 35 aprovadas.
+
+As capturas são os PNGs originais, sem retoque. API 26 usa 640×320 e API 35 usa 1280×720. Estes ensaios não concluem a aceitação em TrueNAS, Xiaomi Box S2 ou Chromecast físicos.
 
 ## Próximo passo
 

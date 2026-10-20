@@ -4,9 +4,11 @@
 
 **Fase em execução:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. Próximo gate M4: ensaio físico das duas origens em cada box. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
-**Desenvolvimento em paralelo — M5:** [WireGuard nativo → HTTPS NOVA](M5_WIREGUARD_REDE.md) aprovado em laboratório, API 26/35 e peer Linux real. A [inscrição por TV](M5_INSCRICAO_WIREGUARD.md) já gera a chave no Android e permite aprovação/revogação no Control. Próximo incremento: adaptador restrito do gateway, com aplicação e remoção idempotentes e estado real confirmado. O gateway instalável, bootstrap remoto e jornadas Tailscale/NetBird mantêm os próprios gates; a entrega LAN 0.9 permanece disponível.
+**Desenvolvimento em paralelo — M5:** [WireGuard nativo → HTTPS NOVA](M5_WIREGUARD_REDE.md), [inscrição por TV](M5_INSCRICAO_WIREGUARD.md) e [adaptador restrito do gateway](M5_GATEWAY_WIREGUARD.md) implementados no laboratório. A chave é gerada no Android; o Control aprova/revoga e o adaptador confere a configuração no kernel do namespace. Próximo incremento: serviço/instalador com leases duráveis e confirmação real no Control. O bootstrap remoto e as jornadas Tailscale/NetBird mantêm os próprios gates; a entrega LAN 0.9 permanece disponível.
 
 **Instalação de teste atual:** APK 0.9 original com a nova imagem do servidor LAN por digest, indicada no guia M5. Esta imagem inclui as correções SQLite e `certifi==2026.10.19`; usar fontes/locks novos ao preparar o servidor. Inscrição WireGuard: 24/24 verificações em cada emulador API 26/35. A aprovação no Control ainda não instala peers num gateway de produto.
+
+**Passo seguinte implementado no laboratório:** o [adaptador WireGuard](M5_GATEWAY_WIREGUARD.md) aplica planos aprovados com validade curta, limita peers a `/32`, remove peers indevidos e confere o kernel. Falta transformar a biblioteca num serviço/instalador restrito, com leases duráveis e confirmação no Control. A reprodução remota e as jornadas Tailscale/NetBird continuam depois desse gate.
 
 | Quando instalar/testar | O que permite |
 |---|---|

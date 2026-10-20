@@ -1,5 +1,7 @@
 # M5 — Inscrição WireGuard por TV e aprovação no Control
 
+Registo da entrega de inscrição. O [incremento seguinte](M5_GATEWAY_WIREGUARD.md) acrescenta o adaptador de reconciliação em namespace; a instalação/serviço de produto e a confirmação no Control continuam pendentes.
+
 Incremento de desenvolvimento posterior à [primeira prova de rede](M5_WIREGUARD_REDE.md). A TV passa a gerar a sua chave WireGuard; Core recebe apenas a chave pública, ligada à associação NOVA existente. O proprietário compara a impressão digital e aprova ou revoga o pedido no Control.
 
 A APK instalável mantém-se [NOVA Cinema 0.9 LAN](M4_DISTRIBUICAO_ANDROID.md), reutilizada com a assinatura original. O servidor recebe uma imagem nova com as correções de arranque e dependências descritas abaixo. O novo botão **Pedir WireGuard · laboratório** só aparece em builds depuráveis. Não há uma nova APK de distribuição neste incremento. A M3 de software continua concluída; M5 continua em desenvolvimento.
