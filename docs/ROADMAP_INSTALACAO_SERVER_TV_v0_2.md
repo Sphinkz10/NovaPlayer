@@ -2,7 +2,7 @@
 
 **Atualização:** 20-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
-**Fase em execução:** [M4 — Recuperação integrada LAN](M4_RECUPERACAO_LAN.md), após instalação nova, bootstrap na TV e catálogo/player. A recuperação cifrada de NOVA/Directory/Jellyfin/TLS preserva identidades e exige nova autorização. Próximos gates M4: assinatura definitiva e ensaio físico das duas origens em cada box.
+**Fase em execução:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. Próximo gate M4: ensaio físico das duas origens em cada box. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
 | Quando instalar/testar | O que permite |
 |---|---|
@@ -11,7 +11,7 @@
 | Instalação LAN de teste — M4 | Gerar estado/YAML no PC, instalar nas Apps, configurar a própria TV e ensaiar catálogo/player separadamente na Xiaomi Box S2 e no Chromecast |
 | Fora de casa — M5 | Jornadas nativas WireGuard, Tailscale e NetBird; cada fornecedor precisa da própria prova |
 
-Já podes preparar uma instalação LAN **nova e de teste** seguindo o guia da entrega verificada, agora com recuperação completa ensaiada em Docker. Não há data de conclusão física M4/M5 confirmada: a M4 exige reprodução nos dois aparelhos e assinatura definitiva; a M5 exige os três fornecedores nativos.
+Já podes preparar uma instalação LAN **nova e de teste** seguindo o guia da entrega, com recuperação completa ensaiada em Docker e identidade persistente da APK. Não há data de conclusão física M4/M5 confirmada: a M4 exige reprodução nos dois aparelhos; a M5 exige os três fornecedores nativos.
 
 **Requisito incorporado:** WireGuard, Tailscale e NetBird são opções nativas do NOVA Connect. O proprietário configura a ligação no NOVA Control. A TV instala a NOVA Cinema e recebe a configuração autorizada através da associação de dispositivo. Instalar outra app VPN na TV não satisfaz o objetivo de integração nativa deste roadmap.
 
@@ -138,7 +138,7 @@ Escolher e testar a confiança TLS inicial, renovação e recuperação após pe
 
 Separar compatibilidade de contentor, codec áudio, vídeo e legendas. Distinguir Direct Play, remux, conversão só de áudio e vídeo transcode autorizado. Observar o método real no Jellyfin. Medir os testes G2 no hardware, incluindo formatos suportados e falhas; não declarar 4K/HDR/áudio multicanal apenas com base numa ficha técnica.
 
-Criar package e chave de assinatura definitivos para continuidade das atualizações; banner/ícone TV e manifest adequados; suportar foco/Back, suspensão e reabertura. A APK debug produzida na auditoria serve como evidência de compilação, não substitui esta entrega.
+Identificador `com.novacinema.cinema` e chave persistente de assinatura preparados na [distribuição Android](M4_DISTRIBUICAO_ANDROID.md), com banner/ícone e manifest TV. A chave privada permanece fora do Git/CI. Confirmar a guarda offline e ensaiar foco/Back, suspensão e reabertura no hardware. A APK debug de laboratório mantém uma identidade separada.
 
 ### M5 — Três fornecedores, a mesma experiência
 

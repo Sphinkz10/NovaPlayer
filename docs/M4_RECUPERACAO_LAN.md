@@ -1,6 +1,6 @@
 # M4 — Recuperação integrada LAN
 
-**Recuperação integrada aprovada em laboratório em 20-10-2026, incluindo Jellyfin real Docker e a imagem exata de entrega.** Este guia cobre o novo formato 2; a entrega LAN anterior e o formato legado M2 continuam preservados. Assinatura de produção e aceitação física permanecem pendentes.
+**Recuperação integrada aprovada em laboratório em 20-10-2026, incluindo Jellyfin real Docker e a imagem exata de entrega.** Este guia regista a entrega com APK 0.8 e o formato 2; a [distribuição Android atual](M4_DISTRIBUICAO_ANDROID.md) acrescenta a APK 0.9 com assinatura persistente, sem alterar o servidor/recuperação. A aceitação física permanece pendente. O formato legado M2 continua preservado.
 
 ## O que fica protegido
 
@@ -58,4 +58,4 @@ O ensaio age real em Windows passou 10 checks de cifragem/recuperação. O Contr
 
 O código Android não mudou desde a APK 0.8 da entrega LAN. O pacote conserva esse APK e a sua assinatura: SHA-256 `f2f8b2ce21cd775fe5acb82152f430d487bb26cc985965923b80bb020afdabf8`. A proveniência da APK original corresponde à revisão `2410776dad8bf5fbbddac679803e8e9472e62366`, testada no API 35; o API 26 testou código equivalente. A [regressão Android atual API 26/35](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39432928357) passou em ambos: o API 26 passou na repetição após uma falha de foco do botão anterior à associação. Não houve alteração de código entre tentativas; o pacote inclui a evidência da tentativa aprovada.
 
-A aceitação física TrueNAS/Xiaomi/Chromecast, assinatura de produção e SEC-01…12 mantêm os seus gates; WireGuard, Tailscale e NetBird nativos completos continuam M5. As provas Docker e Android são distintas: o restauro completo com Jellyfin real foi executado em Docker, não numa TV física.
+A aceitação física TrueNAS/Xiaomi/Chromecast e SEC-01…12 mantêm os seus gates; WireGuard, Tailscale e NetBird nativos completos continuam M5. A assinatura persistente da APK é documentada na entrega Android posterior. As provas Docker e Android são distintas: o restauro completo com Jellyfin real foi executado em Docker, não numa TV física.

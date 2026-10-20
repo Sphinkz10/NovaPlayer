@@ -1,6 +1,6 @@
 # M4 — Distribuição Android com identidade persistente
 
-Pacote de distribuição em validação. A instalação LAN e a recuperação anteriores mantêm as respetivas provas em [M4_RECUPERACAO_LAN.md](M4_RECUPERACAO_LAN.md).
+**Distribuição com identidade persistente aprovada em laboratório em 20-10-2026.** A instalação LAN e a recuperação anteriores mantêm as respetivas provas em [M4_RECUPERACAO_LAN.md](M4_RECUPERACAO_LAN.md). O ensaio físico permanece pendente.
 
 ## Identidade e primeira instalação
 
@@ -9,6 +9,8 @@ Pacote de distribuição em validação. A instalação LAN e a recuperação an
 Este pacote é diferente de `com.novacinema.connect.poc`, usado nas APKs de laboratório. Pode coexistir com a app anterior; não se instala como atualização dela. Na primeira abertura configurar Directory/fingerprint, entrar com a conta e aprovar um novo dispositivo no Control. Os dados privados da app antiga não são copiados. Revogar a associação antiga no Control quando deixar de ser necessária.
 
 As atualizações de distribuição devem manter o identificador, a chave e um `versionCode` crescente. A ferramenta recusa uma chave diferente do certificado público fixado em [release-identity.json](../connect/release-identity.json). Não cria nem substitui uma chave durante o build ou assinatura.
+
+Certificado público SHA-256: `50ec5556fb11d5d13ef6983f6d374aab2c3a82d0252891e38ea2a05a90d0cd72`.
 
 ## Guarda da chave
 
@@ -42,7 +44,17 @@ Para uma instalação nova, usar a imagem e o guia de recuperação LAN da entre
 
 ## Provas e limites
 
-Resultados finais dos emuladores por registar. O gate de assinatura usa o SDK real com chaves descartáveis: criação exclusiva, integridade, pin do certificado, recusa de debug, chave/palavra-passe erradas, substituição de ficheiros e regressão de versão, além de assinatura da versão seguinte. O gate Android instala a variante não depurável, observa o ecrã inicial, recusa outra assinatura, atualiza para um código superior preservando UID/dados e recusa downgrade.
+Revisão executável: `4fa4e78fd3dbc158df1c7c15630b94d5bddd8bdb`. A CI testa a árvore do merge `38830bc551eee330cad9a83898d123fc0474fddf`, conferida igual à árvore dessa revisão. Na [CI de distribuição](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39453252644), **API 26 e 35 aprovados**: 11 verificações do SDK e 6 verificações Android em cada combinação. O mesmo gate do SDK passou também em Windows local.
+
+O gate de assinatura usa chaves descartáveis: criação exclusiva, integridade, pin do certificado, recusa de debug, chave/palavra-passe erradas, substituição de ficheiros e regressão de versão, além de assinatura da versão seguinte. O gate Android instala a variante não depurável, observa a entrada Directory e o foco D-pad, recusa outra assinatura, atualiza de 9 para 10 preservando UID/dados e recusa downgrade.
+
+As duas tentativas iniciais do novo ensaio falharam na observação do ecrã: o tema apresenta botões em maiúsculas e o cabeçalho pode estar fora do viewport. A correção passou a ler a hierarquia real e navegar pelo D-pad. Não houve alteração da aplicação ou do servidor entre essas tentativas; o comportamento de assinatura/update permaneceu sob as mesmas verificações.
+
+APK final SHA-256: `29c470b918147500b62ca0b45310f236ad5cf4552529c558eaeb818d9efe5eb5`. Build sem assinatura da prova API 35: `a91fc95537cb8b4df53c50db2b5ea3e735e56fe36b985bdab2203497717d3d1f`. A assinatura persistente foi aplicada localmente a esse ficheiro exato e conferida de forma independente. Compilação release, 203 testes Kotlin e lint local aprovados; lint release: 0 erros, 55 avisos. As regressões CI de base e associação são registadas no relatório da entrega.
+
+[CI principal 8/8](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39453252594): Linux Python 3.12/3.13 **304/304** em cada; Windows **298 aprovados + 6 exclusões POSIX** em cada; 203 testes Kotlin, build, lint, dependências e Docker. O ensaio de imagem exata passou antes da publicação. O Windows 3.13 passou na repetição após exceder a espera de cinco segundos numa operação Directory do ensaio de navegador.
+
+[Regressão de associação/player/LAN](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39453252547): API 26 e 35 aprovados. O API 26 passou na repetição do mesmo código após falha de foco do botão de confirmação na instrumentação legada. As evidências da entrega correspondem às tentativas aprovadas. A pasta `NOVA_M4_DISTRIBUICAO_2026-10-20` reúne APK, fontes, ferramentas, relatórios e `SHA256SUMS.txt`; `M4_DISTRIBUICAO_RESULTADOS.json` separa revisão executável, documentação final e proveniência dos artefactos.
 
 As chaves descartáveis da CI são distintas da chave persistente. O relatório da APK final liga o hash do build sem assinatura ao binário assinado localmente; a verificação independente confere o certificado público. Os ensaios de login/player continuam na instrumentação debug, em execução separada. Não confundir a assinatura final verificada offline com uma instalação desse binário numa TV física.
 

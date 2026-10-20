@@ -2,7 +2,7 @@
 
 Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
-**Estado atual:** [M4 — Recuperação integrada LAN](docs/M4_RECUPERACAO_LAN.md) acrescenta backup/restauro cifrado, preservação de identidades e revogação de acessos ao [perfil instalável Server/TV](docs/M4_INSTALACAO_LAN.md). Resultados e limites estão no guia atual. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório. Aceitação física e assinatura definitiva mantêm a M4 aberta.
+**Estado atual:** [M4 — Distribuição Android](docs/M4_DISTRIBUICAO_ANDROID.md) prepara a NOVA Cinema com identificador próprio, debug desativado e assinatura persistente offline. O [perfil LAN com recuperação integrada](docs/M4_RECUPERACAO_LAN.md) continua aplicável. Resultados e limites estão no guia de distribuição. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório. A aceitação física mantém a M4 aberta.
 
 O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 
@@ -26,4 +26,4 @@ bash gradlew :core:verifyCore :app:assembleDebug :app:lintDebug
 
 Em Windows usar `gradlew.bat`; os testes de navegador aceitam `--channel msedge`, usado também no runner Windows da CI. Os testes POSIX de permissões/caminhos são executados em Linux. Os gates Docker são `python server/scripts/smoke_compose.py` e `python server/scripts/smoke_lan_compose.py`, num anfitrião Linux descartável com Docker; o primeiro exige portas 8096/8787 livres.
 
-O pacote atual e as execuções são registados em [M4_RECUPERACAO_LAN.md](docs/M4_RECUPERACAO_LAN.md); as provas anteriores estão nos guias de instalação LAN e player. Os ZIPs originais em `archives/` preservam o histórico e não recebem as alterações atuais.
+O pacote atual e as execuções são registados em [M4_DISTRIBUICAO_ANDROID.md](docs/M4_DISTRIBUICAO_ANDROID.md); as provas anteriores estão nos guias de recuperação, instalação LAN e player. Os ZIPs originais em `archives/` preservam o histórico e não recebem as alterações atuais.

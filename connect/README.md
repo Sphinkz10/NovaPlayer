@@ -1,6 +1,6 @@
-# NOVA Cinema / Connect — Laboratório 0.7
+# NOVA Cinema / Connect — Distribuição LAN 0.9
 
-> Estado atual: [M4 Cinema local](../docs/M4_CINEMA_LOCAL.md), com catálogo, ficha, Media3, seek e retoma aprovados nos emuladores API 26/35. A [M3](../docs/M3_FECHO.md) está concluída em laboratório. Instalação LAN guiada, aparelhos físicos e jornadas VPN permanecem pendentes. Os detalhes da fase 1 abaixo são históricos onde divergirem destes dois documentos.
+> Estado atual: [M4 Distribuição Android](../docs/M4_DISTRIBUICAO_ANDROID.md), com pacote de distribuição próprio e assinatura persistente offline. Instalação LAN, catálogo/player e recuperação integrada foram ensaiados em laboratório. A [M3](../docs/M3_FECHO.md) está concluída em software. Aparelhos físicos e jornadas VPN permanecem pendentes. Os detalhes da fase 1 abaixo são históricos onde divergirem destes documentos.
 
 **Base inicial de 17 outubro 2026:** diagnóstico e lógica de domínio. A reprodução local foi acrescentada e ensaiada na M4 em 20 outubro.
 
