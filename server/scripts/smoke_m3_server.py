@@ -86,7 +86,8 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
                 item=catalog.json()['items'][0]['id'];media_items.append(item)
                 detail=lab.tv.get(media+'/'+item,headers=auth)
                 assert detail.status_code==200 and detail.json()['method']=='DirectPlay', 'NOVA detail failed'
-                assert not any(value in detail.text for value in ('/media/','AccessToken','MediaSources','Path'))
+                assert not any(value in detail.text for value in ('/media/source-','AccessToken','MediaSources','Path'))
+                assert set(detail.json())=={'server_id','account_id','library_id','item','method','stream_path'}
                 chunk=lab.tv.get(media+'/'+item+'/stream',headers={**auth,'Range':'bytes=0-255'})
                 assert chunk.status_code==206 and len(chunk.content)==256, 'NOVA Range stream failed'
                 assert 'ftyp' in chunk.content[:32].decode('latin1'), 'NOVA original MP4 bytes missing'

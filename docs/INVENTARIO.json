@@ -790,8 +790,8 @@
     },
     {
       "path": "server/scripts/smoke_m3_server.py",
-      "bytes": 10325,
-      "sha256": "3bfdca5f4e651482e258f7a01072f0f75aecf375f7c04164b5dd8405eb952906"
+      "bytes": 10445,
+      "sha256": "c6909c94acb7290b50897656d502b96237e9b344ae1a315e120ef3e7bf929b06"
     },
     {
       "path": "server/scripts/truenas.py",
