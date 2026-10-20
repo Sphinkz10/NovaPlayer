@@ -105,6 +105,9 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
                 own='/api/v1/media/libraries/'+libraries[index]['id']+'/items/'
                 foreign='/api/v1/media/libraries/'+libraries[1-index]['id']+'/items'
                 assert lab.tv.get(foreign,headers=auth).status_code==404
+                assert lab.tv.get(own+media_items[1-index],headers=auth).status_code==404
+                assert lab.tv.post(own+media_items[1-index]+'/events',headers=auth,
+                                   json={'event':'stop','position_ticks':1}).status_code==404
                 denied=lab.tv.get(own+media_items[1-index]+'/stream',headers=auth)
                 if denied.status_code!=404:
                     error=denied.json().get('error','unexpected') if denied.headers.get('Content-Type','').startswith('application/json') else 'non_json'

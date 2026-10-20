@@ -27,6 +27,10 @@ class JellyfinMembers:
             token=uuid.uuid4().hex;self.tokens[token]=user['Id']
             return httpx.Response(200,json={'AccessToken':token,'ServerId':self.sid,'User':copy.deepcopy(user)})
         if not uid:return httpx.Response(401)
+        if re.fullmatch('/Items/[a-f0-9]{32}/Ancestors',path) and self.media_items:
+            target=path.split('/')[2]
+            return httpx.Response(200,json=[{'Id':library} for library,items in self.media_items.items()
+                if any(item['Id']==target for item in items)])
         if path=='/Items' and self.media_items:
             library=request.url.params.get('ParentId')
             allowed=self.users[uid]['Policy'].get('EnabledFolders',[])

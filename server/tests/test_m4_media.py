@@ -1,5 +1,6 @@
 import asyncio
 import copy
+import json
 import re
 
 import httpx
@@ -19,10 +20,15 @@ def catalog(members, monkeypatch):
     items = []
     content = bytes(range(256))*1000
     events = []
+    with members.store._db() as db:
+        report=members.store.setup_state()['last_observation']
+        for i,lib in enumerate(report['libraries']):lib['paths']=['/media/source-'+('a' if i==0 else 'b')]
+        db.execute('UPDATE jellyfin_setup SET report=?',(json.dumps(report),))
     for index in range(2):
+        path='/media/source-'+('a' if index==0 else 'b')+'/movie.mp4'
         items.append({'Id':str(index+1)*32, 'Name':'Filme '+str(index), 'Type':'Movie',
-            'Overview':'Resumo', 'RunTimeTicks':1000000000, 'Path':'/private/movie.mp4',
-            'MediaSources':[{'Id':str(index+1)*32,'Protocol':'File','Path':'/private/movie.mp4'}],
+            'Overview':'Resumo', 'RunTimeTicks':1000000000, 'Path':path,
+            'MediaSources':[{'Id':str(index+1)*32,'Protocol':'File','Path':path}],
             'UserData':{'PlaybackPositionTicks':0}})
 
     def jf(request):
@@ -37,11 +43,16 @@ def catalog(members, monkeypatch):
                 selected = [copy.deepcopy(items[i]) for i in range(2)
                             if members.fixture_libs[i]['id']==library and library in folders]
                 ids = request.url.params.get('Ids')
-                if ids: selected = [i for i in selected if i['Id']==ids]
+                # Deliberately reproduce the real Ids-over-ParentId behavior.
+                if ids: selected = [copy.deepcopy(i) for i in items if i['Id']==ids]
                 if ids and not selected:return httpx.Response(401)
                 search = request.url.params.get('SearchTerm','')
                 selected = [i for i in selected if search in i['Name']]
                 return httpx.Response(200,json={'Items':selected,'TotalRecordCount':len(selected)})
+            if path.endswith('/Ancestors'):
+                target=path.split('/')[2]
+                ancestors=[{'Id':members.fixture_libs[i]['id']} for i,value in enumerate(items) if value['Id']==target]
+                return httpx.Response(200,json=ancestors)
             if path.startswith('/Sessions/Playing'):
                 import json
                 data=json.loads(request.content); events.append(data)
@@ -78,7 +89,7 @@ def test_catalog_search_detail_and_no_upstream_secrets(catalog):
     service,client,tokens,items,_,_=catalog
     result=client.get(url(service),headers=auth(tokens))
     assert result.status_code==200 and [i['id'] for i in result.json()['items']]==[items[0]['Id']]
-    assert not any(secret in result.text for secret in ('Path','MediaSources','Token','credential','/private/'))
+    assert not any(secret in result.text for secret in ('Path','MediaSources','Token','credential','/media/source-'))
     assert client.get(url(service)+'?search=absent',headers=auth(tokens)).json()['items']==[]
     detail=client.get(url(service,suffix='/'+items[0]['Id']),headers=auth(tokens))
     assert detail.status_code==200 and detail.json()['method']=='DirectPlay'
@@ -94,6 +105,31 @@ def test_library_and_item_authorization_not_just_item_id(catalog):
     assert client.get(url(service)).status_code==401
     for route in ('/api/v1/media/System/Configuration','/Videos/'+items[0]['Id']+'/stream','/Items','/api/v1/admin/members'):
         assert client.get(route,headers=auth(tokens)).status_code==404
+
+
+def test_ancestor_chain_is_required_even_if_upstream_returns_a_plausible_path(catalog):
+    service,client,tokens,items,_,events=catalog
+    items[1]['Path']='/media/source-a/forged.mp4'
+    endpoint=url(service,suffix='/'+items[1]['Id'])
+    assert client.get(endpoint,headers=auth(tokens)).status_code==404
+    assert client.get(endpoint+'/stream',headers=auth(tokens)).status_code==404
+    assert client.post(endpoint+'/events',headers=auth(tokens),json={'event':'stop','position_ticks':1}).status_code==404
+    assert events==[]
+
+
+@pytest.mark.parametrize('path',['/media/source-a-other/movie.mp4','/media/source-a/../source-b/movie.mp4',
+                                 '/media/source-b/movie.mp4','http://server/movie.mp4'])
+def test_catalog_does_not_trust_an_incorrect_upstream_parent_filter(catalog,path):
+    service,client,tokens,items,_,_=catalog
+    items[0]['Path']=path
+    assert client.get(url(service),headers=auth(tokens)).status_code==503
+    assert client.get(url(service,suffix='/'+items[0]['Id']),headers=auth(tokens)).status_code==404
+
+
+def test_alternative_media_source_cannot_leave_assigned_library(catalog):
+    service,client,tokens,items,_,_=catalog
+    items[0]['MediaSources'][0]['Path']='/media/source-b/movie.mp4'
+    assert client.get(url(service,suffix='/'+items[0]['Id']+'/stream'),headers=auth(tokens)).status_code==409
 
 
 def test_stream_range_seek_no_upstream_credentials(catalog):

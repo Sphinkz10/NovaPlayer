@@ -31,9 +31,10 @@ def run():
         libraries=[{'id':'a'*32,'name':'Biblioteca A'},{'id':'b'*32,'name':'Biblioteca B'}]
         for i,library in enumerate(libraries):
             identity=str(i+1)*32
+            path='/media/source-'+('a' if i==0 else 'b')+'/movie.mp4'
             jf.media_items[library['id']]=[{'Id':identity,'Name':'Filme '+('A' if i==0 else 'B'),'Type':'Movie',
-                'RunTimeTicks':400000000,'Overview':'Vídeo sintético de teste.','MediaSources':[
-                    {'Id':identity,'Protocol':'File','Path':'/fixture/movie.mp4'}],'UserData':{'PlaybackPositionTicks':0}}]
+                'RunTimeTicks':400000000,'Overview':'Vídeo sintético de teste.','Path':path,'MediaSources':[
+                    {'Id':identity,'Protocol':'File','Path':path}],'UserData':{'PlaybackPositionTicks':0}}]
         with M3Lab(folder,url,libraries=libraries,jellyfin_id=jf.sid) as lab:
             tokens,_=lab.pair('alice',0)
             fixture={'origin':lab.origin,'server_id':Devices(lab.store).identity(),'account':lab.accounts['alice'],

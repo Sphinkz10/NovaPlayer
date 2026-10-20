@@ -10,6 +10,8 @@ O cliente usa exclusivamente HTTPS NOVA com o certificado aprovado, sessão NOVA
 
 O gateway transmite o ficheiro original por Range; esta entrega não pede transcodificação/remux. Fontes remotas, redirects, respostas comprimidas, intervalos múltiplos e conteúdo HTML são recusados. A revogação e a validade do dispositivo/conta são verificadas durante a transferência. Uma rotação do access token não invalida uma resposta de vídeo já autorizada. Novos pedidos exigem um token válido.
 
+O ensaio Docker revelou que `Ids` pode sobrepor-se ao filtro `ParentId` do Jellyfin. O NOVA exige agora o caminho sob a origem read-only verificada e a cadeia de antecessores com a biblioteca autorizada. A origem alternativa do ficheiro também é verificada. Os testes reproduzem deliberadamente a resposta permissiva do Jellyfin; ficha, vídeo e escrita de progresso de outro título têm de ser recusados. Esta falha pertenceu ao novo gateway M4, não às rotas de autorização de biblioteca M3.
+
 O player só funciona em primeiro plano. Ao sair liberta o player e envia a posição; durante reprodução envia progresso a cada dez segundos. Se a autorização ou a gravação do progresso falhar, liberta o player/buffer e apresenta recuperação, preservando a posição em memória. O Jellyfin aplica os seus limites de retoma, incluindo duração mínima e marcação de título visto.
 
 ## Critérios e evidências

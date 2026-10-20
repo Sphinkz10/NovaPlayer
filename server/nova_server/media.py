@@ -1,5 +1,6 @@
 """Small, authenticated media surface. No arbitrary URLs, paths or Jellyfin proxy."""
 from contextlib import asynccontextmanager
+from pathlib import PurePosixPath
 import re
 import time
 
@@ -76,7 +77,7 @@ class Media:
     async def query(self, client, uid, library, *, allow_missing_item=False, **params):
         return await self.members.setup._request(client, 'GET', '/Items', allow_missing_item=allow_missing_item, params={
             'UserId': uid, 'ParentId': library, 'Recursive': 'true', 'IncludeItemTypes': 'Movie,Episode',
-            'Fields': 'Overview,MediaSources,MediaStreams', 'EnableUserData': 'true',
+            'Fields': 'Overview,MediaSources,MediaStreams,Path', 'EnableUserData': 'true',
             'EnableImages': 'false', 'SortBy': 'SortName', 'SortOrder': 'Ascending', **params})
 
     @staticmethod
@@ -94,6 +95,16 @@ class Media:
                 'position_ticks': number(user.get('PlaybackPositionTicks')),
                 'played': user.get('Played') is True}
 
+    def within_library(self, library, value):
+        if not isinstance(value, str) or not value.startswith('/') or '\\' in value or '..' in value.split('/'):
+            return False
+        report = self.store.setup_state()['last_observation'] or {}
+        roots = {PurePosixPath(root) for lib in report.get('libraries', [])
+                 if lib.get('id', '').replace('-', '') == library for root in lib.get('paths', [])
+                 if root in ('/media/source-a', '/media/source-b')}
+        path = PurePosixPath(value)
+        return any(root in path.parents for root in roots)
+
     async def item(self, client, uid, library, item):
         media_id(item)
         # IDs alone are insufficient: require membership under the selected permitted root.
@@ -104,6 +115,15 @@ class Media:
             raise SetupError('jellyfin_invalid_media')
         found = data['Items']
         if len(found) != 1 or found[0].get('Id', '').replace('-', '') != item:
+            raise DeviceError('unknown_media', 404)
+        # Jellyfin can prioritize Ids over ParentId. Never infer membership from
+        # that query: verify the actual path AND the independent ancestor chain.
+        if not self.within_library(library, found[0].get('Path')):
+            raise DeviceError('unknown_media', 404)
+        ancestors = await self.members.setup._request(client, 'GET', '/Items/'+item+'/Ancestors',
+                                                      params={'UserId':uid}, allow_missing_item=True)
+        if (not isinstance(ancestors, list) or not 1 <= len(ancestors) <= 64 or
+                library not in {p.get('Id', '').replace('-', '') for p in ancestors if isinstance(p, dict)}):
             raise DeviceError('unknown_media', 404)
         self.clean(found[0])
         return found[0]
@@ -117,6 +137,8 @@ class Media:
             data = await self.query(client, uid, library, StartIndex=start, Limit=24, SearchTerm=search,
                                     IncludeItemTypes={'all':'Movie,Episode','movies':'Movie','episodes':'Episode'}[kind])
             if not isinstance(data, dict) or not isinstance(data.get('Items'), list) or len(data['Items']) > 24:
+                raise SetupError('jellyfin_invalid_media')
+            if any(not isinstance(item, dict) or not self.within_library(library, item.get('Path')) for item in data['Items']):
                 raise SetupError('jellyfin_invalid_media')
             total = number(data.get('TotalRecordCount'), 1000000)
             return {'server_id': grant['server_id'], 'account_id': grant['account_id'], 'library_id': library,
@@ -157,7 +179,8 @@ class Media:
             raw = await self.item(client, uid, library, item)
             sources = raw.get('MediaSources') or []
             source = next((s for s in sources if s.get('Protocol') == 'File' and
-                           s.get('IsRemote') is not True and ID.fullmatch(s.get('Id', ''))), None)
+                           s.get('IsRemote') is not True and ID.fullmatch(s.get('Id', '')) and
+                           self.within_library(library, s.get('Path'))), None)
             if source is None:
                 raise DeviceError('direct_play_unavailable', 409)
             headers = {'Range': range_header} if range_header else {}

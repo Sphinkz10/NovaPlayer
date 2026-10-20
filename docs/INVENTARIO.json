@@ -395,8 +395,8 @@
     },
     {
       "path": "connect/scripts/smoke_m4_android.py",
-      "bytes": 4522,
-      "sha256": "1fff358f2652d9327147a6bf305fbf27e454f4ab7c89322798836587101009aa"
+      "bytes": 4588,
+      "sha256": "43d3366fb22b895dc902dfb5b934985b4ee4ba78746b35eabdcd672c7bb0a809"
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
@@ -470,8 +470,8 @@
     },
     {
       "path": "docs/M4_CINEMA_LOCAL.md",
-      "bytes": 4988,
-      "sha256": "ec039916e121436e24e7e4461ea17144278b7742a13a579bc11f8974513f99fa"
+      "bytes": 5489,
+      "sha256": "06054e87e1a4b57c2a76b4ef4de0fb35485ef45c37b2b612d5dc4df295fff616"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -630,8 +630,8 @@
     },
     {
       "path": "server/nova_server/media.py",
-      "bytes": 13153,
-      "sha256": "d7045a3012dfd8119ae1602913550c98265735d2a3bd502d20fc435584c1b9d0"
+      "bytes": 14768,
+      "sha256": "50b8b7a2ae710af22ce1645de6eb931f818faee4e9d5384543b3a1d5c08ec631"
     },
     {
       "path": "server/nova_server/members.py",
@@ -790,8 +790,8 @@
     },
     {
       "path": "server/scripts/smoke_m3_server.py",
-      "bytes": 10965,
-      "sha256": "40f29951d7fdfe6a87f65de7899f9e9994e2d8faae18ed3685fc8d2075076595"
+      "bytes": 11233,
+      "sha256": "da6fb50db3420896785be627407c52296dbeacbfda7805428d9d1a43d037a3fc"
     },
     {
       "path": "server/scripts/truenas.py",
@@ -805,8 +805,8 @@
     },
     {
       "path": "server/tests/jellyfin_m3_fixture.py",
-      "bytes": 6274,
-      "sha256": "db2d588d8547079fef5ef414260e44965ee3b92743103df60a95c12a03116960"
+      "bytes": 6564,
+      "sha256": "86078093c2cf3c0d7cb60d5b6434b5bcbd04a8fbaa88d310d4ca8fccf67292d0"
     },
     {
       "path": "server/tests/test_api.py",
@@ -870,8 +870,8 @@
     },
     {
       "path": "server/tests/test_m4_media.py",
-      "bytes": 10106,
-      "sha256": "1fdb41681634dece60cb31261cc3da98f7c3f3ccad648f523163ac5c89aec242"
+      "bytes": 12159,
+      "sha256": "a1fc65ebda1e7df4f165d5d158ec98a2d5ab925abdec4c3011336059b9555281"
     },
     {
       "path": "server/tests/test_recovery.py",
