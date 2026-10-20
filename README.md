@@ -2,7 +2,7 @@
 
 Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
-**Estado atual:** [M4 — Cinema local](docs/M4_CINEMA_LOCAL.md) com catálogo/player aprovados em laboratório: CI 8/8, Android 26/35 e Jellyfin real Docker. Instalação LAN guiada e aceitação física mantêm a M4 aberta. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório.
+**Estado atual:** [M4 — Instalação LAN](docs/M4_INSTALACAO_LAN.md) reúne assistente de instalação nova no TrueNAS, configuração na própria TV, contas de familiares e catálogo/player. Resultados e limites estão nesse guia. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório. Aceitação física, assinatura definitiva e recuperação integrada do perfil LAN mantêm a M4 aberta.
 
 O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 
@@ -24,6 +24,6 @@ cd ../connect
 bash gradlew :core:verifyCore :app:assembleDebug :app:lintDebug
 ```
 
-Em Windows usar `gradlew.bat`; o teste de navegador aceita `--channel msedge` quando o Edge já está instalado. Os quatro testes de permissões/caminhos do instalador são exclusivos de Linux. O gate Docker de laboratório é `python server/scripts/smoke_compose.py`, num anfitrião Linux com Docker e portas 8096/8787 livres.
+Em Windows usar `gradlew.bat`; os testes de navegador aceitam `--channel msedge`, usado também no runner Windows da CI. Os testes POSIX de permissões/caminhos são executados em Linux. Os gates Docker são `python server/scripts/smoke_compose.py` e `python server/scripts/smoke_lan_compose.py`, num anfitrião Linux descartável com Docker; o primeiro exige portas 8096/8787 livres.
 
-As execuções e os pacotes atuais são registados em [M3_FECHO.md](docs/M3_FECHO.md). Os ZIPs originais em `archives/` preservam o histórico e não recebem as alterações atuais.
+O pacote atual e as execuções são registados em [M4_INSTALACAO_LAN.md](docs/M4_INSTALACAO_LAN.md); a prova anterior do player está em [M4_CINEMA_LOCAL.md](docs/M4_CINEMA_LOCAL.md). Os ZIPs originais em `archives/` preservam o histórico e não recebem as alterações atuais.

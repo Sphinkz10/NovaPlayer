@@ -1,6 +1,6 @@
 # M4 — Instalação LAN guiada
 
-Implementação em validação. Este documento acompanha o novo perfil LAN; a [prova anterior do catálogo/player](M4_CINEMA_LOCAL.md) continua preservada.
+**Software LAN aprovado em laboratório em 20-10-2026 e entregue para instalação nova de teste.** Este é o guia atual; a [prova anterior do catálogo/player 0.7](M4_CINEMA_LOCAL.md) continua preservada. A M4 mantém pendentes aceitação física, assinatura definitiva e recuperação integrada.
 
 ## Percurso preparado
 
@@ -24,7 +24,7 @@ O resultado inclui:
 
 Preparar no TrueNAS os datasets/ACL e transferir o conteúdo inicial por um método administrativo suportado, preservando propriedade UID/GID e permissões privadas. O diretório de destino tem de ser novo e vazio. A cópia não é automatizada e não exige SSH ao gerador. Em Windows, confirmar permissões depois da transferência: o ACL do PC não substitui o ACL/POSIX no NAS. O runtime recusa estado ausente ou chave TLS com permissões públicas em POSIX.
 
-O proprietário instala o YAML nas Apps, abre Control por HTTPS, configura Jellyfin/bibliotecas e publica no Directory. O painel apresenta endereço e fingerprint para preparar a TV; permite criar uma conta de familiar e permitir descoberta. Essa criação não autoriza media: a TV apresenta código, o proprietário atribui bibliotecas e aprova.
+O proprietário instala o YAML nas Apps, abre Control por HTTPS, configura Jellyfin/bibliotecas e publica no Directory. A identidade de assinatura já é criada pelo assistente; o botão de inicialização fica desativado quando está pronta. O painel apresenta endereço e fingerprint para preparar a TV; permite criar uma conta de familiar e permitir descoberta. Essa criação não autoriza media: a TV apresenta código, o proprietário atribui bibliotecas e aprova.
 
 ## Separação de serviços
 
@@ -47,9 +47,34 @@ Não aceita HTTP, redirects, fingerprint diferente ou um bootstrap cujo certific
 
 Os gates novos ensaiam o YAML gerado com Jellyfin Docker real, configuração/publicação a partir dos contentores, criação de familiar, associação, catálogo/Range e persistência após reinício. A prova Android ensaia setup com D-pad, pin incorreto, HTTP, configuração persistida, login/aprovação e primeiro frame pelo IP privado do runner, sem `adb reverse`. O ADB é apenas o mecanismo de instalação/instrumentação dos emuladores CI.
 
-Ainda falta registar aqui o resultado final dos gates desta revisão. Aceitação física no TrueNAS Community, Xiaomi Box S2 e Chromecast continua pendente. Modelo/geração do Chromecast e versão concreta do TrueNAS continuam por recolher no ensaio físico. Não prometer compatibilidade 4K/HDR/áudio por estes testes sintéticos.
+| Gate | Resultado final |
+|---|---|
+| CI de base | 8/8 jobs aprovados |
+| Python Linux 3.12 e 3.13 | 288/288 em cada versão |
+| Python Windows 3.12 e 3.13 | 282 aprovados + 6 exclusões POSIX em cada versão |
+| Kotlin e Android lint | 203 testes; compilação e lint aprovados |
+| Docker LAN com Jellyfin real | 12 checks; repetidos na imagem exata antes de publicar |
+| Configuração LAN Android API 26 e 35 | 8 checks em cada emulador, incluindo primeiro frame pelo IP privado sem adb reverse |
+| Regressão Android de associação/M3/player | 11 fases de associação, 11 M3 e 8 checks M4 em cada emulador |
+| NOVA Control no Edge local | 9 checks do novo percurso, incluindo publicação, criação de familiar e limpeza dos formulários |
+
+Revisão executável: `2410776dad8bf5fbbddac679803e8e9472e62366`. [CI de base](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39404634041) e [Android API 26/35](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39404634004) aprovados. Alterações posteriores da entrega limitam-se a Markdown e inventários de fontes. O ensaio Edge local identifica a sua revisão no JSON; o código servidor/UI respetivo é igual ao da revisão final.
+
+O ensaio API 26 revelou que associação e media ainda usavam o TLS do sistema, incompatível com o servidor LAN que exige TLS 1.3. As ligações de associação, catálogo/player e Directory usam agora Conscrypt, TLS 1.3, certificado aprovado e verificação de hostname. O cliente LAN também exige prova Directory antes do arranque do Control/publicação: não aceita associação anónima nesse intervalo. Há um teste de regressão específico.
+
+Aceitação física no TrueNAS Community, Xiaomi Box S2 e Chromecast continua pendente. Modelo/geração do Chromecast e versão concreta do TrueNAS continuam por recolher no ensaio físico. Estes testes sintéticos não certificam 4K/HDR/áudio ou desempenho nas boxes.
 
 Este gerador é para instalação NOVA; não migra estado M2/M3/M4 existente nem altera IP/identidade de uma instalação ativa. O backup/restauro M2 anterior não abrange toda esta nova pasta Directory/TLS. Guardar o pacote inicial de forma privada não equivale a um backup atualizado. Recuperação integrada, assinatura definitiva da APK e segurança final mantêm os gates próprios. Certificados de serviço têm validade inicial de um ano; rotação e recuperação exigem preservar as identidades existentes. WireGuard, Tailscale e NetBird completos continuam na M5; SEC-01…12 sem aceitação final.
+
+## Entrega verificável
+
+Pasta local `NOVA_M4_LAN_2026-10-20`: começar por `ABRIR_PRIMEIRO.md`. Inclui APK, fontes, imagem por digest, guia, relatórios e `SHA256SUMS.txt`. O ZIP de fontes contém o projeto na pasta `NOVA_Fase1`.
+
+Imagem `linux/amd64`: `ghcr.io/sphinkz10/nova-core@sha256:c8ee2727ac3f97d5db81ac9a20ce8041c7e6f1e38e6ca15263d45e832ca2eabb`.
+
+APK entregue: build realmente testado no API 35, `0.8-m4-lan-lab`, pacote `com.novacinema.connect.poc`, versionCode 8, min SDK 26, target 35. Inclui arm64-v8a, armeabi-v7a, x86 e x86_64. Assinatura debug RSA-2048/v2 verificada; certificado SHA-256 `c0f135b2cda35ada8023419b549fea2f710c17c34e9614bc1e40f46e42656d8a`.
+
+SHA-256 da APK entregue: `f2f8b2ce21cd775fe5acb82152f430d487bb26cc985965923b80bb020afdabf8`. O API 26 testou um build equivalente com a própria assinatura CI: `3607a9b6b754bef3743d9eb38cdd27fdfcacafe2f932953e43b201b901def30c`. Os ZIPs de artefactos foram verificados contra os digests GitHub antes da extração. Proveniência completa em `M4_LAN_RESULTADOS.json` da entrega.
 
 ## TrueNAS
 

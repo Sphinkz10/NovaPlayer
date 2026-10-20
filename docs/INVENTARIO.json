@@ -40,8 +40,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 1790,
-      "sha256": "30102f5eaa790e0bc9ec795da2b4c8d146ec8d6731e98820d89a5774d53b1706"
+      "bytes": 2057,
+      "sha256": "9ad317b9009cb0013017aa281d71b79fa2625dd8494e279676dd9661ed40e2ca"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -440,8 +440,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 1745,
-      "sha256": "5790feea919e9c8b194418b882bbb0175c4d41d634379c278c571c27c12a2bb2"
+      "bytes": 1923,
+      "sha256": "398fae6b4aa5cee644b571f92968c6afd5d60b79f8146041a5616f67ac9b2c42"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -490,13 +490,13 @@
     },
     {
       "path": "docs/M4_CINEMA_LOCAL.md",
-      "bytes": 7561,
-      "sha256": "1afbd8a2d9149b33b5a9c80bd0a026b441c0293b513416839204079dc91b6413"
+      "bytes": 7704,
+      "sha256": "7360720f0b452321ae7916e9c6bccd84a3ccbbcd60b1df5be2a74b74274ed357"
     },
     {
       "path": "docs/M4_INSTALACAO_LAN.md",
-      "bytes": 6671,
-      "sha256": "6b1a2d81fa22bf06b2f5ee7b386c4f5733537f15283ef934911102d4d265cc91"
+      "bytes": 9574,
+      "sha256": "c876b665e584b080db031deac46ea4cfd6a73d473e65746442f00772425d732b"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -520,8 +520,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 27275,
-      "sha256": "def945931f45a666b035e4c6d49dea40138345f7ae8a03dea574e7201987c053"
+      "bytes": 27476,
+      "sha256": "9b02fc7d77d85da8d5f8b488cb7fe0f0714f93b7b45dcac3a78f53209ec32ec4"
     },
     {
       "path": "scripts/inventory.py",
