@@ -11,7 +11,6 @@ from .security import token_hash
 SCHEMA_VERSION = 3
 
 SCHEMA = """
-PRAGMA journal_mode=WAL;
 CREATE TABLE IF NOT EXISTS admin (
  id INTEGER PRIMARY KEY CHECK (id = 1), username TEXT NOT NULL, password_hash TEXT NOT NULL,
  created_at INTEGER NOT NULL
@@ -81,29 +80,43 @@ class Store:
         self.dir.mkdir(mode=0o700, parents=True, exist_ok=True)
         self.path = self.dir / 'nova.sqlite3'
         self.lock = threading.RLock()
-        with self._db() as conn:
-            version = conn.execute('PRAGMA user_version').fetchone()[0]
-            if version > SCHEMA_VERSION:
-                raise RuntimeError('Base de dados de uma versão mais recente; restaurar uma cópia compatível.')
-            # Versions 1/2 only add tables; existing owners and media setup survive.
-            conn.executescript(SCHEMA)
-            for table in ('device_requests','devices'):
-                columns={row[1] for row in conn.execute('PRAGMA table_info('+table+')')}
-                for name in ('account_id','account_name','directory_entry'):
-                    if name not in columns:
-                        conn.execute('ALTER TABLE '+table+' ADD COLUMN '+name+' TEXT')
-            from uuid import uuid4
-            conn.execute('INSERT OR IGNORE INTO server_identity(id,server_id) VALUES(1,?)', (str(uuid4()),))
-            conn.execute(f'PRAGMA user_version={SCHEMA_VERSION}')
-            conn.commit()
+        deadline = time.monotonic()+20
+        while True:
+            try:
+                with self._db(timeout=1) as conn:
+                    version = conn.execute('PRAGMA user_version').fetchone()[0]
+                    if version > SCHEMA_VERSION:
+                        raise RuntimeError('Base de dados de uma versão mais recente; restaurar uma cópia compatível.')
+                    # Changing journal mode can return BUSY without invoking SQLite's
+                    # busy handler during simultaneous first starts. Retry only locks.
+                    conn.execute('PRAGMA journal_mode=WAL')
+                    # executescript starts the write transaction itself; otherwise it
+                    # would commit a preceding BEGIN and race the additive migrations.
+                    conn.executescript('BEGIN IMMEDIATE;\n'+SCHEMA)
+                    if conn.execute('PRAGMA user_version').fetchone()[0] > SCHEMA_VERSION:
+                        raise RuntimeError('Base de dados de uma versão mais recente; restaurar uma cópia compatível.')
+                    for table in ('device_requests','devices'):
+                        columns={row[1] for row in conn.execute('PRAGMA table_info('+table+')')}
+                        for name in ('account_id','account_name','directory_entry'):
+                            if name not in columns:
+                                conn.execute('ALTER TABLE '+table+' ADD COLUMN '+name+' TEXT')
+                    from uuid import uuid4
+                    conn.execute('INSERT OR IGNORE INTO server_identity(id,server_id) VALUES(1,?)', (str(uuid4()),))
+                    conn.execute(f'PRAGMA user_version={SCHEMA_VERSION}')
+                break
+            except sqlite3.OperationalError as exc:
+                if (getattr(exc, 'sqlite_errorcode', 0) & 255 not in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED)
+                        or time.monotonic() >= deadline):
+                    raise
+                time.sleep(.05)
         try:
             self.path.chmod(0o600)
         except OSError:
             pass
 
     @contextmanager
-    def _db(self):
-        conn = sqlite3.connect(self.path, timeout=20)
+    def _db(self, timeout=20):
+        conn = sqlite3.connect(self.path, timeout=timeout)
         try:
             conn.execute('PRAGMA foreign_keys=ON')
             with conn:

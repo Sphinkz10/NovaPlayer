@@ -1,5 +1,7 @@
 # M4 — Distribuição Android com identidade persistente
 
+**Atualização do servidor:** a APK 0.9 permanece válida. Para uma instalação nova, usar as fontes e a imagem corrigidas no [incremento de inscrição WireGuard](M5_INSCRICAO_WIREGUARD.md#correções-no-servidor-lan), que atualiza o bundle de confiança `certifi` e o arranque simultâneo SQLite. As imagens e ZIPs identificados abaixo conservam as versões históricas.
+
 **Distribuição com identidade persistente aprovada em laboratório em 20-10-2026.** A instalação LAN e a recuperação anteriores mantêm as respetivas provas em [M4_RECUPERACAO_LAN.md](M4_RECUPERACAO_LAN.md). O ensaio físico permanece pendente.
 
 ## Identidade e primeira instalação

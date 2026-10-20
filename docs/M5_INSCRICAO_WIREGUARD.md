@@ -2,7 +2,7 @@
 
 Incremento de desenvolvimento posterior à [primeira prova de rede](M5_WIREGUARD_REDE.md). A TV passa a gerar a sua chave WireGuard; Core recebe apenas a chave pública, ligada à associação NOVA existente. O proprietário compara a impressão digital e aprova ou revoga o pedido no Control.
 
-A entrega instalável mantém-se [NOVA Cinema 0.9 LAN](M4_DISTRIBUICAO_ANDROID.md). O novo botão **Pedir WireGuard · laboratório** só aparece em builds depuráveis. Não há uma nova APK de distribuição neste incremento. A M3 de software continua concluída; M5 continua em desenvolvimento.
+A APK instalável mantém-se [NOVA Cinema 0.9 LAN](M4_DISTRIBUICAO_ANDROID.md), reutilizada com a assinatura original. O servidor recebe uma imagem nova com as correções de arranque e dependências descritas abaixo. O novo botão **Pedir WireGuard · laboratório** só aparece em builds depuráveis. Não há uma nova APK de distribuição neste incremento. A M3 de software continua concluída; M5 continua em desenvolvimento.
 
 ## Percurso implementado
 
@@ -39,6 +39,14 @@ O harness descartável lê a chave aprovada, instala-a no WireGuard Linux e conf
 Também se verifica persistência após reinício do processo, rejeição de outra associação, adulteração do ciphertext, perda da chave Keystore e limpeza ao esquecer a associação. Os relatórios publicados não contêm a fixture privada ou material de chave.
 
 Resultados e proveniência CI: pendentes de registo após a execução desta revisão.
+
+## Correções no servidor LAN
+
+A criação/migração da base SQLite passa a ser serializada entre processos. Bloqueios temporários do journal são repetidos durante um prazo limitado, sem repetir erros de corrupção ou de schema incompatível. A corrida foi reproduzida em dois de 120 arranques simultâneos; após a correção, os 120 passaram, além dos testes de concorrência e bloqueio incluídos na suite.
+
+`certifi==2026.10.19` foi fixado nos três locks, com hashes conferidos no PyPI, após o alerta [GHSA-6q48-6c7w-9gw2](https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2). A [versão publicada](https://pypi.org/project/certifi/2026.10.19/) substitui as versões anteriores do bundle de confiança. Esta alteração não desliga verificação de certificados ou nomes; o ensaio TLS real continua a recusar CA desconhecida, hostname errado e fallback HTTP.
+
+Usar o novo digest de imagem e fontes desta entrega para preparar o servidor de teste. As entregas anteriores permanecem como histórico e para conservar a APK/assinatura; os seus locks e imagens não recebem esta correção automaticamente. Fazer backup offline antes de atualizar uma instalação existente. O gerador LAN continua destinado a um dataset novo, sem modificar um estado ativo.
 
 ## Falta para WireGuard instalável
 

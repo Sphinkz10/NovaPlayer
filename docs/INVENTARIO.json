@@ -50,8 +50,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2449,
-      "sha256": "5cbb2fb204da7feb03319b0a6ac61934b65a3c06f3b46be0ae6f6d07c14a9a07"
+      "bytes": 2696,
+      "sha256": "ee6892888cbcb88e3777ea15c5823861c75a87f533c8776207690c0afc58b98a"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -550,8 +550,8 @@
     },
     {
       "path": "docs/M4_DISTRIBUICAO_ANDROID.md",
-      "bytes": 7901,
-      "sha256": "51170b8b52fd5802fe1ff805db660d5e2e514efeb141a40bba68bfdcc3c12e46"
+      "bytes": 8277,
+      "sha256": "b0a63272449e8e6231542644f48dcf5490b8d6d13363f47439e59f4114d4e254"
     },
     {
       "path": "docs/M4_INSTALACAO_LAN.md",
@@ -565,8 +565,8 @@
     },
     {
       "path": "docs/M5_INSCRICAO_WIREGUARD.md",
-      "bytes": 6054,
-      "sha256": "0e8925f04b5240695046a9df173408202681ac019a39d08b32f21b47e15dcf11"
+      "bytes": 7485,
+      "sha256": "c4a8af3878029dc3fb08366d437c3fff1e668d55a748e6c62d302861e8f2a4fd"
     },
     {
       "path": "docs/M5_WIREGUARD_REDE.md",
@@ -780,8 +780,8 @@
     },
     {
       "path": "server/nova_server/storage.py",
-      "bytes": 9759,
-      "sha256": "1a1990963618cf54c97e99b47e165066573c446fcc93401c4d5daa2d3997b869"
+      "bytes": 10774,
+      "sha256": "4b337c574c4b9f8fb78f6a67b656ed226d64f349ba875372705493a21f4a8ab5"
     },
     {
       "path": "server/nova_server/wireguard.py",
@@ -800,8 +800,8 @@
     },
     {
       "path": "server/requirements-dev.txt",
-      "bytes": 48641,
-      "sha256": "e8878a4cf616402966198316a2ebb53cb6aa62c3cc56f403eda84f990f499167"
+      "bytes": 48669,
+      "sha256": "f0bf60f45310eb6ad4a05ec6640c87f749a1f36219950b099700bca3a96e4471"
     },
     {
       "path": "server/requirements-directory.in",
@@ -810,18 +810,18 @@
     },
     {
       "path": "server/requirements-directory.txt",
-      "bytes": 33190,
-      "sha256": "d52dcbb0ce251f2f124f6a160a72efe58c743a39d8bb6db04b2619abea861c67"
+      "bytes": 33217,
+      "sha256": "20e5cc0fb5c514d656cb006ab54fa6d236fa9e2501db1f9e38a3803951203f55"
     },
     {
       "path": "server/requirements.in",
-      "bytes": 199,
-      "sha256": "42bc89351490ad7a159a6ead6587714e36118914a2f4a1c884a9f592324d1584"
+      "bytes": 284,
+      "sha256": "a3d752cf43bca0081d25056fd68823b05d6f12b048c4522b43364cd101b335a6"
     },
     {
       "path": "server/requirements.txt",
-      "bytes": 33124,
-      "sha256": "08a28e708073af029ad6857fda66e41407485ffbe9eefdf21aa72dd0cd7511b4"
+      "bytes": 33152,
+      "sha256": "dff16e62003eaa81e34eec59635085f93d6a7730e310b66332a3bdc602c048a3"
     },
     {
       "path": "server/scripts/acceptance.py",
@@ -1035,8 +1035,8 @@
     },
     {
       "path": "server/tests/test_wireguard_enrollment.py",
-      "bytes": 8278,
-      "sha256": "a341edb2458327d5c0b60c446fe502603bb42587ff8f448bc54b15a0969573bd"
+      "bytes": 9679,
+      "sha256": "7105be7f389fb0cef3148d969e8744e1de9e42cbc8b65052de9e1995eb4dfc0d"
     }
   ]
 }

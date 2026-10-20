@@ -1,4 +1,7 @@
 import base64
+import sqlite3
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
@@ -162,3 +165,35 @@ def test_existing_schema_three_without_enrollment_table_upgrades_additively(lab)
     upgraded=Store(service.store.dir)
     assert Devices(upgraded).authenticate(tokens['access_token'])['device_id']==tokens['device_id']
     assert WireGuardEnrollments(upgraded).list()==[]
+
+
+def test_simultaneous_first_starts_share_atomic_schema_and_identity(tmp_path):
+    for attempt in range(8):
+        folder=tmp_path/str(attempt); barrier=threading.Barrier(6)
+        def start(_):
+            barrier.wait(timeout=10)
+            store=Store(folder)
+            return Devices(store).identity()
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            identities=list(pool.map(start,range(6)))
+        assert len(set(identities))==1
+        with Store(folder)._db() as db:
+            assert {'account_id','account_name','directory_entry'}.issubset(
+                row[1] for row in db.execute('PRAGMA table_info(devices)'))
+
+
+def test_cold_start_waits_for_journal_lock_without_losing_identity(tmp_path):
+    folder=tmp_path/'nova'; folder.mkdir(); entered=threading.Event()
+    with sqlite3.connect(folder/'nova.sqlite3') as blocking:
+        blocking.execute('BEGIN IMMEDIATE')
+        def start():
+            entered.set()
+            return Devices(Store(folder)).identity()
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            future=pool.submit(start); assert entered.wait(5)
+            time.sleep(.15)
+            premature=future.done()
+            blocking.commit()
+            identity=future.result(timeout=10)
+        assert not premature
+        assert Devices(Store(folder)).identity()==identity
