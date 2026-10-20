@@ -105,7 +105,12 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
                 own='/api/v1/media/libraries/'+libraries[index]['id']+'/items/'
                 foreign='/api/v1/media/libraries/'+libraries[1-index]['id']+'/items'
                 assert lab.tv.get(foreign,headers=auth).status_code==404
-                assert lab.tv.get(own+media_items[1-index]+'/stream',headers=auth).status_code==404
+                denied=lab.tv.get(own+media_items[1-index]+'/stream',headers=auth)
+                if denied.status_code!=404:
+                    error=denied.json().get('error','unexpected') if denied.headers.get('Content-Type','').startswith('application/json') else 'non_json'
+                    code=error if isinstance(error,str) and error.isidentifier() and len(error)<=60 else 'unexpected'
+                    # Only a sanitized status/code enters the diagnostic class name, never response bodies/tokens.
+                    raise type('M4ForeignStatus'+str(denied.status_code)+'_'+code,(AssertionError,),{})()
             replay=lab.tv.post('/api/v1/device/authorize',json={'label':'replay','assertion':assertion_a})
             assert replay.status_code==409
             directory=lab.directory_client('bruno')

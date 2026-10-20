@@ -83,8 +83,10 @@ class JellyfinSetup:
         finally:
             self.store.finish_setup(lease, report)
 
-    async def _request(self, client, method, path, *, allow_unauthorized=False, **kwargs):
+    async def _request(self, client, method, path, *, allow_unauthorized=False, allow_missing_item=False, **kwargs):
         async with client.stream(method, path, **kwargs) as response:
+            if allow_missing_item and response.status_code in (401, 403, 404):
+                return None
             if allow_unauthorized and response.status_code == 401:
                 return None
             if response.status_code in (401, 403):

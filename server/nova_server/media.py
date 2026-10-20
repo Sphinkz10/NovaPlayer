@@ -73,8 +73,8 @@ class Media:
             yield client, row[0], grant, guard
             guard()  # Discard buffered data if authorization changed during upstream I/O.
 
-    async def query(self, client, uid, library, **params):
-        return await self.members.setup._request(client, 'GET', '/Items', params={
+    async def query(self, client, uid, library, *, allow_missing_item=False, **params):
+        return await self.members.setup._request(client, 'GET', '/Items', allow_missing_item=allow_missing_item, params={
             'UserId': uid, 'ParentId': library, 'Recursive': 'true', 'IncludeItemTypes': 'Movie,Episode',
             'Fields': 'Overview,MediaSources,MediaStreams', 'EnableUserData': 'true',
             'EnableImages': 'false', 'SortBy': 'SortName', 'SortOrder': 'Ascending', **params})
@@ -97,14 +97,9 @@ class Media:
     async def item(self, client, uid, library, item):
         media_id(item)
         # IDs alone are insufficient: require membership under the selected permitted root.
-        try:
-            data = await self.query(client, uid, library, Ids=item, Limit=1)
-        except SetupError as error:
-            # Jellyfin may return 401/403 rather than an empty list for a foreign
-            # item. The account/policy were already checked; hide item existence.
-            if error.code == 'jellyfin_credentials_rejected':
-                raise DeviceError('unknown_media', 404) from None
-            raise
+        data = await self.query(client, uid, library, Ids=item, Limit=1, allow_missing_item=True)
+        if data is None:
+            raise DeviceError('unknown_media', 404)
         if not isinstance(data, dict) or not isinstance(data.get('Items'), list):
             raise SetupError('jellyfin_invalid_media')
         found = data['Items']
