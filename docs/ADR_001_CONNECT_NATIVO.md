@@ -1,6 +1,6 @@
 # ADR 001 — Base comum para três fornecedores nativos
 
-Estado: contrato inicial e compilação conjunta dos três motores aprovados; pontes funcionais e provas de rede pendentes.
+Estado: contratos e compilação conjunta aprovados; primeira prova de rede WireGuard → HTTPS NOVA aprovada em laboratório. Jornadas de produto e provas de rede Tailscale/NetBird pendentes. Ver [M5 — WireGuard](M5_WIREGUARD_REDE.md).
 Data: 17-10-2026. Substitui a interpretação de que uma app VPN externa satisfaz NOVA Connect.
 
 ## Compatibilidade
@@ -57,7 +57,7 @@ ter fronteiras separadas. O HTTP local existente serve apenas a administração 
 
 | Motor | Fonte fixada para a investigação | Resultado nesta fase |
 |---|---|---|
-| WireGuard | `com.wireguard.android:tunnel:1.0.20260102` | AAR oficial incluído; build e quatro ABIs verificados; handshake pendente |
+| WireGuard | `com.wireguard.android:tunnel:1.0.20260102` | AAR oficial; handshake e HTTPS NOVA autenticado aprovados em API 26/35, com gateway Linux isolado. Hardware ARM/TV e inscrição no produto pendentes |
 | Tailscale | `tailscale/tailscale-android@264102cc702fbd844e900227ee02e5cbb4d7f801` | Pacote libtailscale compilado no AAR conjunto e incluído na APK NOVA experimental |
 | NetBird | `netbirdio/netbird@01185ba3536bcc037481578420d73cb7cee96094` | Pacote client/android compilado no mesmo AAR; fonte Go fixada pelo cliente Android consultado |
 

@@ -6,6 +6,8 @@ Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
 O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 
+**Desenvolvimento M5:** a [primeira prova de rede WireGuard](docs/M5_WIREGUARD_REDE.md) passou em API 26/35 com gateway Linux real, HTTPS NOVA autenticado e firewall. A inscrição no Control e os percursos remotos completos dos três fornecedores continuam por implementar. A entrega de instalação permanece a 0.9 LAN.
+
 - [Estado e limites](docs/ESTADO_REAL.md).
 - [Roadmap até instalar e ver filmes](docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md).
 - [Contrato de integração nativa](docs/ADR_001_CONNECT_NATIVO.md).
