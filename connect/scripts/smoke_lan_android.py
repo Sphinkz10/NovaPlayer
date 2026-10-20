@@ -25,6 +25,10 @@ from nova_server.storage import Store
 def run():
     if os.environ.get('GITHUB_ACTIONS')!='true' or adb('shell','getprop','ro.kernel.qemu').strip()!='1':
         raise SystemExit('Only disposable CI emulator permitted')
+    # This is a NEW deployment journey. Earlier negative tests deliberately corrupt
+    # Directory pins; production must continue to reject that state. Start a fresh
+    # disposable app installation rather than adding a trust-reset path to the app.
+    assert adb('shell','pm','clear',PACKAGE).strip()=='Success'
     out=ROOT/'connect/test-results/lan';out.mkdir(parents=True,exist_ok=True)
     ip=socket.gethostbyname(socket.gethostname());processes=[]
     with tempfile.TemporaryDirectory(prefix='nova-lan-tv-') as folder,jellyfin_http() as (jf,jf_url):

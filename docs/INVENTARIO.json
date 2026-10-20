@@ -405,8 +405,8 @@
     },
     {
       "path": "connect/scripts/smoke_lan_android.py",
-      "bytes": 8103,
-      "sha256": "48a1f4189d4ad12ad736e485ca8db080e2f502fde09a4a80481a1b67c279c243"
+      "bytes": 8418,
+      "sha256": "f80217a84cc0ea50c0479d8ec25c31a676ea22b21e438877ba0c344f54b6c655"
     },
     {
       "path": "connect/scripts/smoke_m3_android.py",
