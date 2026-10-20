@@ -25,7 +25,7 @@ cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  connect/app/sr
 99ffc3e54ca1989804ea5d03211e2df2b852f88da4c4e305d2c07f8a0459ed38  connect/app/src/main/assets/licenses/media3-dependencies.txt
 27b645d8ff27fc1ef6cee14dae9faacd42319d8ab8899b92d7bf0e8a16b5dc7f  connect/app/src/main/java/com/novacinema/connect/AndroidCapabilities.kt
 f7c3c2ed5445c2680736ee8f786b316c01ef838ae0fa86a02814735875db0d3e  connect/app/src/main/java/com/novacinema/connect/CinemaActivity.kt
-6efdac317a8ff7a3858a42227bfce29eb24ec7488ca0d83b68ea0688c71fc45b  connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt
+f28d5abb19d24bf1676ca85ef950e14a1216bbc32aa65c8d91c4f93e6bb20f43  connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt
 d4983ea7414e685f3c72fb3ccfe73102ee3758ad7042f81605b16ef16bff8636  connect/app/src/main/java/com/novacinema/connect/DevicePairingActivity.kt
 5653cdb09c98305d17e4e7d419aac528afe154246f2e7b0162b03795cfbc2310  connect/app/src/main/java/com/novacinema/connect/DeviceSessionStore.kt
 83dd89fa10638d8404a404a57743fbc764bd5390fc361bf497d68cf55fce6580  connect/app/src/main/java/com/novacinema/connect/DirectoryActivity.kt

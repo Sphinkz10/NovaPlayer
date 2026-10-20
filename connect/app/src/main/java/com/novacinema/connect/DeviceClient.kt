@@ -8,6 +8,7 @@ import java.io.InputStream
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.net.ssl.HttpsURLConnection
+import org.conscrypt.Conscrypt
 
 internal fun JSONObject.string(name: String): String = get(name) as? String ?: throw DeviceProtocolFailure()
 internal fun JSONObject.integer(name: String): Int {
@@ -60,7 +61,7 @@ class DeviceInvitation private constructor(val trust: ServerTrust, val expiresAt
 }
 
 class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
-    private val sockets = PinnedServerTls.socketFactory(trust)
+    private val sockets = PinnedServerTls.socketFactory(trust,Conscrypt.newProvider(),tls13=true)
     private fun request(path: String, body: JSONObject? = null, access: String? = null): JSONObject {
         val connection = URL(trust.origin + "/api/v1/device/" + path).openConnection(Proxy.NO_PROXY) as HttpsURLConnection
         try {

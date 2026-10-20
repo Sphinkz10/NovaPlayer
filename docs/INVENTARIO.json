@@ -145,8 +145,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt",
-      "bytes": 8674,
-      "sha256": "6efdac317a8ff7a3858a42227bfce29eb24ec7488ca0d83b68ea0688c71fc45b"
+      "bytes": 8740,
+      "sha256": "f28d5abb19d24bf1676ca85ef950e14a1216bbc32aa65c8d91c4f93e6bb20f43"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DevicePairingActivity.kt",
