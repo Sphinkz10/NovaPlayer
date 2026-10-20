@@ -30,16 +30,16 @@ ORIGIN = 'https://'+GW+':9444'
 sys.path.insert(0, str(ROOT/'server'))
 
 
-def command(*args, check=True, data=None):
+def command(*args, check=True, data=None, timeout=30):
     result = subprocess.run(list(map(str, args)), input=data, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE, timeout=30)
+                            stderr=subprocess.PIPE, timeout=timeout)
     if check and result.returncode:
         raise RuntimeError('Proof command failed: '+str(args[0]))
     return result
 
 
-def adb(*args, check=True):
-    return command('adb', *args, check=check).stdout.decode(errors='replace')
+def adb(*args, check=True, timeout=30):
+    return command('adb', *args, check=check, timeout=timeout).stdout.decode(errors='replace')
 
 
 def push_private(name, data):
@@ -187,7 +187,7 @@ def run():
     assert abs(int(adb('shell', 'date', '+%s').strip())-time.time()) < 5
     for path in ('app/build/outputs/apk/debug/app-debug.apk',
                  'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk'):
-        adb('install', '-r', '-t', str(ROOT/'connect'/path))
+        adb('install', '-r', '-t', str(ROOT/'connect'/path), timeout=120)
     adb('shell', 'run-as', PACKAGE, 'mkdir', '-p', 'files')
     suffix = secrets.token_hex(3)
     namespace, host_link, ns_link = 'nova-wg-'+suffix, 'nwh'+suffix, 'nwn'+suffix
@@ -253,7 +253,8 @@ def run():
                 for _ in range(50):
                     if bootstrap.poll() is not None: raise RuntimeError('LAN enrollment service exited')
                     try:
-                        assert probe.get(f'https://127.0.0.1:{bootstrap_port}/api/v1/device/me').status_code == 401
+                        assert probe.get(f'https://127.0.0.1:{bootstrap_port}/api/v1/device/me',
+                                         headers={'Host':f'10.0.2.2:{bootstrap_port}'}).status_code == 401
                         break
                     except httpx.ConnectError: time.sleep(.2)
                 else: raise RuntimeError('LAN enrollment service not ready')

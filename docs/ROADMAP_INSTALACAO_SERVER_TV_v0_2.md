@@ -4,7 +4,7 @@
 
 **Fase em execução:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. Próximo gate M4: ensaio físico das duas origens em cada box. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
-**Desenvolvimento em paralelo — M5:** [WireGuard nativo → HTTPS NOVA](M5_WIREGUARD_REDE.md) aprovado em laboratório, API 26/35 e peer Linux real, com autorização, firewall e revogação. Próximo incremento: inscrição por dispositivo e configuração idempotente no Control. O gateway instalável, bootstrap remoto e jornadas Tailscale/NetBird mantêm os próprios gates; a prova não altera a entrega LAN 0.9.
+**Desenvolvimento em paralelo — M5:** [WireGuard nativo → HTTPS NOVA](M5_WIREGUARD_REDE.md) aprovado em laboratório, API 26/35 e peer Linux real. A [inscrição por TV](M5_INSCRICAO_WIREGUARD.md) já gera a chave no Android e permite aprovação/revogação no Control. Próximo incremento: adaptador restrito do gateway, com aplicação e remoção idempotentes e estado real confirmado. O gateway instalável, bootstrap remoto e jornadas Tailscale/NetBird mantêm os próprios gates; a entrega LAN 0.9 permanece disponível.
 
 | Quando instalar/testar | O que permite |
 |---|---|

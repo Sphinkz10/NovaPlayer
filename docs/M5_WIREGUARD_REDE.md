@@ -1,5 +1,7 @@
 # M5 — Primeira prova de rede WireGuard nativa
 
+Registo da primeira prova, revisão `3434c8b`. O incremento seguinte substitui a chave de TV preparada pelo anfitrião por [geração no Android e inscrição aprovada no Control](M5_INSCRICAO_WIREGUARD.md). Os resultados abaixo pertencem à primeira execução e permanecem como histórico verificável.
+
 **Primeira prova WireGuard → HTTPS NOVA aprovada em laboratório em 20-10-2026: API 26 e 35, 16/16 verificações em cada.** A instalação de teste disponível continua a ser [NOVA Cinema 0.9 LAN](M4_DISTRIBUICAO_ANDROID.md). Esta prova não ativa o fornecedor no Control nem entrega perfis VPN às TVs de produção.
 
 ## Percurso executado
@@ -55,8 +57,9 @@ A entrega local `NOVA_M5_WIREGUARD_2026-10-20` contém fontes, relatórios e has
 | Etapa | Estado |
 |---|---|
 | WireGuard incorporado → HTTPS NOVA com autorização e firewall | Aprovado em API 26/35, gateway Linux real |
-| Chave de TV criada no dispositivo e inscrição autenticada por associação | Por implementar |
-| Configuração idempotente no Control e adaptador restrito do gateway | Por implementar |
+| Chave de TV criada no dispositivo e inscrição autenticada por associação | Implementada no [incremento seguinte](M5_INSCRICAO_WIREGUARD.md) |
+| Aprovação/revogação de pedidos no Control | Implementada no incremento seguinte; sem declarar peer instalado |
+| Configuração idempotente e adaptador restrito do gateway | Por implementar |
 | Instalação compatível do gateway no TrueNAS, TLS e endereços remotos | Por implementar |
 | Bootstrap Directory fora da LAN, catálogo/player e renovação remota | Por implementar |
 | Revogação automática no fornecedor, troca de rede, suspensão e reconexão | Por implementar |

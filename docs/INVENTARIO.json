@@ -50,8 +50,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2430,
-      "sha256": "d7d1b36ebe86411aaaaa88c7e43aa956a21691b9f042fbe76fa99bf296b9a212"
+      "bytes": 2449,
+      "sha256": "5cbb2fb204da7feb03319b0a6ac61934b65a3c06f3b46be0ae6f6d07c14a9a07"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -465,8 +465,8 @@
     },
     {
       "path": "connect/wireguard-proof/network.py",
-      "bytes": 20536,
-      "sha256": "56f78afc203dc4c8a4081ea1636e2b780b6d71b0df6587cd864c0d91c8366e98"
+      "bytes": 20683,
+      "sha256": "830a738f2a00e361746f84df3f317a1dd9730c7f59410cc82ffe85f3eabd54f2"
     },
     {
       "path": "connect/wireguard-proof/src/androidTest/kotlin/com/novacinema/connect/WireGuardNetworkInstrumentation.kt",
@@ -495,8 +495,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2102,
-      "sha256": "4d8e4f0d6b7212c5954220f6999170e3316e93aad09febcbd3ce34a06c624471"
+      "bytes": 2171,
+      "sha256": "71532454109799702c80bef137ec6acf28136b34c49af3a14e239deada4145e6"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -564,9 +564,14 @@
       "sha256": "b42660b3e1f3044110626213a90df28a03ce29a9d6457bc21f3d82d85e6e24ed"
     },
     {
+      "path": "docs/M5_INSCRICAO_WIREGUARD.md",
+      "bytes": 6054,
+      "sha256": "0e8925f04b5240695046a9df173408202681ac019a39d08b32f21b47e15dcf11"
+    },
+    {
       "path": "docs/M5_WIREGUARD_REDE.md",
-      "bytes": 6962,
-      "sha256": "ca2a242833ae13b553b8ca1bc80e98edcf615da46e574f3c6e5f95c078798355"
+      "bytes": 7423,
+      "sha256": "958006e302cd0424b6aa70559f7932cfcd7324ddd2cdfe739d692e904f26a35a"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -590,8 +595,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 28228,
-      "sha256": "6acd308f60373c159e6dc157342de9919d5af4c076abc507bf5af15666b1fde3"
+      "bytes": 28129,
+      "sha256": "56f55403f09e999aad4d7e11311376b52f3cec05a87db31c400a97be8c00d4a4"
     },
     {
       "path": "scripts/inventory.py",
