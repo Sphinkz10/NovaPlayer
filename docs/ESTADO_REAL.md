@@ -7,7 +7,7 @@ O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias
 | M1 — base | Implementada e testada |
 | M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. Aceitação no TrueNAS físico pendente |
 | M3 — identidade e permissões | Concluída no software de laboratório: login Directory na TV, prova assinada de conta, aprovação, bibliotecas Jellyfin limitadas, renovação e revogação. Sete critérios aprovados; CI 8/8, API 26/35 e Docker real. Ver evidências no documento único |
-| M4 — primeiro filme local | Catálogo/player, instalação LAN guiada, configuração nativa da TV e criação de familiares aprovados em laboratório: CI 8/8, Android API 26/35 e Jellyfin Docker real. Pacote em [Instalação LAN](M4_INSTALACAO_LAN.md). Assinatura definitiva, recuperação integrada e aceitação física pendentes |
+| M4 — primeiro filme local | Instalação LAN, configuração TV, catálogo/player e recuperação integrada aprovados em laboratório. [Entrega atual](M4_RECUPERACAO_LAN.md): backup/restauro completo preserva identidades e invalida acessos, com Jellyfin Docker real. Assinatura definitiva e aceitação física pendentes |
 | M5 — ligação remota | WireGuard, Tailscale e NetBird nativos continuam obrigatórios. Compilação experimental dos três motores não prova túneis funcionais |
 | M6/M7 — utilização familiar | Exigem matriz física, rede externa e validações finais de segurança |
 

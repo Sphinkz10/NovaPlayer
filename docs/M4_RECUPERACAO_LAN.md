@@ -1,6 +1,6 @@
 # M4 — Recuperação integrada LAN
 
-Implementação em validação. A entrega anterior de instalação LAN continua preservada. Este guia cobre o novo formato 2 de backup/restauro; o formato legado M2 continua suportado separadamente.
+**Recuperação integrada aprovada em laboratório em 20-10-2026, incluindo Jellyfin real Docker e a imagem exata de entrega.** Este guia cobre o novo formato 2; a entrega LAN anterior e o formato legado M2 continuam preservados. Assinatura de produção e aceitação física permanecem pendentes.
 
 ## O que fica protegido
 
@@ -44,10 +44,18 @@ Uma chave age errada ou um arquivo alterado/truncado não publica um diretório 
 - Sessões NOVA, Jellyfin e Directory, pedidos de associação, dispositivos, permissões/credenciais de media e agentes de renovação invalidados.
 - Registos Directory deixam de ser descobertos até o proprietário entrar e publicar novamente. Provas de associação emitidas antes do restauro são recusadas mesmo dentro do prazo original.
 - As contas, partilhas e estados de desativação **da data da cópia** são recuperados como configuração. Rever antes de republicar: o snapshot não contém revogações feitas depois dele. Uma partilha de descoberta não restaura permissão de media.
-- No Control, entrar novamente, verificar Jellyfin/indexação, publicar com a conta proprietária e voltar a atribuir bibliotecas/aprovar cada TV. Não é necessário recriar o servidor nem configurar outro fingerprint.
+- No Control, entrar novamente, verificar Jellyfin/indexação, publicar com a conta proprietária e voltar a atribuir bibliotecas/aprovar cada TV. Na TV 0.8, abrir **Associar ao NOVA Server → Esquecer associação nesta TV**, voltar e usar **Entrar na NOVA · Directory** para obter um código novo. Essa ação apaga a sessão do dispositivo e conserva a configuração Directory/fingerprint; não é necessário recriar o servidor ou reinstalar a APK.
 
 ## Prova exigida
 
 Os testes locais exercitam arquivos maliciosos, identidade em falta/trocada, chave de credenciais, YAML inseguro e a barreira temporal das provas. O ensaio Docker faz backup cifrado, rejeita adulteração/truncagem/chave errada, arranca os quatro serviços restaurados num dataset novo, verifica identidades, recusa credenciais antigas e volta a obter catálogo/vídeo depois de nova autorização. A imagem exata é ensaiada antes de publicar.
 
-Resultados finais desta revisão por registar. A aceitação física TrueNAS/Xiaomi/Chromecast, assinatura de produção e SEC-01…12 mantêm os seus gates; WireGuard, Tailscale e NetBird nativos completos continuam M5.
+Revisão executável: `9052241388ca8435d370652b88e8df6223e6490f`. [CI de base 8/8](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39432928447): **304/304** em cada Linux Python 3.12/3.13; **298 aprovados + 6 exclusões POSIX** em cada Windows; 203 testes Kotlin, build e lint. Docker aprovou 12 checks de instalação LAN e 12 de recuperação; ambos foram repetidos sobre a imagem exata antes de publicar.
+
+Imagem `linux/amd64`: `ghcr.io/sphinkz10/nova-core@sha256:c7061ad75502173a763fa4d9a3754e91038b20b6d42220c643c4eb7aedc67c58`.
+
+O ensaio age real em Windows passou 10 checks de cifragem/recuperação. O Control no Edge local passou 9 checks sobre esta revisão. Os relatórios ficam em `evidencias/` da entrega `NOVA_M4_RECUPERACAO_2026-10-20`, com `M4_RECUPERACAO_RESULTADOS.json`, fontes e hashes.
+
+O código Android não mudou desde a APK 0.8 da entrega LAN. O pacote conserva esse APK e a sua assinatura: SHA-256 `f2f8b2ce21cd775fe5acb82152f430d487bb26cc985965923b80bb020afdabf8`. A proveniência da APK original corresponde à revisão `2410776dad8bf5fbbddac679803e8e9472e62366`, testada no API 35; o API 26 testou código equivalente. A [regressão Android atual API 26/35](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39432928357) passou em ambos: o API 26 passou na repetição após uma falha de foco do botão anterior à associação. Não houve alteração de código entre tentativas; o pacote inclui a evidência da tentativa aprovada.
+
+A aceitação física TrueNAS/Xiaomi/Chromecast, assinatura de produção e SEC-01…12 mantêm os seus gates; WireGuard, Tailscale e NetBird nativos completos continuam M5. As provas Docker e Android são distintas: o restauro completo com Jellyfin real foi executado em Docker, não numa TV física.

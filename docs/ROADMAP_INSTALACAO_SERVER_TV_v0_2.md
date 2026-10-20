@@ -2,7 +2,7 @@
 
 **Atualização:** 20-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
-**Fase em execução:** [M4 — Instalação LAN](M4_INSTALACAO_LAN.md), com assistente de instalação nova, bootstrap na própria TV e catálogo/player. Resultados finais dos gates, pacote e limites estão no guia LAN. Próximo marco físico: primeiro filme das duas origens em cada box.
+**Fase em execução:** [M4 — Recuperação integrada LAN](M4_RECUPERACAO_LAN.md), após instalação nova, bootstrap na TV e catálogo/player. A recuperação cifrada de NOVA/Directory/Jellyfin/TLS preserva identidades e exige nova autorização. Próximos gates M4: assinatura definitiva e ensaio físico das duas origens em cada box.
 
 | Quando instalar/testar | O que permite |
 |---|---|
@@ -11,11 +11,11 @@
 | Instalação LAN de teste — M4 | Gerar estado/YAML no PC, instalar nas Apps, configurar a própria TV e ensaiar catálogo/player separadamente na Xiaomi Box S2 e no Chromecast |
 | Fora de casa — M5 | Jornadas nativas WireGuard, Tailscale e NetBird; cada fornecedor precisa da própria prova |
 
-Já podes preparar uma instalação LAN **nova e de teste** seguindo o guia da entrega verificada. Não há data de conclusão física M4/M5 confirmada: a M4 exige reprodução nos dois aparelhos, assinatura definitiva e recuperação integrada; a M5 exige os três fornecedores nativos.
+Já podes preparar uma instalação LAN **nova e de teste** seguindo o guia da entrega verificada, agora com recuperação completa ensaiada em Docker. Não há data de conclusão física M4/M5 confirmada: a M4 exige reprodução nos dois aparelhos e assinatura definitiva; a M5 exige os três fornecedores nativos.
 
 **Requisito incorporado:** WireGuard, Tailscale e NetBird são opções nativas do NOVA Connect. O proprietário configura a ligação no NOVA Control. A TV instala a NOVA Cinema e recebe a configuração autorizada através da associação de dispositivo. Instalar outra app VPN na TV não satisfaz o objetivo de integração nativa deste roadmap.
 
-**Entrega atual — M4 LAN:** assistente no PC sem Docker/SSH, YAML de quatro serviços, três endpoints HTTPS no IP privado e Jellyfin sem porta publicada. O Control configura bibliotecas, publica no Directory e cria familiares; a TV valida o fingerprint e configura-se pela própria UI. [Guia e resultados](M4_INSTALACAO_LAN.md). A [recuperação M2](M2_TRUENAS_RECUPERACAO.md) conserva a prova anterior, mas não abrange todo o novo estado Directory/TLS. A transferência inicial e os ACL do NAS são manuais; este perfil não migra instalações existentes.
+**Entrega atual — M4 LAN com recuperação:** assistente no PC sem Docker/SSH, YAML de quatro serviços, três endpoints HTTPS no IP privado e Jellyfin sem porta publicada. O Control configura bibliotecas, publica no Directory e cria familiares; a TV valida o fingerprint e configura-se pela própria UI. O formato 2 inclui o estado NOVA/Directory/Jellyfin/TLS, com nova publicação, permissões e aprovação após restauro. [Guia e resultados](M4_RECUPERACAO_LAN.md). A [recuperação M2](M2_TRUENAS_RECUPERACAO.md) conserva o formato legado. A transferência e os ACL do NAS são manuais; o restauro cria um destino novo, conservando identidades.
 
 **Execução iniciada:** [fase 1](FASE_1_RESULTADOS.md) e [ADR 001](ADR_001_CONNECT_NATIVO.md). Correções e contratos implementados; gates Linux e Docker aprovados na CI. M0 permanece aberto até à prova de incorporação e HTTPS dos três motores. Os modelos indicados são aparelhos de aceitação, não uma lista que limita o produto: a compatibilidade é decidida por SDK, ABI, recursos e capacidades de reprodução. A recolha das versões exatas acontece no ensaio de instalação, sem bloquear o desenvolvimento da base.
 

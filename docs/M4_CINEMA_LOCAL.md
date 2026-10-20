@@ -1,6 +1,6 @@
 # M4 — NOVA Cinema local
 
-Registo do catálogo/player 0.7, aprovado em laboratório em 20-10-2026. **O ponto de instalação atual é [M4 — Instalação LAN](M4_INSTALACAO_LAN.md), com APK 0.8. A M4 continua aberta para aceitação física, assinatura definitiva e recuperação integrada.** A M3 de identidade e permissões mantém-se fechada em laboratório: [M3_FECHO.md](M3_FECHO.md).
+Registo do catálogo/player 0.7, aprovado em laboratório em 20-10-2026. **A entrega atual é [M4 — Recuperação integrada LAN](M4_RECUPERACAO_LAN.md), mantendo a APK 0.8 e o perfil de instalação LAN. A M4 continua aberta para aceitação física e assinatura definitiva.** A M3 de identidade e permissões mantém-se fechada em laboratório: [M3_FECHO.md](M3_FECHO.md).
 
 **Novo perfil LAN:** gerador de instalação nova, bootstrap nativo da TV e criação de familiares no Control implementados. Os resultados e a entrega atual são registados em [Instalação LAN](M4_INSTALACAO_LAN.md); a entrega 0.7 abaixo identifica a prova anterior.
 

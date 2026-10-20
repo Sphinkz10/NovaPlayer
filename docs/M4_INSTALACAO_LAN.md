@@ -1,6 +1,6 @@
 # M4 — Instalação LAN guiada
 
-**Software LAN aprovado em laboratório em 20-10-2026 e entregue para instalação nova de teste.** Este é o guia atual; a [prova anterior do catálogo/player 0.7](M4_CINEMA_LOCAL.md) continua preservada. A M4 mantém pendentes aceitação física, assinatura definitiva e recuperação integrada.
+**Software LAN aprovado em laboratório em 20-10-2026 e entregue para instalação nova de teste.** A [entrega atual de recuperação integrada](M4_RECUPERACAO_LAN.md) mantém este perfil e atualiza a imagem Core; a imagem e os resultados 0.8 abaixo registam a primeira entrega LAN. A M4 mantém pendentes aceitação física e assinatura definitiva.
 
 ## Percurso preparado
 
@@ -64,7 +64,7 @@ O ensaio API 26 revelou que associação e media ainda usavam o TLS do sistema, 
 
 Aceitação física no TrueNAS Community, Xiaomi Box S2 e Chromecast continua pendente. Modelo/geração do Chromecast e versão concreta do TrueNAS continuam por recolher no ensaio físico. Estes testes sintéticos não certificam 4K/HDR/áudio ou desempenho nas boxes.
 
-Este gerador é para instalação NOVA; não migra estado M2/M3/M4 existente nem altera IP/identidade de uma instalação ativa. O backup/restauro M2 anterior não abrange toda esta nova pasta Directory/TLS. Guardar o pacote inicial de forma privada não equivale a um backup atualizado. Recuperação integrada, assinatura definitiva da APK e segurança final mantêm os gates próprios. Certificados de serviço têm validade inicial de um ano; rotação e recuperação exigem preservar as identidades existentes. WireGuard, Tailscale e NetBird completos continuam na M5; SEC-01…12 sem aceitação final.
+Este gerador é para instalação NOVA; não migra estado M2/M3/M4 existente nem altera IP/identidade de uma instalação ativa. O backup/restauro M2 anterior não abrange toda esta nova pasta Directory/TLS; usar agora o [formato LAN completo](M4_RECUPERACAO_LAN.md). Guardar o pacote inicial de forma privada não equivale a um backup atualizado. Assinatura definitiva da APK e segurança final mantêm os gates próprios. Certificados de serviço têm validade inicial de um ano; rotação e recuperação exigem preservar as identidades existentes. WireGuard, Tailscale e NetBird completos continuam na M5; SEC-01…12 sem aceitação final.
 
 ## Entrega verificável
 
