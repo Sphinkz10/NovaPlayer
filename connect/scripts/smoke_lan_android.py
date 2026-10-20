@@ -56,10 +56,16 @@ def run():
         with store._db() as db:db.execute('UPDATE jellyfin_setup SET server_id=?,report=?',
             (jf.sid,json.dumps({'server_id':jf.sid,'libraries':libraries})))
         context=ssl.create_default_context(cafile=str(bundle/'NOVA-LAN-CA.crt'));context.minimum_version=ssl.TLSVersion.TLSv1_3
+        rotation={name:adb('shell','settings','get','system',name).strip()
+                  for name in ('accelerometer_rotation','user_rotation')}
         try:
             # Landscape screenshots on the disposable phone emulator; this does
             # not claim Android TV hardware/launcher certification.
-            adb('shell','wm','size','1280x720');adb('shell','wm','density','160')
+            # Rotate the actual display too: API 26 screencap uses physical
+            # orientation even when the logical wm size is overridden.
+            adb('shell','settings','put','system','accelerometer_rotation','0')
+            adb('shell','settings','put','system','user_rotation','1')
+            adb('shell','wm','size','720x1280');adb('shell','wm','density','160')
             adb('shell','input','keyevent','KEYCODE_WAKEUP');adb('shell','wm','dismiss-keyguard')
             for role in ('directory','admin','client'):
                 identity=nas/'identity'/role
@@ -98,8 +104,9 @@ def run():
                             raw=subprocess.run(['adb','exec-out','screencap','-p'],stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,check=True,timeout=30).stdout
                             assert 1024<len(raw)<=10*1024*1024 and raw[:8]==b'\x89PNG\r\n\x1a\n'
-                            width,height=struct.unpack('>II',raw[16:24]);assert width>height
+                            width,height=struct.unpack('>II',raw[16:24])
                             (out/'screenshots'/(name+'.png')).write_bytes(raw)
+                            assert width>height, f'Expected landscape screenshot, received {width}x{height}'
                             screenshots.append({'name':name+'.png','sha256':hashlib.sha256(raw).hexdigest(),'width':width,'height':height})
                             subprocess.run(['adb','shell','-T','run-as',PACKAGE,'tee','files/lab-screenshot-gate.txt'],
                                 input=name.encode('ascii'),stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,check=True,timeout=10)
@@ -136,6 +143,9 @@ def run():
         finally:
             adb('shell','am','force-stop',PACKAGE)
             adb('shell','wm','size','reset');adb('shell','wm','density','reset')
+            for name,value in rotation.items():
+                if value=='null':adb('shell','settings','delete','system',name)
+                else:adb('shell','settings','put','system',name,value)
             for name in ('lan-fixture.json','mthree-fixture.json'):
                 adb('shell','run-as',PACKAGE,'rm','-f','files/'+name)
             for process in reversed(processes):stop(process)
