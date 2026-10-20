@@ -6,7 +6,7 @@ import hashlib
 import ipaddress
 import json
 import os
-from pathlib import Path
+from pathlib import Path,PurePosixPath
 import re
 import sys
 
@@ -30,6 +30,33 @@ def write(path,data,mode=0o600):
 
 def pem_key(key):
     return key.private_bytes(serialization.Encoding.PEM,serialization.PrivateFormat.PKCS8,serialization.NoEncryption())
+
+
+def render_lan(deployment,*,state_root,media_a,media_b,uid,gid,image,version='24.10'):
+    """Render the same restricted deployment for installation or offline recovery."""
+    validate(deployment);ip=deployment['ip'];ports=deployment['ports']
+    config=legacy_render(state_root,media_a,media_b,uid,gid,image,version)
+    # Canonical dataset paths also keep installation and recovery renders identical.
+    state_root=str(PurePosixPath(state_root))
+    def mount(source,target,ro=False):
+        return {'type':'bind','source':source,'target':target,'read_only':ro,'bind':{'create_host_path':False}}
+    jf=config['services']['jellyfin'];jf.pop('ports',None)
+    config['services']={'jellyfin':jf}
+    for role in ports:
+        service={'image':image,'user':f'{uid}:{gid}','restart':'unless-stopped','read_only':True,
+            'cap_drop':['ALL'],'security_opt':['no-new-privileges:true'],'tmpfs':['/tmp:rw,noexec,nosuid,size=16m'],
+            'command':['python','-m','nova_server.lan_launch',role],
+            'environment':{'NOVA_JELLYFIN_URL':'http://jellyfin:8096','NOVA_STATE_DIR':'/data'},
+            'ports':[f'{ip}:{ports[role]}:{ports[role]}/tcp'],
+            'volumes':[mount(state_root+('/directory' if role=='directory' else '/nova'),'/data'),
+                       mount(state_root+'/identity/'+role,'/identity',True)],
+            'networks':['nova_internal'],
+            'healthcheck':{'test':['CMD','python','-c',
+                "import socket; s=socket.create_connection(('127.0.0.1',"+str(ports[role])+"),3); s.close()"],
+                'interval':'20s','timeout':'5s','start_period':'20s','retries':3}}
+        if role!='directory':service['depends_on']=['jellyfin','nova-directory']
+        config['services']['nova-'+role]=service
+    return config
 
 
 def prepare(output,*,ip,state_root,media_a,media_b,uid,gid,image,version,username,password,ports=None):
@@ -84,25 +111,8 @@ def prepare(output,*,ip,state_root,media_a,media_b,uid,gid,image,version,usernam
              'certificate_pem':leaves['directory'].public_bytes(serialization.Encoding.PEM).decode(),'public_key':registry.identity_public}
     write(nas/'identity/directory/nova-directory.json',(json.dumps(profile)+'\n').encode(),0o644)
 
-    def mount(source,target,ro=False):
-        return {'type':'bind','source':source,'target':target,'read_only':ro,'bind':{'create_host_path':False}}
-    # Jellyfin stays unexposed: only NOVA administration/media may call it on the internal network.
-    jf=config['services']['jellyfin'];jf.pop('ports',None)
-    config['services']={'jellyfin':jf}
-    for role in ports:
-        service={'image':image,'user':f'{uid}:{gid}','restart':'unless-stopped','read_only':True,
-            'cap_drop':['ALL'],'security_opt':['no-new-privileges:true'],'tmpfs':['/tmp:rw,noexec,nosuid,size=16m'],
-            'command':['python','-m','nova_server.lan_launch',role],
-            'environment':{'NOVA_JELLYFIN_URL':'http://jellyfin:8096','NOVA_STATE_DIR':'/data'},
-            'ports':[f'{ip}:{ports[role]}:{ports[role]}/tcp'],
-            'volumes':[mount(state_root+('/directory' if role=='directory' else '/nova'),'/data'),
-                       mount(state_root+'/identity/'+role,'/identity',True)],
-            'networks':['nova_internal'],
-            'healthcheck':{'test':['CMD','python','-c',
-                "import socket; s=socket.create_connection(('127.0.0.1',"+str(ports[role])+"),3); s.close()"],
-                'interval':'20s','timeout':'5s','start_period':'20s','retries':3}}
-        if role!='directory':service['depends_on']=['jellyfin','nova-directory']
-        config['services']['nova-'+role]=service
+    config=render_lan(deployment,state_root=state_root,media_a=media_a,media_b=media_b,
+                      uid=uid,gid=gid,image=image,version=version)
     write(output/'instalar-no-truenas.yaml',(json.dumps(config,ensure_ascii=False,indent=2)+'\n').encode(),0o644)
     fingerprint=hashlib.sha256(leaves['directory'].public_bytes(serialization.Encoding.DER)).hexdigest()
     info={'version':1,'nas_ip':ip,'state_root':state_root,'uid':uid,'gid':gid,'image':image,

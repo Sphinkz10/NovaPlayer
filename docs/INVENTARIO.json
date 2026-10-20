@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 6489,
-      "sha256": "f1f6a8bac35a6ce42de54fbc9178f465540c377536fb790f929962202e53f234"
+      "bytes": 6544,
+      "sha256": "8c7f77ce6ce636850b48e42610b50e8e064d13851e0bcf68bf9be468ee06c228"
     },
     {
       "path": ".gitignore",
@@ -499,6 +499,11 @@
       "sha256": "c876b665e584b080db031deac46ea4cfd6a73d473e65746442f00772425d732b"
     },
     {
+      "path": "docs/M4_RECUPERACAO_LAN.md",
+      "bytes": 5917,
+      "sha256": "2030c0d9567ab5ab9588ff1e0fe2a483faa994b1cca02b4e59471817d78b5784"
+    },
+    {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
       "bytes": 23945,
       "sha256": "186c72375279a02ff160a683732016c9b0d38f3c338577ea9684b0708c5a7a1f"
@@ -640,8 +645,8 @@
     },
     {
       "path": "server/nova_server/directory_proof.py",
-      "bytes": 1193,
-      "sha256": "1e7018db07d15a549ef4e47f8a7b15d2912bd4527535ee643c2e3a76cbc577d2"
+      "bytes": 1878,
+      "sha256": "af5f0dde226490327332e65cdbfbdee1e6a66fa1a1e852912428cb44881b6922"
     },
     {
       "path": "server/nova_server/jellyfin.py",
@@ -695,8 +700,8 @@
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 24518,
-      "sha256": "1797818c0c63559f9a49a4cff190d1526b5b06586e9840b2b6bfd1e8ff76df16"
+      "bytes": 24611,
+      "sha256": "e68e708c9694612fe7c08c6c45d81731e44799bb3fb076068ddc951d9fab45fd"
     },
     {
       "path": "server/nova_server/static/index.html",
@@ -770,8 +775,13 @@
     },
     {
       "path": "server/scripts/lan_install.py",
-      "bytes": 11039,
-      "sha256": "adc57aca228b5770a62c626662b4c44ed6efff7e0519232f7e527928646628e1"
+      "bytes": 11578,
+      "sha256": "76ceafa8e342a2995705f3b4e14564fa39eed9543ddfcac0a0d3eeed9d4f98db"
+    },
+    {
+      "path": "server/scripts/lan_recovery.py",
+      "bytes": 14353,
+      "sha256": "fc83e6aaa7b395ec1f95a8bd70786aacb8eca0b91153f9166505c85099eaaa72"
     },
     {
       "path": "server/scripts/lock_dependencies.py",
@@ -790,8 +800,8 @@
     },
     {
       "path": "server/scripts/recovery.py",
-      "bytes": 11973,
-      "sha256": "d5cc2d3d00fdbd788c9273de9ccf2a490c8b806e4dc66d4c25aba6107b2ebb36"
+      "bytes": 15798,
+      "sha256": "53140448c5f78e1639c7ebc69b07dcec2249860b49f12853eaa810c0957b774e"
     },
     {
       "path": "server/scripts/smoke_browser.py",
@@ -825,8 +835,13 @@
     },
     {
       "path": "server/scripts/smoke_lan_compose.py",
-      "bytes": 10700,
-      "sha256": "d399cd37e41051fcb5bc8f023d309abc2b090fbc7c2bf0411bf912129bbeff7e"
+      "bytes": 11144,
+      "sha256": "b979e897a02fa9403d3bcb1bb064bd00f2f21b229c0972796cd2c0f865a02591"
+    },
+    {
+      "path": "server/scripts/smoke_lan_recovery.py",
+      "bytes": 10666,
+      "sha256": "5af405d80b9405cd8a57133ea8afcb88d0cbb52a071caa46328e076963611590"
     },
     {
       "path": "server/scripts/smoke_m3_control.py",
@@ -902,6 +917,11 @@
       "path": "server/tests/test_lan.py",
       "bytes": 6597,
       "sha256": "4d9d0da1a321187334dcf837a76338e1b8d085537e7f44f8ab9285e519ecc8e9"
+    },
+    {
+      "path": "server/tests/test_lan_recovery.py",
+      "bytes": 10124,
+      "sha256": "2694e7a1b0204f7ccee2c2041250fe494e6cc4d7a600463776944a9274aa7427"
     },
     {
       "path": "server/tests/test_m3_identity.py",

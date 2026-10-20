@@ -199,7 +199,7 @@ function showDirectory(data){
  el('directoryActions').hidden=!data.enabled;
  directoryReady=data.identity==='ready';directoryCanRenew=Boolean(data.renewal_available);directoryButtons();
  if(!data.enabled){write(el('directoryStatus'),'Directory desativado. O operador deve configurar o serviço e a confiança TLS localmente.');return;}
- const states={not_checked:'Ainda não verificado',published_at_check:'Publicação aceite na última operação',renewed_at_check:'Renovado na última operação',listed_at_check:'Encontrado na última verificação',not_listed_at_check:'Ausente na última verificação',expired:'Última publicação expirada',invalid_receipt:'Não foi possível validar a publicação guardada',identity_error:'Identidade local inválida'};
+ const states={not_checked:'Ainda não verificado',published_at_check:'Publicação aceite na última operação',renewed_at_check:'Renovado na última operação',listed_at_check:'Encontrado na última verificação',not_listed_at_check:'Ausente na última verificação',expired:'Última publicação expirada',recovery_republish_required:'Estado recuperado. Publica novamente com a conta proprietária',invalid_receipt:'Não foi possível validar a publicação guardada',identity_error:'Identidade local inválida'};
  let text=data.origin+' · '+(states[data.state]||'Estado por verificar')+'.';
  if(data.fingerprint)text+=' Identidade: '+data.fingerprint+'.';
  if(data.checked_at)text+=' Observado em '+new Date(data.checked_at*1000).toLocaleString('pt-PT')+'.';

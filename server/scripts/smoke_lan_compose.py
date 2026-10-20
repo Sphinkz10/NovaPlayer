@@ -135,6 +135,10 @@ def run():
                     'image':'exact supplied image' if os.environ.get('NOVA_TEST_IMAGE') else 'locally built fixture image'}
                 out=Path(os.environ.get('NOVA_EVIDENCE_DIR','server/test-results/lan'));out.mkdir(parents=True,exist_ok=True)
                 (out/'lan-server.json').write_text(json.dumps(report,indent=2),encoding='utf8');print(json.dumps(report))
+                from smoke_lan_recovery import run as recover_lan
+                recovered=recover_lan(root,bundle,image,project,info,client,compose,owner=owner,admin=admin,credentials=credentials,
+                    family=family,family_password=family_password,tokens=tokens,selected=selected,profile=profile)
+                (out/'lan-recovery.json').write_text(json.dumps(recovered,indent=2),encoding='utf8');print(json.dumps(recovered))
         finally:
             subprocess.run(['docker','compose','-p',project,'down','--volumes','--remove-orphans'],cwd=root,
                            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False)
