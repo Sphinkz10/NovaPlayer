@@ -97,7 +97,14 @@ class Media:
     async def item(self, client, uid, library, item):
         media_id(item)
         # IDs alone are insufficient: require membership under the selected permitted root.
-        data = await self.query(client, uid, library, Ids=item, Limit=1)
+        try:
+            data = await self.query(client, uid, library, Ids=item, Limit=1)
+        except SetupError as error:
+            # Jellyfin may return 401/403 rather than an empty list for a foreign
+            # item. The account/policy were already checked; hide item existence.
+            if error.code == 'jellyfin_credentials_rejected':
+                raise DeviceError('unknown_media', 404) from None
+            raise
         if not isinstance(data, dict) or not isinstance(data.get('Items'), list):
             raise SetupError('jellyfin_invalid_media')
         found = data['Items']

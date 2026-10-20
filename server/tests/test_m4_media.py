@@ -38,6 +38,7 @@ def catalog(members, monkeypatch):
                             if members.fixture_libs[i]['id']==library and library in folders]
                 ids = request.url.params.get('Ids')
                 if ids: selected = [i for i in selected if i['Id']==ids]
+                if ids and not selected:return httpx.Response(401)
                 search = request.url.params.get('SearchTerm','')
                 selected = [i for i in selected if search in i['Name']]
                 return httpx.Response(200,json={'Items':selected,'TotalRecordCount':len(selected)})
