@@ -6,6 +6,8 @@
 
 **Desenvolvimento em paralelo — M5:** [WireGuard nativo → HTTPS NOVA](M5_WIREGUARD_REDE.md) aprovado em laboratório, API 26/35 e peer Linux real. A [inscrição por TV](M5_INSCRICAO_WIREGUARD.md) já gera a chave no Android e permite aprovação/revogação no Control. Próximo incremento: adaptador restrito do gateway, com aplicação e remoção idempotentes e estado real confirmado. O gateway instalável, bootstrap remoto e jornadas Tailscale/NetBird mantêm os próprios gates; a entrega LAN 0.9 permanece disponível.
 
+**Instalação de teste atual:** APK 0.9 original com a nova imagem do servidor LAN por digest, indicada no guia M5. Esta imagem inclui as correções SQLite e `certifi==2026.10.19`; usar fontes/locks novos ao preparar o servidor. Inscrição WireGuard: 24/24 verificações em cada emulador API 26/35. A aprovação no Control ainda não instala peers num gateway de produto.
+
 | Quando instalar/testar | O que permite |
 |---|---|
 | Servidor de teste — M2 | Configurar proprietário, Jellyfin e duas origens; imagem Docker e recuperação já ensaiadas. TrueNAS físico continua pendente |

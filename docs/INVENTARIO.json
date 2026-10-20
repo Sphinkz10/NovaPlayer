@@ -495,8 +495,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2171,
-      "sha256": "71532454109799702c80bef137ec6acf28136b34c49af3a14e239deada4145e6"
+      "bytes": 2304,
+      "sha256": "71cb3c1b2c9e08cee9975122db3fdf6178484dea66f971510b4aa0e7dfc67b8f"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -565,8 +565,8 @@
     },
     {
       "path": "docs/M5_INSCRICAO_WIREGUARD.md",
-      "bytes": 7485,
-      "sha256": "c4a8af3878029dc3fb08366d437c3fff1e668d55a748e6c62d302861e8f2a4fd"
+      "bytes": 10404,
+      "sha256": "d2c71449974cb4ae0e5249df06d8bb176a8e5c66d2e065d4c621982083ba8483"
     },
     {
       "path": "docs/M5_WIREGUARD_REDE.md",
@@ -595,8 +595,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 28129,
-      "sha256": "56f55403f09e999aad4d7e11311376b52f3cec05a87db31c400a97be8c00d4a4"
+      "bytes": 28507,
+      "sha256": "cf3da7f0f4e19cb28140d3ecafa02ca758ead06f4dabd1bbdc3e88f61fcf35f1"
     },
     {
       "path": "scripts/inventory.py",

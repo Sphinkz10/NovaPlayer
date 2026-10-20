@@ -5,7 +5,7 @@ O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias
 | Marco | Estado e limite |
 |---|---|
 | M1 — base | Implementada e testada |
-| M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. Aceitação no TrueNAS físico pendente |
+| M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. [Imagem atualizada](M5_INSCRICAO_WIREGUARD.md#correções-no-servidor-lan) corrige arranque concorrente SQLite e atualiza `certifi`. Aceitação no TrueNAS físico pendente |
 | M3 — identidade e permissões | Concluída no software de laboratório: login Directory na TV, prova assinada de conta, aprovação, bibliotecas Jellyfin limitadas, renovação e revogação. Sete critérios aprovados; CI 8/8, API 26/35 e Docker real. Ver evidências no documento único |
 | M4 — primeiro filme local | Instalação LAN, configuração TV, catálogo/player e recuperação integrada aprovados em laboratório. [Distribuição atual](M4_DISTRIBUICAO_ANDROID.md): pacote NOVA Cinema próprio, não depurável e com assinatura persistente offline; manter a chave privada e uma cópia de recuperação separada. Aceitação física pendente |
 | M5 — ligação remota | [Prova WireGuard → HTTPS NOVA](M5_WIREGUARD_REDE.md) aprovada em API 26/35. [Inscrição por TV e aprovação no Control](M5_INSCRICAO_WIREGUARD.md) implementadas em laboratório, com chave privada criada e guardada no Android. Falta adaptador/instalação real do gateway e percurso remoto completo. Tailscale e NetBird nativos continuam obrigatórios e sem prova HTTPS |

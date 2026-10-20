@@ -38,7 +38,22 @@ O harness descartável lê a chave aprovada, instala-a no WireGuard Linux e conf
 
 Também se verifica persistência após reinício do processo, rejeição de outra associação, adulteração do ciphertext, perda da chave Keystore e limpeza ao esquecer a associação. Os relatórios publicados não contêm a fixture privada ou material de chave.
 
-Resultados e proveniência CI: pendentes de registo após a execução desta revisão.
+**Validação concluída em 20-10-2026.** Revisão executável `acf84c3505bd5d9f8aa28bb598f03ca9d0d8ef22`; o merge CI `b54663918b6ebddef81faa033c27cbeb0584b256` tem a mesma árvore. Os digests dos artefactos GitHub e os hashes das APKs experimentais foram conferidos. Os quatro workflows desta revisão passaram à primeira tentativa:
+
+- [WireGuard API 26/35](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39497076446): 24/24 verificações em cada, incluindo inscrição e aprovação reais.
+- [CI principal](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39497076520): 8/8 jobs. Linux Python 3.12/3.13: 329 aprovados cada; Windows: 323 aprovados e 6 exclusões POSIX cada. Kotlin: 203; build/lint, auditoria de dependências, Docker e imagem exata aprovados.
+- [Associação/player/LAN API 26/35](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39497076507) e [distribuição/update API 26/35](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39497076503): aprovados. A distribuição é ensaiada com chaves descartáveis; a assinatura privada real não entra na CI.
+
+| Observação no gateway real | API 26 | API 35 |
+|---|---|---|
+| Handshake | Observado | Observado |
+| Bytes recebidos/enviados | 8452 / 9212 | 8532 / 9356 |
+| Pacotes recusados pelo firewall | 6 | 6 |
+| Verificações completas | 24/24 | 24/24 |
+
+O percurso Control no navegador passou com 12 verificações em Linux e Windows, incluindo impressão digital, aprovação sem alegar instalação e revogação da conta. Localmente: 323 testes aprovados, 6 exclusões POSIX, 203 testes Kotlin, build/lint e ensaio TLS real aprovados. Os contadores de rede não são uma medição de bitrate ou reprodução remota.
+
+A pasta local `NOVA_M5_INSCRICAO_2026-10-20` inclui fontes, relatórios, hashes, a APK 0.9 original e o novo digest do servidor. `M5_INSCRICAO_RESULTADOS.json` distingue fonte empacotada, revisão executável, merge CI, APK preservada e imagem atualizada. A documentação final e inventários são as únicas diferenças posteriores à revisão testada.
 
 ## Correções no servidor LAN
 
@@ -47,6 +62,22 @@ A criação/migração da base SQLite passa a ser serializada entre processos. B
 `certifi==2026.10.19` foi fixado nos três locks, com hashes conferidos no PyPI, após o alerta [GHSA-6q48-6c7w-9gw2](https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2). A [versão publicada](https://pypi.org/project/certifi/2026.10.19/) substitui as versões anteriores do bundle de confiança. Esta alteração não desliga verificação de certificados ou nomes; o ensaio TLS real continua a recusar CA desconhecida, hostname errado e fallback HTTP.
 
 Usar o novo digest de imagem e fontes desta entrega para preparar o servidor de teste. As entregas anteriores permanecem como histórico e para conservar a APK/assinatura; os seus locks e imagens não recebem esta correção automaticamente. Fazer backup offline antes de atualizar uma instalação existente. O gerador LAN continua destinado a um dataset novo, sem modificar um estado ativo.
+
+Imagem Linux/amd64 publicada e novamente ensaiada em Docker antes da publicação:
+
+```text
+ghcr.io/sphinkz10/nova-core@sha256:b50a959772122c0d3b6fce71cbb1717c5a6c2fab82c70edb541509ff1339dd56
+```
+
+Na entrega, extrair o ZIP para obter `NOVA_Fase1`, criar uma venv Python 3.12/3.13 e executar a partir desse projeto:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --require-hashes -r server/requirements-directory.txt
+.\.venv\Scripts\python.exe server/scripts/lan_install.py --output ..\NOVA_LAN_NOVA --image-file ..\servidor\IMAGE.txt
+```
+
+Seguir o guia gerado para datasets/ACL, transferência manual, Apps Docker e configuração. Usar a APK assinada 0.9 que acompanha a entrega, configurar Directory/fingerprint na TV e aprovar a associação. A instalação LAN não ativa WireGuard/Tailscale/NetBird. Antes de instalar, conferir versão concreta do TrueNAS e arquitetura suportada; esta imagem não é ARM.
 
 ## Falta para WireGuard instalável
 
