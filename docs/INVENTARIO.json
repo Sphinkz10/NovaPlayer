@@ -35,8 +35,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 6544,
-      "sha256": "8c7f77ce6ce636850b48e42610b50e8e064d13851e0bcf68bf9be468ee06c228"
+      "bytes": 6402,
+      "sha256": "d7407c5c432822ee65c09fa6548dd85a1ff8a4bc7f7546e27f0a4b25751f996b"
     },
     {
       "path": ".github/workflows/wireguard-network.yml",
@@ -85,8 +85,8 @@
     },
     {
       "path": "connect/README.md",
-      "bytes": 8031,
-      "sha256": "7606814aeec818aef777a107ca3e848fbb40ab5cbf8729a57ca05d680633a329"
+      "bytes": 7942,
+      "sha256": "bdbe38ac609bcac51176b27bdd46e48fe0b49e3e30ed4fb40d609fc90318a724"
     },
     {
       "path": "connect/app/build.gradle.kts",
@@ -95,8 +95,8 @@
     },
     {
       "path": "connect/app/gradle.lockfile",
-      "bytes": 53111,
-      "sha256": "311d26e054dbb238e8586251b1fb4892438bc9fe2818a8671e67c2f6552715d2"
+      "bytes": 52959,
+      "sha256": "ddbf9bef1a3d9cce24b0cc2f29df53306a26f13713283b2109b0548e16977d03"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/DevicePairingInstrumentation.kt",
@@ -265,8 +265,8 @@
     },
     {
       "path": "connect/core/gradle.lockfile",
-      "bytes": 3137,
-      "sha256": "c296e6fb9ef0566df21b077133a6be80d081ee7f763082bbbd6b1c56f07d2580"
+      "bytes": 3115,
+      "sha256": "02344a314090aed45bb5da7dee953ea159d9e22d1268ebd46d02413a72bc724d"
     },
     {
       "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/ConnectionPolicy.kt",
@@ -350,8 +350,8 @@
     },
     {
       "path": "connect/gradle/verification-metadata.xml",
-      "bytes": 148354,
-      "sha256": "c2c9f4ebed96c47689fa77c49a27566036d1bfe5b2ddcde7b0d12e550a9c58dd"
+      "bytes": 146037,
+      "sha256": "e4f70996c7f49496f271bdc5b1f331f9d85b3e127f77c653e663a15ef30a1238"
     },
     {
       "path": "connect/gradle/wrapper/gradle-wrapper.jar",
@@ -510,43 +510,43 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 2726,
-      "sha256": "374cb41fbb6407c460af94c3681d0bd5ded908b8038b84907c9793ea7433684e"
+      "bytes": 2699,
+      "sha256": "230cac2f71d31503a86a33de78db832e18c4bf593a787205f501e818935d0859"
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
-      "bytes": 6515,
-      "sha256": "8094a7b435ca2a4776e8b0ad5e553b0e6d1698cf8d7343cf2a801af80ae470d6"
+      "bytes": 6449,
+      "sha256": "a2098f3460b96bc5150686f17f7d1237cad46afc2eda92e8458ab2fa4697d6f3"
     },
     {
       "path": "docs/M2_TRUENAS_RECUPERACAO.md",
-      "bytes": 10900,
-      "sha256": "eef7803ffa85b4cd9d8c03347d84c2516f37f750a503abc42393c26112a342a3"
+      "bytes": 10803,
+      "sha256": "37344ab6a4095b78ce58c9686b64b7cb7b8d846465729af5350a73c2955ee670"
     },
     {
       "path": "docs/M3_ASSOCIACAO_DISPOSITIVOS.md",
-      "bytes": 7423,
-      "sha256": "57f75a4c5238b172cef2483199060f926be62c22a42548d38389066e749faeb6"
+      "bytes": 7367,
+      "sha256": "e97d9c4f6927303b50c33a5331e4225563143374bad6487328fd08825e27b0b4"
     },
     {
       "path": "docs/M3_CLIENTE_ANDROID.md",
-      "bytes": 8043,
-      "sha256": "4d35c3257e7468698a1422e33e4caa956394b2a8d4e5b3a8da8cc1d7aed3aef7"
+      "bytes": 7983,
+      "sha256": "31cd04798a2f74acc442c9865c0018db24d755a2322d0cbd02a2f951a9305924"
     },
     {
       "path": "docs/M3_DIRECTORY_CONTROL.md",
-      "bytes": 6236,
-      "sha256": "cbfb908d9f7d75e6ecdc6793191350ce001ed67c3b4d9d4ff91ae5285fb332b1"
+      "bytes": 6177,
+      "sha256": "b2d649c75714ac48f961a1a265488225472b402c94c98ec12040b000a9ab01eb"
     },
     {
       "path": "docs/M3_DIRECTORY_LAB.md",
-      "bytes": 9739,
-      "sha256": "0af940ba06d82423b3d156beede24da2efa96618e8dd951ed77e94c10feb0c88"
+      "bytes": 9662,
+      "sha256": "95c41151352ddf8b0d9eb41493a55f8f9e8bf65a18b6e0a2f966dcc0e9690654"
     },
     {
       "path": "docs/M3_FECHO.md",
-      "bytes": 12297,
-      "sha256": "24c6aac800822ffd181fc1224884d50260c98b2fe84eaaecd37e725ab79f9959"
+      "bytes": 12185,
+      "sha256": "220a622a42f22aa73ff39777dc8c00d96dcd2d98bd4e7793bc6580cba5354281"
     },
     {
       "path": "docs/M4_CINEMA_LOCAL.md",
@@ -700,8 +700,8 @@
     },
     {
       "path": "server/README.md",
-      "bytes": 12265,
-      "sha256": "576d7cd94872e52923911d615f9f5fd47f61a1ed865ed38105bb4f355ee39de3"
+      "bytes": 12111,
+      "sha256": "fba8bef15a37f7b2ef65e740f3a6595f3adbe317d2b9f36eb98e4ebbb17ab3f1"
     },
     {
       "path": "server/compose.yaml",
@@ -830,8 +830,8 @@
     },
     {
       "path": "server/nova_server/setup.py",
-      "bytes": 11767,
-      "sha256": "b8cc414d156d27e4a26a6599b953ced69caa26a9833d860d39476f659d2356ae"
+      "bytes": 11552,
+      "sha256": "b9f91eb1252f468a996006c30eeaf13da80d80845c90838b621f885d395d0617"
     },
     {
       "path": "server/nova_server/static/control.css",
@@ -955,13 +955,13 @@
     },
     {
       "path": "server/scripts/smoke_browser.py",
-      "bytes": 10752,
-      "sha256": "afe1a2d63d741c494a39a5e83ccdb1f80e24343830ef9ba47e0ff88f2309f8d8"
+      "bytes": 10576,
+      "sha256": "b5db8b254c53e99038720e64cf564549a7281590bb6a5057d86badcfd3645d87"
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 19208,
-      "sha256": "550992d2a449b0c45d792e09b722d332ff33f660031a58443c6109149270dc3c"
+      "bytes": 18921,
+      "sha256": "9e741eb5680e16dfcce86d7ea0b540c04c12c33cd1cab9b080ed116debf15bd2"
     },
     {
       "path": "server/scripts/smoke_devices_tls.py",
@@ -1040,8 +1040,8 @@
     },
     {
       "path": "server/tests/test_devices.py",
-      "bytes": 14511,
-      "sha256": "c8b7fa4bfd2518d9d120043e4286b4427f26bfd3fd8630ea88c6bddeed37c71d"
+      "bytes": 14223,
+      "sha256": "4ffceae517848bfe49230dd4a04b9b059c7487f619274314f8fab7de32d907a6"
     },
     {
       "path": "server/tests/test_directory.py",
