@@ -170,6 +170,8 @@ class GatewayPublisher:
                 if len(set(addresses)) != len(addresses):
                     return unavailable
                 return {**unavailable, 'state': 'configuration_observed', 'configuration_observed': True,
-                        'observed_at': report['observed_at'], 'expires_at': snapshot.expires_at, 'peers': peers}
+                        'observed_at': report['observed_at'], 'expires_at': snapshot.expires_at,
+                        'valid_for_seconds': max(0, min(snapshot.expires_at-now, entry[1]-self.monotonic())),
+                        'peers': peers}
             except (OSError, ValueError, TypeError, KeyError, GatewayError):
                 return unavailable

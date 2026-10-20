@@ -100,6 +100,16 @@ def test_expiry_uses_monotonic_clock_and_changed_plan_id_cannot_extend_existing_
     publisher.publish(); assert worker.tick()  # only a fresh, authenticated plan may apply
 
 
+def test_control_countdown_uses_remaining_server_monotonic_validity(service):
+    _, clock, _, _, publisher, _, _, worker = service
+    publisher.publish(); assert worker.tick()
+    assert publisher.status()['valid_for_seconds'] == 15
+    clock.mono += 7
+    assert publisher.status()['valid_for_seconds'] == 8
+    clock.wall += 14
+    assert publisher.status()['valid_for_seconds'] == 1
+
+
 def test_readback_failure_or_unreachable_gateway_never_reports_removal_success(service):
     _, _, channel, _, publisher, backend, _, worker = service
     publisher.publish(); backend.lie = True

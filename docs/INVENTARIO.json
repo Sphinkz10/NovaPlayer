@@ -805,8 +805,8 @@
     },
     {
       "path": "server/nova_server/gateway_channel.py",
-      "bytes": 8269,
-      "sha256": "b021e14c619754104b4e7577b35c33e7302db0310df78d5f7e4b7906653e48bc"
+      "bytes": 8403,
+      "sha256": "f223e9d081207c5d045b69ab96de8aea1135d04a0d96d14181ec2c31ae0f560e"
     },
     {
       "path": "server/nova_server/gateway_service.py",
@@ -865,8 +865,8 @@
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 28848,
-      "sha256": "b3e5a2921cb806ce5e8e35ee7c4b8b03a7e988cb10a371061969688bb06855ea"
+      "bytes": 28934,
+      "sha256": "e079b7d298e7a97485e57a6f3edfc94893420b26a6de6915223552490564e111"
     },
     {
       "path": "server/nova_server/static/index.html",
@@ -1080,8 +1080,8 @@
     },
     {
       "path": "server/tests/test_gateway_service.py",
-      "bytes": 12584,
-      "sha256": "1d4aedca6c96c9048c6d790e2b6e95942f94a8a3f483bad21911a03152ba1931"
+      "bytes": 12974,
+      "sha256": "3b8e8904c5fbb7e3d1b57c08bff26cd73b90d190fdca0bcee5fdcfd84e065a40"
     },
     {
       "path": "server/tests/test_installer.py",

@@ -197,6 +197,7 @@ async function loadWireGuardEnrollments(){
  if(!r.ok){write(el('wireguardMessage'),'Pedidos indisponíveis. Volta a entrar e atualiza.');return;}
  const data=await r.json();if(token!==session||generation!==wireguardGeneration)return;
  let gateway={state:'not_verified',peers:[]};
+ const gatewayRequestStarted=performance.now();
  try{const result=await fetch('/api/v1/admin/connect/wireguard/gateway',{headers:{Authorization:'Bearer '+session},cache:'no-store'});
   if(result.ok)gateway=await result.json();
  }catch{}
@@ -234,7 +235,7 @@ async function loadWireGuardEnrollments(){
    if(token!==session||generation!==wireguardGeneration)return;
    write(el('wireguardGateway'),'Observação do gateway expirada. Atualiza para verificar novamente.');
    for(const title of list.querySelectorAll('[data-unverified-text]'))title.textContent=title.dataset.unverifiedText;
-  },Math.max(0,gateway.expires_at*1000-Date.now()));
+  },Math.max(0,gateway.valid_for_seconds*1000-(performance.now()-gatewayRequestStarted)));
  }
 }
 el('logout').addEventListener('click',()=>{wireguardGeneration++;clearTimeout(wireguardExpiry);write(el('wireguardGateway'),'Gateway por confirmar.');el('wireguardEnrollments').replaceChildren();});
