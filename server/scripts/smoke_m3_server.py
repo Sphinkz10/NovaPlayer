@@ -1,4 +1,4 @@
-"""Integrated M3 proof against the disposable Docker Jellyfin; no media gateway/player."""
+"""Integrated M3 and M4 gateway proof against disposable Docker Jellyfin."""
 import json
 import os
 from pathlib import Path
@@ -54,6 +54,7 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
         with M3Lab(folder,jellyfin_url,state=state,owner=owner,jellyfin_credentials=jellyfin_credentials,
                    libraries=libraries,jellyfin_id=report['server_id']) as lab:
             alice,assertion_a=lab.pair('alice',0);bruno,_=lab.pair('bruno',1)
+            media_items=[]
             for index,tokens in enumerate((alice,bruno)):
                 auth={'Authorization':'Bearer '+tokens['access_token']}
                 result=lab.tv.get('/api/v1/device/libraries',headers=auth)
@@ -79,6 +80,31 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
                     # This resource explicitly requires administrative elevation.
                     system=jf.get('/System/Configuration/MetadataOptions/Default',headers=restricted)
                     assert system.status_code in (401,403), 'Restricted Jellyfin user retained administrative access'
+                media='/api/v1/media/libraries/'+libraries[index]['id']+'/items'
+                catalog=lab.tv.get(media,headers=auth)
+                assert catalog.status_code==200 and len(catalog.json()['items'])==1, 'NOVA media catalog failed'
+                item=catalog.json()['items'][0]['id'];media_items.append(item)
+                detail=lab.tv.get(media+'/'+item,headers=auth)
+                assert detail.status_code==200 and detail.json()['method']=='DirectPlay', 'NOVA detail failed'
+                assert not any(value in detail.text for value in ('/media/','AccessToken','MediaSources','Path'))
+                chunk=lab.tv.get(media+'/'+item+'/stream',headers={**auth,'Range':'bytes=0-255'})
+                assert chunk.status_code==206 and len(chunk.content)==256, 'NOVA Range stream failed'
+                assert 'ftyp' in chunk.content[:32].decode('latin1'), 'NOVA original MP4 bytes missing'
+                total=int(chunk.headers['Content-Range'].split('/')[1])
+                tail=lab.tv.get(media+'/'+item+'/stream',headers={**auth,'Range':f'bytes={total-128}-{total-1}'})
+                assert tail.status_code==206 and len(tail.content)==128, 'NOVA seek range failed'
+                for event in ('start','progress','stop'):
+                    result=lab.tv.post(media+'/'+item+'/events',headers=auth,json={
+                        'event':event,'position_ticks':0 if event=='start' else 1800000000,'paused':event!='start'})
+                    assert result.status_code==200, 'Jellyfin playback event failed'
+                resumed=lab.tv.get(media+'/'+item,headers=auth)
+                assert resumed.status_code==200 and resumed.json()['item']['position_ticks']==1800000000, 'Jellyfin resume missing'
+            for index,tokens in enumerate((alice,bruno)):
+                auth={'Authorization':'Bearer '+tokens['access_token']}
+                own='/api/v1/media/libraries/'+libraries[index]['id']+'/items/'
+                foreign='/api/v1/media/libraries/'+libraries[1-index]['id']+'/items'
+                assert lab.tv.get(foreign,headers=auth).status_code==404
+                assert lab.tv.get(own+media_items[1-index]+'/stream',headers=auth).status_code==404
             replay=lab.tv.post('/api/v1/device/authorize',json={'label':'replay','assertion':assertion_a})
             assert replay.status_code==409
             directory=lab.directory_client('bruno')
@@ -89,6 +115,8 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
             assert renewed.status_code==200 and renewed.json()['version']==2
             revoked=lab.admin.delete('/api/v1/admin/devices/'+alice['device_id']);assert revoked.status_code==200
             assert lab.tv.get('/api/v1/device/libraries',headers={'Authorization':'Bearer '+alice['access_token']}).status_code==401
+            assert lab.tv.get('/api/v1/media/libraries/'+libraries[0]['id']+'/items/'+media_items[0]+'/stream',
+                              headers={'Authorization':'Bearer '+alice['access_token']}).status_code==401
             revoked=lab.admin.delete('/api/v1/admin/members/'+lab.accounts['bruno']);assert revoked.status_code==200
             assert lab.tv.post('/api/v1/device/refresh',json={'refresh_token':bruno['refresh_token']}).status_code==401
             return {'result':'passed','jellyfin':'real Docker','nova_instances':2,'jellyfin_instances':1,
@@ -96,7 +124,10 @@ def run(state,jellyfin_url,owner,jellyfin_credentials):
                           'nova_library_isolation','jellyfin_library_isolation','jellyfin_admin_denied',
                           'device_token_not_admin','cross_server_token_denied','cross_server_assertion_denied',
                           'assertion_replay_denied','scoped_renewal_without_password','device_revocation','account_revocation'],
-                'catalog':False,'playback':False,'physical_nas':False}
+                'm4_checks':['catalog_two_sources','detail_sanitized','original_mp4_range','seek_range',
+                             'jellyfin_progress_and_resume','cross_library_media_denied','revoked_media_denied'],
+                'catalog':True,'playback':'original bytes and Jellyfin progress; decode tested separately on Android',
+                'physical_nas':False}
 
 
 if __name__=='__main__':

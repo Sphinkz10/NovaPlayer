@@ -122,7 +122,7 @@ class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
         val descriptor = json.getJSONObject("descriptor")
         if (json.string("scope") != "device:read" || descriptor.integer("schema_version") != 1 ||
             descriptor.string("server_id") != json.string("server_id") ||
-            listOf("media_enabled", "remote_access_enabled").any { descriptor.get(it) != false } ||
+            descriptor.get("media_enabled") !is Boolean || descriptor.get("remote_access_enabled") != false ||
             descriptor.get("directory_enabled") !is Boolean)
             throw DeviceProtocolFailure()
         val account=if(json.isNull("account_id"))null else json.string("account_id").also { require(ServerTrust.validId(it)) }
@@ -132,7 +132,7 @@ class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
     fun permissions(saved:SavedDevice):List<Pair<String,String>> {
         val data=request("libraries",access=saved.tokens.access)
         require(data.string("server_id")==trust.serverId && data.string("device_id")==saved.tokens.deviceId &&
-            data.string("account_id")==saved.accountId && data.get("media_enabled")==false && data.get("catalog_enabled")==false)
+            data.string("account_id")==saved.accountId && data.get("media_enabled") is Boolean && data.get("catalog_enabled") is Boolean)
         val values=data.getJSONArray("libraries");require(values.length()<=2)
         return (0 until values.length()).map { i ->
             val lib=values.getJSONObject(i);val id=lib.string("id");val name=lib.string("name")

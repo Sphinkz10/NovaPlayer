@@ -2,6 +2,8 @@
 
 **Atualização:** 20-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
+**Fase em execução:** [M4 — Cinema local](M4_CINEMA_LOCAL.md), com catálogo e player implementados e validação integrada em curso.
+
 | Quando instalar/testar | O que permite |
 |---|---|
 | Servidor de teste — M2 | Configurar proprietário, Jellyfin e duas origens; imagem Docker e recuperação já ensaiadas. TrueNAS físico continua pendente |
@@ -118,11 +120,11 @@ Definir storage persistente e permissões por dataset, recursos mínimos medidos
 
 ### M3 — Identidade independente da VPN
 
-**Incremento implementado:** associação no servidor com aprovação no Control, API HTTPS isolada, credenciais rotativas e revogação. [Estado e ensaio M3](M3_ASSOCIACAO_DISPOSITIVOS.md). O cliente Android de laboratório agora inclui associação, Keystore e confirmação de identidade importada ([guia](M3_CLIENTE_ANDROID.md)). A integração Directory na TV, o bootstrap/renovação TLS integrados e as permissões de media permanecem pendentes; não considerar o marco concluído.
+**M3 concluída no software de laboratório:** login Directory na TV, prova de conta, aprovação, continuidade TLS, bibliotecas Jellyfin limitadas, renovação e revogação. Os sete critérios e evidências estão consolidados em [M3_FECHO.md](M3_FECHO.md).
 
 **Prova de 19-10-2026:** associação Android aprovada em emuladores API 26 e 35, com 11 etapas cada. Já existe APK para ensaiar associação em laboratório com o PC; não liga automaticamente ao NAS nem reproduz filmes. A primeira utilização local com biblioteca e vídeo continua a ser M4. Aceitação física das boxes e do TrueNAS permanece pendente.
 
-**Incremento Directory:** [serviço privado executável](M3_DIRECTORY_LAB.md), com contas, registo assinado, descoberta por conta e partilha/revogação. CLI e percurso HTTPS real implementados. O Control já permite inicializar identidade, publicar/renovar manualmente e verificar o registo ([guia](M3_DIRECTORY_CONTROL.md)). Falta integrar a TV, automatizar renovação com credenciais adequadas, preservar continuidade de confiança e ligar permissões Jellyfin. O serviço é separado e não foi publicado na Internet.
+**Directory:** serviço privado integrado com o Control e a TV, renovação limitada e revogável e continuidade de confiança aprovadas em laboratório. Não foi publicado na Internet. Os guias de incrementos anteriores são históricos.
 
 O Directory autentica, associa conta e servidor e fornece descoberta autenticada; não recebe biblioteca, histórico, vídeo ou segredos administrativos dos fornecedores. Registar servidor com chave própria e prova de posse. Desenhar disponibilidade e recuperação do Directory; reprodução local já associada deve ter uma política explícita para indisponibilidade do serviço.
 

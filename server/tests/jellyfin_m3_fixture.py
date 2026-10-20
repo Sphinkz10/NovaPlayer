@@ -12,6 +12,7 @@ import httpx
 class JellyfinMembers:
     def __init__(self):
         self.sid='fixture-jellyfin';self.owner=uuid.uuid4().hex;self.users={};self.passwords={};self.tokens={}
+        self.media_items={};self.media_content=None;self.media_events=[];self.media_ranges=[]
         self.add(self.owner,'owner','owner-fixture-password',{'IsAdministrator':True,'IsDisabled':False})
     def add(self,uid,name,password,policy):
         self.users[uid]={'Id':uid,'Name':name,'Policy':policy};self.passwords[name]=password
@@ -26,6 +27,39 @@ class JellyfinMembers:
             token=uuid.uuid4().hex;self.tokens[token]=user['Id']
             return httpx.Response(200,json={'AccessToken':token,'ServerId':self.sid,'User':copy.deepcopy(user)})
         if not uid:return httpx.Response(401)
+        if path=='/Items' and self.media_items:
+            library=request.url.params.get('ParentId')
+            allowed=self.users[uid]['Policy'].get('EnabledFolders',[])
+            values=copy.deepcopy(self.media_items.get(library,[])) if library in allowed else []
+            if request.url.params.get('Ids'):values=[v for v in values if v['Id']==request.url.params['Ids']]
+            search=request.url.params.get('SearchTerm','').casefold()
+            values=[v for v in values if search in v['Name'].casefold()]
+            start=int(request.url.params.get('StartIndex',0));limit=int(request.url.params.get('Limit',24))
+            return httpx.Response(200,json={'Items':values[start:start+limit],'TotalRecordCount':len(values)})
+        if path.startswith('/Sessions/Playing') and self.media_items:
+            for library,values in self.media_items.items():
+                if library not in self.users[uid]['Policy'].get('EnabledFolders',[]):continue
+                for item in values:
+                    if item['Id']==data.get('ItemId'):
+                        item.setdefault('UserData',{})['PlaybackPositionTicks']=data['PositionTicks']
+                        self.media_events.append({'path':path,**data});return httpx.Response(204)
+            return httpx.Response(404)
+        if re.fullmatch('/Videos/[a-f0-9]{32}/stream',path) and self.media_content is not None:
+            item_id=path.split('/')[2]
+            if not any(item['Id']==item_id for library,items in self.media_items.items()
+                       if library in self.users[uid]['Policy'].get('EnabledFolders',[]) for item in items):
+                return httpx.Response(404)
+            content=self.media_content;first=0;last=len(content)-1;code=200
+            value=request.headers.get('Range')
+            if value:
+                match=re.fullmatch(r'bytes=(\d+)-(\d*)',value)
+                if not match:return httpx.Response(416)
+                first=int(match[1]);last=min(int(match[2]),last) if match[2] else last;code=206
+                if first>last:return httpx.Response(416)
+                self.media_ranges.append(first)
+            headers={'Content-Type':'video/mp4','Content-Length':str(last-first+1),'Accept-Ranges':'bytes'}
+            if code==206:headers['Content-Range']=f'bytes {first}-{last}/{len(content)}'
+            return httpx.Response(code,content=content[first:last+1],headers=headers)
         if path=='/Sessions/Logout':self.tokens.pop(token[1],None);return httpx.Response(204)
         if path=='/Users/New' and admin:
             new=uuid.uuid4().hex;self.add(new,data['Name'],data['Password'],{'IsAdministrator':False,'IsDisabled':False,'EnableAllFolders':True})
@@ -55,9 +89,10 @@ def jellyfin_http():
             request=httpx.Request(self.command,'http://127.0.0.1'+self.path,headers=dict(self.headers),content=body)
             response=fixture(request)
             self.send_response(response.status_code)
-            self.send_header('Content-Type','application/json')
-            self.send_header('Content-Length',str(len(response.content)))
-            self.end_headers();self.wfile.write(response.content)
+            for name,value in response.headers.items():self.send_header(name,value)
+            self.end_headers()
+            try:self.wfile.write(response.content)
+            except (BrokenPipeError,ConnectionResetError):pass
         do_GET=handle_request
         do_POST=handle_request
     server=ThreadingHTTPServer(('127.0.0.1',0),Handler)

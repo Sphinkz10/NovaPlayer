@@ -1,4 +1,4 @@
-"""Separate HTTPS-only device surface. Does not mount NOVA Control or Jellyfin."""
+"""Separate HTTPS device/media surface. Administration is never mounted here."""
 import ipaddress
 import os
 import re
@@ -125,7 +125,7 @@ def make_client_app(state_dir=None, origin=None):
             raise DeviceError('invalid_token', 401)
         result = devices.authenticate(bearer[7:])
         result['descriptor'] = {'schema_version': 1, 'server_id': result['server_id'],
-                                'client_origin': origin, 'media_enabled': False,
+                                'client_origin': origin, 'media_enabled': result['account_id'] is not None,
                                 'directory_enabled': result['account_id'] is not None, 'remote_access_enabled': False}
         return result
 
@@ -147,7 +147,7 @@ def make_client_app(state_dir=None, origin=None):
         result=await libraries(request)
         permitted=[lib for lib in result['libraries'] if lib['id']==library_id]
         if not permitted:raise DeviceError('unknown_library',404)
-        return {'authorized':True,'server_id':result['server_id'],'library':permitted[0],'media_enabled':False}
+        return {'authorized':True,'server_id':result['server_id'],'library':permitted[0],'media_enabled':True}
 
     @api.post('/api/v1/device/logout')
     def logout(request: Request):
@@ -158,6 +158,8 @@ def make_client_app(state_dir=None, origin=None):
         device = devices.authenticate(bearer[7:])
         return devices.revoke(device['device_id'])
 
+    from .media import mount_media
+    mount_media(api,store,os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096'))
     return api
 
 

@@ -6,7 +6,7 @@ android {
     compileSdk = 35
     defaultConfig {
         applicationId = "com.novacinema.connect.poc"; minSdk = 26; targetSdk = 35
-        versionCode = 6; versionName = "0.6-m3-lab"
+        versionCode = 7; versionName = "0.7-m4-lab"
         testInstrumentationRunner = "com.novacinema.connect.DevicePairingInstrumentation"
     }
     if (nativeProofAar != null) {
@@ -40,6 +40,8 @@ if(directoryProfile!=null) {
     tasks.named("preBuild").configure { dependsOn(prepare) }
 }
 dependencies {
+    implementation("androidx.media3:media3-exoplayer:1.9.4")
+    implementation("androidx.media3:media3-ui:1.9.4")
     implementation("org.bouncycastle:bcprov-jdk15to18:1.86")
     implementation("org.conscrypt:conscrypt-android:2.7.0")
     implementation("com.wireguard.android:tunnel:1.0.20260102")

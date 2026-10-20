@@ -82,7 +82,7 @@ def run():
                 # Generate tiny synthetic media using the image's bundled ffmpeg.
                 compose('exec', '-T', 'jellyfin', '/usr/lib/jellyfin-ffmpeg/ffmpeg',
                         '-hide_banner', '-loglevel', 'error', '-f', 'lavfi', '-i',
-                        'color=c=black:s=64x64:r=10', '-t', '1', '-c:v', 'libx264',
+                          'color=c=black:s=64x64:r=10', '-t', '600', '-c:v', 'libx264',
                         '-pix_fmt', 'yuv420p', '-y', '/cache/nova-fixture.mp4')
                 for name, directory in (('A', a), ('B', b)):
                     compose('cp', 'jellyfin:/cache/nova-fixture.mp4', str(directory/f'NOVA Fixture {name}.mp4'))

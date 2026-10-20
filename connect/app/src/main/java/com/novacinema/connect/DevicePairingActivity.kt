@@ -73,6 +73,7 @@ class DevicePairingActivity : Activity() {
             work { manager.forget(); PairingView(PairingState.EMPTY) }
         }
         button("Voltar") { finish() }
+        button("Abrir NOVA Cinema") { startActivity(Intent(this,CinemaActivity::class.java)) }
         setContentView(ScrollView(this).apply { addView(root) })
         importButton.requestFocus()
         if(selection!=null) {
@@ -157,7 +158,7 @@ class DevicePairingActivity : Activity() {
                 listOf(importButton, refresh, forget, confirm).forEach { it.isEnabled = true }
                 render(value)
                 if(value.state==PairingState.ASSOCIATED && DeviceSessionStore(this).load()?.accountId!=null)
-                    permissions.text=allowed?.let { "Bibliotecas autorizadas: "+it.joinToString(" · ") { lib -> lib.second }+". Catálogo e reprodução chegam na M4." }
+                    permissions.text=allowed?.let { "Bibliotecas autorizadas: "+it.joinToString(" · ") { lib -> lib.second }+". Usa Abrir NOVA Cinema para ver os títulos." }
                         ?: "Permissões de biblioteca indisponíveis. Pede ao proprietário para verificar a conta e o Jellyfin."
             }
         }
@@ -168,7 +169,7 @@ class DevicePairingActivity : Activity() {
         status.text = when (value.state) {
             PairingState.EMPTY -> "Sem associação. Se esqueceste a TV enquanto estava offline, o proprietário pode revogá-la no Control."
             PairingState.WAITING -> "No NOVA Control, introduz este código e confirma este dispositivo. Aguarda a aprovação."
-            PairingState.ASSOCIATED -> "Dispositivo associado e identidade confirmada. Catálogo, filmes e ligação VPN chegam nas próximas fases."
+            PairingState.ASSOCIATED -> "Dispositivo associado e identidade confirmada. A NOVA Cinema disponibiliza os títulos autorizados."
             PairingState.OFFLINE -> "Servidor indisponível. A associação foi preservada; volta a verificar quando houver ligação."
             PairingState.EXPIRED -> "Código expirado. Importa a ligação para pedir um novo código."
             PairingState.DENIED -> "O proprietário recusou este pedido."

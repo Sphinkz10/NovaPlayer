@@ -2,9 +2,9 @@
 
 Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
-**Estado atual:** [fecho consolidado da M3](docs/M3_FECHO.md). Servidor com configuração Jellyfin e cliente Android de laboratório com identidade, login Directory e permissões. A M3 de software está concluída em laboratório; o documento reúne os sete critérios aprovados, evidências e instalação de teste.
+**Estado atual:** [M4 — Cinema local](docs/M4_CINEMA_LOCAL.md) em validação. Catálogo limitado por conta, pesquisa, ficha, player Media3 e progresso implementados. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório.
 
-O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. Catálogo e reprodução chegam na M4; WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
+O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 
 - [Estado e limites](docs/ESTADO_REAL.md).
 - [Roadmap até instalar e ver filmes](docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md).

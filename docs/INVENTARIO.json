@@ -15,8 +15,8 @@
     },
     {
       "path": ".github/workflows/device-pairing.yml",
-      "bytes": 1852,
-      "sha256": "603dc008ff280a61ae19d5118b918fee556ef7dd06e70bfcdd1e87ac3269036c"
+      "bytes": 2078,
+      "sha256": "46264ce0771f7ffdac6d3f69100e693eed6da34e45dcb284b4242de1d433c330"
     },
     {
       "path": ".github/workflows/native-engines.yml",
@@ -40,8 +40,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 1834,
-      "sha256": "dd88274ab8e929dcfb42332a76c84c3fcb96586d92039be0037735692f69c3d9"
+      "bytes": 1733,
+      "sha256": "c86c98ed12446cca55f56d6145336e82cfa023e75ab0939dabfb4a33e65adadd"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -80,18 +80,18 @@
     },
     {
       "path": "connect/app/build.gradle.kts",
-      "bytes": 2771,
-      "sha256": "481bd7c7ad8f56196da9a018a14294db231e81ab6435ffc10b0dc2ed72f49178"
+      "bytes": 2886,
+      "sha256": "05b813b40fff612c475f27ceadbc1fb255ff717782a57a6c407573c6a9feb8d3"
     },
     {
       "path": "connect/app/gradle.lockfile",
-      "bytes": 47323,
-      "sha256": "2584916f58cb966af430b623ef9e5437cc6f228e3a413b75860055f6398c0f85"
+      "bytes": 53111,
+      "sha256": "311d26e054dbb238e8586251b1fb4892438bc9fe2818a8671e67c2f6552715d2"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/DevicePairingInstrumentation.kt",
-      "bytes": 8501,
-      "sha256": "bda93e455ae771f8e735fe7dfff8398d736245c1c0e13ca558472ddaeca24911"
+      "bytes": 8561,
+      "sha256": "4ca494534712e5de81053d32b2c06a2bc2be847548acefff38aa5bffaf2f5a0f"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M3Steps.kt",
@@ -99,9 +99,14 @@
       "sha256": "c53833f733acc4d379b58f529b6ba23fe9f4f469f3793f54ba58c302ac07c3d3"
     },
     {
+      "path": "connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt",
+      "bytes": 4071,
+      "sha256": "a7f0cb650c89d4637aeed6b2ea31fda091d3fc1c8296ff206554e5d3b0e19cdd"
+    },
+    {
       "path": "connect/app/src/main/AndroidManifest.xml",
-      "bytes": 1558,
-      "sha256": "ca21fa30c2dad81fd690c18bd8ececc5ca2435720a9a9dc3d48f8b45663dd23b"
+      "bytes": 1774,
+      "sha256": "5cc2f17f3fbf02e863d0a90feb63dac4be0bc2d4de0bce377cb101ec724d1781"
     },
     {
       "path": "connect/app/src/main/assets/licenses/bouncycastle-1.86.html",
@@ -114,19 +119,34 @@
       "sha256": "eebc1e08d5edeea3b0866243385c0ec20bda335a1e4adaed3874525ede3d6e0c"
     },
     {
+      "path": "connect/app/src/main/assets/licenses/media3-1.9.4-apache2.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "connect/app/src/main/assets/licenses/media3-dependencies.txt",
+      "bytes": 692,
+      "sha256": "99ffc3e54ca1989804ea5d03211e2df2b852f88da4c4e305d2c07f8a0459ed38"
+    },
+    {
       "path": "connect/app/src/main/java/com/novacinema/connect/AndroidCapabilities.kt",
       "bytes": 449,
       "sha256": "27b645d8ff27fc1ef6cee14dae9faacd42319d8ab8899b92d7bf0e8a16b5dc7f"
     },
     {
+      "path": "connect/app/src/main/java/com/novacinema/connect/CinemaActivity.kt",
+      "bytes": 6352,
+      "sha256": "f7c3c2ed5445c2680736ee8f786b316c01ef838ae0fa86a02814735875db0d3e"
+    },
+    {
       "path": "connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt",
-      "bytes": 8655,
-      "sha256": "3e54d6aa15ab5d34594d118ac95e2ea360ba8550283c8761811115e6ee20be08"
+      "bytes": 8674,
+      "sha256": "6efdac317a8ff7a3858a42227bfce29eb24ec7488ca0d83b68ea0688c71fc45b"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DevicePairingActivity.kt",
-      "bytes": 10185,
-      "sha256": "2f5efb4d7d90355452833bb1636dd67871e70bb7d6e17332d585efd29ca94654"
+      "bytes": 10276,
+      "sha256": "d4983ea7414e685f3c72fb3ccfe73102ee3758ad7042f81605b16ef16bff8636"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DeviceSessionStore.kt",
@@ -155,8 +175,23 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MainActivity.kt",
-      "bytes": 7091,
-      "sha256": "39576020453f37046fea81a3c65850dafc11268289406eb36cce331892aa49fa"
+      "bytes": 7274,
+      "sha256": "4b67d11621660a0864fee79376859e9396deb776314c81326395f706cb7b698a"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",
+      "bytes": 4841,
+      "sha256": "059712bfe06cb3ae995f35e59ab0788a7140312c04d10810d22ec2189833e482"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/NovaMediaSource.kt",
+      "bytes": 3008,
+      "sha256": "832e46c71a6d69c4b29f1de69a3a945e33edea8fc0956b26f66af806ba3515ed"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt",
+      "bytes": 6861,
+      "sha256": "b9c13e8936be68fe8dd81f9c9f0a0517c80429633963db37eb10c786d3400388"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt",
@@ -280,8 +315,8 @@
     },
     {
       "path": "connect/gradle/verification-metadata.xml",
-      "bytes": 134657,
-      "sha256": "46cdf60b34d6ff2d24c4fbba77e41c2c3a49fb2728cc2c61868de8a5ec2264f0"
+      "bytes": 148354,
+      "sha256": "c2c9f4ebed96c47689fa77c49a27566036d1bfe5b2ddcde7b0d12e550a9c58dd"
     },
     {
       "path": "connect/gradle/wrapper/gradle-wrapper.jar",
@@ -359,6 +394,11 @@
       "sha256": "833020548b18911e414ed38c357d612331344c02b3e6ac970bda0f9303641dff"
     },
     {
+      "path": "connect/scripts/smoke_m4_android.py",
+      "bytes": 4522,
+      "sha256": "1fff358f2652d9327147a6bf305fbf27e454f4ab7c89322798836587101009aa"
+    },
+    {
       "path": "connect/scripts/smoke_pairing_android.py",
       "bytes": 12531,
       "sha256": "31ff22055b65525b22db9e0cb2fc57f285c4b42a24bdfca39d9a32980adc1006"
@@ -380,8 +420,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 1532,
-      "sha256": "9351789a53336582acb1eb4b35b44d856a4226df5ef596068e435878ece103d5"
+      "bytes": 1724,
+      "sha256": "2d3faf1fb57f762e979840bc9aa6dd71e9ee7c1b75a6900eba947cd351f5be77"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -390,8 +430,8 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 2595,
-      "sha256": "b699bbe6b505d0c796ee20f6bb5cad2085a71886cc04c39b395b50076e4b27a1"
+      "bytes": 2732,
+      "sha256": "e86b6cf01ddf9cb122e6a722190a5deae5dea74abee870c862c377f8b2e2ecbd"
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
@@ -429,6 +469,11 @@
       "sha256": "24c6aac800822ffd181fc1224884d50260c98b2fe84eaaecd37e725ab79f9959"
     },
     {
+      "path": "docs/M4_CINEMA_LOCAL.md",
+      "bytes": 4933,
+      "sha256": "fcaa23d85a796f5614e8eaa546892777632e066a82fa374bca3b8c733368c8cd"
+    },
+    {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
       "bytes": 23945,
       "sha256": "186c72375279a02ff160a683732016c9b0d38f3c338577ea9684b0708c5a7a1f"
@@ -450,8 +495,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 27598,
-      "sha256": "d13768e774942cfc870356552cc5c77927439e010327afa75aeca3bebd3b59ed"
+      "bytes": 27226,
+      "sha256": "b4d55f0148ae4cfd936665b1cf54456ece5303a049965a47db8a440baa5b6d60"
     },
     {
       "path": "scripts/inventory.py",
@@ -545,8 +590,8 @@
     },
     {
       "path": "server/nova_server/client_api.py",
-      "bytes": 8138,
-      "sha256": "dec1dd4283e991cba6df9c611b112417500296a543aa2ba0dc9c5c119d4c9c33"
+      "bytes": 8285,
+      "sha256": "4cb82a21feae5e1348d325e63e62032bc5bd8afc22752dc70f983a25be48031b"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -560,8 +605,8 @@
     },
     {
       "path": "server/nova_server/devices.py",
-      "bytes": 13262,
-      "sha256": "b63e6911ed29ec46809f198ed83a909c5cfc5a4fffa94fc13568798addfd660b"
+      "bytes": 13269,
+      "sha256": "e21c5037791cccd2baa2f81b15d33d7f8486b541c8828d8e373869864473eaad"
     },
     {
       "path": "server/nova_server/directory_control.py",
@@ -584,9 +629,14 @@
       "sha256": "f580fd040a463c86663230817902a5a29211ca59470439c7f6fcb79685bde6e2"
     },
     {
+      "path": "server/nova_server/media.py",
+      "bytes": 12983,
+      "sha256": "904165f372f1c87c1f5f92b708ef90fb60af4343f8241d3812057d6498a0a447"
+    },
+    {
       "path": "server/nova_server/members.py",
-      "bytes": 11245,
-      "sha256": "700f0cb3409315e1fcd178e5a1a65995c01fcce64bf0effff4b49cce6fe07c22"
+      "bytes": 11243,
+      "sha256": "6357460f4f6e9aa23d9c0a81907e5d2d8974b900cce24285860c3fb0a6bb8a28"
     },
     {
       "path": "server/nova_server/secret_vault.py",
@@ -710,8 +760,8 @@
     },
     {
       "path": "server/scripts/smoke_compose.py",
-      "bytes": 19204,
-      "sha256": "611c28720314dc16671cdf1450a0ec6d1caa1bfbbafeed43b97ed3f434bbe9d7"
+      "bytes": 19208,
+      "sha256": "550992d2a449b0c45d792e09b722d332ff33f660031a58443c6109149270dc3c"
     },
     {
       "path": "server/scripts/smoke_devices_tls.py",
@@ -740,8 +790,8 @@
     },
     {
       "path": "server/scripts/smoke_m3_server.py",
-      "bytes": 7577,
-      "sha256": "f23f0b3c81f864b45d674f0085502973ee082eb113d38348321ec96890979613"
+      "bytes": 10325,
+      "sha256": "3bfdca5f4e651482e258f7a01072f0f75aecf375f7c04164b5dd8405eb952906"
     },
     {
       "path": "server/scripts/truenas.py",
@@ -755,8 +805,8 @@
     },
     {
       "path": "server/tests/jellyfin_m3_fixture.py",
-      "bytes": 3735,
-      "sha256": "f6c2cad7d86b73a2e997e6ec6162249708ca58657296c0b2cab4ecd5dacd0d7f"
+      "bytes": 6274,
+      "sha256": "db2d588d8547079fef5ef414260e44965ee3b92743103df60a95c12a03116960"
     },
     {
       "path": "server/tests/test_api.py",
@@ -817,6 +867,11 @@
       "path": "server/tests/test_m3_renewal.py",
       "bytes": 4430,
       "sha256": "932d93c7b1503aaeacb7b704256c1c44fa13f56904ebc8200b65260b48d74338"
+    },
+    {
+      "path": "server/tests/test_m4_media.py",
+      "bytes": 10039,
+      "sha256": "e6939542283fd21551b97330c28bbc551a07331bb559b0c97f4f339dcd8e3633"
     },
     {
       "path": "server/tests/test_recovery.py",

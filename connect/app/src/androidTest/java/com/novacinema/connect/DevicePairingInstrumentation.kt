@@ -32,7 +32,8 @@ class DevicePairingInstrumentation : Instrumentation() {
     override fun onStart() {
         val report = Bundle()
         try {
-            if(phase.startsWith("m3-")) M3Steps(this).run(phase.removePrefix("m3-")) else when (phase) {
+            if(phase=="m4-cinema") M4Steps(this).run()
+            else if(phase.startsWith("m3-")) M3Steps(this).run(phase.removePrefix("m3-")) else when (phase) {
                 "security" -> security()
                 "pair" -> pairThroughUi()
                 "refresh" -> {

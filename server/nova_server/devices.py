@@ -1,4 +1,4 @@
-"""Owner-approved device grants. No media, Jellyfin or overlay privileges yet.
+"""Owner-approved device grants. Media requires a separate live member/library check.
 
 Opaque credentials are hashed at rest. All grant transitions use a SQLite write
 transaction, including polling/replay failures whose side effects must commit.

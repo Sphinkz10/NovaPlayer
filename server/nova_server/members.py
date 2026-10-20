@@ -165,6 +165,6 @@ class Members:
                 if not db.execute('SELECT 1 FROM member_accounts WHERE subject=? AND disabled=0 AND revision=?',(subject,revision)).fetchone():
                     raise DeviceError('member_permissions_changed',403)
             return {'server_id':identity['server_id'],'device_id':identity['device_id'],'account_id':subject,
-                    'revision':revision,'libraries':libraries,'catalog_enabled':False,'media_enabled':False}
+                    'revision':revision,'libraries':libraries,'catalog_enabled':True,'media_enabled':True}
         except (ValueError,KeyError,TypeError,OSError,InvalidTag,TimeoutError,httpx.HTTPError):
             raise DeviceError('member_authorization_unavailable',503) from None
