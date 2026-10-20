@@ -62,7 +62,7 @@ class PlayerActivity:Activity() {
         button("Voltar") { finish() }
         root.addView(controls);setContentView(root);view.requestFocus()
     }
-    override fun onStart() { super.onStart();foreground=true;if(::library.isInitialized && mediaId.matches(library))open() }
+    override fun onStart() { super.onStart();foreground=true;if(::view.isInitialized)open() }
     override fun onSaveInstanceState(out:Bundle) { out.putLong("position",observedPosition);super.onSaveInstanceState(out) }
     override fun onStop() {
         foreground=false;generation++;handler.removeCallbacks(heartbeat)
@@ -71,22 +71,24 @@ class PlayerActivity:Activity() {
     }
     override fun onDestroy() { io.shutdown();super.onDestroy() }
     private fun release() {
-        view.player=null;player?.release();player=null;view.keepScreenOn=false
+        if(::view.isInitialized) { view.player=null;view.keepScreenOn=false }
+        player?.release();player=null
     }
     private fun open() {
         handler.removeCallbacks(heartbeat)
         player?.let { position=it.currentPosition };release();renderedFrame=false
-        status.text="A verificar título e autorização…";val current=++generation
+        status.text="A verificar título e autorização…";val current=++generation;val requestedPosition=position
         io.execute {
             val ready=runCatching {
                 val client=MediaClient(this);val detail=client.detail(library,item)
-                if(detail.runtime>0)position=position.coerceAtMost(detail.runtime/10000)
-                client.event(library,item,"start",position,false)
-                client.session().trust.origin
+                val resolved=if(detail.runtime>0)requestedPosition.coerceAtMost(detail.runtime/10000) else requestedPosition
+                client.event(library,item,"start",resolved,false)
+                client.session().trust.origin to resolved
             }
             runOnUiThread {
                 if(!foreground || current!=generation || isDestroyed)return@runOnUiThread
-                ready.fold({ origin ->
+                ready.fold({ (origin,resolved) ->
+                    position=resolved
                     val p=ExoPlayer.Builder(this).build();player=p;view.player=p;view.keepScreenOn=true
                     val source=ProgressiveMediaSource.Factory(DataSource.Factory { NovaMediaSource(this) })
                         .createMediaSource(MediaItem.fromUri("$origin/api/v1/media/libraries/$library/items/$item/stream"))
@@ -115,12 +117,12 @@ class PlayerActivity:Activity() {
             runOnUiThread {
                 eventBusy=false
                 if(!final && foreground && current==generation && !success) {
-                    player?.pause();view.keepScreenOn=false
-                    status.text="Autorização ou progresso indisponível. Reprodução pausada; verifica a ligação e tenta novamente."
+                    position=observedPosition;handler.removeCallbacks(heartbeat);release()
+                    status.text="Autorização ou progresso indisponível. Reprodução interrompida; verifica a ligação e tenta novamente."
                 }
             }
         }
     }
     override fun dispatchKeyEvent(event:android.view.KeyEvent):Boolean =
-        if(view.dispatchKeyEvent(event))true else super.dispatchKeyEvent(event)
+        if(::view.isInitialized && view.dispatchKeyEvent(event))true else super.dispatchKeyEvent(event)
 }

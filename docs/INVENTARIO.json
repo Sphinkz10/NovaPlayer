@@ -190,8 +190,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt",
-      "bytes": 6861,
-      "sha256": "b9c13e8936be68fe8dd81f9c9f0a0517c80429633963db37eb10c786d3400388"
+      "bytes": 7055,
+      "sha256": "d948dac22f080d33cd7cfe539a0db9e9e47f97446ac389b48b9e59d9475d68a2"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt",
@@ -470,8 +470,8 @@
     },
     {
       "path": "docs/M4_CINEMA_LOCAL.md",
-      "bytes": 4933,
-      "sha256": "fcaa23d85a796f5614e8eaa546892777632e066a82fa374bca3b8c733368c8cd"
+      "bytes": 4988,
+      "sha256": "ec039916e121436e24e7e4461ea17144278b7742a13a579bc11f8974513f99fa"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",

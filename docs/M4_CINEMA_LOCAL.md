@@ -10,7 +10,7 @@ O cliente usa exclusivamente HTTPS NOVA com o certificado aprovado, sessão NOVA
 
 O gateway transmite o ficheiro original por Range; esta entrega não pede transcodificação/remux. Fontes remotas, redirects, respostas comprimidas, intervalos múltiplos e conteúdo HTML são recusados. A revogação e a validade do dispositivo/conta são verificadas durante a transferência. Uma rotação do access token não invalida uma resposta de vídeo já autorizada. Novos pedidos exigem um token válido.
 
-O player só funciona em primeiro plano. Ao sair liberta o player e envia a posição; durante reprodução envia progresso a cada dez segundos. Se a autorização ou a gravação do progresso falhar, pausa e apresenta recuperação. O Jellyfin aplica os seus limites de retoma, incluindo duração mínima e marcação de título visto.
+O player só funciona em primeiro plano. Ao sair liberta o player e envia a posição; durante reprodução envia progresso a cada dez segundos. Se a autorização ou a gravação do progresso falhar, liberta o player/buffer e apresenta recuperação, preservando a posição em memória. O Jellyfin aplica os seus limites de retoma, incluindo duração mínima e marcação de título visto.
 
 ## Critérios e evidências
 
