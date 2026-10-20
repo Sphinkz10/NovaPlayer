@@ -125,11 +125,16 @@ class DevicePairingInstrumentation : Instrumentation() {
                 if(!windowFocused) android.os.SystemClock.sleep(100)
             }
             check(windowFocused) { "Pairing activity did not receive window focus" }
-            onMainChecked {
-                val button=views(activity.window.decorView).filterIsInstance<Button>().first { it.text.toString().startsWith("Confirmei") }
-                check(button.isFocusable && button.isEnabled)
-                check(button.requestFocus() && button.hasFocus())
+            var buttonFocused=false
+            val buttonDeadline=android.os.SystemClock.uptimeMillis()+15000
+            while(!buttonFocused && android.os.SystemClock.uptimeMillis()<buttonDeadline) {
+                onMainChecked {
+                    val button=views(activity.window.decorView).filterIsInstance<Button>().first { it.text.toString().startsWith("Confirmei") }
+                    buttonFocused=button.isFocusable && button.isEnabled && button.requestFocus() && button.hasFocus()
+                }
+                if(!buttonFocused)android.os.SystemClock.sleep(100)
             }
+            check(buttonFocused) { "Pairing confirmation did not receive focus" }
             sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_DPAD_CENTER)
             var sent=false
             val deadline=System.currentTimeMillis()+120000

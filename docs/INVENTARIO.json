@@ -90,8 +90,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/DevicePairingInstrumentation.kt",
-      "bytes": 8561,
-      "sha256": "4ca494534712e5de81053d32b2c06a2bc2be847548acefff38aa5bffaf2f5a0f"
+      "bytes": 8931,
+      "sha256": "315361d65fe20af9da20c68d8a911bbe504d19897a7812afd37a4bd5f49ee0d4"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M3Steps.kt",
