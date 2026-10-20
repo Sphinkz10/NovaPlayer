@@ -580,8 +580,13 @@
     },
     {
       "path": "docs/M5_SERVICO_GATEWAY.md",
-      "bytes": 7220,
-      "sha256": "5998813c32cbe7b0ab24c0eef7163c3a94c968585f6c658fe46fdd5e34d25a68"
+      "bytes": 8064,
+      "sha256": "41ca37c02a8df2ee304d1e1bc8aec412cc086584fe1517dee254c39dafe3fd29"
+    },
+    {
+      "path": "docs/M5_SERVICO_RESULTADOS.json",
+      "bytes": 12922,
+      "sha256": "27e37aae988561a730c92ae3265ed1d7fa0b52dfe7045d67e0d136c698ce0fa2"
     },
     {
       "path": "docs/M5_WIREGUARD_REDE.md",
