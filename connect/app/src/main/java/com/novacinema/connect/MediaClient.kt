@@ -7,6 +7,7 @@ import java.io.IOException
 import java.net.Proxy
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
+import org.conscrypt.Conscrypt
 
 internal val mediaId = Regex("[a-f0-9]{32}")
 internal data class CinemaItem(val id:String,val name:String,val type:String,val series:String,
@@ -21,7 +22,7 @@ internal class MediaClient(private val context:Context) {
     fun connection(path:String,saved:SavedDevice):HttpsURLConnection {
         require(path.startsWith("/api/v1/media/libraries/") && !path.contains('#') && !path.contains(".."))
         return (URL(saved.trust.origin+path).openConnection(Proxy.NO_PROXY) as HttpsURLConnection).apply {
-            sslSocketFactory=PinnedServerTls.socketFactory(saved.trust)
+            sslSocketFactory=PinnedServerTls.socketFactory(saved.trust,Conscrypt.newProvider(),tls13=true)
             instanceFollowRedirects=false;connectTimeout=5000;readTimeout=8000;useCaches=false
             setRequestProperty("Authorization","Bearer ${saved.tokens.access}")
             setRequestProperty("Accept-Encoding","identity");setRequestProperty("Cache-Control","no-store")

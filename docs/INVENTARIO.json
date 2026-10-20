@@ -195,8 +195,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",
-      "bytes": 4841,
-      "sha256": "059712bfe06cb3ae995f35e59ab0788a7140312c04d10810d22ec2189833e482"
+      "bytes": 4907,
+      "sha256": "79b206bdf1778eaab86cffa6347ad6fc76ee4d2d60185c7b47330fc93a39ed85"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/NovaMediaSource.kt",
