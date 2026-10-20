@@ -1,8 +1,8 @@
-# NOVA Connect — Laboratório v0.4 / fase 1
+# NOVA Cinema / Connect — Laboratório 0.7
 
-> Atualização M3 (20-10-2026): login Directory na TV, conta verificada e bibliotecas limitadas foram aprovados em laboratório. Começar por [M3_FECHO.md](../docs/M3_FECHO.md); os parágrafos abaixo preservam instruções de incrementos anteriores.
+> Estado atual: [M4 Cinema local](../docs/M4_CINEMA_LOCAL.md), com catálogo, ficha, Media3, seek e retoma aprovados nos emuladores API 26/35. A [M3](../docs/M3_FECHO.md) está concluída em laboratório. Instalação LAN guiada, aparelhos físicos e jornadas VPN permanecem pendentes. Os detalhes da fase 1 abaixo são históricos onde divergirem destes dois documentos.
 
-**17 outubro 2026 · APK debug compilada; diagnóstico e lógica de domínio testados. Rede VPN e reprodução ainda não aprovadas.**
+**Base inicial de 17 outubro 2026:** diagnóstico e lógica de domínio. A reprodução local foi acrescentada e ensaiada na M4 em 20 outubro.
 
 Esta fase acrescenta deteção de SDK/ABIs/Leanback, contratos WireGuard/Tailscale/NetBird e estados que não confundem túnel UP com serviço autorizado. Não há restrição a Xiaomi/Chromecast: Android API 26+ e ABIs compatíveis definem a base. Tailscale e NetBird são explicitamente não implementados; o motor WireGuard conserva a prova existente.
 
@@ -10,11 +10,11 @@ Build reproduzível por dependências fixadas: JDK 17, SDK 35, `gradlew.bat :cor
 
 Para atualizar checksums após revisão: `bash gradlew -I scripts/resolve_build_tools.gradle :app:resolveBuildToolArtifacts :core:verifyCore :app:assembleDebug :app:lintDebug --write-locks --write-verification-metadata sha256`. Rever o diff; a CI normal não regenera nem aceita novos checksums automaticamente.
 
-A política de reprodução agora distingue remux de contentor, conversão de áudio, vídeo autorizado e codecs/legendas incompatíveis. A política ainda não controla um player. [Resultados e limites da fase 1](../docs/FASE_1_RESULTADOS.md).
+A política de domínio distingue remux, conversão de áudio, vídeo autorizado e codecs/legendas incompatíveis. O primeiro player M4 usa apenas o ficheiro original: as rotas de remux/transcodificação continuam pendentes. [Resultados históricos da fase 1](../docs/FASE_1_RESULTADOS.md).
 
 ## Objetivo
 
-Uma única app Android TV incorpora o motor WireGuard (biblioteca oficial `com.wireguard.android:tunnel:1.0.20260102`). Familiares não precisam de instalar outro cliente VPN. O Android continua a exigir o consentimento do sistema na primeira utilização quando aplicável. A configuração e aprovação de dispositivos pertencem ao administrador; **a associação por convite ainda NÃO foi implementada**.
+Uma única app Android TV deve incorporar os motores dos três fornecedores. A APK normal contém a base WireGuard (`com.wireguard.android:tunnel:1.0.20260102`); as jornadas remotas completas pertencem à M5. O Android exige consentimento do sistema quando aplicável. A associação por código e aprovação do proprietário já está implementada na M3; não fornece ainda perfis VPN.
 
 Este projeto **não faz alterações à UniFi Dream Router, TrueNAS, Jellyfin ou repositórios existentes**. Não guarda nem fornece chaves de produção.
 

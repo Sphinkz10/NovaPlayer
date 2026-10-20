@@ -2,7 +2,7 @@
 
 **Atualização:** 20-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
-**Fase em execução:** [M4 — Cinema local](M4_CINEMA_LOCAL.md), com catálogo e player implementados e validação integrada em curso.
+**Fase em execução:** [M4 — Cinema local](M4_CINEMA_LOCAL.md), com catálogo/player e retoma aprovados em laboratório. Próximo passo: instalação LAN guiada e aceitação física.
 
 | Quando instalar/testar | O que permite |
 |---|---|

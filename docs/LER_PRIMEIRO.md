@@ -2,9 +2,9 @@
 
 **Atualização:** 20 outubro 2026. Começar por [M3_FECHO.md](M3_FECHO.md): critérios únicos, resultado consolidado e procedimento de ensaio. Aceitação física TrueNAS/TV continua separada.
 
-**Trabalho atual:** [M4_CINEMA_LOCAL.md](M4_CINEMA_LOCAL.md) reúne catálogo, player e os critérios pendentes da primeira reprodução local.
+**Trabalho atual:** [M4_CINEMA_LOCAL.md](M4_CINEMA_LOCAL.md) reúne catálogo/player aprovados em laboratório e os critérios pendentes de instalação LAN e aceitação física.
 
-As fontes atuais incluem M3 (`0.3.0-dev`): [associação de dispositivos](M3_ASSOCIACAO_DISPOSITIVOS.md), [cliente Android de laboratório](M3_CLIENTE_ANDROID.md) e [Directory privado](M3_DIRECTORY_LAB.md). A entrega M2 por digest permanece identificada no seu guia.
+As fontes atuais incluem M3 e M4. O Core mantém `0.3.0-dev`; o digest M4 identifica a imagem testada atual. O cliente Android é `0.7-m4-lab`. Os guias anteriores de associação, cliente e Directory preservam o histórico.
 
 ## Como usar este arquivo
 

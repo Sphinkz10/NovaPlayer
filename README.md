@@ -2,7 +2,7 @@
 
 Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
-**Estado atual:** [M4 — Cinema local](docs/M4_CINEMA_LOCAL.md) em validação. Catálogo limitado por conta, pesquisa, ficha, player Media3 e progresso implementados. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório.
+**Estado atual:** [M4 — Cinema local](docs/M4_CINEMA_LOCAL.md) com catálogo/player aprovados em laboratório: CI 8/8, Android 26/35 e Jellyfin real Docker. Instalação LAN guiada e aceitação física mantêm a M4 aberta. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório.
 
 O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 

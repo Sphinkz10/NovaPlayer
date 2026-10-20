@@ -7,7 +7,7 @@ O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias
 | M1 — base | Implementada e testada |
 | M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. Aceitação no TrueNAS físico pendente |
 | M3 — identidade e permissões | Concluída no software de laboratório: login Directory na TV, prova assinada de conta, aprovação, bibliotecas Jellyfin limitadas, renovação e revogação. Sete critérios aprovados; CI 8/8, API 26/35 e Docker real. Ver evidências no documento único |
-| M4 — primeiro filme local | Catálogo, pesquisa, ficha, player Media3, faixas incorporadas e progresso implementados; validação integrada em curso. Instalação LAN guiada e aparelhos físicos pendentes. [Ponto único M4](M4_CINEMA_LOCAL.md) |
+| M4 — primeiro filme local | Catálogo, pesquisa, ficha, player Media3 e retoma aprovados em laboratório: CI 8/8, API 26/35 e Jellyfin Docker real. Instalação LAN guiada, assinatura definitiva e aparelhos físicos pendentes. [Ponto único M4](M4_CINEMA_LOCAL.md) |
 | M5 — ligação remota | WireGuard, Tailscale e NetBird nativos continuam obrigatórios. Compilação experimental dos três motores não prova túneis funcionais |
 | M6/M7 — utilização familiar | Exigem matriz física, rede externa e validações finais de segurança |
 

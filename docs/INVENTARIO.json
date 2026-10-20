@@ -40,8 +40,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 1733,
-      "sha256": "c86c98ed12446cca55f56d6145336e82cfa023e75ab0939dabfb4a33e65adadd"
+      "bytes": 1790,
+      "sha256": "30102f5eaa790e0bc9ec795da2b4c8d146ec8d6731e98820d89a5774d53b1706"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -75,8 +75,8 @@
     },
     {
       "path": "connect/README.md",
-      "bytes": 7802,
-      "sha256": "af31ba51361430752a365badd719e0b37c2f5d135777e9fa2203cb1906a9355e"
+      "bytes": 7955,
+      "sha256": "76c6c2a9d4d1f5f6e426c423fda73790410957bad33b26de4ec28f59fb442463"
     },
     {
       "path": "connect/app/build.gradle.kts",
@@ -420,8 +420,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 1724,
-      "sha256": "2d3faf1fb57f762e979840bc9aa6dd71e9ee7c1b75a6900eba947cd351f5be77"
+      "bytes": 1745,
+      "sha256": "5790feea919e9c8b194418b882bbb0175c4d41d634379c278c571c27c12a2bb2"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -430,8 +430,8 @@
     },
     {
       "path": "docs/LER_PRIMEIRO.md",
-      "bytes": 2732,
-      "sha256": "e86b6cf01ddf9cb122e6a722190a5deae5dea74abee870c862c377f8b2e2ecbd"
+      "bytes": 2726,
+      "sha256": "374cb41fbb6407c460af94c3681d0bd5ded908b8038b84907c9793ea7433684e"
     },
     {
       "path": "docs/M2_SERVIDOR_LAB.md",
@@ -470,8 +470,8 @@
     },
     {
       "path": "docs/M4_CINEMA_LOCAL.md",
-      "bytes": 5489,
-      "sha256": "06054e87e1a4b57c2a76b4ef4de0fb35485ef45c37b2b612d5dc4df295fff616"
+      "bytes": 7327,
+      "sha256": "441725b8a3f401448d4944ca0902b00fe2ca493f4ad0b8d753f744593d57b994"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -495,8 +495,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 27226,
-      "sha256": "b4d55f0148ae4cfd936665b1cf54456ece5303a049965a47db8a440baa5b6d60"
+      "bytes": 27275,
+      "sha256": "def945931f45a666b035e4c6d49dea40138345f7ae8a03dea574e7201987c053"
     },
     {
       "path": "scripts/inventory.py",
@@ -530,8 +530,8 @@
     },
     {
       "path": "server/README.md",
-      "bytes": 12171,
-      "sha256": "45d3425609c81ad7c62bc79cf9a48a3bf49ab68f09726509cbb966952015c13c"
+      "bytes": 12265,
+      "sha256": "576d7cd94872e52923911d615f9f5fd47f61a1ed865ed38105bb4f355ee39de3"
     },
     {
       "path": "server/compose.yaml",

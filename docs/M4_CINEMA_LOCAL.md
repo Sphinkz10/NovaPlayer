@@ -1,6 +1,6 @@
 # M4 — NOVA Cinema local
 
-Ponto único desta fase. A M3 de identidade e permissões mantém-se fechada em laboratório: [M3_FECHO.md](M3_FECHO.md).
+Ponto único desta fase. **Catálogo e reprodução aprovados em laboratório em 20-10-2026. A M4 continua aberta para instalação LAN e aceitação física.** A M3 de identidade e permissões mantém-se fechada em laboratório: [M3_FECHO.md](M3_FECHO.md).
 
 ## Resultado implementado
 
@@ -18,13 +18,23 @@ O player só funciona em primeiro plano. Ao sair liberta o player e envia a posi
 
 | Critério | Validação |
 |---|---|
-| Catálogo e ficha limitados à biblioteca da conta | Testes de API; prova Docker preparada |
-| Ficheiro original, Range e seek | Testes de API; prova Docker preparada |
-| Progresso e retoma persistidos no Jellyfin | Testes de API; prova Docker preparada |
-| D-pad → ficha → primeiro frame → seek → reabertura | Instrumentação preparada para emuladores API 26/35 |
+| Catálogo e ficha limitados à biblioteca da conta | Aprovado em API e Jellyfin real Docker, incluindo consulta permissiva por ID |
+| Ficheiro original, Range e seek | Aprovado em API/Docker e decode Media3 nos dois emuladores |
+| Progresso e retoma persistidos no Jellyfin | Aprovado no Jellyfin real; reabertura aprovada nos emuladores com fixture isolada |
+| D-pad → ficha → primeiro frame → seek → reabertura | Aprovado nos emuladores API 26 e 35 |
 | Reprodução física em Xiaomi Box S2 e Chromecast | Pendente; aparelhos não ligados a este ambiente |
 
-Os resultados finais da execução são registados aqui depois dos gates. Um build ou um ficheiro de teste não certifica codecs, 4K, HDR, áudio multicanal ou desempenho das boxes.
+Revisão executável verificada: `53407fe0ef496a7e194a344d74c13fba3d33027b`. A CI testa a árvore do merge do PR, confirmada igual à árvore desta revisão. [CI 8/8](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39396695163) e [Android API 26/35](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39396695151) aprovados. Linux Python 3.12/3.13: **276/276** cada; Windows: **270 aprovados + 6 POSIX ignorados** cada; Kotlin: **203**; lint aprovado. Docker repetido sobre a imagem exata antes da publicação.
+
+Em cada emulador passaram 11 fases de associação anteriores, 11 fases M3 e os 8 checks M4. O vídeo sintético é H.264/AAC; o seek exige um salto de pelo menos nove segundos em cinco segundos, e a retoma exige novo primeiro frame. O Android usa um Jellyfin HTTP fixture isolado; o teste Docker usa Jellyfin real. Estes ensaios são distintos e não equivalem a NAS/TV físicos.
+
+Uma execução intermédia API 26 falhou no foco imediato do botão de confirmação, antes da associação. O harness passou a esperar por foco real, mantendo o D-pad e as verificações de segurança. A revisão final passou nos dois níveis sem recorrer a clique direto ou relaxar TLS/permissões.
+
+Imagem `linux/amd64`: `ghcr.io/sphinkz10/nova-core@sha256:2c7a51e0dbfd4b85735aaf264b97078d5b3113700125353abfeba5b86ee1bb26`.
+
+APK entregue: a testada no API 35, versão `0.7-m4-lab`, pacote `com.novacinema.connect.poc`, min SDK 26, target 35, assinatura debug v2. SHA-256: `38160fd4ebe32ad5da2438680058b3e25d7c4b5307ccb6628254b8cfbac99444`. API 26 testou um build equivalente com a própria assinatura de CI. Não substituir este APK por outro build sem registar a sua proveniência.
+
+Um build ou um ficheiro de teste não certifica codecs, 4K, HDR, áudio multicanal ou desempenho das boxes.
 
 ## Ensaio
 

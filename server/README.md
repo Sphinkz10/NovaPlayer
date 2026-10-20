@@ -1,10 +1,10 @@
-# NOVA Server 0.2.0-lab — M2
+# NOVA Server — laboratório M2/M3/M4
 
-> Atualização M3 (20-10-2026): login Directory na TV, conta verificada e bibliotecas limitadas foram aprovados em laboratório. Começar por [M3_FECHO.md](../docs/M3_FECHO.md); os parágrafos abaixo preservam instruções de incrementos anteriores.
+> Estado atual: [M4 Cinema local](../docs/M4_CINEMA_LOCAL.md), com gateway de catálogo/vídeo e progresso aprovados em Docker real; [M3 de identidade](../docs/M3_FECHO.md) concluída em laboratório. Usar a imagem atual por digest do guia M4. O Core conserva a versão de desenvolvimento `0.3.0-dev`; o digest identifica a revisão. Os detalhes M2/fase 1 abaixo são históricos onde divergirem destes documentos.
 
 Base de segurança implementada em 17-10-2026: login Control corrigido, diagnóstico Jellyfin limitado a 16 KiB/4 s com validação de produto/wizard/identidade opcional, limite de login atómico, duas verificações Argon2 simultâneas por processo, dependências transitivas fixadas com hashes. Cinco falhas/tentativas em curso por origem durante 15 minutos; sucesso retira apenas a própria reserva e não apaga outras falhas. A administração aceita Host `localhost`/`127.0.0.1`.
 
-O Control guarda **rascunhos** WireGuard/Tailscale/NetBird sem segredos nem ativação de rede. As origens mostram permissões/leitura/indexação ainda não verificadas. Para comparar a identidade Jellyfin com uma associação aprovada, definir `NOVA_JELLYFIN_SERVER_ID` no ambiente do Core; sem isso o diagnóstico devolve `identity_verified=false`.
+O Control guarda **rascunhos** WireGuard/Tailscale/NetBird sem ativação de rede e dispõe do assistente M2 para configuração/indexação. Para comparar a identidade Jellyfin no diagnóstico de disponibilidade, definir `NOVA_JELLYFIN_SERVER_ID`; sem isso esse diagnóstico devolve `identity_verified=false`. A autorização de media verifica também a identidade guardada na configuração da conta.
 
 Instalação Apps TrueNAS, imagem por digest, cópia cifrada, recuperação e reversão: [guia M2](../docs/M2_TRUENAS_RECUPERACAO.md). Aceitação no NAS físico pendente.
 
@@ -12,7 +12,7 @@ Novo incremento: [assistente M2](../docs/M2_SERVIDOR_LAB.md). Criação do propr
 
 Testes e limitações anteriores: [fase 1](../docs/FASE_1_RESULTADOS.md). O restante percurso de instalação abaixo continua destinado a laboratório; não foi executado neste TrueNAS.
 
-> **Estado:** entrega funcional de laboratório, não uma versão pronta para famílias nem uma instalação validada no TrueNAS. Associação Android e [Directory privado separado](../docs/M3_DIRECTORY_LAB.md) já têm implementação; login universal na TV, permissões de media, player e VPN completa permanecem pendentes. Não publicar estas portas na Internet.
+> **Estado:** entrega funcional de laboratório, com Directory privado, associação, permissões e player. Instalação LAN guiada, aceitação TrueNAS/boxes e VPN completa permanecem pendentes. Não publicar estas portas na Internet.
 
 ## Para que serve
 
