@@ -29,7 +29,8 @@ class MainActivity : Activity() {
         provisioning = ProvisioningStore(this)
         bridge = WireGuardBridge(this)
         val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(46, 46, 46, 46) }
-        val label = TextView(this).apply { text = "NOVA Cinema · Laboratório M4 0.7"; textSize = 26f }
+        val version = packageManager.getPackageInfo(packageName, 0).versionName
+        val label = TextView(this).apply { text = "NOVA Cinema · $version · Teste LAN M4"; textSize = 26f }
         status = TextView(this).apply { textSize = 21f; text = "Associação NOVA disponível em laboratório. Configuração VPN continua independente e por implementar." }
         val device = AndroidCapabilities.read(this)
         val compatibility = TextView(this).apply {

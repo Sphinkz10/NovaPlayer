@@ -13,6 +13,8 @@ state/
 local.properties
 *.jks
 *.keystore
+*.p12
+*.pfx
 node_modules/
 test-results/
 dist/

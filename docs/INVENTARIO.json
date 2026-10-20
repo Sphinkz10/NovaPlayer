@@ -14,6 +14,11 @@
       "sha256": "1d16f330a5ac1574310cdec40475de980a65110f78176dde48669d550a27e09a"
     },
     {
+      "path": ".github/workflows/android-distribution.yml",
+      "bytes": 2309,
+      "sha256": "295a699ec4b39005dfd3b21a66671c3e2803a87bb98e4edbfaebb3da7f3f7ba1"
+    },
+    {
       "path": ".github/workflows/device-pairing.yml",
       "bytes": 2172,
       "sha256": "16c68799c586b031070e50ffbfd7124232fb3e61f6e534e6ec7a577b47f2dcfb"
@@ -35,8 +40,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 214,
-      "sha256": "61a08380eb11c1b568665057783c0195330b2c9300035996c3cd44ed99ef0553"
+      "bytes": 226,
+      "sha256": "dca00ae690b349f6d1f84d9371548ab365668ad94527bdb06ef9530ff1be5aee"
     },
     {
       "path": "README.md",
@@ -80,8 +85,8 @@
     },
     {
       "path": "connect/app/build.gradle.kts",
-      "bytes": 2890,
-      "sha256": "075c96f210e213a5ae74713805bae797ee653d869483a910da88019f4e295e07"
+      "bytes": 3584,
+      "sha256": "269cca83bf3f7c99813dac2d9347dfb8f6912adfade4eb08e4b96c627478e58c"
     },
     {
       "path": "connect/app/gradle.lockfile",
@@ -111,7 +116,7 @@
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
       "bytes": 1859,
-      "sha256": "f232381ddc8dfdd4d90be557bdc6e9f3d191e6790260ee18c988ce76dbe9a0c0"
+      "sha256": "046b41ef61a0bb01e7a4156f5a89ffa6ab90b20fbd25ee48ad7bf4891641e52f"
     },
     {
       "path": "connect/app/src/main/assets/licenses/bouncycastle-1.86.html",
@@ -190,8 +195,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MainActivity.kt",
-      "bytes": 7274,
-      "sha256": "4b67d11621660a0864fee79376859e9396deb776314c81326395f706cb7b698a"
+      "bytes": 7360,
+      "sha256": "b383d59702aa4607aff26d0c6fa750c24485505c867bc3d4fa6ab8cc0906bffb"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",
@@ -389,9 +394,24 @@
       "sha256": "3e67a48363371a0d1bcffc4cf3c2660a83b62911855bccdf783735c244ef8818"
     },
     {
+      "path": "connect/release-identity.json",
+      "bytes": 213,
+      "sha256": "6b8b8fd73cdf94fa0abd69040f0521d626b68bdb2def0e4f967ecba1a387635d"
+    },
+    {
+      "path": "connect/scripts/check_distribution.py",
+      "bytes": 5131,
+      "sha256": "79d777e657d9918d5324443dfa9df8f33487e6265c9a4641a42f615a04c48194"
+    },
+    {
       "path": "connect/scripts/check_source_hygiene.py",
       "bytes": 2325,
       "sha256": "f510c7f6d4264e468ba96688805086c3dad1144544727cdfb37002f4ed57b781"
+    },
+    {
+      "path": "connect/scripts/distribution.py",
+      "bytes": 10170,
+      "sha256": "4eeb47ed10e7703dc4acad9d56086f0f28c37eb30fd7d1b8b8911ee5b45be483"
     },
     {
       "path": "connect/scripts/resolve_build_tools.gradle",
@@ -402,6 +422,11 @@
       "path": "connect/scripts/run_core_tests.sh",
       "bytes": 315,
       "sha256": "26da91767b8bb5b31bc9687dc7a646ea17f650cb53eb47464434aa84f62fc5e5"
+    },
+    {
+      "path": "connect/scripts/smoke_distribution_android.py",
+      "bytes": 4409,
+      "sha256": "35f2b0e1c835322e863850e5dbf27f00a65eb4e3800170b22ff7bf35186193b1"
     },
     {
       "path": "connect/scripts/smoke_lan_android.py",
