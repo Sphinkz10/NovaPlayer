@@ -41,11 +41,17 @@ def main():
     while True:
         adb('shell', 'uiautomator', 'dump', '/sdcard/nova-release-window.xml')
         xml = adb('shell', 'cat', '/sdcard/nova-release-window.xml').stdout
-        if 'Entrar na NOVA' in xml and 'NOVA Cinema' in xml:
+        (OUT/'launcher.xml').write_text(xml)
+        # The Directory button receives initial focus. ScrollView can therefore
+        # put the title outside the viewport on a portrait emulator. Check the
+        # focused entry and its real package; aapt checks the application label.
+        if 'Entrar na NOVA' in xml and 'package="'+PACKAGE+'"' in xml:
             break
         assert time.monotonic() < deadline
         time.sleep(1)
-    checks.append('release launcher renders Directory entry and NOVA Cinema title')
+    capture = subprocess.run(['adb', 'exec-out', 'screencap', '-p'], stdout=subprocess.PIPE, check=True, timeout=30)
+    (OUT/'launcher.png').write_bytes(capture.stdout)
+    checks.append('release launcher renders Directory entry in the distribution package')
     # Root is used only by the isolated harness to inspect sandbox preservation.
     # The product remains non-debuggable and contains no test data endpoints.
     marker = secrets.token_hex(32)

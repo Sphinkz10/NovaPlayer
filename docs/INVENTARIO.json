@@ -425,8 +425,8 @@
     },
     {
       "path": "connect/scripts/smoke_distribution_android.py",
-      "bytes": 4409,
-      "sha256": "35f2b0e1c835322e863850e5dbf27f00a65eb4e3800170b22ff7bf35186193b1"
+      "bytes": 4880,
+      "sha256": "238ff2842440f4f0b7b3dc62f2f3fb827d74cd4af4abdd3c3576501e08f1e3e8"
     },
     {
       "path": "connect/scripts/smoke_lan_android.py",
@@ -517,6 +517,11 @@
       "path": "docs/M4_CINEMA_LOCAL.md",
       "bytes": 7715,
       "sha256": "ae24a834e3b18d6fca316793f3cacd26890c88df0c6d95ddf863124657def461"
+    },
+    {
+      "path": "docs/M4_DISTRIBUICAO_ANDROID.md",
+      "bytes": 5511,
+      "sha256": "9921b0f0154d58c6e638739bea0650dff2305c0f4d3ae1f5e6ed4b07ed339a56"
     },
     {
       "path": "docs/M4_INSTALACAO_LAN.md",
