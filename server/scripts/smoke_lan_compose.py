@@ -153,6 +153,7 @@ def run():
                 (out/'lan-server.json').write_text(json.dumps(report,indent=2),encoding='utf8');print(json.dumps(report))
                 if gateway_mode:
                     (out/'gateway-remote.json').write_text(json.dumps(remote_report,indent=2)+'\n',encoding='utf8')
+                    (out/'gateway-local-image.txt').write_text(gateway_image+'\n',encoding='ascii')
                     print(json.dumps(remote_report));return
                 from smoke_lan_recovery import run as recover_lan
                 recovered=recover_lan(root,bundle,image,project,info,client,compose,owner=owner,admin=admin,credentials=credentials,

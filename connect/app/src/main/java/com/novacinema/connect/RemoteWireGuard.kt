@@ -33,7 +33,9 @@ internal class RemoteWireGuardProfile private constructor(val json: String, val 
                 val value = data.get(name);require(value is Int || value is Long);return (value as Number).toLong()
             }
             val issued = seconds("issued_at");val expiry = seconds("expires_at")
-            require(issued in 1..(now/1000) && expiry > now/1000 && expiry-issued in 1..86400)
+            // Independent NAS/TV clocks may differ slightly. Bound future skew
+            // explicitly; never extend expiry or alter TLS certificate checks.
+            require(issued in 1..(now/1000+30) && expiry > now/1000 && expiry-issued in 1..86400)
             val origin = data.string("client_origin")
             val host = URI(origin).host ?: error("Missing gateway")
             require(RouteGuard.isPrivateGatewayHost(host) && ServerTrust.validOrigin(origin))

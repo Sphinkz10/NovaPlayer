@@ -35,7 +35,7 @@ class M4Steps(private val runner:Instrumentation) {
         }
         runner.sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_CENTER)
     }
-    fun run() {
+    fun run(captureScreens:Boolean=false) {
         val data=JSONObject(File(context.filesDir,"mfour-fixture.json").readText())
         val t=data.getJSONObject("tokens")
         DeviceSessionStore(context).save(SavedDevice(ServerTrust(data.string("origin"),data.string("server_id"),
@@ -52,11 +52,23 @@ class M4Steps(private val runner:Instrumentation) {
         val monitor=runner.addMonitor(PlayerActivity::class.java.name,null,false)
         val cinema=runner.startActivitySync(Intent(context,CinemaActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         var playback:PlayerActivity?=null
+        fun capture(activity:Activity,tag:String,name:String) {
+            if(!captureScreens)return
+            waitUntil { var ready=false;main { ready=activity.hasWindowFocus() &&
+                views(activity.window.decorView).filterIsInstance<Button>().any { it.tag==tag } };ready }
+            LabScreenshots(runner).capture(activity,name)
+        }
         try {
             runner.setInTouchMode(false)
-            click(cinema,"cinema-library-$library");click(cinema,"cinema-item-$item");click(cinema,"cinema-play")
+            capture(cinema,"cinema-library-$library","tv-libraries")
+            click(cinema,"cinema-library-$library")
+            capture(cinema,"cinema-item-$item","tv-catalogue")
+            click(cinema,"cinema-item-$item")
+            capture(cinema,"cinema-play","tv-detail")
+            click(cinema,"cinema-play")
             playback=runner.waitForMonitorWithTimeout(monitor,30000) as? PlayerActivity ?: error("Player not opened")
             waitUntil { var ok=false;main { ok=playback!!.renderedFrame && playback!!.observedPosition>1000 };ok }
+            if(captureScreens)LabScreenshots(runner).capture(playback!!,"tv-player")
             var before=0L;main { before=playback!!.observedPosition }
             runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD)
             waitUntil(5000) { var ok=false;main { ok=playback!!.observedPosition>=before+9000 };ok }

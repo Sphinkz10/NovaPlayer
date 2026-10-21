@@ -10,7 +10,7 @@ android {
     compileSdk = 35
     defaultConfig {
         applicationId = "com.novacinema.connect.poc"; minSdk = 26; targetSdk = 35
-        versionCode = distributionCode; versionName = "0.9-m4-lan"
+        versionCode = distributionCode; versionName = providers.gradleProperty("novaVersionName").orElse("0.9-m4-lan").get()
         testInstrumentationRunner = "com.novacinema.connect.DevicePairingInstrumentation"
     }
     if (nativeProofAar != null) {

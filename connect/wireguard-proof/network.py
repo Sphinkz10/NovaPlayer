@@ -45,7 +45,7 @@ def adb(*args, check=True, timeout=30):
 
 
 def push_private(name, data):
-    assert name in ('wireguard-fixture.json', 'wireguard-gate.txt', 'mfour-fixture.json')
+    assert name in ('wireguard-fixture.json', 'wireguard-gate.txt', 'mfour-fixture.json', 'lab-screenshot-gate.txt')
     command('adb', 'shell', '-T', 'run-as', PACKAGE, 'tee', 'files/'+name, data=data)
 
 
@@ -196,6 +196,15 @@ def instrument(mode, callback=lambda stage: None):
             lines.append(line)
             match = re.search(r'INSTRUMENTATION_STATUS: wireguard_stage=([a-z-]+)', line)
             if match: callback(match[1])
+            capture = re.search(r'INSTRUMENTATION_STATUS: screenshot_name=(tv-[a-z]+)',line)
+            if capture:
+                name=capture[1]
+                assert name in ('tv-libraries','tv-catalogue','tv-detail','tv-player')
+                screenshots=OUT/'screenshots';screenshots.mkdir(exist_ok=True)
+                remote='/sdcard/nova-wireguard-'+name+'.png'
+                adb('shell','screencap','-p',remote)
+                adb('pull',remote,str(screenshots/(name+'.png')))
+                push_private('lab-screenshot-gate.txt',name.encode('ascii'))
         process.wait(timeout=10)
     finally:
         timer.cancel()

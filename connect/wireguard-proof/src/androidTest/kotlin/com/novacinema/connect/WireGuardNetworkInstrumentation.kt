@@ -136,7 +136,11 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                     check(runCatching { RemoteWireGuardProfile.parse(JSONObject(profile.json).put(field,value).toString(),saved,publicKey) }.isFailure)
                 }
                 check(runCatching { RemoteWireGuardProfile.parse(profile.json,saved,publicKey,profile.expiresAt+1) }.isFailure)
+                val issued=JSONObject(profile.json).getLong("issued_at")*1000
+                check(runCatching { RemoteWireGuardProfile.parse(profile.json,saved,publicKey,issued-30000) }.isSuccess)
+                check(runCatching { RemoteWireGuardProfile.parse(profile.json,saved,publicKey,issued-31000) }.isFailure)
                 checks.add("remote profile rejects foreign device broad route injection public gateway and expiry")
+                checks.add("clock skew bounded to thirty seconds without extending expiry or disabling TLS validation")
                 vault.saveRemote(profile.json)
                 check(!raw.contains(enrollmentKeys.keys(saved).privateKey.toBase64()))
                 vault.provisionAdminOnly(localConfig, origin, trust.serverId)
@@ -175,7 +179,7 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 check(DeviceSessionStore(targetContext).loadBase()!!.trust.origin==saved.trust.origin)
                 check(DeviceAssociationRuntime.get(targetContext).check().state==PairingState.ASSOCIATED)
                 checks.add("Cinema session uses verified tunnel origin while durable association remains bound to LAN identity")
-                M4Steps(this).run()
+                M4Steps(this).run(captureScreens=true)
                 checks.add("actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard")
                 RemoteWireGuardRuntime.disconnectToLan(targetContext)
                 check(DeviceSessionStore(targetContext).load()!!.trust.origin==saved.trust.origin)
