@@ -4,6 +4,7 @@ Disposable GitHub emulator only. Never run against a NAS or configure host route
 to the private HTTPS address. The host proxy transports encrypted UDP only.
 """
 import argparse
+import base64
 from datetime import datetime, timedelta, timezone
 import hashlib
 import ipaddress
@@ -20,6 +21,7 @@ import sys
 import tempfile
 import threading
 import time
+import uuid
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -43,7 +45,7 @@ def adb(*args, check=True, timeout=30):
 
 
 def push_private(name, data):
-    assert name in ('wireguard-fixture.json', 'wireguard-gate.txt')
+    assert name in ('wireguard-fixture.json', 'wireguard-gate.txt', 'mfour-fixture.json')
     command('adb', 'shell', '-T', 'run-as', PACKAGE, 'tee', 'files/'+name, data=data)
 
 
@@ -104,6 +106,31 @@ def serve(root, bootstrap_port=None):
     import uvicorn
     from nova_server.client_api import make_client_app
     os.environ['NOVA_STATE_DIR'] = str(root/'state')
+    media_fixture = None
+    if bootstrap_port is None:
+        # Same restricted NOVA media implementation, synthetic upstream bytes.
+        # The companion Docker test uses the real Jellyfin image.
+        import asyncio
+        sys.path.insert(0,str(ROOT/'server/tests'))
+        from jellyfin_m3_fixture import jellyfin_http
+        from nova_server.members import Members, MemberConfiguration
+        from nova_server.storage import Store
+        media_fixture=jellyfin_http();jf,url=media_fixture.__enter__()
+        os.environ['NOVA_JELLYFIN_URL']=url
+        jf.media_content=(root/'synthetic.mp4').read_bytes()
+        libraries=[]
+        for index,letter in enumerate(('a','b')):
+            lib={'id':letter*32,'name':'Biblioteca '+letter.upper(),'paths':['/media/source-'+letter]}
+            libraries.append(lib);identity=str(index+1)*32;path='/media/source-'+letter+'/movie.mp4'
+            jf.media_items[lib['id']]=[{'Id':identity,'Name':'Filme '+letter.upper(),'Type':'Movie','RunTimeTicks':400000000,
+                'Overview':'Vídeo sintético pelo WireGuard.','Path':path,'MediaSources':[{'Id':identity,'Protocol':'File','Path':path}],
+                'UserData':{'PlaybackPositionTicks':0}}]
+        state=Store(root/'state')
+        with state._db() as db:
+            db.execute('UPDATE jellyfin_setup SET server_id=?,report=? WHERE id=1',
+                (jf.sid,json.dumps({'server_id':jf.sid,'libraries':libraries})))
+        asyncio.run(Members(state,url).configure(MemberConfiguration(username='owner',password='owner-fixture-password',
+            subject=(root/'member.txt').read_text(),libraries=['a'*32])))
     # Live canaries prove the denied ports are not simply absent services.
     def canary(port):
         with socket.socket() as listener:
@@ -126,7 +153,9 @@ def serve(root, bootstrap_port=None):
                              ssl_certfile=str(root/'client.crt'), ssl_keyfile=str(root/'client.key'),
                              access_log=False, proxy_headers=False, log_level='error')
     runtime.load(); runtime.ssl.minimum_version = ssl.TLSVersion.TLSv1_3
-    uvicorn.Server(runtime).run()
+    try:uvicorn.Server(runtime).run()
+    finally:
+        if media_fixture:media_fixture.__exit__(None,None,None)
 
 
 def check_services(root):
@@ -215,9 +244,15 @@ def run():
         from nova_server.gateway_channel import atomic_private
         from nova_server.wireguard_gateway import GatewayPolicy
         store = Store(root/'state'); assert store.bootstrap('owner', hash_password(secrets.token_urlsafe(32)))
-        devices = Devices(store); request = devices.start('Disposable WireGuard TV')
-        review = devices.inspect(request['user_code']); devices.decide(request['user_code'], review['request_id'], True)
-        tokens = devices.poll(request['device_code'])
+        from nova_server.secret_vault import SecretVault
+        SecretVault(store).key(create=True)
+        devices = Devices(store); account=str(uuid.uuid4())
+        (root/'member.txt').write_text(account)
+        request = devices.start('Disposable WireGuard TV',{'audience':devices.identity(),'expires_at':int(time.time())+300,
+            'assertion_id':str(uuid.uuid4()),'subject':account,'username':'alice','entry_id':str(uuid.uuid4())})
+        command('ffmpeg','-hide_banner','-loglevel','error','-f','lavfi','-i','testsrc2=size=320x180:rate=24',
+            '-f','lavfi','-i','sine=frequency=440:sample_rate=48000','-t','40','-c:v','libx264','-preset','ultrafast',
+            '-g','24','-pix_fmt','yuv420p','-c:a','aac','-movflags','+faststart',root/'synthetic.mp4',timeout=60)
         pem, wrong = certificate(root, 'client'), certificate(root, 'wrong')
         private = command('wg', 'genkey').stdout.strip()
         public = command('wg', 'pubkey', data=private+b'\n').stdout.decode().strip()
@@ -295,6 +330,8 @@ def run():
                 if ns(sys.executable, Path(__file__).resolve(), '--check-services', root, check=False).returncode == 0: break
                 time.sleep(.2)
             else: raise RuntimeError('Private namespace services not ready')
+            review=devices.inspect(request['user_code']);devices.decide(request['user_code'],review['request_id'],True)
+            tokens=devices.poll(request['device_code'])
             checks.append('real NOVA HTTPS and live denied-port canaries in isolated namespace')
             assert not command('ip', 'route', 'show', GW+'/32').stdout.strip()
             checks.append('host has no route or TCP forwarder to the service overlay address')
@@ -318,11 +355,17 @@ def run():
                     except httpx.ConnectError: time.sleep(.2)
                 else: raise RuntimeError('LAN enrollment service not ready')
             fixture = {'origin': ORIGIN, 'server_id': devices.identity(), 'device_id': tokens['device_id'],
+                       'account_id':account,
                        'access_token': tokens['access_token'], 'refresh_token': tokens['refresh_token'],
                        'enrollment_origin': f'https://10.0.2.2:{bootstrap_port}',
                        'gateway_public_key': public, 'endpoint_port': relay.port,
                        'certificate_pem': pem, 'wrong_certificate_pem': wrong}
             push_private('wireguard-fixture.json', json.dumps(fixture).encode())
+            from cryptography import x509
+            from cryptography.hazmat.primitives import serialization
+            push_private('mfour-fixture.json',json.dumps({'origin':ORIGIN,'server_id':devices.identity(),'account':account,
+                'certificate':base64.b64encode(x509.load_pem_x509_certificate(pem.encode()).public_bytes(serialization.Encoding.DER)).decode(),
+                'tokens':tokens,'library':'a'*32,'item':'1'*32,'other_library':'b'*32}).encode())
             def callback(stage):
                 nonlocal client_public,worker
                 if stage == 'consent': consent()
@@ -395,6 +438,7 @@ def run():
                       'checks': checks, 'gateway_handshake': handshake, 'adb_reverse': False,
                       'tls': 'TLS 1.3, exact certificate and hostname validation', 'gateway': 'isolated Linux kernel WireGuard namespace',
                       'client': 'official embedded Android GoBackend', 'consent': 'actual system dialog, no appops bypass',
+                      'playback':'actual Media3 frame/seek/pause/resume over WireGuard; synthetic Jellyfin HTTP fixture inside namespace',
                       'private_profile_delivery': 'authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation',
                       'gateway_installation': 'standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending',
                       'physical_nas': False, 'physical_tv': False, 'production_remote_access_enabled': False,

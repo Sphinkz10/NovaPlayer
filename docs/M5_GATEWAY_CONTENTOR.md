@@ -25,6 +25,7 @@ A página inicial Android permite pedir/preparar o WireGuard, ligar, e desligar 
 
 1. Testes de API: autenticação, isolamento por dispositivo, aprovação, expiração/indisponibilidade, revogação, destino/porta e ausência de rotas administrativas.
 2. Docker real: instalação gerada, peer WireGuard, TLS 1.3, catálogo/vídeo Range Jellyfin pelo túnel, bloqueio de HTTPS existente/novo com gateway congelado, recuperação, endereço estável e revogação.
-3. Android API 26/35: obtenção real de perfil pela API, rejeição de parâmetros adulterados, consentimento nativo, verificação da identidade e mudança explícita da sessão Cinema entre túnel e LAN.
+3. Android API 26/35: obtenção real de perfil pela API, rejeição de parâmetros adulterados, consentimento nativo, verificação da identidade, catálogo por D-pad, primeiro frame Media3, avanço/pausa/retoma pelo túnel e mudança explícita entre túnel e LAN. Vídeo sintético servido por fixture Jellyfin HTTP; a imagem Jellyfin real é coberta pelo ensaio Docker complementar.
+4. Reinício do processo Android com WireGuard selecionado: a sessão persistente conserva a identidade de associação e bloqueia a utilização implícita da LAN até uma escolha explícita do utilizador.
 
 Estes critérios descrevem os ensaios implementados. Consultar os resultados da execução antes de interpretar qualquer um como aprovado.

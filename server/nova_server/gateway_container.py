@@ -160,6 +160,7 @@ def main():
         if Path('/proc/sys/net/ipv4/ip_forward').read_text().strip() != '0':
             raise GatewayError('gateway_forwarding_must_be_disabled')
         config, policy = load('/identity/gateway.json')
+        Path('/run/nova-gateway/healthy').unlink(missing_ok=True)
         channel = GatewayChannel('/channel', '/identity/channel.key')
         gate = KernelLeaseGate(policy, config['client_port'], config['listen_port'])
         with exclusive('/leases', 'container'):

@@ -51,7 +51,7 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
             .generateCertificate(fixture.string("certificate_pem").byteInputStream())
         return SavedDevice(ServerTrust(fixture.string("enrollment_origin"), fixture.string("server_id"), cert.encoded),
             DeviceTokens(fixture.string("access_token"), fixture.string("refresh_token"), fixture.string("device_id"),300,2592000),
-            System.currentTimeMillis()+2592000_000L)
+            System.currentTimeMillis()+2592000_000L,accountId=fixture.string("account_id"))
     }
     override fun onStart() {
         val report = Bundle()
@@ -63,6 +63,12 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
             val enrollmentKeys = WireGuardEnrollmentStore(targetContext)
             val saved = association(fixture)
             if (mode == "restart") {
+                check(RemoteWireGuardRuntime.selected(targetContext))
+                check(runCatching { DeviceSessionStore(targetContext).load() }.exceptionOrNull() is IOException)
+                check(DeviceSessionStore(targetContext).loadBase()!=null)
+                checks.add("process restart with remote selected refuses silent LAN fallback and preserves association")
+                RemoteWireGuardRuntime.disconnectToLan(targetContext)
+                check(vault.loadRemote()!=null)
                 check(vault.load()?.expectedServerId == fixture.string("server_id"))
                 check(VpnService.prepare(targetContext) == null)
                 checks.add("encrypted profile survives process restart")
@@ -86,6 +92,7 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 checks.add("missing wrapping key never regenerates enrollment identity")
                 DeviceSessionStore(targetContext).clear()
                 check(enrollmentPrefs.all.isEmpty())
+                check(vault.loadRemote()==null && !RemoteWireGuardRuntime.selected(targetContext))
                 checks.add("forgetting NOVA association erases local WireGuard enrollment")
                 val prefs = targetContext.getSharedPreferences("nova_connect_secure", 0)
                 val sealed = android.util.Base64.decode(prefs.getString("sealed", null), android.util.Base64.NO_WRAP)
@@ -112,7 +119,7 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 check(enrollClient.enrollWireGuard(saved, publicKey) == "pending")
                 checks.add("Android-generated public key enrolled idempotently over pinned LAN HTTPS")
                 val foreign = SavedDevice(saved.trust, DeviceTokens(saved.tokens.access, saved.tokens.refresh,
-                    java.util.UUID.randomUUID().toString(),300,2592000), saved.refreshDeadline)
+                    java.util.UUID.randomUUID().toString(),300,2592000), saved.refreshDeadline,accountId=saved.accountId)
                 check(runCatching { enrollmentKeys.publicKey(foreign) }.isFailure)
                 checks.add("encrypted enrollment key bound to NOVA server origin and device")
                 stage("enrolled"); gate("approved")
@@ -168,6 +175,8 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 check(DeviceSessionStore(targetContext).loadBase()!!.trust.origin==saved.trust.origin)
                 check(DeviceAssociationRuntime.get(targetContext).check().state==PairingState.ASSOCIATED)
                 checks.add("Cinema session uses verified tunnel origin while durable association remains bound to LAN identity")
+                M4Steps(this).run()
+                checks.add("actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard")
                 RemoteWireGuardRuntime.disconnectToLan(targetContext)
                 check(DeviceSessionStore(targetContext).load()!!.trust.origin==saved.trust.origin)
                 checks.add("explicit disconnect restores selected LAN transport")
@@ -209,6 +218,11 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 bridge.disconnect(); check(!bridge.isTunnelUp())
                 networkRefused { client.identity(access) }
                 checks.add("disconnect stops tunnel without public fallback")
+                check(!RemoteWireGuardRuntime.connect(targetContext))
+                check(RemoteWireGuardRuntime.selected(targetContext))
+                check(runCatching { DeviceSessionStore(targetContext).load() }.exceptionOrNull() is IOException)
+                check(DeviceSessionStore(targetContext).loadBase()!=null)
+                checks.add("failed remote reconnection preserves selection and blocks implicit LAN credentials")
                 stage("disconnected")
             }
             report.putString("nova_wireguard", "passed")
