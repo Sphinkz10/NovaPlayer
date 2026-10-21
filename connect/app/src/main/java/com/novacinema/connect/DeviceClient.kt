@@ -150,6 +150,11 @@ class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
     fun wireGuardStatus(saved: SavedDevice, publicKey: String): String = wireGuardResult(saved,
         publicKey, request("wireguard", access = saved.tokens.access))
 
+    internal fun wireGuardProfile(saved:SavedDevice,publicKey:String):RemoteWireGuardProfile {
+        require(saved.trust.origin==trust.origin && saved.trust.serverId==trust.serverId)
+        return RemoteWireGuardProfile.parse(request("wireguard/profile",access=saved.tokens.access).toString(),saved,publicKey)
+    }
+
     private fun wireGuardResult(saved: SavedDevice, publicKey: String, result: JSONObject): String {
         require(saved.trust.serverId == trust.serverId && saved.trust.origin == trust.origin)
         require(result.integer("schema_version") == 1 && result.string("server_id") == trust.serverId &&

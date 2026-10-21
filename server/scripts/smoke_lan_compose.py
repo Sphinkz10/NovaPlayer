@@ -22,6 +22,7 @@ def run():
     ip=socket.gethostbyname(socket.gethostname())
     if not ipaddress.ip_address(ip).is_private or ip.startswith('127.'):raise ValueError('Private runner interface required')
     source=Path(__file__).resolve().parents[1]
+    gateway_mode=os.environ.get('NOVA_GATEWAY_LAB')=='1'
     with tempfile.TemporaryDirectory(prefix='nova-lan-compose-') as temp:
         root=Path(temp);bundle=root/'bundle';a=root/'a';b=root/'b';a.mkdir();b.mkdir()
         ports={}
@@ -31,20 +32,32 @@ def run():
             ports[role]=port
         password=__import__('secrets').token_urlsafe(24)
         owner={'username':'owner','password':password}
-        info=prepare(bundle,ip=ip,state_root='/mnt/pool/nova',media_a='/mnt/pool/a',media_b='/mnt/pool/b',
+        installer=prepare
+        gateway_options={}
+        if gateway_mode:
+            from wireguard_install import prepare as installer
+            gateway_options={'gateway_image':'ghcr.io/sphinkz10/nova-gateway@sha256:'+'b'*64,'udp_endpoint':'nova-gateway:51820'}
+        info=installer(bundle,ip=ip,state_root='/mnt/pool/nova',media_a='/mnt/pool/a',media_b='/mnt/pool/b',
             uid=os.getuid(),gid=os.getgid(),image='ghcr.io/sphinkz10/nova-core@sha256:'+'a'*64,
-            version='25.10.5',username='owner',password=password,ports=ports)
+            version='25.10.5',username='owner',password=password,ports=ports,**gateway_options)
         config=json.loads((bundle/'instalar-no-truenas.yaml').read_text())
         image=os.environ.get('NOVA_TEST_IMAGE') or 'nova-lan-test:'+uuid.uuid4().hex
         if not os.environ.get('NOVA_TEST_IMAGE'):
             subprocess.run(['docker','build','-t',image,str(source)],check=True,stdout=subprocess.DEVNULL)
+        gateway_image=None
+        if gateway_mode:
+            gateway_image='nova-gateway-test:'+uuid.uuid4().hex
+            subprocess.run(['docker','build','-f',str(source/'gateway/Dockerfile'),'-t',gateway_image,str(source)],check=True,stdout=subprocess.DEVNULL)
         for name,service in config['services'].items():
-            if name!='jellyfin':service['image']=image
+            if name!='jellyfin':service['image']=gateway_image if name=='nova-gateway' else image
             for mount in service['volumes']:
                 path=mount['source']
                 if path.startswith('/mnt/pool/nova/'):mount['source']=str(bundle/'copiar-para-nas'/path.removeprefix('/mnt/pool/nova/'))
                 elif path in ('/mnt/pool/a','/mnt/pool/b'):mount['source']=str(a if path.endswith('/a') else b)
                 else:raise ValueError('Unexpected fixture mount')
+        if gateway_mode:
+            from smoke_gateway_remote import prepare_probe
+            config['services']['probe']=prepare_probe(root,gateway_image)
         (root/'compose.yaml').write_text(json.dumps(config),encoding='utf8')
         project='nova-lan-'+uuid.uuid4().hex[:10]
         def compose(*args):
@@ -121,6 +134,9 @@ def run():
                 for service in ('client','tv_directory'):
                     assert client.get(info[service]+'/api/v1/admin/overview',headers=admin).status_code==404
                 assert client.get(info['control']+'/api/v1/admin/overview',headers=device).status_code==401
+                if gateway_mode:
+                    from smoke_gateway_remote import verify_remote
+                    remote_report=verify_remote(root,bundle,project,client,info,admin,device,tokens,selected,item)
                 compose('restart')
                 for _ in range(120):
                     try:
@@ -135,11 +151,19 @@ def run():
                     'image':'exact supplied image' if os.environ.get('NOVA_TEST_IMAGE') else 'locally built fixture image'}
                 out=Path(os.environ.get('NOVA_EVIDENCE_DIR','server/test-results/lan'));out.mkdir(parents=True,exist_ok=True)
                 (out/'lan-server.json').write_text(json.dumps(report,indent=2),encoding='utf8');print(json.dumps(report))
+                if gateway_mode:
+                    (out/'gateway-remote.json').write_text(json.dumps(remote_report,indent=2)+'\n',encoding='utf8')
+                    print(json.dumps(remote_report));return
                 from smoke_lan_recovery import run as recover_lan
                 recovered=recover_lan(root,bundle,image,project,info,client,compose,owner=owner,admin=admin,credentials=credentials,
                     family=family,family_password=family_password,tokens=tokens,selected=selected,profile=profile)
                 (out/'lan-recovery.json').write_text(json.dumps(recovered,indent=2),encoding='utf8');print(json.dumps(recovered))
         finally:
+            if gateway_mode:
+                out=Path(os.environ.get('NOVA_EVIDENCE_DIR','server/test-results/gateway-container'));out.mkdir(parents=True,exist_ok=True)
+                logs=subprocess.run(['docker','compose','-p',project,'logs','--no-color','nova-gateway'],cwd=root,
+                    stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,check=False)
+                (out/'gateway.log').write_bytes(logs.stdout)
             subprocess.run(['docker','compose','-p',project,'down','--volumes','--remove-orphans'],cwd=root,
                            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False)
 

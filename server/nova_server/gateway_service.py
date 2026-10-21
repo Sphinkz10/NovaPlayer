@@ -105,9 +105,10 @@ class DurableLeases:
 
 
 class GatewayWorker:
-    def __init__(self, policy, backend, channel, leases, *, clock=time.time, monotonic=time.monotonic):
+    def __init__(self, policy, backend, channel, leases, *, clock=time.time, monotonic=time.monotonic, gate=None):
         self.policy, self.backend, self.channel, self.leases = policy, backend, channel, leases
         self.clock, self.monotonic = clock, monotonic
+        self.gate = gate
         self.seen = {}  # replay deadlines are monotonic and never extended
         self.latest_wall = 0
 
@@ -147,6 +148,11 @@ class GatewayWorker:
                     raise GatewayError('gateway_plan_expired')
                 return self.clock()
             result = reconcile(plan['snapshot'], self.policy, self.backend, clock=guarded_clock, assignments=assigned)
+            if self.gate is not None:
+                # Kernel timeout is bounded by BOTH deadlines. Stopping this
+                # process cannot leave an indefinitely usable HTTPS peer.
+                remaining = min(snapshot.expires_at-self.clock(), previous[1]-self.monotonic())
+                self.gate.authorize(result['peers'], remaining)
             report = {'schema_version': 1, 'publisher_id': plan['publisher_id'], 'plan_id': plan['plan_id'],
                       'observed_at': int(self.clock()), 'result': result}
             self.channel.write('observation', report)
@@ -159,6 +165,12 @@ class GatewayWorker:
 
     def stop(self):
         removed = False
+        gate_closed = self.gate is None
+        if self.gate is not None:
+            try:
+                self.gate.close()
+                gate_closed = True
+            except Exception: pass
         try:
             clear_owned(self.policy, self.backend)
             removed = True
@@ -166,9 +178,9 @@ class GatewayWorker:
         # Replace a previous success immediately, including when cleanup fails.
         try:
             self.channel.write('observation', {'schema_version': 1, 'state': 'not_verified',
-                'configuration_observed': False, 'cleanup_confirmed': removed})
+                'configuration_observed': False, 'cleanup_confirmed': removed and gate_closed})
         except Exception: pass
-        return removed
+        return removed and gate_closed
 
     def run(self, stopping, *, interval=1):
         try:

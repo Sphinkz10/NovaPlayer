@@ -118,10 +118,19 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 stage("enrolled"); gate("approved")
                 check(enrollClient.wireGuardStatus(saved, publicKey) == "approved")
                 checks.add("owner approval checked before constructing local lab tunnel profile")
-                val localConfig = "[Interface]\nPrivateKey = ${enrollmentKeys.keys(saved).privateKey.toBase64()}\n" +
-                    "Address = 10.222.0.2/32\nMTU = 1280\nIncludedApplications = ${targetContext.packageName}\n\n" +
-                    "[Peer]\nPublicKey = ${fixture.string("gateway_public_key")}\nEndpoint = 10.0.2.2:${fixture.integer("endpoint_port")}\n" +
-                    "AllowedIPs = 10.222.0.1/32\nPersistentKeepalive = 25\n"
+                var remote:RemoteWireGuardProfile?=null
+                waitFor { try { remote=enrollClient.wireGuardProfile(saved,publicKey);true }
+                    catch(e:DeviceApiFailure) { if(e.status!=503)throw e;false } }
+                val profile=remote!!
+                val localConfig=profile.config(targetContext,saved)
+                checks.add("public gateway configuration delivered by authenticated pinned device API")
+                for((field,value) in listOf("device_id" to java.util.UUID.randomUUID().toString(),
+                    "allowed_ip" to "0.0.0.0/0","endpoint" to "10.0.2.2:51820\nPostUp=bad","client_origin" to "https://8.8.8.8:443")) {
+                    check(runCatching { RemoteWireGuardProfile.parse(JSONObject(profile.json).put(field,value).toString(),saved,publicKey) }.isFailure)
+                }
+                check(runCatching { RemoteWireGuardProfile.parse(profile.json,saved,publicKey,profile.expiresAt+1) }.isFailure)
+                checks.add("remote profile rejects foreign device broad route injection public gateway and expiry")
+                vault.saveRemote(profile.json)
                 check(!raw.contains(enrollmentKeys.keys(saved).privateKey.toBase64()))
                 vault.provisionAdminOnly(localConfig, origin, trust.serverId)
                 val stored = targetContext.getSharedPreferences("nova_connect_secure", 0).getString("sealed", null)!!
@@ -153,6 +162,15 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 catch (_: IllegalArgumentException) { rejected = true }
                 check(rejected && !bridge.isTunnelUp())
                 checks.add("full-tunnel and other-application profiles rejected")
+                DeviceSessionStore(targetContext).save(saved)
+                check(RemoteWireGuardRuntime.connect(targetContext))
+                check(DeviceSessionStore(targetContext).load()!!.trust.origin==origin)
+                check(DeviceSessionStore(targetContext).loadBase()!!.trust.origin==saved.trust.origin)
+                check(DeviceAssociationRuntime.get(targetContext).check().state==PairingState.ASSOCIATED)
+                checks.add("Cinema session uses verified tunnel origin while durable association remains bound to LAN identity")
+                RemoteWireGuardRuntime.disconnectToLan(targetContext)
+                check(DeviceSessionStore(targetContext).load()!!.trust.origin==saved.trust.origin)
+                checks.add("explicit disconnect restores selected LAN transport")
                 check(bridge.connect(config, origin) && bridge.isTunnelUp())
                 var identity: DeviceIdentity? = null
                 waitFor {

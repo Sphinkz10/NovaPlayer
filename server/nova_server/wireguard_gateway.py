@@ -158,12 +158,18 @@ class KernelWireGuard:
     is a local dependency, never an HTTP parameter. The interface must already be
     UP, with its public key, exact gateway /32 and explicit NOVA ownership alias.
     """
-    def __init__(self, execute, interface):
+    def __init__(self, execute, interface, *, local_namespace=None):
         if sys.platform != 'linux':
             raise GatewayError('linux_namespace_required')
         if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]{0,14}', interface):
             raise GatewayError('invalid_gateway_interface')
         self.execute, self.interface = execute, interface
+        # Container entrypoint only: pin the namespace inode before provisioning.
+        # The host worker continues to require a distinct namespace by default.
+        if local_namespace is not None and (not re.fullmatch(r'net:\[\d+\]', local_namespace)
+                or local_namespace != os.readlink('/proc/self/ns/net')):
+            raise GatewayError('invalid_local_namespace')
+        self.local_namespace = local_namespace
 
     def _run(self, *argv):
         result = self.execute(*argv)
@@ -173,7 +179,9 @@ class KernelWireGuard:
 
     def verify_scope(self, policy):
         inside = self._run('readlink', '/proc/self/ns/net')
-        if not re.fullmatch(r'net:\[\d+\]', inside) or inside == os.readlink('/proc/self/ns/net'):
+        if (not re.fullmatch(r'net:\[\d+\]', inside)
+                or (self.local_namespace is None and inside == os.readlink('/proc/self/ns/net'))
+                or (self.local_namespace is not None and inside != self.local_namespace)):
             raise GatewayError('isolated_network_namespace_required')
         links = json.loads(self._run('ip', '-j', '-d', 'link', 'show', 'dev', self.interface))
         if (len(links) != 1 or links[0].get('ifalias') != 'nova-wireguard-v1:'+policy.server_id

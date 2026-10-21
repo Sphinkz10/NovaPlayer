@@ -114,7 +114,14 @@ def serve(root, bootstrap_port=None):
     if bootstrap_port is None:
         for port in (22, 9443): threading.Thread(target=canary, args=(port,), daemon=True).start()
     origin = ORIGIN if bootstrap_port is None else 'https://10.0.2.2:'+str(bootstrap_port)
-    runtime = uvicorn.Config(make_client_app(origin=origin), host=GW if bootstrap_port is None else '127.0.0.1',
+    profiles = None
+    if bootstrap_port is not None:
+        from nova_server.wireguard_profile import WireGuardProfiles
+        from nova_server.gateway_channel import GatewayChannel
+        from nova_server.storage import Store
+        profiles=WireGuardProfiles(Store(root/'state'),json.loads((root/'public-profile.json').read_text()),
+            GatewayChannel(root/'channel',root/'channel.key'))
+    runtime = uvicorn.Config(make_client_app(origin=origin,wireguard_profiles=profiles), host=GW if bootstrap_port is None else '127.0.0.1',
                              port=bootstrap_port or 9444,
                              ssl_certfile=str(root/'client.crt'), ssl_keyfile=str(root/'client.key'),
                              access_log=False, proxy_headers=False, log_level='error')
@@ -292,6 +299,8 @@ def run():
             assert not command('ip', 'route', 'show', GW+'/32').stdout.strip()
             checks.append('host has no route or TCP forwarder to the service overlay address')
             relay = UdpRelay()
+            atomic_private(root/'public-profile.json',json.dumps({'schema_version':1,'policy':asdict(gateway_policy),
+                'endpoint':'10.0.2.2:'+str(relay.port),'client_origin':ORIGIN}).encode())
             # Separate LAN enrollment endpoint, sharing Core state but never forwarding
             # TCP to the overlay. Only the encrypted UDP relay reaches that network.
             with socket.socket() as allocation:
@@ -386,7 +395,7 @@ def run():
                       'checks': checks, 'gateway_handshake': handshake, 'adb_reverse': False,
                       'tls': 'TLS 1.3, exact certificate and hostname validation', 'gateway': 'isolated Linux kernel WireGuard namespace',
                       'client': 'official embedded Android GoBackend', 'consent': 'actual system dialog, no appops bypass',
-                      'private_profile_delivery': 'Android-generated private key never leaves app; public key enrolled over pinned LAN HTTPS',
+                      'private_profile_delivery': 'authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation',
                       'gateway_installation': 'standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending',
                       'physical_nas': False, 'physical_tv': False, 'production_remote_access_enabled': False,
                       'apk_sha256': hashlib.sha256((ROOT/'connect/app/build/outputs/apk/debug/app-debug.apk').read_bytes()).hexdigest(),

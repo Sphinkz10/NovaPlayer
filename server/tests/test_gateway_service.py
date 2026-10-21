@@ -66,6 +66,21 @@ def test_worker_durable_ips_survive_interface_and_process_rebuild(service):
     assert backend.state == {} and publisher.status()['peers'] == []
 
 
+def test_kernel_gate_failure_clears_peer_and_cannot_report_success(service):
+    config, clock, channel, _, publisher, backend, leases, _ = service
+    class Gate:
+        closed=0
+        def authorize(self,peers,seconds):
+            assert peers and 0<seconds<=15
+            raise GatewayError('gateway_firewall_failed')
+        def close(self):self.closed+=1
+    gate=Gate()
+    worker=GatewayWorker(config,backend,channel,leases,clock=clock.time,monotonic=clock.monotonic,gate=gate)
+    publisher.publish();assert not worker.tick()
+    assert gate.closed==1 and not backend.state
+    assert publisher.status()['configuration_observed'] is False
+
+
 @pytest.mark.parametrize('failure', ['missing', 'signature', 'expired', 'future', 'replaced_identity', 'unknown_field', 'oversized'])
 def test_transport_failure_clears_owned_peers_and_invalidates_previous_report(service, failure):
     config, clock, channel, data, publisher, backend, leases, worker = service

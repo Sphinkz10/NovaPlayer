@@ -59,8 +59,9 @@ def render_lan(deployment,*,state_root,media_a,media_b,uid,gid,image,version='24
     return config
 
 
-def prepare(output,*,ip,state_root,media_a,media_b,uid,gid,image,version,username,password,ports=None):
+def prepare(output,*,ip,state_root,media_a,media_b,uid,gid,image,version,username,password,ports=None,gateway_ip=None):
     ip=lan_ip(ip)
+    if gateway_ip is not None:gateway_ip=lan_ip(gateway_ip)
     # Reuse the established dataset, version, image and non-root validation before writing anything.
     config=legacy_render(state_root,media_a,media_b,uid,gid,image,version)
     if not re.fullmatch(r'[a-z][a-z0-9_.-]{2,39}',username):raise ValueError('Conta com 3–40 caracteres minúsculos.')
@@ -97,7 +98,8 @@ def prepare(output,*,ip,state_root,media_a,media_b,uid,gid,image,version,usernam
             .add_extension(x509.BasicConstraints(ca=False,path_length=None),critical=True)
             .add_extension(x509.SubjectKeyIdentifier.from_public_key(key.public_key()),critical=False)
             .add_extension(x509.AuthorityKeyIdentifier.from_issuer_public_key(ca_key.public_key()),critical=False)
-            .add_extension(x509.SubjectAlternativeName([x509.IPAddress(ipaddress.ip_address(ip))]),critical=False)
+            .add_extension(x509.SubjectAlternativeName([x509.IPAddress(ipaddress.ip_address(address))
+                for address in ([ip,gateway_ip] if role=='client' and gateway_ip and gateway_ip!=ip else [ip])]),critical=False)
             .add_extension(x509.ExtendedKeyUsage([ExtendedKeyUsageOID.SERVER_AUTH]),critical=False)
             .add_extension(x509.KeyUsage(True,False,False,False,False,False,False,False,False),critical=True)
             .sign(ca_key,hashes.SHA256()))

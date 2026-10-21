@@ -69,16 +69,20 @@ class SmallBody:
         await self.app(scope, replay, send)
 
 
-def make_client_app(state_dir=None, origin=None, *, require_directory=False):
+def make_client_app(state_dir=None, origin=None, *, require_directory=False, wireguard_profiles=None):
     origin, host = client_origin(origin or os.environ.get('NOVA_CLIENT_ORIGIN', ''))
     store = Store(state_dir or os.environ.get('NOVA_STATE_DIR', '/data'))
     devices = Devices(store)
+    if wireguard_profiles is None and os.environ.get('NOVA_WIREGUARD_PUBLIC_CONFIG'):
+        from .wireguard_profile import WireGuardProfiles
+        wireguard_profiles = WireGuardProfiles.local(store,os.environ['NOVA_WIREGUARD_PUBLIC_CONFIG'])
+    remote_origin = wireguard_profiles.origin if wireguard_profiles is not None else None
     api = FastAPI(title='NOVA device laboratory', docs_url=None, redoc_url=None, openapi_url=None)
     api.state.devices = devices
     api.add_exception_handler(DeviceError, device_error)
     api.add_exception_handler(RequestValidationError, invalid_device_payload)
     api.add_middleware(SmallBody)
-    api.add_middleware(TrustedHostMiddleware, allowed_hosts=[host], www_redirect=False)
+    api.add_middleware(TrustedHostMiddleware, allowed_hosts=[host]+([urlsplit(remote_origin).hostname] if remote_origin else []), www_redirect=False)
 
     @api.middleware('http')
     async def transport(request: Request, call_next):
@@ -126,7 +130,8 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False):
             raise DeviceError('invalid_token', 401)
         result = devices.authenticate(bearer[7:])
         result['descriptor'] = {'schema_version': 1, 'server_id': result['server_id'],
-                                'client_origin': origin, 'media_enabled': result['account_id'] is not None,
+                                'client_origin': remote_origin if remote_origin and request.url.hostname == urlsplit(remote_origin).hostname else origin,
+                                'media_enabled': result['account_id'] is not None,
                                 'directory_enabled': result['account_id'] is not None, 'remote_access_enabled': False}
         return result
 
@@ -173,6 +178,14 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False):
     @api.get('/api/v1/device/wireguard')
     def wireguard_status(request: Request):
         return WireGuardEnrollments(store).status(wireguard_access(request))
+
+    @api.get('/api/v1/device/wireguard/profile')
+    def wireguard_profile(request: Request):
+        access = wireguard_access(request)
+        devices.authenticate(access)
+        if wireguard_profiles is None:
+            raise DeviceError('wireguard_gateway_unavailable',503)
+        return wireguard_profiles.issue(access)
 
     from .media import mount_media
     mount_media(api,store,os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096'))
