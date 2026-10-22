@@ -39,6 +39,11 @@
       "sha256": "36ebfd44463a7b28ba99a0f7f4db30579a198a5b9199a0e6fe67292059a78000"
     },
     {
+      "path": ".github/workflows/tailscale-network.yml",
+      "bytes": 2305,
+      "sha256": "40c38acaf04ad39ab0b66c723b8f8c4c4ce1cd7ada9bf0a800e96886a76d9e8e"
+    },
+    {
       "path": ".github/workflows/verify.yml",
       "bytes": 6402,
       "sha256": "d7407c5c432822ee65c09fa6548dd85a1ff8a4bc7f7546e27f0a4b25751f996b"
@@ -95,8 +100,8 @@
     },
     {
       "path": "connect/app/build.gradle.kts",
-      "bytes": 4252,
-      "sha256": "18b9d0b5f1d6b8e9b8722f33fe0fd10fb3076362247c760f449ba5dd29182dab"
+      "bytes": 4950,
+      "sha256": "b3846f75a455393eedbb1623ff8fd7780d29b6d15deacc16bd64b2b10b0290ee"
     },
     {
       "path": "connect/app/gradle.lockfile",
@@ -479,6 +484,51 @@
       "sha256": "2116b2d6bfb6277d1a2293336476b1ae6e012ad2e5892da91de0ad2ab3311413"
     },
     {
+      "path": "connect/tailscale-native/network.py",
+      "bytes": 20779,
+      "sha256": "554697ad7795193ee0f63521147fc21a40a70ea01fa95fc4a05426cc7896688b"
+    },
+    {
+      "path": "connect/tailscale-native/src/androidTest/kotlin/com/novacinema/connect/TailscaleNetworkInstrumentation.kt",
+      "bytes": 8725,
+      "sha256": "ee8cbccd22366ff23ca3f9b99d3fbb2731c3749b73b9499b4e3c1f6bae624990"
+    },
+    {
+      "path": "connect/tailscale-native/src/debug/AndroidManifest.xml",
+      "bytes": 922,
+      "sha256": "c8da3307953e215dbb805159a3264580b6474c4c8dcd93024db1a130cb96c187"
+    },
+    {
+      "path": "connect/tailscale-native/src/debug/kotlin/com/novacinema/connect/TailscaleConsentActivity.kt",
+      "bytes": 923,
+      "sha256": "b86a2842ee54dff751acb2305ef5bf046254f35520a68cb3d072a0e30b1f8c5b"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleHttps.kt",
+      "bytes": 3926,
+      "sha256": "2b19d71c4fab9f1ac584122941d27870acf4cace4ee72775a44b1079a87591d6"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscalePlatform.kt",
+      "bytes": 4317,
+      "sha256": "c1bc05c71717c5a9a1076c9777dcf7871a940482f73a910f1d57d45e20b0cd77"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleRoutePolicy.kt",
+      "bytes": 2413,
+      "sha256": "8991d92cdd0ca3cee896a1918ef805cc2669bbba692056225b8981fbb2a05ea5"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleStateStore.kt",
+      "bytes": 2805,
+      "sha256": "6068c981071828a6283c847f3f9356424f5e2d28ec203b02e4b94dd393f59072"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleVpnService.kt",
+      "bytes": 8580,
+      "sha256": "6febba0c5826432d9a1cda6142c2a025b8a270f1321d10ef1b0cc0436f59c584"
+    },
+    {
       "path": "connect/wireguard-proof/network.py",
       "bytes": 31514,
       "sha256": "96fb9c188aba392735bebc9f3a9307efa1f4ce03acf7bcfb3e732f1fb487cda2"
@@ -627,6 +677,11 @@
       "path": "docs/M5_SERVICO_RESULTADOS.json",
       "bytes": 12922,
       "sha256": "27e37aae988561a730c92ae3265ed1d7fa0b52dfe7045d67e0d136c698ce0fa2"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_NATIVO.md",
+      "bytes": 3265,
+      "sha256": "d892ffc68bbba89da3b921f3de08f3672cb64ab10aa9b8c86f747782d5c0df2b"
     },
     {
       "path": "docs/M5_WIREGUARD_REDE.md",

@@ -2,7 +2,9 @@ plugins { id("com.android.application"); id("org.jetbrains.kotlin.android") }
 val nativeProofAar = providers.gradleProperty("novaNativeProofAar").orNull
 val directoryProfile = providers.gradleProperty("novaDirectoryProfile").orNull
 val wireGuardProof = providers.gradleProperty("novaWireGuardProof").orNull == "true"
+val tailscaleProof = providers.gradleProperty("novaTailscaleProof").orNull == "true"
 require(!wireGuardProof || nativeProofAar == null) { "Network and combined-runtime proofs are separate variants" }
+require(!tailscaleProof || (nativeProofAar != null && !wireGuardProof)) { "Tailscale requires the pinned combined AAR" }
 val distributionCode = providers.gradleProperty("novaVersionCode").orElse("9").get().toInt()
 require(distributionCode >= 9) { "Distribution version codes must not go backwards" }
 android {
@@ -27,6 +29,13 @@ android {
         sourceSets["androidTest"].java.srcDir("../wireguard-proof/src/androidTest/kotlin")
         sourceSets["debug"].java.srcDir("../wireguard-proof/src/debug/kotlin")
         sourceSets["debug"].manifest.srcFile("../wireguard-proof/src/debug/AndroidManifest.xml")
+    }
+    if (tailscaleProof) {
+        defaultConfig { testInstrumentationRunner = "com.novacinema.connect.TailscaleNetworkInstrumentation" }
+        sourceSets["debug"].java.srcDir("../tailscale-native/src/main/kotlin")
+        sourceSets["debug"].java.srcDir("../tailscale-native/src/debug/kotlin")
+        sourceSets["debug"].manifest.srcFile("../tailscale-native/src/debug/AndroidManifest.xml")
+        sourceSets["androidTest"].java.srcDir("../tailscale-native/src/androidTest/kotlin")
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }
