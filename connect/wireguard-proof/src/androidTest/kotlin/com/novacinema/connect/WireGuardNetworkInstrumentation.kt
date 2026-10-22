@@ -127,7 +127,12 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 checks.add("owner approval checked before constructing local lab tunnel profile")
                 var remote:RemoteWireGuardProfile?=null
                 waitFor { try { remote=enrollClient.wireGuardProfile(saved,publicKey);true }
-                    catch(e:DeviceApiFailure) { if(e.status!=503)throw e;false } }
+                    catch(e:DeviceApiFailure) {
+                        if(e.status!=503 || e.code!="wireguard_gateway_unavailable")throw e
+                        // A plan can precede its fresh authenticated kernel observation.
+                        // Poll below the real API budget instead of ten requests/second.
+                        Thread.sleep(1000);false
+                    } }
                 val profile=remote!!
                 val localConfig=profile.config(targetContext,saved)
                 checks.add("public gateway configuration delivered by authenticated pinned device API")
@@ -183,7 +188,15 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 M4Steps(this).run(captureScreens=true)
                 checks.add("actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard")
                 val beforeRenewal=RemoteWireGuardProfile.parse(vault.loadRemote()!!,saved,publicKey)
-                check(RemoteWireGuardRuntime.renew(targetContext))
+                val beforeRenewalRaw=vault.loadRemote()
+                waitFor {
+                    try { RemoteWireGuardRuntime.renew(targetContext) }
+                    catch(e:DeviceApiFailure) {
+                        if(e.status!=503 || e.code!="wireguard_gateway_unavailable")throw e
+                        check(vault.loadRemote()==beforeRenewalRaw)
+                        Thread.sleep(1000);false
+                    }
+                }
                 val afterRenewal=RemoteWireGuardProfile.parse(vault.loadRemote()!!,saved,publicKey)
                 check(afterRenewal.expiresAt>beforeRenewal.expiresAt+80000000 && beforeRenewal.sameTransport(afterRenewal))
                 check(DeviceSessionStore(targetContext).load()!!.trust.origin==origin)
@@ -246,6 +259,10 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
         } catch (error: Throwable) {
             report.putString("nova_wireguard", "failed")
             report.putString("failure_type", error.javaClass.simpleName)
+            if(error is DeviceApiFailure) {
+                report.putInt("failure_http_status",error.status)
+                report.putString("failure_api_code",error.code)
+            }
             report.putString("failure_at", error.stackTrace.firstOrNull { it.className.startsWith("com.novacinema") }
                 ?.let { it.className + ":" + it.lineNumber })
             report.putString("failure_context",error.stackTrace.filter { it.className.startsWith("com.novacinema") }

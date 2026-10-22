@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-22",
+  "milestone": "M5 native Tailscale transport proof",
+  "production_provider_enabled": false,
+  "m5_complete": false,
+  "distribution_unchanged": "0.11 WireGuard",
+  "tested_source": "66d78529e10550e985614a78e22e10cc50b34f33",
+  "successful_run": 39800485304,
+  "reports": [
+    {
+      "result": "passed",
+      "provider": "tailscale",
+      "api": 26,
+      "android_checks": 29,
+      "harness_checks": [
+        "pinned real Linux Tailscale peer enrolled with a one-use ten-minute key",
+        "host has no overlay route or TCP proxy to NOVA",
+        "real NOVA Core HTTPS and live blocked administration/SSH canaries",
+        "persisted identity sealed with Android Keystore; no enrollment key or NOVA token in engine preferences",
+        "overlay revocation proven while NOVA access credential remains valid",
+        "corrupted state remains corrupted after refusal, without silently replacing identity",
+        "sealed identity preserved when its missing Android wrapping key is refused"
+      ],
+      "native_engine_aar_sha256": "224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0",
+      "coordinator": "Headscale 0.29.5, disposable TLS coordinator",
+      "linux_peer": "Tailscale 1.104.2",
+      "source_commit": "66d78529e10550e985614a78e22e10cc50b34f33",
+      "apk_sha256": "8d97aae9c635c20e98659c7ea9e8e99c61bc497590837479777ade791b6ac8f1",
+      "external_android_vpn_app": false,
+      "adb_reverse": false,
+      "physical_nas": false,
+      "physical_tv": false,
+      "tailscale_saas_account": false,
+      "production_provider_enabled": false,
+      "media_playback_tested": false
+    },
+    {
+      "result": "passed",
+      "provider": "tailscale",
+      "api": 35,
+      "android_checks": 29,
+      "harness_checks": [
+        "pinned real Linux Tailscale peer enrolled with a one-use ten-minute key",
+        "host has no overlay route or TCP proxy to NOVA",
+        "real NOVA Core HTTPS and live blocked administration/SSH canaries",
+        "persisted identity sealed with Android Keystore; no enrollment key or NOVA token in engine preferences",
+        "overlay revocation proven while NOVA access credential remains valid",
+        "corrupted state remains corrupted after refusal, without silently replacing identity",
+        "sealed identity preserved when its missing Android wrapping key is refused"
+      ],
+      "native_engine_aar_sha256": "224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0",
+      "coordinator": "Headscale 0.29.5, disposable TLS coordinator",
+      "linux_peer": "Tailscale 1.104.2",
+      "source_commit": "66d78529e10550e985614a78e22e10cc50b34f33",
+      "apk_sha256": "695b83bb8c46efb7f1c02f19d638b27097907b33ba690b59437524e677cfb8b3",
+      "external_android_vpn_app": false,
+      "adb_reverse": false,
+      "physical_nas": false,
+      "physical_tv": false,
+      "tailscale_saas_account": false,
+      "production_provider_enabled": false,
+      "media_playback_tested": false
+    }
+  ],
+  "artifacts": [
+    {
+      "api": 26,
+      "id": 12435827200,
+      "zip_sha256": "cf443755bd15f344997aa947c5b0d4f12a460d9fa48c9dd11853497a708c0118"
+    },
+    {
+      "api": 35,
+      "id": 12436146509,
+      "zip_sha256": "7bfad60251aa6a801bcc751dce48b3fe6b9dfa214b8619e1488e61f45c1dafea"
+    }
+  ],
+  "local": {
+    "kotlin_app_and_instrumentation_compilation": "passed; real exported AAR classes, JNI omitted locally for disk space",
+    "provider_boundary_jvm_cases": 42,
+    "nova_cgnat_api_compatibility": "authenticated identity 200, anonymous 401, administration 404",
+    "classes_jar_sha256": "db7d9f92e779510668a586f9970e99749b6952670c3ecfdf60eab273403203af"
+  },
+  "attempts": [
+    {
+      "source": "625a0975cee4dc81ea8d13c38f0a6e15efc8777b",
+      "run": 39798188270,
+      "api26": "failed native initialization",
+      "api35": "failed native initialization"
+    },
+    {
+      "source": "1da7c846a27806b24e210a4e1682d9410196f2d9",
+      "run": 39799404399,
+      "api26": "passed",
+      "api35": "passed"
+    },
+    {
+      "source": "66d78529e10550e985614a78e22e10cc50b34f33",
+      "run": 39800485304,
+      "api26": "passed",
+      "api35": "passed",
+      "additional_case": "missing Android wrapping key must fail before native startup"
+    }
+  ],
+  "limits": [
+    "No Tailscale SaaS account tested",
+    "No Control enrollment or server installer yet",
+    "No Media3 playback over this transport yet",
+    "No physical TrueNAS or TV acceptance",
+    "NetBird remains pending",
+    "Offline expired-profile reconnection remains pending",
+    "SEC final acceptance 0/12"
+  ],
+  "initial_successful_run": 39799404399,
+  "regression": {
+    "wireguard_initial_failed_run": 39800494200,
+    "wireguard_initial_failed_job": 119899474759,
+    "observed_failure": "DeviceApiFailure on profile renewal after playback; original instrumentation omitted HTTP status/code",
+    "follow_up": "proof harness now waits for authenticated gateway observations with bounded 503-only retries, keeps the stored profile unchanged on refusal, slows initial provisioning polls and reports sanitized status/code; new execution pending"
+  }
+}

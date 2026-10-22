@@ -2,11 +2,13 @@
 
 **Atualização:** 22-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
-**Fase em execução:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. Próximo gate M4: ensaio físico das duas origens em cada box. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
+**Entrega de teste disponível:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada, e o incremento WireGuard 0.11. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. A aceitação física M4 continua pendente. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
 **Incremento M5:** [gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md), seguido de [renovação pelo túnel e recuperação cifrada](M5_RENOVACAO_RECUPERACAO.md). O gerador prepara cinco serviços e os certificados; o gateway aplica aprovações/revogações; a TV usa o motor nativo para catálogo/player. O perfil de 24 horas pode ser renovado enquanto ligado. Preparação inicial e recuperação depois de expirar offline ainda exigem LAN.
 
-**Próximos passos para fechar M5:** (1) descoberta/reconexão remota após expiração offline; (2) autenticação, ligação, reprodução e revogação nativas com Tailscale; (3) o mesmo com NetBird; (4) rede externa e os dois aparelhos físicos. Compilar as bibliotecas dos fornecedores não satisfaz estes critérios.
+**Fase em desenvolvimento — Tailscale na M5:** a [prova nativa de transporte](M5_TAILSCALE_NATIVO.md) passou nas APIs 26/35: inscrição descartável, HTTPS NOVA, reinício com a mesma identidade, recusa de certificado diferente e revogação no coordenador. Falta integrar a instalação/configuração pelo Control, associação NOVA e reprodução Media3 neste transporte. A prova usa Headscale de laboratório; a conta Tailscale SaaS ainda não foi ensaiada.
+
+**Próximos passos para fechar M5:** (1) concluir a jornada Tailscale no Control e no player; (2) autenticação, ligação, reprodução e revogação nativas com NetBird; (3) descoberta/reconexão remota após expiração offline; (4) rede externa e os dois aparelhos físicos. Compilar as bibliotecas dos fornecedores não satisfaz estes critérios.
 
 | Quando instalar/testar | O que permite |
 |---|---|

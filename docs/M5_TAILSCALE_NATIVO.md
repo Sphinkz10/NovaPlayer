@@ -1,8 +1,12 @@
 # M5 — Tailscale nativo: serviço VPN e ensaio de rede
 
-Estado em 22 outubro 2026: implementação em desenvolvimento; a primeira execução
-do novo ensaio ainda não constitui um resultado aprovado. A entrega instalável
-continua a ser a 0.11 WireGuard. Não há alteração do estado final da M5.
+Estado em 22 outubro 2026: **prova de transporte nativo aprovada nas APIs 26 e 35**,
+na [execução 39800485304](https://github.com/Sphinkz10/NovaPlayer/actions/runs/39800485304),
+fonte `66d78529e10550e985614a78e22e10cc50b34f33`. Cada API passou 29 verificações
+Android e sete verificações do harness; a política passou 42 casos JVM.
+A perda da chave Keystore foi recusada antes do arranque, sem regeneração da
+identidade. [Resultados e proveniência](M5_TAILSCALE_RESULTADOS.json).
+A entrega instalável continua a ser a 0.11 WireGuard. A M5 completa permanece aberta.
 
 O adaptador em `connect/tailscale-native` usa o motor real `libtailscale`, já
 compilado a partir do commit Android `264102cc702fbd844e900227ee02e5cbb4d7f801`.
@@ -20,7 +24,7 @@ aprovado `/32`, apenas para a app NOVA; sem rotas LAN/default/exit node, anúnci
 de sub-redes ou captura de DNS. A validação CGNAT é específica deste adaptador;
 as regras LAN e WireGuard existentes permanecem separadas.
 
-O workflow `tailscale-network.yml` pretende verificar API 26/35 com:
+O workflow `tailscale-network.yml` verifica API 26/35 com:
 
 - consentimento pelo diálogo real do Android;
 - inscrição com chave de uso único, válida por dez minutos;
@@ -28,8 +32,22 @@ O workflow `tailscale-network.yml` pretende verificar API 26/35 com:
 - TLS 1.3, certificado exato e verificação de hostname da plataforma;
 - recusa de certificado diferente e das portas SSH/administração com serviços vivos;
 - reconexão com a mesma identidade após force-stop, sem reutilizar a chave de inscrição;
+- recriação do serviço no mesmo processo, reutilizando uma única Application Go;
 - corte de acesso após expirar o nó no coordenador e ao desligar localmente;
-- recusa de estado cifrado adulterado antes de inicializar o motor.
+- recusa de estado cifrado adulterado ou perda da chave Keystore antes de inicializar o motor.
+
+A primeira execução, `39798188270` / fonte `625a097`, falhou na inicialização nas
+duas APIs e não conta como aprovada. A correção trata a resposta vazia da LocalAPI
+como sucesso sem corpo: gomobile pode devolvê-la como `null`. Foi também corrigida
+a duração do motor, que agora existe uma única vez por processo, e o sentinela
+de política não configurada foi alinhado com a API upstream. O novo ensaio inclui
+diagnóstico por etapa/classe de erro, sem mensagens do coordenador ou credenciais.
+
+Neste PC a compilação Kotlin e os 42 casos JVM usaram as classes reais do AAR
+verificado, num AAR reduzido apenas para compilação, sem bibliotecas JNI, devido
+ao espaço livre. A execução GitHub usa o AAR completo, verifica o SHA-256 antes
+do build e executa o túnel real. O teste NOVA local confirmou `/device/me` autenticado
+numa origem CGNAT, recusa sem credencial e ausência das rotas administrativas.
 
 O coordenador descartável é Headscale 0.29.5; o par Linux usa Tailscale 1.104.2.
 Os dois binários são fixados por SHA-256 em `network.py`. A namespace não encaminha

@@ -60,8 +60,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3055,
-      "sha256": "9169a67cfd7118f6348eac2fc9d9bd40307e89f522bec772c1671287185e8a1e"
+      "bytes": 3194,
+      "sha256": "187ea1d3243a84f3de9402713fe95643157271863ac51411a207b50f366c2d67"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -540,8 +540,8 @@
     },
     {
       "path": "connect/wireguard-proof/src/androidTest/kotlin/com/novacinema/connect/WireGuardNetworkInstrumentation.kt",
-      "bytes": 17886,
-      "sha256": "af43db31bea6cd6c9ac6a9326599fd0d5ffab207df2549b6e652b94ac95bedcb"
+      "bytes": 18768,
+      "sha256": "18ab092e679d2b892cc75e58466bf074dae625cad49bdf4cbe383a734c218d50"
     },
     {
       "path": "connect/wireguard-proof/src/debug/AndroidManifest.xml",
@@ -565,8 +565,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2275,
-      "sha256": "42bf62593a06961ff46b34a2a148c32c4905bc56f5e67723bac8d5ee64f75a40"
+      "bytes": 2359,
+      "sha256": "c5c3bf5b4ed5c6b5ceee9b0d047539b86565cafd2e254e4624c032f3bd2f78d9"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -685,8 +685,13 @@
     },
     {
       "path": "docs/M5_TAILSCALE_NATIVO.md",
-      "bytes": 3265,
-      "sha256": "d892ffc68bbba89da3b921f3de08f3672cb64ab10aa9b8c86f747782d5c0df2b"
+      "bytes": 4624,
+      "sha256": "8858b8d5b5715dce3cbfaf1422ba8eb831c4485e8e7c04237be82fbcab450425"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_RESULTADOS.json",
+      "bytes": 5188,
+      "sha256": "cec18e80d0ea15a3bfa285781982a13ebdbd6201b93ff4630a061d386010f050"
     },
     {
       "path": "docs/M5_WIREGUARD_REDE.md",
@@ -720,8 +725,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 28708,
-      "sha256": "604aa0be5163f43643b9a10e222559b6f3ff327dd456bb70bfd30735a28385a8"
+      "bytes": 29226,
+      "sha256": "ce5816f65d291f52cf110f0d76230186d3b0ebfa31e23f43c7ce3f81fa2f0702"
     },
     {
       "path": "docs/screenshots/PROVENIENCIA.json",
