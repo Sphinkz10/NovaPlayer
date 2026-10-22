@@ -4,23 +4,23 @@
 
 **Fase em execução:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. Próximo gate M4: ensaio físico das duas origens em cada box. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
-**Incremento M5:** [gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md). O gerador prepara cinco serviços e os certificados; o gateway cria a interface e aplica aprovações/revogações do Control; a TV obtém parâmetros públicos pela API e usa o motor nativo para catálogo/player. A preparação/renovação do perfil de 24 horas ainda exige LAN. Consultar o guia para resultados e pacote verificado.
+**Incremento M5:** [gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md), seguido de [renovação pelo túnel e recuperação cifrada](M5_RENOVACAO_RECUPERACAO.md). O gerador prepara cinco serviços e os certificados; o gateway aplica aprovações/revogações; a TV usa o motor nativo para catálogo/player. O perfil de 24 horas pode ser renovado enquanto ligado. Preparação inicial e recuperação depois de expirar offline ainda exigem LAN.
 
-**Próximos passos para fechar M5:** (1) integrar renovação/descoberta remota e recuperação cifrada do perfil de cinco serviços; (2) concluir autenticação, ligação, reprodução e revogação nativas com Tailscale; (3) concluir o mesmo com NetBird; (4) validar rede externa e os dois aparelhos físicos. Compilar as bibliotecas dos fornecedores não satisfaz estes critérios.
+**Próximos passos para fechar M5:** (1) descoberta/reconexão remota após expiração offline; (2) autenticação, ligação, reprodução e revogação nativas com Tailscale; (3) o mesmo com NetBird; (4) rede externa e os dois aparelhos físicos. Compilar as bibliotecas dos fornecedores não satisfaz estes critérios.
 
 | Quando instalar/testar | O que permite |
 |---|---|
 | Servidor de teste — M2 | Configurar proprietário, Jellyfin e duas origens; imagem Docker e recuperação já ensaiadas. TrueNAS físico continua pendente |
 | APK de laboratório — M3 | Login Directory, aprovação e bibliotecas atribuídas; sem reprodução. M3 de software concluída: sete critérios e pacote verificados |
 | Instalação LAN de teste — M4 | Gerar estado/YAML no PC, instalar nas Apps, configurar a própria TV e ensaiar catálogo/player separadamente na Xiaomi Box S2 e no Chromecast |
-| Ensaio WireGuard — incremento M5 | Pacote novo de cinco serviços e APK 0.10; preparação inicial na LAN, perfil de 24 horas e endpoint UDP alcançável. Resultados e limites no guia M5 |
+| Ensaio WireGuard — incremento M5 | Pacote de cinco serviços e APK 0.11; perfil de 24 horas renovável enquanto ligado e recuperação cifrada. Preparação inicial na LAN e endpoint UDP alcançável |
 | Utilização remota familiar — M5 completa | Descoberta/renovação, recuperação e jornadas nativas WireGuard, Tailscale e NetBird; cada fornecedor precisa da própria prova |
 
 Já podes preparar uma instalação LAN **nova e de teste** seguindo o guia da entrega, com recuperação completa ensaiada em Docker e identidade persistente da APK. Não há data de conclusão física M4/M5 confirmada: a M4 exige reprodução nos dois aparelhos; a M5 exige os três fornecedores nativos.
 
 **Requisito incorporado:** WireGuard, Tailscale e NetBird são opções nativas do NOVA Connect. O proprietário configura a ligação no NOVA Control. A TV instala a NOVA Cinema e recebe a configuração autorizada através da associação de dispositivo. Instalar outra app VPN na TV não satisfaz o objetivo de integração nativa deste roadmap.
 
-**Entrega atual — M4 LAN com recuperação:** assistente no PC sem Docker/SSH, YAML de quatro serviços, três endpoints HTTPS no IP privado e Jellyfin sem porta publicada. O Control configura bibliotecas, publica no Directory e cria familiares; a TV valida o fingerprint e configura-se pela própria UI. O formato 2 inclui o estado NOVA/Directory/Jellyfin/TLS, com nova publicação, permissões e aprovação após restauro. [Guia e resultados](M4_RECUPERACAO_LAN.md). A [recuperação M2](M2_TRUENAS_RECUPERACAO.md) conserva o formato legado. A transferência e os ACL do NAS são manuais; o restauro cria um destino novo, conservando identidades.
+**Perfil M4 LAN — base da entrega:** assistente no PC sem Docker/SSH, YAML de quatro serviços, três endpoints HTTPS no IP privado e Jellyfin sem porta publicada. O Control configura bibliotecas, publica no Directory e cria familiares; a TV valida o fingerprint e configura-se pela própria UI. O formato 2 inclui o estado NOVA/Directory/Jellyfin/TLS, com nova publicação, permissões e aprovação após restauro. [Guia e resultados](M4_RECUPERACAO_LAN.md). A [recuperação M2](M2_TRUENAS_RECUPERACAO.md) conserva o formato legado. A transferência e os ACL do NAS são manuais; o restauro cria um destino novo, conservando identidades. O perfil M5 WireGuard acrescenta o quinto serviço e usa o formato 3.
 
 **Execução iniciada:** [fase 1](FASE_1_RESULTADOS.md) e [ADR 001](ADR_001_CONNECT_NATIVO.md). Correções e contratos implementados; gates Linux e Docker aprovados na CI. M0 permanece aberto até à prova de incorporação e HTTPS dos três motores. Os modelos indicados são aparelhos de aceitação, não uma lista que limita o produto: a compatibilidade é decidida por SDK, ABI, recursos e capacidades de reprodução. A recolha das versões exatas acontece no ensaio de instalação, sem bloquear o desenvolvimento da base.
 

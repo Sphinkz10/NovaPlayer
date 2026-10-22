@@ -14,6 +14,8 @@ A página inicial Android permite pedir/preparar o WireGuard, ligar, e desligar 
 
 ## Limites da entrega
 
+Os limites abaixo pertencem à **0.10**. A [0.11 acrescenta renovação enquanto ligado e recuperação cifrada dos cinco serviços](M5_RENOVACAO_RECUPERACAO.md); mantém a exigência de LAN se o perfil expirar offline. As provas 0.10 abaixo conservam a revisão e os hashes originais.
+
 - Preparação inicial na LAN e renovação do perfil após 24 horas; o Directory ainda não fornece descoberta remota anterior ao túnel.
 - WireGuard direto exige endpoint UDP alcançável; não há ainda relé NOVA nem travessia automática de CGNAT. Não expor HTTP/Jellyfin/admin do NAS na Internet.
 - Atualizar/reiniciar o conjunto Compose, incluindo gateway e cliente que partilham a rede.

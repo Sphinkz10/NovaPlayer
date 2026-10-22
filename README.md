@@ -6,9 +6,9 @@ Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
 O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 
-**Desenvolvimento M5:** [gateway Docker e percurso WireGuard](docs/M5_GATEWAY_CONTENTOR.md): instalação nova de cinco serviços, inscrição/aprovação por TV, perfil autenticado e catálogo/player através do motor nativo. A firewall expira autorizações mesmo se o processo do gateway ficar congelado. O guia regista os resultados e os limites da entrega. Tailscale, NetBird, renovação remota e recuperação do novo perfil continuam pendentes; a M5 completa permanece aberta.
+**Desenvolvimento M5:** [gateway Docker e percurso WireGuard](docs/M5_GATEWAY_CONTENTOR.md), com [renovação pelo túnel e recuperação cifrada](docs/M5_RENOVACAO_RECUPERACAO.md). Cinco serviços, aprovação por TV, perfil autenticado e catálogo/player nativo. A firewall expira autorizações mesmo se o processo ficar congelado. Tailscale, NetBird e reconexão remota após expiração offline continuam pendentes; a M5 completa permanece aberta.
 
-[Guia do pacote de teste 0.10](docs/M5_INSTALACAO_WIREGUARD.md): preparação no PC, instalação no TrueNAS e associação/ligação na TV. Aplicável a um destino novo; consultar primeiro os resultados do incremento.
+[Guia do pacote de teste 0.11](docs/M5_INSTALACAO_WIREGUARD_0_11.md): preparação no PC, instalação no TrueNAS e associação/ligação na TV. Aplicável a um destino novo; consultar primeiro os resultados do incremento. O [guia 0.10](docs/M5_INSTALACAO_WIREGUARD.md) conserva o histórico anterior.
 
 [Capturas reais das apps](docs/PRINTS_APPS.md), com conteúdo sintético e interface provisória. As entregas antigas preservam as imagens e dependências históricas; não recebem automaticamente as correções atuais.
 
