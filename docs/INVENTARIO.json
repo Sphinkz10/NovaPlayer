@@ -585,8 +585,8 @@
     },
     {
       "path": "docs/M5_GATEWAY_RESULTADOS.json",
-      "bytes": 16531,
-      "sha256": "ee6f7814cc74899d169b1d34ac3b3ecb5102983a4bd7c9453217dec1a6e45006"
+      "bytes": 16149,
+      "sha256": "d7ed48d4410f5419f50f4d78485a8df4d4ed2e0810fd79253b6bd74767e44565"
     },
     {
       "path": "docs/M5_GATEWAY_WIREGUARD.md",
@@ -705,8 +705,8 @@
     },
     {
       "path": "docs/screenshots/wireguard-88efc1a/PROVENIENCIA.json",
-      "bytes": 1981,
-      "sha256": "6d82200a481edd07bc4a543d1173dfaa89398fdad23e30fcc4b47df47dd44e86"
+      "bytes": 1929,
+      "sha256": "27d36f254b09f2389481c386c287abe5d77849f9942b7e125a33261c0bcc572f"
     },
     {
       "path": "docs/screenshots/wireguard-88efc1a/api-26/tv-catalogue.png",
