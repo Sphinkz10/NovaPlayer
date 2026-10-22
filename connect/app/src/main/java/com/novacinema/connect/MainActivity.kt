@@ -42,10 +42,14 @@ class MainActivity : Activity() {
             val consent=VpnService.prepare(this)
             if(consent!=null)startActivityForResult(consent,401) else connect()
         }
+        button("Renovar WireGuard pela ligação atual") { work {
+            check(RemoteWireGuardRuntime.renew(applicationContext))
+            "Perfil renovado pelo túnel seguro. Podes continuar a usar o Cinema."
+        } }
         button("Desligar WireGuard e usar LAN") { work {
             RemoteWireGuardRuntime.disconnectToLan(applicationContext);"Túnel desligado. Ligação local selecionada."
         } }
-        root.addView(TextView(this).apply { textSize=17f;text="Prepara o WireGuard na rede local, depois da associação e aprovação no Control. A configuração expira em 24 horas.\nTailscale e NetBird: integração nativa ainda indisponível nesta versão." })
+        root.addView(TextView(this).apply { textSize=17f;text="Prepara o WireGuard na rede local, depois da associação e aprovação no Control. O perfil dura 24 horas e renova-se pelo túnel enquanto ligado. Se expirar sem ligação, prepara-o novamente na LAN.\nTailscale e NetBird: integração nativa ainda indisponível nesta versão." })
         setContentView(ScrollView(this).apply { addView(root) });directory.requestFocus()
     }
     private fun note(value:String) { runOnUiThread { if(!isDestroyed)status.text=value } }

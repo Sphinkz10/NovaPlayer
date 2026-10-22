@@ -37,7 +37,7 @@ def endpoint(value):
     return value
 
 
-def render(deployment,*,state_root,media_a,media_b,uid,gid,image,version,gateway_image):
+def render(deployment,*,state_root,media_a,media_b,uid,gid,image,version='25.10',gateway_image):
     if not re.fullmatch(r'ghcr\.io/sphinkz10/nova-gateway@sha256:[a-f0-9]{64}',gateway_image):
         raise ValueError('Imagem nova-gateway fixada por digest obrigatória.')
     compose=render_lan(deployment,state_root=state_root,media_a=media_a,media_b=media_b,

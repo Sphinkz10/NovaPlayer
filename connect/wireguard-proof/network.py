@@ -141,13 +141,11 @@ def serve(root, bootstrap_port=None):
     if bootstrap_port is None:
         for port in (22, 9443): threading.Thread(target=canary, args=(port,), daemon=True).start()
     origin = ORIGIN if bootstrap_port is None else 'https://10.0.2.2:'+str(bootstrap_port)
-    profiles = None
-    if bootstrap_port is not None:
-        from nova_server.wireguard_profile import WireGuardProfiles
-        from nova_server.gateway_channel import GatewayChannel
-        from nova_server.storage import Store
-        profiles=WireGuardProfiles(Store(root/'state'),json.loads((root/'public-profile.json').read_text()),
-            GatewayChannel(root/'channel',root/'channel.key'))
+    from nova_server.wireguard_profile import WireGuardProfiles
+    from nova_server.gateway_channel import GatewayChannel
+    from nova_server.storage import Store
+    profiles=WireGuardProfiles(Store(root/'state'),json.loads((root/'public-profile.json').read_text()),
+        GatewayChannel(root/'channel',root/'channel.key'))
     runtime = uvicorn.Config(make_client_app(origin=origin,wireguard_profiles=profiles), host=GW if bootstrap_port is None else '127.0.0.1',
                              port=bootstrap_port or 9444,
                              ssl_certfile=str(root/'client.crt'), ssl_keyfile=str(root/'client.key'),
@@ -331,6 +329,9 @@ def run():
             ns('iptables', '-A', 'INPUT', '-i', 'wg0', '-s', CLIENT, '-d', GW, '-p', 'tcp', '--dport', '9444', '-j', 'ACCEPT')
             ns('iptables', '-A', 'OUTPUT', '-o', 'wg0', '-s', GW, '-d', CLIENT, '-p', 'tcp', '--sport', '9444',
                '-m', 'conntrack', '--ctstate', 'ESTABLISHED', '-j', 'ACCEPT')
+            relay = UdpRelay()
+            atomic_private(root/'public-profile.json',json.dumps({'schema_version':1,'policy':asdict(gateway_policy),
+                'endpoint':'10.0.2.2:'+str(relay.port),'client_origin':ORIGIN}).encode())
             server = subprocess.Popen(['sudo', 'ip', 'netns', 'exec', namespace, sys.executable,
                                        str(Path(__file__).resolve()), '--serve', str(root)],
                                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -344,9 +345,6 @@ def run():
             checks.append('real NOVA HTTPS and live denied-port canaries in isolated namespace')
             assert not command('ip', 'route', 'show', GW+'/32').stdout.strip()
             checks.append('host has no route or TCP forwarder to the service overlay address')
-            relay = UdpRelay()
-            atomic_private(root/'public-profile.json',json.dumps({'schema_version':1,'policy':asdict(gateway_policy),
-                'endpoint':'10.0.2.2:'+str(relay.port),'client_origin':ORIGIN}).encode())
             # Separate LAN enrollment endpoint, sharing Core state but never forwarding
             # TCP to the overlay. Only the encrypted UDP relay reaches that network.
             with socket.socket() as allocation:

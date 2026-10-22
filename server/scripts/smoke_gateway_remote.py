@@ -38,6 +38,7 @@ def prepare_probe(root,image):
 
 
 def verify_remote(root,bundle,project,client,info,admin,device,tokens,library,item):
+    for name in ('ready','continue'):(root/'probe'/name).unlink(missing_ok=True)
     def command(*args,data=None,check=True):
         result=subprocess.run(['docker','compose','-p',project,*args],cwd=root,input=data,
             stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=60)

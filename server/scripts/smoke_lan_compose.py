@@ -154,11 +154,11 @@ def run():
                 if gateway_mode:
                     (out/'gateway-remote.json').write_text(json.dumps(remote_report,indent=2)+'\n',encoding='utf8')
                     (out/'gateway-local-image.txt').write_text(gateway_image+'\n',encoding='ascii')
-                    print(json.dumps(remote_report));return
+                    print(json.dumps(remote_report))
                 from smoke_lan_recovery import run as recover_lan
                 recovered=recover_lan(root,bundle,image,project,info,client,compose,owner=owner,admin=admin,credentials=credentials,
-                    family=family,family_password=family_password,tokens=tokens,selected=selected,profile=profile)
-                (out/'lan-recovery.json').write_text(json.dumps(recovered,indent=2),encoding='utf8');print(json.dumps(recovered))
+                    family=family,family_password=family_password,tokens=tokens,selected=selected,profile=profile,gateway_image=gateway_image)
+                (out/('gateway-recovery.json' if gateway_mode else 'lan-recovery.json')).write_text(json.dumps(recovered,indent=2),encoding='utf8');print(json.dumps(recovered))
         finally:
             if gateway_mode:
                 out=Path(os.environ.get('NOVA_EVIDENCE_DIR','server/test-results/gateway-container'));out.mkdir(parents=True,exist_ok=True)

@@ -24,6 +24,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 
 FORMAT = 1
 LAN_FORMAT = 2
+WIREGUARD_FORMAT = 3
 MAX_BYTES = 100 * 1024**3
 
 
@@ -72,7 +73,7 @@ def files_for_backup(state):
     folders=('nova','jellyfin/config')+(('directory','identity') if is_lan(state) else ())
     for folder in folders:
         root = state/folder
-        for component in (state/'nova', state/'jellyfin', state/'jellyfin/config',state/'directory',state/'identity'):
+        for component in (state/'nova', state/'jellyfin', state/'jellyfin/config',state/'directory',state/'identity',state/'gateway'):
             if component.is_symlink():
                 raise ValueError('Cópia recusada: links nos diretórios de estado.')
         for path in sorted(root.rglob('*')):
@@ -101,18 +102,24 @@ def backup(state, destination, recipient, *, deployment, stopped=False, age='age
     validate_state(state)
     deployment_text=Path(deployment).read_text(encoding='utf8')
     profile=is_lan(state)
+    from scripts.wireguard_recovery import is_wireguard
+    wireguard=is_wireguard(state)
+    if wireguard and not profile:raise ValueError('Identidade LAN/WireGuard incompleta.')
     if not profile and 'nova_server.lan_launch' in deployment_text:
         raise ValueError('Deployment LAN sem Directory/identidades completos; cópia recusada.')
+    if not wireguard and 'nova-gateway' in deployment_text:
+        raise ValueError('Deployment WireGuard sem identidade completa; cópia recusada.')
     if profile:
         from scripts.lan_recovery import validate_lan,deployment_values
-        validate_lan(state);deployment_values(state,deployment_text)
+        validate_lan(state,wireguard=wireguard);deployment_values(state,deployment_text,wireguard=wireguard)
     destination = Path(destination).resolve()
     if destination == state or state in destination.parents:
         raise ValueError('Guardar a cópia fora do estado de execução.')
     # Record deployment data inside encryption, never execute it during restore.
     with closing(sqlite3.connect(state/'nova/nova.sqlite3')) as db,db:
         schema = db.execute('PRAGMA user_version').fetchone()[0]
-    manifest = json.dumps({'format': LAN_FORMAT if profile else FORMAT, 'nova_schema': schema,
+    selected_format=WIREGUARD_FORMAT if wireguard else LAN_FORMAT if profile else FORMAT
+    manifest = json.dumps({'format': selected_format, 'nova_schema': schema,
                            'deployment': deployment_text}).encode()
     if len(manifest)>1024*1024:raise ValueError('Manifesto demasiado grande.')
     # All SQLite connections must be closed before the final file snapshot.
@@ -139,7 +146,7 @@ def backup(state, destination, recipient, *, deployment, stopped=False, age='age
         destination.unlink(missing_ok=True)
         raise
     return {'encrypted': True, 'files': len(files), 'media_included': False,
-            'profile':'lan' if profile else 'legacy','format':LAN_FORMAT if profile else FORMAT}
+            'profile':'wireguard' if wireguard else 'lan' if profile else 'legacy','format':selected_format}
 
 
 def extract_checked(stream, staging):
@@ -162,7 +169,7 @@ def extract_checked(stream, staging):
                     raise ValueError('Manifesto demasiado grande.')
                 manifest = json.load(source)
                 if (not isinstance(manifest, dict) or type(manifest.get('format')) is not int or
-                    manifest['format'] not in (FORMAT,LAN_FORMAT) or type(manifest.get('nova_schema')) is not int or
+                    manifest['format'] not in (FORMAT,LAN_FORMAT,WIREGUARD_FORMAT) or type(manifest.get('nova_schema')) is not int or
                     manifest['nova_schema'] not in (0,1,2,3) or not isinstance(manifest.get('deployment'),str)):
                     raise ValueError('Versão de cópia não suportada.')
                 continue
@@ -225,7 +232,7 @@ def revoke_restored_sessions(state):
     (state/'jellyfin/cache').mkdir(mode=0o700, parents=True, exist_ok=True)
 
 
-def restore(archive, destination, identity, *, age='age',lan_state_root=None,image=None):
+def restore(archive, destination, identity, *, age='age',lan_state_root=None,image=None,gateway_image=None):
     destination = Path(destination).absolute()
     if destination.exists() or destination.is_symlink():
         raise FileExistsError('Restaurar apenas para uma pasta nova; nunca sobrepor uma instalação.')
@@ -242,17 +249,23 @@ def restore(archive, destination, identity, *, age='age',lan_state_root=None,ima
             process.stdout.close()
             if process.poll() is None:
                 process.kill(); process.wait()
-        profile=manifest['format']==LAN_FORMAT
+        wireguard=manifest['format']==WIREGUARD_FORMAT
+        profile=manifest['format'] in (LAN_FORMAT,WIREGUARD_FORMAT)
+        if not wireguard and gateway_image:raise ValueError('Imagem gateway só é aplicável a uma cópia WireGuard.')
+        if wireguard and not gateway_image:raise ValueError('Restauro WireGuard exige --gateway-image ou --gateway-image-file.')
         if not profile and (lan_state_root or image):raise ValueError('Arquivo legado; opções LAN não são aplicáveis.')
         if profile:
             if not lan_state_root or not image:raise ValueError('Restauro LAN exige --lan-state-root e a imagem desta entrega (--image ou --image-file).')
             if manifest['nova_schema']!=3:raise ValueError('Schema LAN não suportado.')
             from scripts.lan_recovery import write_restored_guidance,revoke_lan
-            report=write_restored_guidance(staging,manifest,state_root=lan_state_root,image=image)
+            report=write_restored_guidance(staging,manifest,state_root=lan_state_root,image=image,gateway_image=gateway_image)
         elif is_lan(staging/'state'):
             raise ValueError('Estado LAN não permitido num arquivo legado.')
         revoke_restored_sessions(staging/'state')
         if profile:revoke_lan(staging/'state')
+        if wireguard:
+            from scripts.wireguard_recovery import revoke_gateway_runtime
+            revoke_gateway_runtime(staging/'state')
         (staging/'deployment.original.txt').write_text(manifest['deployment'], encoding='utf8')
         (staging/'deployment.original.txt').chmod(0o600)
         # mkdir reserves the destination without overwriting an existing path.
@@ -260,7 +273,7 @@ def restore(archive, destination, identity, *, age='age',lan_state_root=None,ima
         for child in list(staging.iterdir()):
             child.rename(destination/child.name)
     return {'restored': True, 'sessions_revoked': True, 'requires_fresh_login': True,
-            'profile':'lan' if profile else 'legacy',
+            'profile':'wireguard' if wireguard else 'lan' if profile else 'legacy',
             **({'identity_preserved':True,'requires_republication':True,'tls_rotation_required':report['tls_rotation_required']} if profile else {})}
 
 
@@ -282,11 +295,14 @@ if __name__ == '__main__':
     recover.add_argument('--lan-state-root',help='Novo dataset /mnt/POOL/PASTA para o YAML LAN; não acede ao NAS')
     images=recover.add_mutually_exclusive_group()
     images.add_argument('--image');images.add_argument('--image-file',type=Path)
+    gateways=recover.add_mutually_exclusive_group()
+    gateways.add_argument('--gateway-image');gateways.add_argument('--gateway-image-file',type=Path)
     args = parser.parse_args()
     if args.command == 'backup':
         result = backup(args.state, args.output, args.recipient, deployment=args.deployment,
                         stopped=args.services_stopped,age=args.age)
     else:
         image=args.image or (args.image_file.read_text(encoding='ascii').strip() if args.image_file else None)
-        result = restore(args.input, args.output, args.identity,lan_state_root=args.lan_state_root,image=image,age=args.age)
+        gateway=args.gateway_image or (args.gateway_image_file.read_text(encoding='ascii').strip() if args.gateway_image_file else None)
+        result = restore(args.input, args.output, args.identity,lan_state_root=args.lan_state_root,image=image,age=args.age,gateway_image=gateway)
     print(json.dumps(result))

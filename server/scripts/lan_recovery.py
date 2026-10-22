@@ -39,10 +39,16 @@ def certificate(path):
 def der(cert):return cert.public_bytes(serialization.Encoding.DER)
 
 
-def validate_lan(state):
+def validate_lan(state,*,wireguard=False):
     """Check offline consistency, including expired certificates, without migrations."""
     state=Path(state);identity=state/'identity'
     expected={role+'/'+name for role,names in IDENTITY_FILES.items() for name in names}
+    gateway=None
+    if wireguard:
+        from scripts.wireguard_recovery import validate_gateway_identity
+        gateway=validate_gateway_identity(state)
+        expected.update({'gateway/gateway.json','gateway/wireguard.key','gateway/channel.key',
+                         'admin/channel.key','client/channel.key','client/wireguard-public.json'})
     if {p.relative_to(identity).as_posix() for p in identity.rglob('*') if p.is_file()}!=expected:
         raise ValueError('Identidade LAN incompleta ou com ficheiros desconhecidos.')
     config=load(identity/'admin/deployment.json')
@@ -75,7 +81,9 @@ def validate_lan(state):
         if ExtendedKeyUsageOID.SERVER_AUTH not in cert.extensions.get_extension_for_class(x509.ExtendedKeyUsage).value:
             raise ValueError('Finalidade TLS inválida.')
         names=cert.extensions.get_extension_for_class(x509.SubjectAlternativeName).value
-        if names.get_values_for_type(x509.IPAddress)!=[ipaddress.ip_address(config['ip'])]:
+        addresses=[ipaddress.ip_address(config['ip'])]
+        if gateway and role=='client':addresses.append(ipaddress.ip_address(gateway.gateway))
+        if names.get_values_for_type(x509.IPAddress)!=addresses:
             raise ValueError('IP do certificado LAN diferente.')
         certificates[role]=cert
     if len({der(c) for c in certificates.values()})!=3:raise ValueError('Certificados de serviço repetidos.')
@@ -112,6 +120,7 @@ def validate_lan(state):
         profile['public_key']!=public or der(x509.load_pem_x509_certificate(profile['certificate_pem'].encode()))!=der(certificates['directory'])):
         raise ValueError('Bootstrap Directory não corresponde à identidade.')
     sid,signing=server_identity(state/'nova')
+    if gateway and gateway.server_id!=sid:raise ValueError('Identidade WireGuard diferente da NOVA.')
     control=state/'nova/directory-control.sqlite3'
     if control.is_file():
         with closing(sqlite3.connect(control)) as db,db:
@@ -135,7 +144,7 @@ def validate_lan(state):
         'tls_rotation_required':any(not c.not_valid_before_utc<=now<c.not_valid_after_utc for c in [ca,*certificates.values()])}
 
 
-def deployment_values(state,text):
+def deployment_values(state,text,*,wireguard=False):
     """Only accept the generator's exact restricted YAML/JSON, never arbitrary commands."""
     if not isinstance(text,str) or len(text.encode('utf8'))>1024*1024:raise ValueError('Deployment inválido.')
     raw=json.loads(text);config=load(state/'identity/admin/deployment.json')
@@ -145,7 +154,11 @@ def deployment_values(state,text):
     media={mount['target']:mount['source'] for mount in jf['volumes']}
     values={'state_root':root[:-5],'media_a':media['/media/source-a'],'media_b':media['/media/source-b'],
             'uid':int(user),'gid':int(group),'image':admin['image']}
-    if raw!=render_lan(config,**values):raise ValueError('Deployment difere do perfil LAN suportado.')
+    renderer=render_lan
+    if wireguard:
+        from scripts.wireguard_install import render as renderer
+        values['gateway_image']=services['nova-gateway']['image']
+    if raw!=renderer(config,**values):raise ValueError('Deployment difere do perfil LAN suportado.')
     return values
 
 
@@ -165,16 +178,22 @@ def revoke_lan(state,*,now=None):
             db.execute("UPDATE publication SET renewal_credential=NULL,renewal_expires_at=NULL,checked_at=NULL,observation='recovery_republish_required'")
 
 
-def write_restored_guidance(staging,manifest,*,state_root,image):
-    state=staging/'state';identity=validate_lan(state)
-    values=deployment_values(state,manifest['deployment'])
+def write_restored_guidance(staging,manifest,*,state_root,image,gateway_image=None):
+    wireguard=gateway_image is not None
+    state=staging/'state';identity=validate_lan(state,wireguard=wireguard)
+    values=deployment_values(state,manifest['deployment'],wireguard=wireguard)
     values.update(state_root=state_root,image=image)
-    rendered=render_lan(identity['config'],**values)
+    renderer=render_lan
+    if wireguard:
+        from scripts.wireguard_install import render as renderer
+        values['gateway_image']=gateway_image
+    rendered=renderer(identity['config'],**values)
     def write(name,value):
         path=staging/name;path.write_text(value,encoding='utf8');path.chmod(0o600)
     write('instalar-no-truenas.yaml',json.dumps(rendered,indent=2)+'\n')
     write('NOVA-LAN-CA.crt',(state/'identity/admin/lan-ca.crt').read_text(encoding='ascii'))
     report={**{k:v for k,v in identity.items() if k!='config'},'state_root':state_root,'image':image,
+        **({'gateway_image':gateway_image,'wireguard_reapproval_required':True,'gateway_runtime_restored':False} if wireguard else {}),
         'control':origin(identity['config'],'admin'),'directory':origin(identity['config'],'directory'),
         'requires_republication':True,'media_grants_revoked':True,'directory_accounts_and_shares':'snapshot configuration retained; review before republication'}
     write('RECUPERACAO.json',json.dumps(report,indent=2)+'\n')
@@ -182,7 +201,7 @@ def write_restored_guidance(staging,manifest,*,state_root,image):
 
 O restauro preservou as identidades NOVA/Directory e os três certificados. Não geres outra instalação com o assistente: isso criaria identidades diferentes.
 
-1. Manter os quatro serviços antigos parados. Preparar um dataset NOVO e vazio em `{state_root}`; copiar apenas o conteúdo de `state/` e confirmar UID/GID {values['uid']}:{values['gid']} e permissões privadas. A ferramenta não acede ao NAS nem copia ficheiros para ele.
+1. Manter os {'cinco' if wireguard else 'quatro'} serviços antigos parados. Preparar um dataset NOVO e vazio em `{state_root}`; copiar apenas o conteúdo de `state/` e confirmar UID/GID {values['uid']}:{values['gid']} e permissões privadas. A ferramenta não acede ao NAS nem copia ficheiros para ele.
 2. Rever as contas e partilhas recuperadas da data da cópia. Revogações posteriores à cópia não podem ser deduzidas desse snapshot. Todas as permissões de media, dispositivos e sessões foram invalidadas.
 3. Nas Apps, usar `instalar-no-truenas.yaml`, regenerado pelo perfil seguro com a imagem indicada no comando de restauro. `deployment.original.txt` é apenas um registo e não é executado.
 4. Abrir {report['control']} e entrar novamente. Confirmar IP, relógio e CA. O certificado público NOVA-LAN-CA.crt recuperado é o mesmo. Necessidade de rotação TLS: {report['tls_rotation_required']}.
@@ -193,5 +212,6 @@ Directory: {report['directory']}
 Fingerprint: {report['fingerprint']}
 
 Certificados expirados são preservados para recuperação, mas o runtime continua a recusar a ligação até uma rotação autorizada. A chave privada da CA offline e a chave privada age não pertencem a este estado recuperado. Media e cache não estão na cópia. Não iniciar em simultâneo duas instâncias com esta identidade/IP. Aceitação física TrueNAS/TV continua por executar.
+{'WireGuard: chave e política do gateway preservadas; canal local rodado e planos, observações e leases antigos descartados. Aprovar novamente cada TV e preparar o perfil na LAN. Rever o endpoint UDP e reiniciar/atualizar os cinco serviços em conjunto.' if wireguard else ''}
 ''')
     return report
