@@ -126,6 +126,9 @@ class DevicePairingInstrumentation : Instrumentation() {
                 if(!windowFocused) android.os.SystemClock.sleep(100)
             }
             check(windowFocused) { "Pairing activity did not receive window focus" }
+            // Real D-pad input leaves touch mode on API 26 after Activity startup;
+            // the instrumentation flag alone need not update the focused window.
+            sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_DPAD_DOWN)
             var buttonFocused=false
             val buttonDeadline=android.os.SystemClock.uptimeMillis()+15000
             while(!buttonFocused && android.os.SystemClock.uptimeMillis()<buttonDeadline) {
