@@ -40,7 +40,7 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
     }.isFailure
     override fun onStart() {
         val report = Bundle(); var bound = false
-        val connected = CountDownLatch(1)
+        var connected = CountDownLatch(1)
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, binder: IBinder) { service = Messenger(binder); connected.countDown() }
             override fun onServiceDisconnected(name: ComponentName) { service = null }
@@ -84,7 +84,8 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
                 check(blocked(gateway, 9444))
                 checks.add("tampered persisted state refused before engine initialization; no replacement identity")
             } else {
-                check(initial.getString("result") == "ok") { "Native initialization refused" }
+                check(initial.getString("result") == "ok") {
+                    "Native initialization refused: ${initial.getString("failure_stage")}/${initial.getString("failure_type")}/${initial.getInt("api_status")}" }
                 check(initial.getInt("pid") > 0 && initial.getInt("pid") != Process.myPid())
                 checks.add("Tailscale JNI and WireGuard JNI execute in separate processes")
                 var status = Bundle()
@@ -109,6 +110,7 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
                     checks.add("same Tailscale node identity reconnects after force-stop without enrollment auth key")
                     stage("revoke")
                     waitFor(90000) { File(targetContext.filesDir, "tailscale-gate.txt").let { it.exists() && it.readText() == "revoked" } }
+                    waitFor(60000) { blocked(gateway, 9444) }
                     waitFor(60000) { runCatching { identity() }.isFailure }
                     // Repeated failures after coordinator expiry, not just a transient first failure.
                     repeat(3) { check(runCatching { identity() }.isFailure); Thread.sleep(500) }
@@ -116,6 +118,22 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
                 }
                 check(request(3).getString("result") == "ok")
                 check(blocked(gateway, 9444)); checks.add("explicit disconnect closes private access")
+                if (mode == "network") {
+                    targetContext.unbindService(connection); bound = false; service = null
+                    targetContext.stopService(intent)
+                    runOnMainSync { }; Thread.sleep(500)
+                    connected = CountDownLatch(1)
+                    targetContext.startForegroundService(intent)
+                    bound = targetContext.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+                    check(bound && connected.await(15, TimeUnit.SECONDS))
+                    options.remove("auth_key")
+                    val reconnect = request(1, options)
+                    check(reconnect.getString("result") == "ok" && reconnect.getInt("pid") == initial.getInt("pid"))
+                    waitFor { val next = request(2); next.getBoolean("tun") && next.getString("node_key") == node &&
+                        runCatching { identity() }.isSuccess }
+                    checks.add("service recreation reuses one Go Application and the same node within its original process")
+                    check(request(3).getString("result") == "ok" && blocked(gateway, 9444))
+                }
             }
             report.putString("nova_tailscale", "passed"); report.putString("mode", mode)
             report.putInt("api", Build.VERSION.SDK_INT); report.putStringArrayList("checks", ArrayList(checks))

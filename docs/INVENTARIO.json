@@ -40,8 +40,8 @@
     },
     {
       "path": ".github/workflows/tailscale-network.yml",
-      "bytes": 2305,
-      "sha256": "40c38acaf04ad39ab0b66c723b8f8c4c4ce1cd7ada9bf0a800e96886a76d9e8e"
+      "bytes": 2332,
+      "sha256": "5f422b7c1ea2bc0090cc6bb2ce56dc3c2185a848be65f7b2fcffc5370f2cb048"
     },
     {
       "path": ".github/workflows/verify.yml",
@@ -100,8 +100,8 @@
     },
     {
       "path": "connect/app/build.gradle.kts",
-      "bytes": 4950,
-      "sha256": "b3846f75a455393eedbb1623ff8fd7780d29b6d15deacc16bd64b2b10b0290ee"
+      "bytes": 5843,
+      "sha256": "14a317ff8b2776a18ec6c36a12ce4de91f7f0758722242c32b3e0d2a3ec67117"
     },
     {
       "path": "connect/app/gradle.lockfile",
@@ -485,13 +485,13 @@
     },
     {
       "path": "connect/tailscale-native/network.py",
-      "bytes": 20779,
-      "sha256": "554697ad7795193ee0f63521147fc21a40a70ea01fa95fc4a05426cc7896688b"
+      "bytes": 21085,
+      "sha256": "c490efa03298baf44600c3d756eb86eb0b253df37dc8938ed7cf4da173fce5ea"
     },
     {
       "path": "connect/tailscale-native/src/androidTest/kotlin/com/novacinema/connect/TailscaleNetworkInstrumentation.kt",
-      "bytes": 8725,
-      "sha256": "ee8cbccd22366ff23ca3f9b99d3fbb2731c3749b73b9499b4e3c1f6bae624990"
+      "bytes": 10082,
+      "sha256": "7b1875ae596421d97dca0e9fd8ae7f165a763cd64dd0313c241a63dc44931709"
     },
     {
       "path": "connect/tailscale-native/src/debug/AndroidManifest.xml",
@@ -510,8 +510,8 @@
     },
     {
       "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscalePlatform.kt",
-      "bytes": 4317,
-      "sha256": "c1bc05c71717c5a9a1076c9777dcf7871a940482f73a910f1d57d45e20b0cd77"
+      "bytes": 4397,
+      "sha256": "6a0ddb7663623642848f0c24cbfcb024bb025934315d34fe69c63ad186d244f1"
     },
     {
       "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleRoutePolicy.kt",
@@ -525,8 +525,13 @@
     },
     {
       "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleVpnService.kt",
-      "bytes": 8580,
-      "sha256": "6febba0c5826432d9a1cda6142c2a025b8a270f1321d10ef1b0cc0436f59c584"
+      "bytes": 9767,
+      "sha256": "4180972cfb7b2106bd7a57d2bc0cfc93783b438a4717660a2431a24772477eeb"
+    },
+    {
+      "path": "connect/tailscale-native/src/policyTest/java/com/novacinema/connect/TailscalePolicyChecks.java",
+      "bytes": 3068,
+      "sha256": "46126dd4f028c12241239a6c1a75af6159d5d4463ddf0e40b4dfcb45bbd7bfd0"
     },
     {
       "path": "connect/wireguard-proof/network.py",

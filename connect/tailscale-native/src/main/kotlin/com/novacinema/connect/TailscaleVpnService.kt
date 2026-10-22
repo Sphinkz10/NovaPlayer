@@ -11,15 +11,34 @@ import org.json.JSONObject
 import java.util.UUID
 import java.util.concurrent.Executors
 
+/** libtailscale permits one Application per process, across VpnService instances. */
+private object TailscaleEngineRuntime {
+    val work = Executors.newSingleThreadExecutor()
+    private var engine: com.novacinema.engines.libtailscale.Application? = null
+    fun acquire(context: android.content.Context, state: TailscaleStateStore, ca: ByteArray):
+        com.novacinema.engines.libtailscale.Application {
+        // Called only from the shared serial worker, including service teardown.
+        return engine ?: run {
+            go.Seq.setContext(context)
+            val directory = java.io.File(context.noBackupFilesDir, "tailscale").apply { check(mkdirs() || isDirectory) }
+            Libtailscale.start(directory.path, directory.path, false, TailscalePlatform(context, state, ca)).also {
+                it.setClientLoggingEnabled(false); engine = it
+            }
+        }
+    }
+}
+
 /** Real native VPN adapter. Included only in the explicit Tailscale debug proof variant. */
 class TailscaleVpnService : VpnService() {
     private val instance = UUID.randomUUID().toString()
-    private val work = Executors.newSingleThreadExecutor()
+    private val work = TailscaleEngineRuntime.work
     private var app: com.novacinema.engines.libtailscale.Application? = null
     private var gateway: String? = null
     private var registered = false
     @Volatile private var tun = false
     @Volatile private var failed = false
+    private var phase = "idle"
+    private var apiStatus = 0
     private val engineService = object : IPNService {
         override fun id(): String = instance
         override fun protect(fd: Int): Boolean = this@TailscaleVpnService.protect(fd)
@@ -50,9 +69,12 @@ class TailscaleVpnService : VpnService() {
                     response.putString("backend", status.optString("BackendState"))
                     response.putString("node_key", status.optJSONObject("Self")?.optString("PublicKey"))
                 }
-            } catch (_: Exception) {
+            } catch (failure: Exception) {
                 // Errors from the coordinator may contain auth keys or login URLs.
                 response.putString("result", "refused"); response.putBoolean("failed", true)
+                response.putString("failure_stage", phase)
+                response.putString("failure_type", failure.javaClass.simpleName)
+                response.putInt("api_status", apiStatus)
                 runCatching { disconnect() }
             }
             runCatching { reply.send(Message.obtain(null, command).apply { data = response }) }
@@ -70,12 +92,14 @@ class TailscaleVpnService : VpnService() {
     override fun onBind(intent: Intent): IBinder? =
         if (intent.action == SERVICE_INTERFACE) super.onBind(intent) else messages.binder
     private fun connect(options: Bundle) {
+        phase = "validate"
         check(VpnService.prepare(this) == null) { "VPN consent required" }
         val control = TailscaleRoutePolicy.controlOrigin(checkNotNull(options.getString("control")))
         val address = checkNotNull(options.getString("gateway")); TailscaleRoutePolicy(address)
         check(!registered && (gateway == null || gateway == address))
         val ca = options.getByteArray("fixture_ca") ?: byteArrayOf()
         require(ca.size <= 16384)
+        phase = "state-preflight"
         val state = TailscaleStateStore(this); state.preflight()
         val binding = JSONObject().put("control", control).put("gateway", address).toString()
         val previous = state.read("nova-binding")
@@ -83,10 +107,8 @@ class TailscaleVpnService : VpnService() {
         if (previous.isEmpty()) state.write("nova-binding", binding)
         gateway = address; failed = false
         if (app == null) {
-            go.Seq.setContext(applicationContext)
-            val directory = java.io.File(noBackupFilesDir, "tailscale").apply { mkdirs() }
-            app = Libtailscale.start(directory.path, directory.path, false, TailscalePlatform(this, state, ca))
-            app!!.setClientLoggingEnabled(false)
+            phase = "engine-initialize"
+            app = TailscaleEngineRuntime.acquire(applicationContext, state, ca)
         }
         val prefs = JSONObject().put("ControlURL", control).put("WantRunning", true)
             .put("LoggedOut", false).put("RouteAll", false).put("CorpDNS", false)
@@ -104,14 +126,17 @@ class TailscaleVpnService : VpnService() {
         if (key.isNotEmpty()) api("POST", "login-interactive")
     }
     private fun api(method: String, endpoint: String, json: JSONObject? = null): JSONObject {
+        phase = endpoint; apiStatus = 0
         val body = json?.toString()?.toByteArray()?.let { bytes -> object : InputStream {
             private var sent = false
             override fun read(): ByteArray? = if (sent) null else bytes.also { sent = true }
             override fun close() { sent = true }
         } }
         val response = checkNotNull(app).callLocalAPI(15000, method, "/localapi/v0/" + endpoint, body)
-        check(response.statusCode() in 200..299)
-        val raw = response.bodyBytes(); require(raw.size <= 2_000_000)
+        apiStatus = response.statusCode().toInt()
+        check(apiStatus in 200..299)
+        // Gomobile represents a zero-length Go []byte as null on this binding.
+        val raw = response.bodyBytes() ?: byteArrayOf(); require(raw.size <= 2_000_000)
         return if (raw.isEmpty()) JSONObject() else JSONObject(String(raw, Charsets.UTF_8))
     }
     private fun disconnect() {
@@ -122,7 +147,7 @@ class TailscaleVpnService : VpnService() {
     }
     override fun onRevoke() { work.execute { runCatching { disconnect() }; stopSelf() } }
     override fun onDestroy() {
-        work.execute { runCatching { disconnect() } }; work.shutdown(); super.onDestroy()
+        work.execute { runCatching { disconnect() } }; super.onDestroy()
     }
     private fun restrictedBuilder(address: String): VPNServiceBuilder {
         val policy = TailscaleRoutePolicy(address)

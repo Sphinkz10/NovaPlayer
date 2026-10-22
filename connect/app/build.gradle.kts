@@ -84,3 +84,19 @@ dependencies {
         implementation(files(aar))
     }
 }
+if (tailscaleProof) {
+    val policyClasses = layout.buildDirectory.dir("tailscalePolicyChecks")
+    val compilePolicy = tasks.register<JavaCompile>("compileTailscalePolicyChecks") {
+        dependsOn("compileDebugKotlin")
+        source(fileTree("../tailscale-native/src/policyTest/java") { include("**/*.java") })
+        classpath = files(layout.buildDirectory.dir("tmp/kotlin-classes/debug")) + configurations.getByName("debugRuntimeClasspath")
+        destinationDirectory.set(policyClasses)
+        sourceCompatibility = "17"; targetCompatibility = "17"
+    }
+    tasks.register<JavaExec>("verifyTailscalePolicy") {
+        dependsOn(compilePolicy)
+        classpath = files(policyClasses, layout.buildDirectory.dir("tmp/kotlin-classes/debug")) +
+            configurations.getByName("debugRuntimeClasspath")
+        mainClass.set("com.novacinema.connect.TailscalePolicyChecks")
+    }
+}

@@ -253,6 +253,7 @@ def run():
             def callback(stage):
                 if stage == 'consent': consent()
                 elif stage == 'revoke':
+                    assert devices.authenticate(tokens['access_token'])['device_id'] == tokens['device_id']
                     nodes = json.loads(hs('nodes', 'list', '-o', 'json').stdout)
                     android = [node for node in nodes if GATEWAY not in node['ip_addresses']]
                     assert len(android) == 1
@@ -268,6 +269,8 @@ def run():
             fixture.pop('auth_key'); fixture['expected_node_key'] = key_match[1]
             push('tailscale-fixture.json', json.dumps(fixture).encode())
             instrument('restart', callback)
+            assert devices.authenticate(tokens['access_token'])['device_id'] == tokens['device_id']
+            checks.append('overlay revocation proven while NOVA access credential remains valid')
             adb('shell', 'am', 'force-stop', PACKAGE)
             # Corrupt one authenticated preference while the service process is stopped.
             document = ET.fromstring(adb('shell', 'run-as', PACKAGE, 'cat', 'shared_prefs/nova_tailscale_state.xml'))

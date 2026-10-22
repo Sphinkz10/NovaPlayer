@@ -37,7 +37,7 @@ jobs:
         run: echo '224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0  native-output/nova-engines.aar' | sha256sum -c -
       - name: Build explicit Tailscale proof APK
         working-directory: connect
-        run: bash gradlew :app:assembleDebug :app:assembleDebugAndroidTest -PnovaTailscaleProof=true -PnovaNativeProofAar="$GITHUB_WORKSPACE/native-output/nova-engines.aar" --no-daemon --console plain
+        run: bash gradlew :app:verifyTailscalePolicy :app:assembleDebug :app:assembleDebugAndroidTest -PnovaTailscaleProof=true -PnovaNativeProofAar="$GITHUB_WORKSPACE/native-output/nova-engines.aar" --no-daemon --console plain
       - name: Namespace tooling and emulator acceleration
         run: |
           sudo apt-get update

@@ -61,7 +61,8 @@ internal class TailscalePlatform(private val context: Context, private val state
     }.getOrDefault(false)
     // Only the disposable debug fixture supplies a CA. Normal release does not include this adapter yet.
     override fun getUserCACertsPEM(): ByteArray = fixtureCA.copyOf()
-    private fun unset(): Nothing = throw java.io.IOException("policy not configured")
+    // libtailscale translates this exact upstream sentinel across the gomobile boundary.
+    private fun unset(): Nothing = throw java.io.IOException("no such key")
     override fun getSyspolicyStringValue(key: String): String = unset()
     override fun getSyspolicyBooleanValue(key: String): Boolean = unset()
     override fun getSyspolicyStringArrayJSONValue(key: String): String = unset()
