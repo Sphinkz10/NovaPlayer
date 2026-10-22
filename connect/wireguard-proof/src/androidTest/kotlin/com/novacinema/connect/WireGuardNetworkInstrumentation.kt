@@ -189,11 +189,9 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 check(DeviceSessionStore(targetContext).load()!!.trust.origin==origin)
                 check(MediaClient(targetContext).page("a".repeat(32)).items.isNotEmpty())
                 checks.add("authenticated profile renewal extends shortened test lease through the tunnel without LAN or engine restart")
-                RemoteWireGuardRuntime.disconnectToLan(targetContext)
-                check(runCatching { RemoteWireGuardRuntime.renew(targetContext) }.isFailure)
-                check(DeviceSessionStore(targetContext).load()!!.trust.origin==saved.trust.origin)
-                checks.add("explicit disconnect restores selected LAN transport")
-                check(bridge.connect(config, origin) && bridge.isTunnelUp())
+                // Continue with the production runtime's single engine owner.
+                // Two independent GoBackend instances do not represent a product
+                // operation and may race Android VpnService teardown/startup.
                 var identity: DeviceIdentity? = null
                 waitFor {
                     try { identity = client.identity(access); true } catch (_: IOException) { false }
@@ -220,7 +218,7 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 stage("connected"); gate("device-revoked")
                 var revoked = false
                 try { client.identity(access) } catch (e: DeviceApiFailure) { revoked = e.status == 401 }
-                check(revoked && bridge.isTunnelUp())
+                check(revoked && DeviceSessionStore(targetContext).load()!!.trust.origin==origin)
                 check(ProviderRegistry.evaluate(ProviderId.WIREGUARD, AndroidCapabilities.read(targetContext),
                     ProviderObservation(provisioned = true, consentGranted = true, tunnelUp = true,
                         privateHttpsReachable = true, serverIdentityMatches = true)) != ProviderState.CONNECTED)
@@ -228,7 +226,10 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
                 stage("device-revoked"); gate("peer-removed")
                 networkRefused { client.identity(access) }
                 checks.add("gateway peer removal prevents further private traffic")
-                bridge.disconnect(); check(!bridge.isTunnelUp())
+                RemoteWireGuardRuntime.disconnectToLan(targetContext)
+                check(runCatching { RemoteWireGuardRuntime.renew(targetContext) }.isFailure)
+                check(DeviceSessionStore(targetContext).load()!!.trust.origin==saved.trust.origin)
+                checks.add("explicit disconnect restores selected LAN transport")
                 networkRefused { client.identity(access) }
                 checks.add("disconnect stops tunnel without public fallback")
                 check(!RemoteWireGuardRuntime.connect(targetContext))
@@ -247,6 +248,8 @@ class WireGuardNetworkInstrumentation : Instrumentation() {
             report.putString("failure_type", error.javaClass.simpleName)
             report.putString("failure_at", error.stackTrace.firstOrNull { it.className.startsWith("com.novacinema") }
                 ?.let { it.className + ":" + it.lineNumber })
+            report.putString("failure_context",error.stackTrace.filter { it.className.startsWith("com.novacinema") }
+                .take(3).joinToString("|") { it.className+":"+it.lineNumber })
             finish(Activity.RESULT_CANCELED, report)
         } finally { runCatching { bridge?.disconnect() } }
     }
