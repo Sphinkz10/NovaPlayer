@@ -283,7 +283,15 @@ def run():
             after = adb('shell', 'run-as', PACKAGE, 'cat', 'shared_prefs/nova_tailscale_state.xml')
             assert entry.text in after
             checks.append('corrupted state remains corrupted after refusal, without silently replacing identity')
-            outputs = [(OUT/(mode+'.txt')).read_text() for mode in ('network', 'restart', 'tamper')]
+            adb('shell', 'am', 'force-stop', PACKAGE)
+            entry.text = original
+            restored = ET.tostring(document, encoding='utf-8', xml_declaration=True)
+            command('adb', 'shell', '-T', 'run-as', PACKAGE, 'tee', 'shared_prefs/nova_tailscale_state.xml', data=restored)
+            instrument('missing-key', callback)
+            after_missing = adb('shell', 'run-as', PACKAGE, 'cat', 'shared_prefs/nova_tailscale_state.xml')
+            assert original in after_missing
+            checks.append('sealed identity preserved when its missing Android wrapping key is refused')
+            outputs = [(OUT/(mode+'.txt')).read_text() for mode in ('network', 'restart', 'tamper', 'missing-key')]
             count = sum(int(re.search(r'INSTRUMENTATION_RESULT: checks_count=(\d+)', output)[1]) for output in outputs)
             report = {'result': 'passed', 'provider': 'tailscale', 'api': int(adb('shell', 'getprop', 'ro.build.version.sdk')),
                 'android_checks': count, 'harness_checks': checks, 'native_engine_aar_sha256':

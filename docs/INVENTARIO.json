@@ -485,13 +485,13 @@
     },
     {
       "path": "connect/tailscale-native/network.py",
-      "bytes": 21085,
-      "sha256": "c490efa03298baf44600c3d756eb86eb0b253df37dc8938ed7cf4da173fce5ea"
+      "bytes": 21702,
+      "sha256": "4bec7f86aa90bcf74d5f05702de4f9155e04916ce90ac41781b25902c79f4f99"
     },
     {
       "path": "connect/tailscale-native/src/androidTest/kotlin/com/novacinema/connect/TailscaleNetworkInstrumentation.kt",
-      "bytes": 10082,
-      "sha256": "7b1875ae596421d97dca0e9fd8ae7f165a763cd64dd0313c241a63dc44931709"
+      "bytes": 10897,
+      "sha256": "d37307c78bdf96e6570da38fd54b52d0bf400ca343be87b715ee08fb9f9b5a43"
     },
     {
       "path": "connect/tailscale-native/src/debug/AndroidManifest.xml",

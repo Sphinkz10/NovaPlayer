@@ -46,7 +46,7 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
             override fun onServiceDisconnected(name: ComponentName) { service = null }
         }
         try {
-            check(mode in setOf("network", "restart", "tamper"))
+            check(mode in setOf("network", "restart", "tamper", "missing-key"))
             val fixture = JSONObject(File(targetContext.filesDir, "tailscale-fixture.json").readText())
             val gateway = fixture.getString("gateway")
             check(TailscaleRoutePolicy.isOverlayV4(gateway))
@@ -61,15 +61,21 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
             check(blocked(gateway, 9444)); checks.add("NOVA gateway unreachable before VPN")
             check(GoBackend(targetContext).version.isNotBlank())
             checks.add("WireGuard native runtime remains usable in the main process")
+            // Match a user-initiated connection from the visible TV app on every run,
+            // including when Android has already remembered VPN consent.
+            val activity = startActivitySync(Intent(targetContext, TailscaleConsentActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as TailscaleConsentActivity
             if (VpnService.prepare(targetContext) != null) {
-                val activity = startActivitySync(Intent(targetContext, TailscaleConsentActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as TailscaleConsentActivity
                 runOnMainSync { (activity.findViewById<android.view.View>(android.R.id.content) as android.view.ViewGroup)
                     .getChildAt(0).performClick() }
                 stage("consent")
                 waitFor { TailscaleConsentActivity.approved }
             }
             val intent = Intent(targetContext, TailscaleVpnService::class.java)
+            if (mode == "missing-key") {
+                java.security.KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+                    .deleteEntry("nova-tailscale-state-v1")
+            }
             targetContext.startForegroundService(intent)
             replies.start(); bound = targetContext.bindService(intent, connection, Context.BIND_AUTO_CREATE)
             check(bound && connected.await(15, TimeUnit.SECONDS))
@@ -79,10 +85,15 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
                 putString("auth_key", fixture.optString("auth_key"))
             }
             val initial = request(1, options)
-            if (mode == "tamper") {
+            if (mode == "tamper" || mode == "missing-key") {
                 check(initial.getString("result") == "refused")
+                check(initial.getString("failure_stage") == "state-preflight")
                 check(blocked(gateway, 9444))
-                checks.add("tampered persisted state refused before engine initialization; no replacement identity")
+                if (mode == "missing-key") {
+                    check(!java.security.KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+                        .containsAlias("nova-tailscale-state-v1"))
+                    checks.add("missing wrapping key refused before engine initialization without regenerating it")
+                } else checks.add("tampered persisted state refused before engine initialization; no replacement identity")
             } else {
                 check(initial.getString("result") == "ok") {
                     "Native initialization refused: ${initial.getString("failure_stage")}/${initial.getString("failure_type")}/${initial.getInt("api_status")}" }
