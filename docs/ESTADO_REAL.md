@@ -1,4 +1,4 @@
-# Estado atual — 20 outubro 2026
+# Estado atual — 22 outubro 2026
 
 O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias M3 anteriores são registos de incrementos; não devem ser usados para decidir o estado atual.
 
@@ -8,7 +8,7 @@ O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias
 | M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. [Imagem atualizada](M5_INSCRICAO_WIREGUARD.md#correções-no-servidor-lan) corrige arranque concorrente SQLite e atualiza `certifi`. Aceitação no TrueNAS físico pendente |
 | M3 — identidade e permissões | Concluída no software de laboratório: login Directory na TV, prova assinada de conta, aprovação, bibliotecas Jellyfin limitadas, renovação e revogação. Sete critérios aprovados; CI 8/8, API 26/35 e Docker real. Ver evidências no documento único |
 | M4 — primeiro filme local | Instalação LAN, configuração TV, catálogo/player e recuperação integrada aprovados em laboratório. [Distribuição atual](M4_DISTRIBUICAO_ANDROID.md): pacote NOVA Cinema próprio, não depurável e com assinatura persistente offline; manter a chave privada e uma cópia de recuperação separada. Aceitação física pendente |
-| M5 — ligação remota | [Serviço do gateway](M5_SERVICO_GATEWAY.md) implementado: canal local autenticado, leases duráveis e observação temporária no Control, além da inscrição/aprovação por TV. Falta provisionamento/instalador do namespace e supervisor para NAS, distribuição de parâmetros à TV e percurso remoto completo. Tailscale e NetBird nativos continuam obrigatórios e sem prova HTTPS |
+| M5 — ligação remota | [Gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md) implementados: instalação nova de cinco serviços, firewall com expiração no kernel, perfil autenticado e catálogo/player pelo túnel na app. Consultar o relatório do incremento para os resultados e a entrega. Tailscale e NetBird nativos continuam obrigatórios e sem jornada funcional; renovação remota e recuperação do novo perfil também pendentes |
 | M6/M7 — utilização familiar | Exigem matriz física, rede externa e validações finais de segurança |
 
 Alvos: TrueNAS Community e Android TV/Google TV API 26+, incluindo Xiaomi Box S2 e Chromecast. Os emuladores não certificam os aparelhos físicos, codecs, HDR ou desempenho.

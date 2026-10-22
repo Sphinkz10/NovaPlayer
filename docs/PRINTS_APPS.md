@@ -1,5 +1,7 @@
 # Capturas reais das apps NOVA
 
+**Incremento de 22 outubro:** [oito capturas do percurso WireGuard](screenshots/wireguard-88efc1a/index.html), recolhidas em emuladores API 26/35 com 37 verificações aprovadas em cada. Vídeo sintético pelo túnel; orientação vertical de emulador, interface provisória. As capturas abaixo preservam o ensaio LAN anterior.
+
 Capturas originais dos ensaios CI: Control no navegador Windows e app Android em emulador horizontal API 35. API 26 também foi executada; imagens adicionais e galeria estão na pasta local `NOVA_PRINTS_2026-10-20`.
 
 É o protótipo funcional atual, com conteúdo sintético de teste. A interface Cinema é mínima e ainda não é o design final. Não são capturas de hardware TrueNAS/Android TV.

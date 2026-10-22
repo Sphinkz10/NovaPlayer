@@ -1,21 +1,20 @@
 # NOVA — Roadmap até à instalação no servidor e na TV
 
-**Atualização:** 20-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
+**Atualização:** 22-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
 **Fase em execução:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. Próximo gate M4: ensaio físico das duas origens em cada box. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
-**Desenvolvimento em paralelo — M5:** [serviço WireGuard](M5_SERVICO_GATEWAY.md) implementado sobre a inscrição/aprovação e o adaptador restrito: canal local autenticado, atribuições de IP duráveis e observação temporária no Control. Próximo gate: provisionamento, instalador e supervisor do namespace compatíveis com NAS. O bootstrap remoto e as jornadas Tailscale/NetBird mantêm os próprios gates; a entrega LAN 0.9 permanece disponível.
+**Incremento M5:** [gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md). O gerador prepara cinco serviços e os certificados; o gateway cria a interface e aplica aprovações/revogações do Control; a TV obtém parâmetros públicos pela API e usa o motor nativo para catálogo/player. A preparação/renovação do perfil de 24 horas ainda exige LAN. Consultar o guia para resultados e pacote verificado.
 
-**Instalação de teste atual:** APK 0.9 original com a nova imagem do servidor LAN por digest, indicada no guia M5. Esta imagem inclui as correções SQLite e `certifi==2026.10.19`; usar fontes/locks novos ao preparar o servidor. Inscrição WireGuard: 24/24 verificações em cada emulador API 26/35. A aprovação no Control ainda não instala peers num gateway de produto.
-
-**Passo seguinte implementado no laboratório:** o [worker WireGuard](M5_SERVICO_GATEWAY.md) aplica planos autenticados continuamente, conserva `/32` entre reinícios e comunica a configuração lida do kernel. Ainda requer um namespace dedicado previamente provisionado; não é um instalador TrueNAS. A reprodução remota e as jornadas Tailscale/NetBird continuam depois desse gate.
+**Próximos passos para fechar M5:** (1) integrar renovação/descoberta remota e recuperação cifrada do perfil de cinco serviços; (2) concluir autenticação, ligação, reprodução e revogação nativas com Tailscale; (3) concluir o mesmo com NetBird; (4) validar rede externa e os dois aparelhos físicos. Compilar as bibliotecas dos fornecedores não satisfaz estes critérios.
 
 | Quando instalar/testar | O que permite |
 |---|---|
 | Servidor de teste — M2 | Configurar proprietário, Jellyfin e duas origens; imagem Docker e recuperação já ensaiadas. TrueNAS físico continua pendente |
 | APK de laboratório — M3 | Login Directory, aprovação e bibliotecas atribuídas; sem reprodução. M3 de software concluída: sete critérios e pacote verificados |
 | Instalação LAN de teste — M4 | Gerar estado/YAML no PC, instalar nas Apps, configurar a própria TV e ensaiar catálogo/player separadamente na Xiaomi Box S2 e no Chromecast |
-| Fora de casa — M5 | Jornadas nativas WireGuard, Tailscale e NetBird; cada fornecedor precisa da própria prova |
+| Ensaio WireGuard — incremento M5 | Pacote novo de cinco serviços e APK 0.10; preparação inicial na LAN, perfil de 24 horas e endpoint UDP alcançável. Resultados e limites no guia M5 |
+| Utilização remota familiar — M5 completa | Descoberta/renovação, recuperação e jornadas nativas WireGuard, Tailscale e NetBird; cada fornecedor precisa da própria prova |
 
 Já podes preparar uma instalação LAN **nova e de teste** seguindo o guia da entrega, com recuperação completa ensaiada em Docker e identidade persistente da APK. Não há data de conclusão física M4/M5 confirmada: a M4 exige reprodução nos dois aparelhos; a M5 exige os três fornecedores nativos.
 

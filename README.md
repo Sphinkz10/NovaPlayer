@@ -6,11 +6,11 @@ Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
 O proprietário configura o NOVA Server e aprova as TVs. O familiar usa a própria conta Directory. WireGuard, Tailscale e NetBird nativos pertencem à M5. Ainda não há ensaio físico no TrueNAS, Xiaomi Box S2 ou Chromecast.
 
-**Desenvolvimento M5:** após a [primeira prova de rede WireGuard](docs/M5_WIREGUARD_REDE.md), a [inscrição por TV](docs/M5_INSCRICAO_WIREGUARD.md) gera a chave no Android e permite aprovação/revogação no Control. O gateway instalável e os percursos remotos completos dos três fornecedores continuam por implementar. A entrega de instalação permanece a 0.9 LAN.
+**Desenvolvimento M5:** [gateway Docker e percurso WireGuard](docs/M5_GATEWAY_CONTENTOR.md): instalação nova de cinco serviços, inscrição/aprovação por TV, perfil autenticado e catálogo/player através do motor nativo. A firewall expira autorizações mesmo se o processo do gateway ficar congelado. O guia regista os resultados e os limites da entrega. Tailscale, NetBird, renovação remota e recuperação do novo perfil continuam pendentes; a M5 completa permanece aberta.
 
-**Servidor LAN atualizado:** usar as fontes/imagem do incremento M5 para obter a correção do arranque SQLite e `certifi` atualizado. A APK assinada 0.9 é reutilizada; as imagens/locks das entregas anteriores conservam as versões históricas.
+[Guia do pacote de teste 0.10](docs/M5_INSTALACAO_WIREGUARD.md): preparação no PC, instalação no TrueNAS e associação/ligação na TV. Aplicável a um destino novo; consultar primeiro os resultados do incremento.
 
-**Desenvolvimento M5:** [serviço WireGuard](docs/M5_SERVICO_GATEWAY.md) com canal local autenticado, leases de IP duráveis, reconciliação restrita e observação temporária no Control. O provisionamento/instalador e supervisor para NAS, parâmetros da TV e percurso remoto completo continuam pendentes. [Capturas reais das apps](docs/PRINTS_APPS.md), com conteúdo sintético e interface provisória.
+[Capturas reais das apps](docs/PRINTS_APPS.md), com conteúdo sintético e interface provisória. As entregas antigas preservam as imagens e dependências históricas; não recebem automaticamente as correções atuais.
 
 - [Estado e limites](docs/ESTADO_REAL.md).
 - [Roadmap até instalar e ver filmes](docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md).

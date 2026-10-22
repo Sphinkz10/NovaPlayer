@@ -46,7 +46,9 @@ Testes locais de Windows: serviço/canal com backend controlado, persistência d
 
 A prova nativa passa a lançar o worker como processo separado em Linux, com publisher real do Core, aprovação HTTP e cliente Android. Verifica observação no Control, reinício/limpeza do worker, conservação do `/32`, repetição sem escritas, handshake, HTTPS, firewall e remoção por revogação. Resultados: **29/29 verificações em cada API 26 e 35**, com handshake real. API 26: RX 8452 B / TX 8700 B; API 35: RX 8340 B / TX 8700 B; 6 descartes do firewall em cada ensaio. Código `9dffd36aa3249d8309f7d21f97afe5359351e8b0`, merge CI `1ac5c352add9798b3887d354829d23d2e2794715`, com árvores iguais. Servidor: **369/369 em Linux**, **361 aprovados + 8 exclusões POSIX em Windows**. CI principal: **8/8 jobs**, incluindo Docker, Android build/lint, dependências e imagem. Associação/player e distribuição/update API 26/35 também aprovados. O job Windows/Python 3.13 foi repetido após o ensaio de navegador atingir o prazo de 5 segundos enquanto aguardava a configuração de permissões Jellyfin, antes da interação WireGuard; a repetição conservou código e verificações. Os restantes jobs passaram na primeira tentativa. [Relatório e proveniência](M5_SERVICO_RESULTADOS.json).
 
-## Próximos gates
+## Próximos gates desta revisão histórica
+
+O incremento seguinte implementa o provisionamento Docker, a expiração de acesso no kernel e o percurso da TV: [gateway Docker e configuração autenticada](M5_GATEWAY_CONTENTOR.md). As limitações e resultados acima pertencem ao worker autónomo desta revisão; consultar o guia novo para o estado atual.
 
 - Provisionamento/instalador do namespace, firewall, serviço e supervisor compatíveis com TrueNAS Community, sem instruir o utilizador a modificar o sistema base do NAS.
 - Entrega autenticada dos parâmetros públicos à TV e catálogo/player através do túnel.
