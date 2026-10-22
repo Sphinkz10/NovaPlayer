@@ -74,6 +74,7 @@ with httpx.Client(base_url='http://jellyfin:8096',trust_env=False,timeout=10) as
         assert not list((new_state/'gateway/channel').iterdir()) and not list((new_state/'gateway/leases').iterdir())
     assert not list(new_state.rglob('*ca.key'))
     rendered=json.loads((accepted/'instalar-no-truenas.yaml').read_text())
+    assert len(rendered['services'])==(5 if gateway_image else 4)
     media_hosts={m['target']:m['source'] for m in config['services']['jellyfin']['volumes'] if m['target'].startswith('/media/')}
     for name,service in rendered['services'].items():
         if name!='jellyfin':service['image']=gateway_image if name=='nova-gateway' else image
@@ -86,7 +87,9 @@ with httpx.Client(base_url='http://jellyfin:8096',trust_env=False,timeout=10) as
     compose('down');(root/'compose.yaml').write_text(json.dumps(rendered));compose('up','-d')
     for _ in range(120):
         try:
-            if client.get(directory+'/api/v1/directory/bootstrap').json()==profile and client.get(control+'/api/v1/health/live').status_code==200:break
+            if (client.get(directory+'/api/v1/directory/bootstrap').json()==profile and
+                client.get(control+'/api/v1/health/live').status_code==200 and
+                client.get(media+'/api/v1/device/me',headers={'Authorization':'Bearer '+tokens['access_token']}).status_code==401):break
         except Exception:pass
         time.sleep(1)
     else:raise AssertionError('Restored LAN services did not become ready')
@@ -140,7 +143,8 @@ with httpx.Client(trust_env=False,timeout=10) as client:
         remote=verify_remote(root,bundle,project,client,info,admin,device,new_tokens,selected,catalog['items'][0]['id'])
         assert remote['result']=='passed'
     return {'result':'passed','format':3 if gateway_image else 2,'physical_truenas':False,'checks':['age_encrypted_complete_state','tamper_truncation_wrong_key_refused',
-        'existing_destination_refused','identities_and_tls_preserved','safe_yaml_new_dataset','four_restored_services',
+        'existing_destination_refused','identities_and_tls_preserved','safe_yaml_new_dataset',
+        'five_restored_services' if gateway_image else 'four_restored_services',
         'admin_device_directory_sessions_revoked','jellyfin_sessions_revoked','republication_required','pre_restore_assertion_refused',
         'media_requires_fresh_grant_and_approval','catalog_and_video_after_reassociation']+
         (['gateway_key_preserved_channel_secret_rotated_runtime_discarded','no_old_peers_after_restore',
