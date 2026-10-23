@@ -210,6 +210,9 @@ def instrument(mode, callback=lambda stage: None):
     output = ''.join(lines)
     (OUT/(mode+'.txt')).write_text(output)
     if 'INSTRUMENTATION_RESULT: nova_wireguard=passed' not in output:
+        sys.path.insert(0,str(ROOT/'connect/scripts'))
+        from android_failure import capture
+        capture(OUT/'android-failure.json')
         # Instrumentation reports only class/line, never exception messages or secrets.
         safe = '\n'.join(line for line in lines if 'INSTRUMENTATION_RESULT:' in line)
         raise AssertionError(safe)

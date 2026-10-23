@@ -14,6 +14,7 @@ import java.io.File
 
 class M4Steps(private val runner:Instrumentation) {
     private val context get()=runner.targetContext
+    private fun stage(value:String) { runner.sendStatus(1,android.os.Bundle().apply { putString("cinema_stage",value) }) }
     private fun main(action:()->Unit) {
         var failure:Throwable?=null
         runner.runOnMainSync { try { action() } catch(error:Throwable) { failure=error } }
@@ -43,7 +44,7 @@ class M4Steps(private val runner:Instrumentation) {
             DeviceTokens(t.string("access_token"),t.string("refresh_token"),t.string("device_id"),
                 t.integer("expires_in"),t.integer("refresh_expires_in")),
             System.currentTimeMillis()+t.integer("refresh_expires_in")*1000L,accountId=data.string("account")))
-        val client=MediaClient(context);val library=data.string("library");val item=data.string("item")
+        stage("api");val client=MediaClient(context);val library=data.string("library");val item=data.string("item")
         check(client.page(library).items.single().id==item)
         check(client.page(library,search="absent").items.isEmpty())
         check(client.page(library,kind="continue").items.isEmpty())
@@ -52,7 +53,7 @@ class M4Steps(private val runner:Instrumentation) {
         try { client.page(data.string("other_library")) } catch(_:Exception) { denied=true }
         check(denied)
         val monitor=runner.addMonitor(PlayerActivity::class.java.name,null,false)
-        val home=runner.startActivitySync(Intent(context,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        stage("home");val home=runner.startActivitySync(Intent(context,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         val catalogueMonitor=runner.addMonitor(CinemaActivity::class.java.name,null,false)
         runner.setInTouchMode(false)
         waitUntil { var ready=false;main { ready=views(home.window.decorView).filterIsInstance<Button>()
@@ -71,35 +72,35 @@ class M4Steps(private val runner:Instrumentation) {
         try {
             runner.setInTouchMode(false)
             capture(cinema,"cinema-library-$library","tv-libraries")
-            click(cinema,"cinema-library-$library")
+            stage("library");click(cinema,"cinema-library-$library")
             capture(cinema,"cinema-item-$item","tv-catalogue")
-            click(cinema,"cinema-item-$item")
+            stage("detail");click(cinema,"cinema-item-$item")
             // Real Back must restore the catalogue and the selected card's focus.
-            click(cinema,"cinema-back")
+            stage("back-focus");click(cinema,"cinema-back")
             waitUntil { var focused=false;main { focused=views(cinema.window.decorView)
                 .any { it.tag=="cinema-item-$item" && it.hasFocus() } };focused }
-            click(cinema,"cinema-item-$item")
+            stage("detail");click(cinema,"cinema-item-$item")
             capture(cinema,"cinema-play","tv-detail")
-            click(cinema,"cinema-play")
+            stage("player");click(cinema,"cinema-play")
             playback=runner.waitForMonitorWithTimeout(monitor,30000) as? PlayerActivity ?: error("Player not opened")
             waitUntil { var ok=false;main { ok=playback!!.renderedFrame && playback!!.observedPosition>1000 };ok }
             if(captureScreens)LabScreenshots(runner).capture(playback!!,"tv-player")
             var before=0L;main { before=playback!!.observedPosition }
-            runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD)
+            stage("seek");runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD)
             waitUntil(5000) { var ok=false;main { ok=playback!!.observedPosition>=before+9000 };ok }
-            runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PAUSE)
+            stage("pause");runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PAUSE)
             waitUntil { var paused=false;main { paused=!playback!!.observedPlaying };paused }
-            val settings=runner.startActivitySync(Intent(context,ConnectionActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            main { settings.finish() }
+            stage("background");val settings=runner.startActivitySync(Intent(context,ConnectionActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            stage("foreground");main { settings.finish() }
             waitUntil { var paused=false;main { paused=playback!!.renderedFrame && !playback!!.observedPlaying };paused }
             var pausedAt=0L;main { pausedAt=playback!!.observedPosition }
             Thread.sleep(1200)
             main { check(!playback!!.observedPlaying && kotlin.math.abs(playback!!.observedPosition-pausedAt)<250) }
-            main { playback!!.finish() };playback=null
+            stage("stop");main { playback!!.finish() };playback=null
             waitUntil { client.detail(library,item).position>=100000000 }
             val resumed=client.detail(library,item).position/10000
             check(client.page(library,kind="continue").items.single().id==item)
-            playback=runner.startActivitySync(Intent(context,PlayerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            stage("resume");playback=runner.startActivitySync(Intent(context,PlayerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra("library",library).putExtra("item",item).putExtra("position",resumed)) as PlayerActivity
             waitUntil { var ok=false;main { ok=playback!!.renderedFrame && playback!!.observedPosition>=resumed };ok }
         } finally {

@@ -137,9 +137,9 @@ def run():
                                   headers={**device,'Range':'bytes=0-255'})
                 assert stream.status_code==206 and len(stream.content)==256
                 media_base=info['client']+'/api/v1/media/libraries/'+selected+'/items'
-                image=client.get(media_base+'/'+item+'/image',headers=device)
-                assert image.status_code==200 and image.headers['Content-Type']=='image/jpeg'
-                assert image.content[:2]==b'\xff\xd8' and image.headers['Cache-Control']=='no-store'
+                artwork=client.get(media_base+'/'+item+'/image',headers=device)
+                assert artwork.status_code==200 and artwork.headers['Content-Type']=='image/jpeg'
+                assert artwork.content[:2]==b'\xff\xd8' and artwork.headers['Cache-Control']=='no-store'
                 assert client.get(media_base+'?kind=continue',headers=device).json()['items']==[]
                 event=client.post(media_base+'/'+item+'/events',headers=device,
                                   json={'event':'stop','position_ticks':1200000000,'paused':True})

@@ -130,8 +130,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt",
-      "bytes": 6638,
-      "sha256": "064eef05d347489d6915bb41b1576f1aa200ddd94c2e27fb81e312eb6105d7e1"
+      "bytes": 6972,
+      "sha256": "ff353acf11206bd5ea1984ce902544f03ad49ddbb0e632130b83e2f6fd4d0a34"
     },
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
@@ -165,8 +165,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaActivity.kt",
-      "bytes": 10866,
-      "sha256": "c8ae3d2475d6a99d81a349281025054b5d565ca3b4411da500886fd6f7c83210"
+      "bytes": 11037,
+      "sha256": "3ed652e0aca9c95d547cfbf487a89fdebfa686ab2c564ddea9567719ad0656be"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaArtwork.kt",
@@ -240,8 +240,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt",
-      "bytes": 8884,
-      "sha256": "dbcde952a62e70702e200b44cf6884ac7006e43f330a676bc9b1507109b28fc2"
+      "bytes": 9841,
+      "sha256": "55626fa3b4f93d76f70b2301eaeedba81f01d11131baaeaf044f02912791df03"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt",
@@ -444,6 +444,11 @@
       "sha256": "f20336501c31adf309ccfb6b7a6e7c80b416b475b064604166645e05b59db7ab"
     },
     {
+      "path": "connect/scripts/android_failure.py",
+      "bytes": 975,
+      "sha256": "73d2c4fdb02d231f0a92dc682a498648272a61a468e04c3d1ed5ec9b83d8a48d"
+    },
+    {
       "path": "connect/scripts/check_distribution.py",
       "bytes": 5132,
       "sha256": "c9f7072a48ad1017eb201764d9886c8d5cdbfd76d9d89794fa1e6b228dd086ed"
@@ -485,8 +490,8 @@
     },
     {
       "path": "connect/scripts/smoke_m4_android.py",
-      "bytes": 4715,
-      "sha256": "2a9da69c4ca2f384948bef8560cc2dfa369cfb7f719d255ff3f12d4a9a6b5075"
+      "bytes": 4907,
+      "sha256": "cc6b65062e67011ff8bb61172c215b2eecb9db8e10422c95a7872fa9c2719722"
     },
     {
       "path": "connect/scripts/smoke_pairing_android.py",
@@ -550,8 +555,8 @@
     },
     {
       "path": "connect/wireguard-proof/network.py",
-      "bytes": 31524,
-      "sha256": "f1339f4a1c717d23c7dc3b43f212be0ecff06294898563f865a7b7b7d3236022"
+      "bytes": 31667,
+      "sha256": "4563d4f9c3c566f5652d2c4d60fc499c04206fd1edeb49dfbf77f3942d96d81f"
     },
     {
       "path": "connect/wireguard-proof/src/androidTest/kotlin/com/novacinema/connect/WireGuardNetworkInstrumentation.kt",
@@ -1210,8 +1215,8 @@
     },
     {
       "path": "server/scripts/smoke_lan_compose.py",
-      "bytes": 14359,
-      "sha256": "053b1a91c96126239e9562f41dae28f3629c3154474bc6a0d10b1ff10f0f78eb"
+      "bytes": 14369,
+      "sha256": "1a810efd419881c57e20cdb5e95efb2561d7973fe0bd8b7090d1e327992366d2"
     },
     {
       "path": "server/scripts/smoke_lan_recovery.py",

@@ -48,6 +48,9 @@ def run():
                 output=adb('shell','am','instrument','-w','-r','-e','phase','m4-cinema',
                            PACKAGE+'.test/com.novacinema.connect.DevicePairingInstrumentation',timeout=180)
                 (out/'cinema.txt').write_text(output,encoding='utf8')
+                if 'INSTRUMENTATION_RESULT: nova_pairing=passed' not in output:
+                    from android_failure import capture
+                    capture(out/'android-failure.json')
                 assert 'INSTRUMENTATION_RESULT: nova_pairing=passed' in output,output
                 assert 'INSTRUMENTATION_CODE: -1' in output,output
                 assert any(event['path'].endswith('/Stopped') and event['PositionTicks']>=100000000 for event in jf.media_events)

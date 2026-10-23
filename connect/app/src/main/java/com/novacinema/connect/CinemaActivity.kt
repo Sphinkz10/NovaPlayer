@@ -146,11 +146,11 @@ class CinemaActivity:Activity() {
             val resume=if(item.played)0 else item.position/10000
             fun play(position:Long) { startActivity(Intent(this,PlayerActivity::class.java)
                 .putExtra("library",lib).putExtra("item",id).putExtra("position",position)) }
-            val row=TvUi.row(root)
+            val row=TvUi.row(root).apply { if(resources.configuration.screenWidthDp<600)orientation=LinearLayout.VERTICAL }
             val poster=TvUi.button(row,if(resume>0)"Retomar · ${TvUi.time(resume)}" else "Reproduzir","cinema-play") { play(resume) }
             poster.gravity=Gravity.CENTER;artwork(poster,lib,item,saved)
             val summary=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
-            row.addView(summary,LinearLayout.LayoutParams(0,-2,3f).apply { setMargins(TvUi.dp(this@CinemaActivity,18),0,0,0) })
+            row.addView(summary,if(row.orientation==LinearLayout.HORIZONTAL)LinearLayout.LayoutParams(0,-2,3f).apply { setMargins(TvUi.dp(this@CinemaActivity,18),0,0,0) } else LinearLayout.LayoutParams(-1,-2))
             TvUi.label(summary,item.overview.ifBlank { "Este título ainda não tem sinopse." })
             if(resume>0)TvUi.button(summary,"Reproduzir desde o início","cinema-restart") { play(0) }
             TvUi.label(summary,"${TvUi.network(this)} · Qualidade original. Áudio e legendas disponíveis no leitor.",15f,TvUi.muted)

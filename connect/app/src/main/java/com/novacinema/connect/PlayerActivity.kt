@@ -57,13 +57,18 @@ class PlayerActivity:Activity() {
         view=PlayerView(this).apply { useController=true;controllerShowTimeoutMs=5000 }
         root.addView(view,FrameLayout.LayoutParams(-1,-1))
         val controls=LinearLayout(this).apply {
-            orientation=LinearLayout.HORIZONTAL;gravity=android.view.Gravity.CENTER_VERTICAL
+            orientation=LinearLayout.VERTICAL
             setPadding(TvUi.dp(context,18),TvUi.dp(context,6),TvUi.dp(context,18),TvUi.dp(context,6))
             setBackgroundColor(0xdd090f1b.toInt())
         }
         status=TextView(this).apply { textSize=15f;setTextColor(TvUi.ink) }
-        controls.addView(status,LinearLayout.LayoutParams(0,-2,2f))
-        fun button(title:String,tagValue:String,action:()->Unit)=TvUi.button(controls,title,tagValue,action)
+        controls.addView(status,LinearLayout.LayoutParams(-1,-2))
+        val actions=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
+        controls.addView(HorizontalScrollView(this).apply { addView(actions) })
+        fun button(title:String,tagValue:String,action:()->Unit)=TvUi.style(Button(this)).apply {
+            text=title;tag=tagValue;setOnClickListener { action() }
+            actions.addView(this,LinearLayout.LayoutParams(-2,-2).apply { setMargins(0,0,TvUi.dp(this@PlayerActivity,8),0) })
+        }
         button("Áudio","player-audio") {
             player?.let { TrackSelectionDialogBuilder(this,"Áudio",it,androidx.media3.common.C.TRACK_TYPE_AUDIO).build().show() }
         }
@@ -144,6 +149,18 @@ class PlayerActivity:Activity() {
             }
         }
     }
-    override fun dispatchKeyEvent(event:android.view.KeyEvent):Boolean =
-        if(::view.isInitialized && (view.hasFocus() || event.keyCode in setOf(85,86,87,88,89,90,126,127)) && view.dispatchKeyEvent(event))true else super.dispatchKeyEvent(event)
+    override fun dispatchKeyEvent(event:android.view.KeyEvent):Boolean {
+        val p=player
+        if(p!=null && event.keyCode in setOf(85,86,89,90,126,127)) {
+            if(event.action==android.view.KeyEvent.ACTION_DOWN)when(event.keyCode) {
+                85 -> if(p.isCommandAvailable(Player.COMMAND_PLAY_PAUSE)) { if(p.playWhenReady)p.pause() else p.play() }
+                86,127 -> if(p.isCommandAvailable(Player.COMMAND_PLAY_PAUSE))p.pause()
+                126 -> if(p.isCommandAvailable(Player.COMMAND_PLAY_PAUSE))p.play()
+                89 -> if(p.isCommandAvailable(Player.COMMAND_SEEK_BACK))p.seekBack()
+                90 -> if(p.isCommandAvailable(Player.COMMAND_SEEK_FORWARD))p.seekForward()
+            }
+            return true
+        }
+        return if(::view.isInitialized && view.hasFocus() && view.dispatchKeyEvent(event))true else super.dispatchKeyEvent(event)
+    }
 }
