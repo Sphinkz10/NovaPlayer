@@ -116,6 +116,245 @@
     "wireguard_initial_failed_run": 39800494200,
     "wireguard_initial_failed_job": 119899474759,
     "observed_failure": "DeviceApiFailure on profile renewal after playback; original instrumentation omitted HTTP status/code",
-    "follow_up": "proof harness now waits for authenticated gateway observations with bounded 503-only retries, keeps the stored profile unchanged on refusal, slows initial provisioning polls and reports sanitized status/code; new execution pending"
-  }
+    "follow_up": "passed: bounded 503-only retries preserve the previous profile; initial polls respect the API budget; failures now include sanitized HTTP status/code. The original failure did not expose its status, so its precise API cause is not asserted.",
+    "tested_source": "ab7fbc6eadef3db3a92c1b9b0d015b8322013f3c",
+    "ci_merge": "a0df292eca1f93372b09ad5d155631bcb5ad50ea",
+    "jobs": [
+      {
+        "run": 39802491120,
+        "id": 119906706244,
+        "name": "wireguard (35)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491120,
+        "id": 119906706649,
+        "name": "wireguard (26)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119906706333,
+        "name": "server (ubuntu-latest, 3.12)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119906706748,
+        "name": "server (windows-latest, 3.13)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119906706812,
+        "name": "dependencies",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119906706876,
+        "name": "server (ubuntu-latest, 3.13)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119906706928,
+        "name": "server (windows-latest, 3.12)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119906706930,
+        "name": "compose-lab",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119906707064,
+        "name": "android",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491115,
+        "id": 119911911584,
+        "name": "server-image",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491143,
+        "id": 119906706854,
+        "name": "gateway",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491112,
+        "id": 119906706709,
+        "name": "distribution (26)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491112,
+        "id": 119906706770,
+        "name": "distribution (35)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491150,
+        "id": 119906707095,
+        "name": "pairing (26)",
+        "conclusion": "success"
+      },
+      {
+        "run": 39802491150,
+        "id": 119906707526,
+        "name": "pairing (35)",
+        "conclusion": "success"
+      }
+    ],
+    "jobs_passed": 15,
+    "wireguard_reports": [
+      {
+        "result": "passed",
+        "provider": "wireguard",
+        "api": 26,
+        "checks": [
+          "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+          "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+          "host has no route or TCP forwarder to the service overlay address",
+          "restricted adapter removes stale and broad peers before applying approved per-device host route",
+          "process restart restores durable per-device lease after confirmed peer cleanup",
+          "Control accepts only fresh authenticated kernel observations and never claims handshake",
+          "repeated live worker tick performs zero kernel writes",
+          "device revocation invalidates the previous Control observation immediately",
+          "private service unreachable before VPN",
+          "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+          "encrypted enrollment key bound to NOVA server origin and device",
+          "owner approval checked before constructing local lab tunnel profile",
+          "public gateway configuration delivered by authenticated pinned device API",
+          "remote profile rejects foreign device broad route injection public gateway and expiry",
+          "clock skew bounded to thirty seconds without extending expiry or disabling TLS validation",
+          "WireGuard profile encrypted by Android Keystore",
+          "Android system VPN consent explicitly approved",
+          "full-tunnel and other-application profiles rejected",
+          "Cinema session uses verified tunnel origin while durable association remains bound to LAN identity",
+          "actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard",
+          "authenticated profile renewal extends shortened test lease through the tunnel without LAN or engine restart",
+          "authenticated NOVA device API over native WireGuard and TLS 1.3",
+          "wrong HTTPS identity rejected inside tunnel",
+          "client surface does not mount administrative routes",
+          "firewall blocks live SSH/admin canaries and underlay ingress",
+          "revoked access credential refused even while tunnel remains UP",
+          "gateway peer removal prevents further private traffic",
+          "explicit disconnect restores selected LAN transport",
+          "disconnect stops tunnel without public fallback",
+          "failed remote reconnection preserves selection and blocks implicit LAN credentials",
+          "process restart with remote selected refuses silent LAN fallback and preserves association",
+          "encrypted profile survives process restart",
+          "Android-generated enrollment key survives process restart",
+          "enrollment tampering fails closed without replacing key",
+          "missing wrapping key never regenerates enrollment identity",
+          "forgetting NOVA association erases local WireGuard enrollment",
+          "tampered encrypted profile fails closed",
+          "local profile revocation removes decryption material"
+        ],
+        "gateway_handshake": {
+          "observed": true,
+          "received_bytes": 202292,
+          "sent_bytes": 7169388,
+          "firewall_dropped_packets": 6
+        },
+        "adb_reverse": false,
+        "tls": "TLS 1.3, exact certificate and hostname validation",
+        "gateway": "isolated Linux kernel WireGuard namespace",
+        "client": "official embedded Android GoBackend",
+        "consent": "actual system dialog, no appops bypass",
+        "playback": "actual Media3 frame/seek/pause/resume over WireGuard; synthetic Jellyfin HTTP fixture inside namespace",
+        "private_profile_delivery": "authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation",
+        "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+        "physical_nas": false,
+        "physical_tv": false,
+        "production_remote_access_enabled": false,
+        "apk_sha256": "bf3584bd36de26b0cef87c0d30e9c6589806ea0c7a7c6ccc067bf32152e9d0d3",
+        "source_commit": "a0df292eca1f93372b09ad5d155631bcb5ad50ea"
+      },
+      {
+        "result": "passed",
+        "provider": "wireguard",
+        "api": 35,
+        "checks": [
+          "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+          "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+          "host has no route or TCP forwarder to the service overlay address",
+          "restricted adapter removes stale and broad peers before applying approved per-device host route",
+          "process restart restores durable per-device lease after confirmed peer cleanup",
+          "Control accepts only fresh authenticated kernel observations and never claims handshake",
+          "repeated live worker tick performs zero kernel writes",
+          "device revocation invalidates the previous Control observation immediately",
+          "private service unreachable before VPN",
+          "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+          "encrypted enrollment key bound to NOVA server origin and device",
+          "owner approval checked before constructing local lab tunnel profile",
+          "public gateway configuration delivered by authenticated pinned device API",
+          "remote profile rejects foreign device broad route injection public gateway and expiry",
+          "clock skew bounded to thirty seconds without extending expiry or disabling TLS validation",
+          "WireGuard profile encrypted by Android Keystore",
+          "Android system VPN consent explicitly approved",
+          "full-tunnel and other-application profiles rejected",
+          "Cinema session uses verified tunnel origin while durable association remains bound to LAN identity",
+          "actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard",
+          "authenticated profile renewal extends shortened test lease through the tunnel without LAN or engine restart",
+          "authenticated NOVA device API over native WireGuard and TLS 1.3",
+          "wrong HTTPS identity rejected inside tunnel",
+          "client surface does not mount administrative routes",
+          "firewall blocks live SSH/admin canaries and underlay ingress",
+          "revoked access credential refused even while tunnel remains UP",
+          "gateway peer removal prevents further private traffic",
+          "explicit disconnect restores selected LAN transport",
+          "disconnect stops tunnel without public fallback",
+          "failed remote reconnection preserves selection and blocks implicit LAN credentials",
+          "process restart with remote selected refuses silent LAN fallback and preserves association",
+          "encrypted profile survives process restart",
+          "Android-generated enrollment key survives process restart",
+          "enrollment tampering fails closed without replacing key",
+          "missing wrapping key never regenerates enrollment identity",
+          "forgetting NOVA association erases local WireGuard enrollment",
+          "tampered encrypted profile fails closed",
+          "local profile revocation removes decryption material"
+        ],
+        "gateway_handshake": {
+          "observed": true,
+          "received_bytes": 250356,
+          "sent_bytes": 6991740,
+          "firewall_dropped_packets": 6
+        },
+        "adb_reverse": false,
+        "tls": "TLS 1.3, exact certificate and hostname validation",
+        "gateway": "isolated Linux kernel WireGuard namespace",
+        "client": "official embedded Android GoBackend",
+        "consent": "actual system dialog, no appops bypass",
+        "playback": "actual Media3 frame/seek/pause/resume over WireGuard; synthetic Jellyfin HTTP fixture inside namespace",
+        "private_profile_delivery": "authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation",
+        "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+        "physical_nas": false,
+        "physical_tv": false,
+        "production_remote_access_enabled": false,
+        "apk_sha256": "487ab1eea23a7e94a10058760b91e795949db4bcda0e13d82f33820d6f238ba6",
+        "source_commit": "a0df292eca1f93372b09ad5d155631bcb5ad50ea"
+      }
+    ],
+    "production_source_equivalence_to_tailscale_test": "connect/app and connect/tailscale-native unchanged between 66d7852 and ab7fbc6; regression revision changes only the WireGuard proof and documentation/inventories",
+    "artifacts": [
+      {
+        "id": 12437006061,
+        "name": "wireguard-network-api-35",
+        "zip_sha256": "1c28f9db26e85925c558029c2b46b4c16af1c74e3eefeac311fccb533d477e1f"
+      },
+      {
+        "id": 12436671536,
+        "name": "wireguard-network-api-26",
+        "zip_sha256": "4590abf7a6b40dfd1a1d14933c2622a8111bf15a06b3a3815e0f44f9be2de1ed"
+      }
+    ]
+  },
+  "closed_date": "2026-10-23"
 }

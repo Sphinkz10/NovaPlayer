@@ -1,4 +1,4 @@
-# Estado atual — 22 outubro 2026
+# Estado atual — 23 outubro 2026
 
 O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias M3 anteriores são registos de incrementos; não devem ser usados para decidir o estado atual.
 

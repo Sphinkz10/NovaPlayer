@@ -8,6 +8,21 @@ A perda da chave Keystore foi recusada antes do arranque, sem regeneração da
 identidade. [Resultados e proveniência](M5_TAILSCALE_RESULTADOS.json).
 A entrega instalável continua a ser a 0.11 WireGuard. A M5 completa permanece aberta.
 
+Fecho em **23 outubro 2026**: a regressão da revisão
+`ab7fbc6eadef3db3a92c1b9b0d015b8322013f3c` passou **15/15 jobs**, incluindo
+WireGuard **38/38 verificações em cada API 26/35**, Docker, associação, distribuição
+e atualização. O código Tailscale/app coincide com a revisão `66d7852` aprovada;
+a alteração posterior foi no ensaio WireGuard e na documentação/inventários.
+Os dois jobs Tailscale são adicionais aos 15 da regressão, com proveniência própria.
+
+Uma execução anterior falhou na API de renovação WireGuard depois do vídeo.
+O diagnóstico original não registou o estado HTTP, pelo que não se afirma uma
+causa precisa. O ensaio passou a aguardar, com prazo, apenas a indisponibilidade
+temporária `503/wireguard_gateway_unavailable`, verificando que a recusa conserva
+o perfil anterior; outros erros continuam a falhar. A consulta inicial foi
+desacelerada para respeitar o orçamento da API. O servidor e o cliente WireGuard
+de produção não foram alterados neste incremento.
+
 O adaptador em `connect/tailscale-native` usa o motor real `libtailscale`, já
 compilado a partir do commit Android `264102cc702fbd844e900227ee02e5cbb4d7f801`.
 O AAR combinado tem SHA-256

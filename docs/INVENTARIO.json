@@ -566,7 +566,7 @@
     {
       "path": "docs/ESTADO_REAL.md",
       "bytes": 2359,
-      "sha256": "c5c3bf5b4ed5c6b5ceee9b0d047539b86565cafd2e254e4624c032f3bd2f78d9"
+      "sha256": "12965811d0f75ceafb55f8bed5da25c37ca69c65a34a5c68a57e3343bda4b739"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -685,13 +685,13 @@
     },
     {
       "path": "docs/M5_TAILSCALE_NATIVO.md",
-      "bytes": 4624,
-      "sha256": "8858b8d5b5715dce3cbfaf1422ba8eb831c4485e8e7c04237be82fbcab450425"
+      "bytes": 5640,
+      "sha256": "55fa633d38091ce365763b2d295d601c5bd14c6b4740e5f21710cd5f168eda9a"
     },
     {
       "path": "docs/M5_TAILSCALE_RESULTADOS.json",
-      "bytes": 5188,
-      "sha256": "cec18e80d0ea15a3bfa285781982a13ebdbd6201b93ff4630a061d386010f050"
+      "bytes": 16866,
+      "sha256": "9914fb9865ce7711b0f47ab6950c6f6099fad6ca3049586f922f987dca8b5794"
     },
     {
       "path": "docs/M5_WIREGUARD_REDE.md",
@@ -726,7 +726,7 @@
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
       "bytes": 29226,
-      "sha256": "ce5816f65d291f52cf110f0d76230186d3b0ebfa31e23f43c7ce3f81fa2f0702"
+      "sha256": "01699dd278473ba9adabdcc31eee904f58dade7d09e4c1cf3efea39034290945"
     },
     {
       "path": "docs/screenshots/PROVENIENCIA.json",

@@ -1,6 +1,6 @@
 # NOVA — Roadmap até à instalação no servidor e na TV
 
-**Atualização:** 22-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
+**Atualização:** 23-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
 **Entrega de teste disponível:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada, e o incremento WireGuard 0.11. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. A aceitação física M4 continua pendente. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
