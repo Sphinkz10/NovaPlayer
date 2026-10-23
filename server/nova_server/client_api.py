@@ -69,7 +69,7 @@ class SmallBody:
         await self.app(scope, replay, send)
 
 
-def make_client_app(state_dir=None, origin=None, *, require_directory=False, wireguard_profiles=None):
+def make_client_app(state_dir=None, origin=None, *, require_directory=False, wireguard_profiles=None, tailscale_profiles=None):
     origin, host = client_origin(origin or os.environ.get('NOVA_CLIENT_ORIGIN', ''))
     store = Store(state_dir or os.environ.get('NOVA_STATE_DIR', '/data'))
     devices = Devices(store)
@@ -77,12 +77,18 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False, wir
         from .wireguard_profile import WireGuardProfiles
         wireguard_profiles = WireGuardProfiles.local(store,os.environ['NOVA_WIREGUARD_PUBLIC_CONFIG'])
     remote_origin = wireguard_profiles.origin if wireguard_profiles is not None else None
+    if tailscale_profiles is None and os.environ.get('NOVA_TAILSCALE_PUBLIC_CONFIG'):
+        from .tailscale_profile import TailscaleProfiles
+        tailscale_profiles=TailscaleProfiles.local(store,os.environ['NOVA_TAILSCALE_PUBLIC_CONFIG'],origin)
+    remote_origins=[value for value in (remote_origin,tailscale_profiles.origin if tailscale_profiles else None) if value]
+    if len(remote_origins)!=len(set(urlsplit(value).hostname for value in remote_origins)):
+        raise ValueError('Remote providers require distinct gateway addresses')
     api = FastAPI(title='NOVA device laboratory', docs_url=None, redoc_url=None, openapi_url=None)
     api.state.devices = devices
     api.add_exception_handler(DeviceError, device_error)
     api.add_exception_handler(RequestValidationError, invalid_device_payload)
     api.add_middleware(SmallBody)
-    api.add_middleware(TrustedHostMiddleware, allowed_hosts=[host]+([urlsplit(remote_origin).hostname] if remote_origin else []), www_redirect=False)
+    api.add_middleware(TrustedHostMiddleware, allowed_hosts=[host]+[urlsplit(value).hostname for value in remote_origins], www_redirect=False)
 
     @api.middleware('http')
     async def transport(request: Request, call_next):
@@ -130,7 +136,7 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False, wir
             raise DeviceError('invalid_token', 401)
         result = devices.authenticate(bearer[7:])
         result['descriptor'] = {'schema_version': 1, 'server_id': result['server_id'],
-                                'client_origin': remote_origin if remote_origin and request.url.hostname == urlsplit(remote_origin).hostname else origin,
+                                'client_origin': next((value for value in remote_origins if request.url.hostname==urlsplit(value).hostname),origin),
                                 'media_enabled': result['account_id'] is not None,
                                 'directory_enabled': result['account_id'] is not None, 'remote_access_enabled': False}
         return result
@@ -186,6 +192,16 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False, wir
         if wireguard_profiles is None:
             raise DeviceError('wireguard_gateway_unavailable',503)
         return wireguard_profiles.issue(access)
+
+    @api.get('/api/v1/device/tailscale/profile')
+    def tailscale_profile(request:Request):
+        limit(request,'tailscale',20,100,60)
+        bearer=request.headers.get('Authorization','')
+        if not bearer.startswith('Bearer ') or not 40<=len(bearer[7:])<=128:
+            raise DeviceError('invalid_token',401)
+        devices.authenticate(bearer[7:])
+        if tailscale_profiles is None:raise DeviceError('tailscale_gateway_unavailable',503)
+        return tailscale_profiles.issue(bearer[7:])
 
     from .media import mount_media
     mount_media(api,store,os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096'))

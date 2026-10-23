@@ -143,6 +143,11 @@ class DeviceClient(private val trust: ServerTrust) : DeviceTransport {
     }
     override fun logout(access: String) { request("logout", JSONObject(), access) }
 
+    internal fun tailscaleProfile(saved:SavedDevice):TailscaleProfile {
+        require(saved.trust.origin==trust.origin && saved.trust.serverId==trust.serverId)
+        return com.novacinema.connect.tailscaleProfile(request("tailscale/profile",access=saved.tokens.access),saved)
+    }
+
     /** Only public material crosses the API; an approval is not tunnel activation. */
     fun enrollWireGuard(saved: SavedDevice, publicKey: String): String = wireGuardResult(saved,
         publicKey, request("wireguard", JSONObject().put("public_key", publicKey), saved.tokens.access))

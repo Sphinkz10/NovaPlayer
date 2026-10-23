@@ -35,13 +35,13 @@ class MainActivity : Activity() {
         io.execute {
             val saved = runCatching { DeviceSessionStore(applicationContext).loadBase() }
             val configured = runCatching { DirectoryProfile.load(applicationContext) }.isSuccess
-            val remote = RemoteWireGuardRuntime.selected(applicationContext)
+            val network=TvUi.network(applicationContext)
             runOnUiThread {
                 if (isDestroyed || current != generation) return@runOnUiThread
                 val associated = saved.getOrNull() != null
                 status.text = when {
                     saved.isFailure -> "Não foi possível ler a associação. Abre Conta e associação para recuperar."
-                    associated && remote -> "WireGuard selecionado. A identidade do servidor será verificada antes de abrir a biblioteca."
+                    associated && network!="Rede local" -> "$network selecionado. A identidade do servidor será verificada antes de abrir a biblioteca."
                     associated -> "TV associada · Rede local. Escolhe a tua biblioteca para começar."
                     configured -> "Configuração pronta. Entra com a conta que o proprietário partilhou contigo."
                     else -> "Primeira utilização: configura esta TV com os dados fornecidos pelo proprietário."

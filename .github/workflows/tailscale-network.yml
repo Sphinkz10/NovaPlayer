@@ -5,6 +5,9 @@ on:
     branches: [codex/phase-one]
     paths:
       - 'connect/tailscale-native/**'
+      - 'connect/core/src/main/kotlin/com/novacinema/connect/core/TailscaleProfile.kt'
+      - 'connect/app/src/main/java/com/novacinema/connect/RemoteTailscale.kt'
+      - 'server/nova_server/tailscale_profile.py'
       - '.github/workflows/tailscale-network.yml'
 permissions:
   contents: read
@@ -41,7 +44,7 @@ jobs:
       - name: Namespace tooling and emulator acceleration
         run: |
           sudo apt-get update
-          sudo apt-get install -y iproute2 iptables
+          sudo apt-get install -y iproute2 iptables ffmpeg
           sudo chown "$(id -u):$(id -g)" /dev/kvm
       - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:

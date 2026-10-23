@@ -5,6 +5,7 @@ account. No host route to the overlay, TCP proxy, adb reverse or external VPN ap
 Only encrypted Tailscale traffic can reach the namespace's HTTPS service.
 """
 import argparse
+import base64
 from datetime import datetime, timedelta, timezone
 import hashlib
 import ipaddress
@@ -30,6 +31,7 @@ OUT = ROOT/'connect/test-results/tailscale'
 PACKAGE = 'com.novacinema.connect.poc'
 GATEWAY = '100.64.0.1'
 CONTROL = 'https://10.0.2.2:18443'
+BASE_ORIGIN = 'https://10.0.2.2:19444'
 sys.path.insert(0, str(ROOT/'server'))
 
 
@@ -47,7 +49,7 @@ def adb(*args, **kwargs):
 
 
 def push(name, data):
-    assert name in ('tailscale-fixture.json', 'tailscale-gate.txt')
+    assert name in ('tailscale-fixture.json', 'tailscale-gate.txt', 'mfour-fixture.json', 'lab-screenshot-gate.txt')
     command('adb', 'shell', '-T', 'run-as', PACKAGE, 'tee', 'files/'+name, data=data)
 
 
@@ -92,21 +94,51 @@ def tools(root):
             (root/binary).write_bytes(archive.extractfile(members[0]).read()); (root/binary).chmod(0o700)
 
 
-def serve(root):
+def serve(root,bootstrap=False):
     import uvicorn
     from nova_server.client_api import make_client_app
+    from nova_server.storage import Store
+    from nova_server.tailscale_profile import TailscaleProfiles
+    state=Store(root/'state')
+    os.environ['NOVA_STATE_DIR']=str(root/'state')
+    media_fixture=None
+    if not bootstrap:
+        import asyncio
+        sys.path.insert(0,str(ROOT/'server/tests'))
+        from jellyfin_m3_fixture import jellyfin_http
+        from nova_server.members import Members,MemberConfiguration
+        media_fixture=jellyfin_http();jf,url=media_fixture.__enter__()
+        os.environ['NOVA_JELLYFIN_URL']=url
+        jf.media_content=(root/'synthetic.mp4').read_bytes()
+        libraries=[]
+        for index,letter in enumerate(('a','b')):
+            lib={'id':letter*32,'name':'Biblioteca '+letter.upper(),'paths':['/media/source-'+letter]}
+            libraries.append(lib);identity=str(index+1)*32;path='/media/source-'+letter+'/movie.mp4'
+            jf.media_items[lib['id']]=[{'Id':identity,'Name':'Filme '+letter.upper(),'Type':'Movie','RunTimeTicks':400000000,
+                'Overview':'Vídeo sintético pelo Tailscale.','Path':path,'MediaSources':[{'Id':identity,'Protocol':'File','Path':path}],
+                'UserData':{'PlaybackPositionTicks':0}}]
+        with state._db() as db:
+            db.execute('UPDATE jellyfin_setup SET server_id=?,report=? WHERE id=1',
+                (jf.sid,json.dumps({'server_id':jf.sid,'libraries':libraries})))
+        asyncio.run(Members(state,url).configure(MemberConfiguration(username='owner',password='owner-fixture-password',
+            subject=(root/'member.txt').read_text(),libraries=['a'*32])))
     def canary(port):
         with socket.socket() as listener:
             listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             listener.bind(('0.0.0.0', port)); listener.listen()
             while True:
                 connection, _ = listener.accept(); connection.close()
-    for port in (22, 9443): threading.Thread(target=canary, args=(port,), daemon=True).start()
-    config = uvicorn.Config(make_client_app(root/'state', 'https://'+GATEWAY+':9444'), host=GATEWAY, port=9444,
+    if not bootstrap:
+        for port in (22, 9443): threading.Thread(target=canary, args=(port,), daemon=True).start()
+    profiles=TailscaleProfiles(state,json.loads((root/'tailscale-public.json').read_text()),BASE_ORIGIN)
+    config = uvicorn.Config(make_client_app(root/'state', BASE_ORIGIN,tailscale_profiles=profiles),
+                            host='127.0.0.1' if bootstrap else GATEWAY, port=19444 if bootstrap else 9444,
                             ssl_certfile=str(root/'gateway.crt'), ssl_keyfile=str(root/'gateway.key'),
                             log_level='error', access_log=False, proxy_headers=False)
     config.load(); config.ssl.minimum_version = ssl.TLSVersion.TLSv1_3
-    uvicorn.Server(config).run()
+    try:uvicorn.Server(config).run()
+    finally:
+        if media_fixture:media_fixture.__exit__(None,None,None)
 
 
 def consent():
@@ -134,6 +166,15 @@ def instrument(mode, callback):
             lines.append(line)
             stage = re.search(r'INSTRUMENTATION_STATUS: tailscale_stage=([a-z-]+)', line)
             if stage: callback(stage[1])
+            capture=re.search(r'INSTRUMENTATION_STATUS: screenshot_name=(tv-[a-z]+)',line)
+            if capture:
+                name=capture[1]
+                assert name in ('tv-home','tv-libraries','tv-catalogue','tv-detail','tv-player')
+                screenshots=OUT/'screenshots';screenshots.mkdir(exist_ok=True)
+                remote='/sdcard/nova-tailscale-'+name+'.png'
+                adb('shell','screencap','-p',remote)
+                adb('pull',remote,str(screenshots/(name+'.png')))
+                push('lab-screenshot-gate.txt',name.encode('ascii'))
         process.wait(timeout=10)
     finally:
         timer.cancel()
@@ -152,6 +193,7 @@ def run():
     OUT.mkdir(parents=True, exist_ok=True)
     for apk in ('debug/app-debug.apk', 'androidTest/debug/app-debug-androidTest.apk'):
         adb('install', '-r', '-t', str(ROOT/'connect/app/build/outputs/apk'/apk), timeout=180)
+    adb('shell','wm','size','1280x720');adb('shell','wm','density','160')
     # Create the app's private files directory before run-as receives the fixture.
     adb('shell', 'am', 'start', '-n', PACKAGE+'/com.novacinema.connect.MainActivity')
     adb('shell', 'run-as', PACKAGE, 'mkdir', '-p', 'files')
@@ -168,7 +210,7 @@ def run():
         try:
             tools(root)
             control_ca = certificate(root, 'control', ['10.0.2.2', '127.0.0.1', '10.203.0.1'])
-            gateway_ca = certificate(root, 'gateway', [GATEWAY])
+            gateway_ca = certificate(root, 'gateway', [GATEWAY,'10.0.2.2'])
             wrong = certificate(root, 'wrong', [GATEWAY])
             config = {
                 'server_url': CONTROL, 'listen_addr': '0.0.0.0:18443', 'metrics_listen_addr': '127.0.0.1:19090',
@@ -234,22 +276,45 @@ def run():
             from nova_server.devices import Devices
             from nova_server.security import hash_password
             store = Store(root/'state'); assert store.bootstrap('owner', hash_password(secrets.token_urlsafe(32)))
-            devices = Devices(store); grant = devices.start('NOVA Tailscale disposable emulator')
-            pending = devices.inspect(grant['user_code']); devices.decide(grant['user_code'], pending['request_id'], True)
-            tokens = devices.poll(grant['device_code'])
+            from nova_server.secret_vault import SecretVault
+            SecretVault(store).key(create=True)
+            devices = Devices(store);account=str(uuid.uuid4());(root/'member.txt').write_text(account)
+            grant=devices.start('NOVA Tailscale disposable emulator',{'audience':devices.identity(),
+                'expires_at':int(time.time())+300,'assertion_id':str(uuid.uuid4()),'subject':account,
+                'username':'alice','entry_id':str(uuid.uuid4())})
+            command('ffmpeg','-hide_banner','-loglevel','error','-f','lavfi','-i','testsrc2=size=320x180:rate=24',
+                '-f','lavfi','-i','sine=frequency=440:sample_rate=48000','-t','40','-c:v','libx264','-preset','ultrafast',
+                '-g','24','-pix_fmt','yuv420p','-c:a','aac','-movflags','+faststart',root/'synthetic.mp4',timeout=60)
+            (root/'tailscale-public.json').write_text(json.dumps({'schema_version':1,'server_id':devices.identity(),
+                'revision':1,'control_origin':CONTROL,'client_origin':'https://'+GATEWAY+':9444'}))
             spawn(['sudo', 'ip', 'netns', 'exec', namespace, sys.executable, Path(__file__).resolve(), '--serve', root], 'nova')
             for _ in range(100):
                 probe = ns(sys.executable, '-c', "import socket;s=socket.create_connection(('100.64.0.1',9444),1);s.close()", check=False)
                 if probe.returncode == 0: break
                 time.sleep(.2)
             else: raise RuntimeError('NOVA HTTPS not ready')
+            pending=devices.inspect(grant['user_code']);devices.decide(grant['user_code'],pending['request_id'],True)
+            tokens=devices.poll(grant['device_code'])
+            bootstrap=spawn([sys.executable,Path(__file__).resolve(),'--serve',root,'--bootstrap'],'bootstrap')
+            for _ in range(100):
+                if bootstrap.poll() is not None:raise RuntimeError('Bootstrap HTTPS exited')
+                try:
+                    with socket.create_connection(('127.0.0.1',19444),timeout=1):break
+                except OSError:time.sleep(.2)
+            else:raise RuntimeError('Bootstrap HTTPS not ready')
             for port in (22, 9443):
                 ns(sys.executable, '-c', f"import socket;s=socket.create_connection(('127.0.0.1',{port}),1);s.close()")
             checks.append('real NOVA Core HTTPS and live blocked administration/SSH canaries')
             fixture = {'control': CONTROL, 'control_ca': control_ca, 'gateway': GATEWAY, 'auth_key': android_key,
                        'certificate_pem': gateway_ca, 'wrong_certificate_pem': wrong,
-                       'server_id': devices.identity(), 'device_id': tokens['device_id'], 'access_token': tokens['access_token']}
+                       'server_id': devices.identity(), 'device_id': tokens['device_id'], 'access_token': tokens['access_token'],
+                       'base_origin':BASE_ORIGIN,'account_id':account,'tokens':tokens}
             push('tailscale-fixture.json', json.dumps(fixture).encode())
+            from cryptography import x509
+            from cryptography.hazmat.primitives import serialization
+            push('mfour-fixture.json',json.dumps({'origin':BASE_ORIGIN,'server_id':devices.identity(),'account':account,
+                'certificate':base64.b64encode(x509.load_pem_x509_certificate(gateway_ca.encode()).public_bytes(serialization.Encoding.DER)).decode(),
+                'tokens':tokens,'library':'a'*32,'item':'1'*32,'other_library':'b'*32}).encode())
             def callback(stage):
                 if stage == 'consent': consent()
                 elif stage == 'revoke':
@@ -300,7 +365,9 @@ def run():
                 'source_commit': command('git', '-C', ROOT, 'rev-parse', 'HEAD').stdout.decode().strip(),
                 'apk_sha256': hashlib.sha256((ROOT/'connect/app/build/outputs/apk/debug/app-debug.apk').read_bytes()).hexdigest(),
                 'external_android_vpn_app': False, 'adb_reverse': False, 'physical_nas': False, 'physical_tv': False,
-                'tailscale_saas_account': False, 'production_provider_enabled': False, 'media_playback_tested': False}
+                'tailscale_saas_account': False, 'production_provider_enabled': False, 'media_playback_tested': True,
+                'playback':'actual Cinema catalogue, artwork, Media3 frame/seek/pause/resume over native Tailscale; synthetic Jellyfin upstream',
+                'profile_delivery':'associated NOVA device API over pinned LAN HTTPS, existing leaf and server/device/account identity retained'}
             (OUT/'tailscale-network.json').write_text(json.dumps(report, indent=2)+'\n')
             print(json.dumps({'result': 'passed', 'api': report['api'], 'android_checks': count, 'harness_checks': len(checks)}))
         finally:
@@ -315,7 +382,7 @@ def run():
             available = locals()
             secret_values = [available[name] for name in ('peer_key', 'android_key') if name in available]
             if 'tokens' in locals(): secret_values.extend((tokens['access_token'], tokens['refresh_token']))
-            for name in ('headscale', 'tailscaled', 'nova'):
+            for name in ('headscale', 'tailscaled', 'nova', 'bootstrap'):
                 file = root/(name+'.log')
                 if file.exists():
                     value = file.read_text(errors='replace')
@@ -330,6 +397,6 @@ def run():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(); parser.add_argument('--serve', type=Path); args = parser.parse_args()
-    if args.serve: serve(args.serve)
+    parser = argparse.ArgumentParser(); parser.add_argument('--serve', type=Path); parser.add_argument('--bootstrap',action='store_true'); args = parser.parse_args()
+    if args.serve: serve(args.serve,args.bootstrap)
     else: run()

@@ -92,6 +92,7 @@ internal object RemoteWireGuardRuntime {
         return SavedDevice(active.base,saved.tokens,saved.refreshDeadline,saved.refreshPending,saved.accountId)
     }
     fun prepare(context:Context):String = synchronized(operations) {
+        check(!RemoteTailscaleRuntime.selected(context))
         val operation=generation.get()
         check(!selected(context)) { "Prepare over the approved local connection" }
         check(DeviceAssociationRuntime.get(context).check().state==PairingState.ASSOCIATED)
@@ -108,6 +109,7 @@ internal object RemoteWireGuardRuntime {
         state
     }
     fun connect(context:Context):Boolean = synchronized(operations) {
+        check(!RemoteTailscaleRuntime.selected(context))
         val operation=generation.get()
         check(VpnService.prepare(context)==null)
         val saved=DeviceSessionStore(context).loadBase() ?: error("Association required")
@@ -173,6 +175,7 @@ internal object RemoteWireGuardRuntime {
         true
     }
     fun disconnectToLan(context:Context) {
+        check(!RemoteTailscaleRuntime.selected(context))
         generation.incrementAndGet()
         synchronized(operations) {
             renewal?.cancel(false);renewal=null

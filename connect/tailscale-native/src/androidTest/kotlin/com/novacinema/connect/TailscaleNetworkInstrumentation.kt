@@ -6,6 +6,7 @@ import android.content.*
 import android.net.VpnService
 import android.os.*
 import com.wireguard.android.backend.GoBackend
+import com.novacinema.connect.core.*
 import org.json.JSONObject
 import java.io.File
 import java.net.InetSocketAddress
@@ -49,6 +50,18 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
             check(mode in setOf("network", "restart", "tamper", "missing-key"))
             val fixture = JSONObject(File(targetContext.filesDir, "tailscale-fixture.json").readText())
             val gateway = fixture.getString("gateway")
+            val certBytes=java.security.cert.CertificateFactory.getInstance("X.509").generateCertificate(
+                fixture.getString("certificate_pem").byteInputStream()).encoded
+            val values=fixture.getJSONObject("tokens")
+            val base=SavedDevice(ServerTrust(fixture.getString("base_origin"),fixture.getString("server_id"),certBytes),
+                DeviceTokens(values.string("access_token"),values.string("refresh_token"),values.string("device_id"),
+                    values.integer("expires_in"),values.integer("refresh_expires_in")),
+                System.currentTimeMillis()+values.integer("refresh_expires_in")*1000L,accountId=fixture.getString("account_id"))
+            val profile=if(mode=="network" || mode=="restart")DeviceClient(base.trust).tailscaleProfile(base) else null
+            if(profile!=null) {
+                check(profile.gateway==gateway && profile.controlOrigin==fixture.getString("control"))
+                checks.add("Tailscale public profile received from associated server over pinned LAN HTTPS")
+            }
             check(TailscaleRoutePolicy.isOverlayV4(gateway))
             for (invalid in listOf("100.63.255.255", "100.128.0.1", "10.0.0.1", "100.064.0.1", "example.com"))
                 check(!TailscaleRoutePolicy.isOverlayV4(invalid))
@@ -112,6 +125,21 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
                 check(identity!!.getString("server_id") == fixture.getString("server_id"))
                 check(identity!!.getString("device_id") == fixture.getString("device_id"))
                 checks.add("authenticated NOVA identity over pinned HTTPS through the native Tailscale tunnel")
+                DeviceSessionStore(targetContext).save(base)
+                RemoteTailscaleRuntime.activate(targetContext,base,checkNotNull(profile)) {
+                    runCatching { val live=request(2);live.getString("result")=="ok" && live.getBoolean("tun") &&
+                        live.getString("backend")=="Running" }.getOrDefault(false)
+                }
+                check(DeviceAssociationRuntime.get(targetContext).check().state==PairingState.ASSOCIATED)
+                val projected=checkNotNull(DeviceSessionStore(targetContext).load())
+                check(projected.trust.origin==profile.clientOrigin && projected.accountId==base.accountId)
+                DeviceSessionStore(targetContext).save(projected)
+                check(DeviceSessionStore(targetContext).loadBase()!!.trust.origin==base.trust.origin)
+                checks.add("Cinema session selects Tailscale while durable identity remains LAN-bound")
+                if(mode=="network") {
+                    M4Steps(this).run(captureScreens=true,installSession=false)
+                    checks.add("Cinema catalogue artwork detail Media3 frame seek pause background resume and saved progress over native Tailscale")
+                }
                 check(runCatching { TailscaleHttps.identity(gateway, 9444,
                     fixture.getString("wrong_certificate_pem").toByteArray(), fixture.getString("access_token")) }.isFailure)
                 checks.add("incorrect gateway certificate refused")
@@ -125,10 +153,13 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
                     waitFor(60000) { runCatching { identity() }.isFailure }
                     // Repeated failures after coordinator expiry, not just a transient first failure.
                     repeat(3) { check(runCatching { identity() }.isFailure); Thread.sleep(500) }
+                    check(runCatching { MediaClient(targetContext).page("a".repeat(32)) }.isFailure)
                     checks.add("coordinator node expiry removes private NOVA access")
                 }
                 check(request(3).getString("result") == "ok")
                 check(blocked(gateway, 9444)); checks.add("explicit disconnect closes private access")
+                check(RemoteTailscaleRuntime.selected(targetContext) && runCatching { DeviceSessionStore(targetContext).load() }.isFailure)
+                checks.add("selected Tailscale fails closed after native disconnect without automatic LAN fallback")
                 if (mode == "network") {
                     targetContext.unbindService(connection); bound = false; service = null
                     targetContext.stopService(intent)

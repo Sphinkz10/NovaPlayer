@@ -40,8 +40,8 @@
     },
     {
       "path": ".github/workflows/tailscale-network.yml",
-      "bytes": 2332,
-      "sha256": "5f422b7c1ea2bc0090cc6bb2ce56dc3c2185a848be65f7b2fcffc5370f2cb048"
+      "bytes": 2554,
+      "sha256": "0828b4fe9306d477b98ac05df49a399c4f9f76fb13d013c51d6f95439d03d4b1"
     },
     {
       "path": ".github/workflows/verify.yml",
@@ -130,8 +130,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt",
-      "bytes": 7514,
-      "sha256": "2286590639985b6ed29b57b8004cd2a01c684f47cce1c67a1db34e292f286635"
+      "bytes": 7560,
+      "sha256": "32951d13e67fb6eb818d6c9fc1580859a4a23720f31a4db619c458e47d1b13f1"
     },
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
@@ -175,13 +175,13 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ConnectionActivity.kt",
-      "bytes": 4165,
-      "sha256": "2ae54769d679305e208e70b2270e9bac922f6343dbf0d21d0e5cc8e7830e49b0"
+      "bytes": 4342,
+      "sha256": "59640bcb26dc042d02a0368a53e4cd456139007e12e155e06cb6ee354d922c52"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt",
-      "bytes": 10440,
-      "sha256": "d85b7d375d07f54cb45f89fbba10c18b9fc2be2666c7bdfabb32230b4672b761"
+      "bytes": 10727,
+      "sha256": "d73fca28e693fa106db696b4e8481cfb5b1cf53c35c1c1b70b5eb4891952faa5"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DevicePairingActivity.kt",
@@ -190,8 +190,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DeviceSessionStore.kt",
-      "bytes": 4893,
-      "sha256": "3ddf5d8d2643de641bfbf59425e99357fe7c6fec57aae62cd11dd537106826bf"
+      "bytes": 5015,
+      "sha256": "77719cce9c48a6863ef2e6e540ab54b08ad5d412a19cf1d9d8dbf503c3d7c96e"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryActivity.kt",
@@ -225,8 +225,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MainActivity.kt",
-      "bytes": 3485,
-      "sha256": "fc2655fa7db8016ed0ea5b74815aaeb5c0680e4c4e396f619be3bc8518fd731a"
+      "bytes": 3479,
+      "sha256": "21fda54c612b20d7f2dfca10959bd5513990c9a83487b0b9e729264929710b67"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",
@@ -249,14 +249,19 @@
       "sha256": "ca70715a54a56232b7bde1b50d0dfd26a6f49bad0502434b307a9660db4f4915"
     },
     {
+      "path": "connect/app/src/main/java/com/novacinema/connect/RemoteTailscale.kt",
+      "bytes": 4159,
+      "sha256": "047426bfb0c2131b7213c4eae56d7ebf8cfd1a23649dc7d38e32147fb1b13637"
+    },
+    {
       "path": "connect/app/src/main/java/com/novacinema/connect/RemoteWireGuard.kt",
-      "bytes": 12075,
-      "sha256": "0cc7cef3ad88cec8a58dce7fb27e88f69f7503b4e108237a30d8456d7c28e3ba"
+      "bytes": 12246,
+      "sha256": "dd5d63e78232ca8b5f3d61dea6cb8eee13136861602f4005154cac3a8715f7c8"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/TvUi.kt",
-      "bytes": 4445,
-      "sha256": "784b74ce7ff7b817ff871d7294cdca5a991a23b687f32a1552bb18d9289577e5"
+      "bytes": 4539,
+      "sha256": "74f4a0c6b7ea88e4d0ebef97b8d8766aebeac35562727b890c36de5738ed4698"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/WireGuardBridge.kt",
@@ -305,8 +310,8 @@
     },
     {
       "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/DevicePairing.kt",
-      "bytes": 11091,
-      "sha256": "60af0f6a75bd4f157343c70962753b684030d42ff6aa06e97640a0e19c6b8c4f"
+      "bytes": 11498,
+      "sha256": "93fe737c1205e4cf9a2c56d208f98bd314b3a18afa4a9cb1cbabb14f33deb756"
     },
     {
       "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/JellyfinHealth.kt",
@@ -334,9 +339,14 @@
       "sha256": "cfd5eba447b22ddb480f27080ff04c0ecb3c8281d2d7bdce755da3259d89221c"
     },
     {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/TailscaleProfile.kt",
+      "bytes": 2409,
+      "sha256": "19168feb379757e2ed4381f8d3e2f574783ae144c89278441f8e9dd945e98857"
+    },
+    {
       "path": "connect/core/src/test/kotlin/com/novacinema/connect/core/DevicePairingTest.kt",
-      "bytes": 15362,
-      "sha256": "6518a2d30a81c209d691de55b2c1fcbacfde13c44f6429801cee736182f38da1"
+      "bytes": 18013,
+      "sha256": "cccb0dea1633e6b882189245aca7e4dd9c0dabc3e2518dba4f2213cf5516b781"
     },
     {
       "path": "connect/core/src/test/kotlin/com/novacinema/connect/core/JellyfinTransportTest.kt",
@@ -505,13 +515,13 @@
     },
     {
       "path": "connect/tailscale-native/network.py",
-      "bytes": 21702,
-      "sha256": "4bec7f86aa90bcf74d5f05702de4f9155e04916ce90ac41781b25902c79f4f99"
+      "bytes": 26727,
+      "sha256": "4ac1502737cfa5d1259ebc96dd5928edc966eb05ef47e936933bc30d85259b8f"
     },
     {
       "path": "connect/tailscale-native/src/androidTest/kotlin/com/novacinema/connect/TailscaleNetworkInstrumentation.kt",
-      "bytes": 10897,
-      "sha256": "d37307c78bdf96e6570da38fd54b52d0bf400ca343be87b715ee08fb9f9b5a43"
+      "bytes": 13590,
+      "sha256": "239b8c2aaf7afa3ce566eee3651c25b3a68a317f0d80d52ea0fdfd5fdd0f4942"
     },
     {
       "path": "connect/tailscale-native/src/debug/AndroidManifest.xml",
@@ -702,6 +712,11 @@
       "path": "docs/M5_SERVICO_RESULTADOS.json",
       "bytes": 12922,
       "sha256": "27e37aae988561a730c92ae3265ed1d7fa0b52dfe7045d67e0d136c698ce0fa2"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_CINEMA.md",
+      "bytes": 2744,
+      "sha256": "66ccfa92472581deae60b38525f18b824847a562506f6f09186734b199d3b97d"
     },
     {
       "path": "docs/M5_TAILSCALE_NATIVO.md",
@@ -970,8 +985,8 @@
     },
     {
       "path": "server/nova_server/client_api.py",
-      "bytes": 9760,
-      "sha256": "c95b049e3174666bb8476d6131b240f8ff226d6b886e8930fe89c4cdd9865b1c"
+      "bytes": 10827,
+      "sha256": "0bbdde764b9cc0e5a6ade69ff343d20b42909c87023598aa7d6a930fb4eab29e"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -1077,6 +1092,11 @@
       "path": "server/nova_server/storage.py",
       "bytes": 10774,
       "sha256": "4b337c574c4b9f8fb78f6a67b656ed226d64f349ba875372705493a21f4a8ab5"
+    },
+    {
+      "path": "server/nova_server/tailscale_profile.py",
+      "bytes": 3346,
+      "sha256": "bc4cc7787cb11b247a56244dcaed0e4b28a218293b28fd160e50b22ec6267a5e"
     },
     {
       "path": "server/nova_server/wireguard.py",
@@ -1362,6 +1382,11 @@
       "path": "server/tests/test_setup.py",
       "bytes": 7283,
       "sha256": "2242982abc99507852acb99f51c46e8b49e1edd70a53dc5e7fbee0d41eebf0a3"
+    },
+    {
+      "path": "server/tests/test_tailscale_profile.py",
+      "bytes": 5925,
+      "sha256": "a45d7002a069f612cc58000cebc8661e2bcda2df2c1c84e12eb8df5c43b0d131"
     },
     {
       "path": "server/tests/test_wireguard_enrollment.py",

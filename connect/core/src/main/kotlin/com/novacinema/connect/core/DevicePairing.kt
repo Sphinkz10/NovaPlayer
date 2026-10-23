@@ -7,12 +7,13 @@ import java.security.cert.X509Certificate
 import java.io.ByteArrayInputStream
 
 /** Public trust material imported and explicitly confirmed by the owner, not a login token. */
-class ServerTrust private constructor(val origin: String, val serverId: String, certificateDer: ByteArray, stored: Boolean) {
+class ServerTrust private constructor(val origin: String, val serverId: String, certificateDer: ByteArray, stored: Boolean,
+                                     tailscale: Boolean = false) {
     constructor(origin: String, serverId: String, certificateDer: ByteArray):this(origin,serverId,certificateDer,false)
     private val certificateBytes = certificateDer.copyOf()
     val certificateDer: ByteArray get() = certificateBytes.copyOf()
     init {
-        require(validOrigin(origin)) { "Invalid private HTTPS origin" }
+        require(if(tailscale) TailscaleProfile.validGatewayOrigin(origin) else validOrigin(origin)) { "Invalid private HTTPS origin" }
         require(validId(serverId)) { "Invalid server identity" }
         require(certificateBytes.size in 128..8192) { "Invalid certificate size" }
         if(!stored)certificate().checkValidity() else certificate()
@@ -23,6 +24,9 @@ class ServerTrust private constructor(val origin: String, val serverId: String, 
     companion object {
         // Only authenticated local storage uses this; network TLS still checks certificate dates.
         fun restore(origin:String,serverId:String,certificateDer:ByteArray)=ServerTrust(origin,serverId,certificateDer,true)
+        // Called only by the identity-bound Tailscale profile. Other transports
+        // retain their existing private-origin validation unchanged.
+        internal fun tailscale(origin:String,base:ServerTrust)=ServerTrust(origin,base.serverId,base.certificateDer,false,true)
         fun validId(value: String) = value.matches(Regex("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"))
         fun validOrigin(value: String): Boolean = runCatching {
             val uri = URI(value)

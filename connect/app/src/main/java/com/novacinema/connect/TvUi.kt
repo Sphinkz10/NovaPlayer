@@ -75,5 +75,9 @@ internal object TvUi {
         val minutes = millis.coerceAtLeast(0) / 60000
         return if (minutes >= 60) "${minutes / 60} h ${minutes % 60} min" else "$minutes min"
     }
-    fun network(context: Context) = if (RemoteWireGuardRuntime.selected(context)) "WireGuard" else "Rede local"
+    fun network(context: Context) = when {
+        RemoteTailscaleRuntime.selected(context) -> "Tailscale"
+        RemoteWireGuardRuntime.selected(context) -> "WireGuard"
+        else -> "Rede local"
+    }
 }

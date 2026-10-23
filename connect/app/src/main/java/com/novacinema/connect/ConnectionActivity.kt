@@ -19,7 +19,9 @@ class ConnectionActivity : Activity() {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         val root=TvUi.screen(this,"Ligação ao servidor","Escolhe como esta TV chega ao teu NOVA Server.")
-        status=TvUi.label(root, "").apply { text=if(RemoteWireGuardRuntime.selected(this@ConnectionActivity))
+        status=TvUi.label(root, "").apply { text=if(RemoteTailscaleRuntime.selected(this@ConnectionActivity))
+            "Tailscale selecionado em ensaio. A identidade é verificada antes de abrir o Cinema."
+            else if(RemoteWireGuardRuntime.selected(this@ConnectionActivity))
             "WireGuard selecionado. Liga e verifica o servidor para abrir o Cinema." else "Ligação local selecionada." }
         fun button(label:String,action:()->Unit)=TvUi.button(root,label,action=action)
         val cinema=button("Abrir biblioteca") { startActivity(Intent(this,CinemaActivity::class.java)) }

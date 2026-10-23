@@ -28,7 +28,7 @@ class DeviceSessionStore(private val context: Context) : DeviceVault {
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE).setRandomizedEncryptionRequired(true).build())
         return generator.generateKey()
     }
-    @Synchronized override fun save(value: SavedDevice) = persist(RemoteWireGuardRuntime.persistent(value))
+    @Synchronized override fun save(value: SavedDevice) = persist(RemoteWireGuardRuntime.persistent(RemoteTailscaleRuntime.persistent(value)))
     private fun persist(value: SavedDevice) {
         val json = JSONObject().put("version", 2).put("origin", value.trust.origin).put("server_id", value.trust.serverId)
             .put("account_id",value.accountId ?: JSONObject.NULL)
@@ -41,7 +41,7 @@ class DeviceSessionStore(private val context: Context) : DeviceVault {
         val sealed = cipher.iv + cipher.doFinal(json.toString().toByteArray(Charsets.UTF_8))
         check(prefs.edit().putString("sealed", Base64.encodeToString(sealed, Base64.NO_WRAP)).commit())
     }
-    override fun load(): SavedDevice? = loadBase()?.let { RemoteWireGuardRuntime.project(context,it) }
+    override fun load(): SavedDevice? = loadBase()?.let { RemoteTailscaleRuntime.project(context,RemoteWireGuardRuntime.project(context,it)) }
     @Synchronized internal fun loadBase(): SavedDevice? {
         val encoded = prefs.getString("sealed", null) ?: return null
         return try {
@@ -62,6 +62,7 @@ class DeviceSessionStore(private val context: Context) : DeviceVault {
         }
     }
     @Synchronized override fun clear() {
+        RemoteTailscaleRuntime.forget(context)
         RemoteWireGuardRuntime.forget(context)
         WireGuardEnrollmentStore(context).clear()
         check(prefs.edit().remove("sealed").commit())

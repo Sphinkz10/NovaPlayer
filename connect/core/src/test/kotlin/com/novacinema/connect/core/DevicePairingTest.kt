@@ -80,6 +80,39 @@ object DevicePairingTest {
                 "-storepass","temporary-test-password","-noprompt")
             command("-exportcert","-alias","test","-keystore",keystore.toString(),"-storepass","temporary-test-password","-file",certificate.toString())
             val trust = ServerTrust(ORIGIN, SERVER, Files.readAllBytes(certificate))
+            val base=SavedDevice(trust,tokens(),System.currentTimeMillis()+3600000)
+            val now=System.currentTimeMillis()/1000
+            fun overlay(server:String=SERVER,device:String=DEVICE,account:String?=null,origin:String=ORIGIN,
+                control:String="https://controlplane.tailscale.com",gateway:String="https://100.64.0.1:9444",
+                revision:Int=1,issued:Long=now,expires:Long=now+86400)=
+                TailscaleProfile(base,server,device,account,origin,control,gateway,revision,issued,expires,now)
+            test("Tailscale preserves existing certificate and server identity") {
+                val p=overlay();check(p.trust.origin=="https://100.64.0.1:9444" && p.trust.serverId==SERVER &&
+                    p.trust.certificateDer.contentEquals(trust.certificateDer) && p.gateway=="100.64.0.1")
+            }
+            test("Tailscale does not broaden existing private trust to public origins") {
+                check(!ServerTrust.validOrigin("https://8.8.8.8:9444"))
+                rejects { ServerTrust("https://8.8.8.8:9444",SERVER,trust.certificateDer) }
+                rejects { ServerTrust.restore("https://8.8.8.8:9444",SERVER,trust.certificateDer) }
+            }
+            for(bad in listOf("https://10.0.0.1:9444","https://100.63.255.255:9444","https://100.128.0.1:9444",
+                "https://100.064.0.1:9444","https://example.com:9444","https://100.64.0.1:9444/",
+                "https://100.64.0.1:9444?x=1","https://100.64.0.1:9444#x","https://user@100.64.0.1:9444",
+                "https://100.64.0.1:443","https://100.64.0.1:09444","http://100.64.0.1:9444")) {
+                test("Tailscale rejects unapproved gateway form $bad") { rejects { overlay(gateway=bad) } }
+            }
+            test("Tailscale cross-server device account and LAN substitution refused") {
+                rejects { overlay(server=DEVICE) };rejects { overlay(device=SERVER) }
+                rejects { overlay(account=SERVER) };rejects { overlay(origin="https://10.0.0.2:9444") }
+            }
+            test("Tailscale expiry future skew and duration bounded") {
+                rejects { overlay(expires=now) };rejects { overlay(issued=now+31) }
+                rejects { overlay(expires=now+86401) };rejects { overlay(revision=0) }
+            }
+            for(bad in listOf("http://control.example","https://user@control.example","https://control.example/",
+                "https://control.example?x=1","https://CONTROL.example","https://control.example:0443")) {
+                test("Tailscale control origin rejects ambiguity $bad") { rejects { overlay(control=bad) } }
+            }
             fun fixture(action: (DevicePairing,Vault,Api,LongArray) -> Unit) {
                 val vault = Vault(); val api = Api(); val clock = longArrayOf(System.currentTimeMillis())
                 val manager = DevicePairing(vault, { api }, { clock[0] })

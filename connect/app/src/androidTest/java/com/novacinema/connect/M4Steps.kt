@@ -36,10 +36,10 @@ class M4Steps(private val runner:Instrumentation) {
         }
         runner.sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_CENTER)
     }
-    fun run(captureScreens:Boolean=false) {
+    fun run(captureScreens:Boolean=false,installSession:Boolean=true) {
         val data=JSONObject(File(context.filesDir,"mfour-fixture.json").readText())
         val t=data.getJSONObject("tokens")
-        DeviceSessionStore(context).save(SavedDevice(ServerTrust(data.string("origin"),data.string("server_id"),
+        if(installSession)DeviceSessionStore(context).save(SavedDevice(ServerTrust(data.string("origin"),data.string("server_id"),
             Base64.decode(data.string("certificate"),Base64.NO_WRAP)),
             DeviceTokens(t.string("access_token"),t.string("refresh_token"),t.string("device_id"),
                 t.integer("expires_in"),t.integer("refresh_expires_in")),
