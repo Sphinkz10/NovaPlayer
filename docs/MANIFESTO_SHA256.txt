@@ -42,7 +42,7 @@ ae5decaf8993cb9b6ac741c72b0c12f9475b8011d727c32bf4bc585c4fd63b34  connect/app/sr
 01a0080fe014f3b203989633f8e9a9a7211a56a73f99305db7f6e4787b416a07  connect/app/src/main/java/com/novacinema/connect/DirectorySetupActivity.kt
 bdd4e03d74e240333a877468f4e2a4598a643bdbfeefa6cd7cfe1c8b7e62d974  connect/app/src/main/java/com/novacinema/connect/JellyfinHttpProbe.kt
 fc2655fa7db8016ed0ea5b74815aaeb5c0680e4c4e396f619be3bc8518fd731a  connect/app/src/main/java/com/novacinema/connect/MainActivity.kt
-fd48a37fab15dfca1766638ba46ad40044893d1b540d7f051ecee2d1b9da7801  connect/app/src/main/java/com/novacinema/connect/MediaClient.kt
+b0973e4ace4e0a2e7df7680b1d1dfc1fcfb0dac1092f6717e47fca8838046049  connect/app/src/main/java/com/novacinema/connect/MediaClient.kt
 832e46c71a6d69c4b29f1de69a3a945e33edea8fc0956b26f66af806ba3515ed  connect/app/src/main/java/com/novacinema/connect/NovaMediaSource.kt
 dbcde952a62e70702e200b44cf6884ac7006e43f330a676bc9b1507109b28fc2  connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt
 ca70715a54a56232b7bde1b50d0dfd26a6f49bad0502434b307a9660db4f4915  connect/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt

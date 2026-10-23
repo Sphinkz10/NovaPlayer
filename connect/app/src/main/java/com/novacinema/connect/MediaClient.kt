@@ -90,6 +90,7 @@ internal class MediaClient(private val context:Context) {
             android.graphics.BitmapFactory.decodeByteArray(raw,0,raw.size,bounds)
             require(bounds.outWidth in 1..4096 && bounds.outHeight in 1..4096 && bounds.outWidth.toLong()*bounds.outHeight<=16777216)
             val options=android.graphics.BitmapFactory.Options().apply {
+                inSampleSize=1
                 while(bounds.outWidth/inSampleSize>320 || bounds.outHeight/inSampleSize>480)inSampleSize*=2
             }
             return android.graphics.BitmapFactory.decodeByteArray(raw,0,raw.size,options)
