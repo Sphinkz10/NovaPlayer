@@ -197,7 +197,7 @@ def instrument(mode, callback=lambda stage: None):
             capture = re.search(r'INSTRUMENTATION_STATUS: screenshot_name=(tv-[a-z]+)',line)
             if capture:
                 name=capture[1]
-                assert name in ('tv-libraries','tv-catalogue','tv-detail','tv-player')
+                assert name in ('tv-home','tv-libraries','tv-catalogue','tv-detail','tv-player')
                 screenshots=OUT/'screenshots';screenshots.mkdir(exist_ok=True)
                 remote='/sdcard/nova-wireguard-'+name+'.png'
                 adb('shell','screencap','-p',remote)

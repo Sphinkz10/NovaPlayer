@@ -115,8 +115,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/LabScreenshots.kt",
-      "bytes": 2339,
-      "sha256": "174bbcccc77f5de2b95185c212ec886c39f1dec7e87d7a0937cbeef94c11bc3b"
+      "bytes": 2350,
+      "sha256": "3a7d65ca46bb2eb6fe3b5d22c52d44080ce7de6244f33fb06544da9d34e741e2"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/LanSteps.kt",
@@ -550,8 +550,8 @@
     },
     {
       "path": "connect/wireguard-proof/network.py",
-      "bytes": 31514,
-      "sha256": "96fb9c188aba392735bebc9f3a9307efa1f4ce03acf7bcfb3e732f1fb487cda2"
+      "bytes": 31524,
+      "sha256": "f1339f4a1c717d23c7dc3b43f212be0ecff06294898563f865a7b7b7d3236022"
     },
     {
       "path": "connect/wireguard-proof/src/androidTest/kotlin/com/novacinema/connect/WireGuardNetworkInstrumentation.kt",
