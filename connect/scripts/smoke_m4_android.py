@@ -54,7 +54,8 @@ def run():
                 assert any(position>0 for position in jf.media_ranges)
                 report={'result':'passed','api':int(adb('shell','getprop','ro.build.version.sdk').strip()),
                         'checks':['catalog_dpad','detail_dpad','first_video_frame','seek','pause','progress_stop',
-                                  'resume_after_reopen','cross_library_denied'],
+                                  'resume_after_reopen','cross_library_denied','authenticated_artwork','continue_filter',
+                                  'back_restores_focus','pause_survives_background'],
                         'apk_sha256':hashlib.sha256((ROOT/'connect/app/build/outputs/apk/debug/app-debug.apk').read_bytes()).hexdigest(),
                         'synthetic_video_sha256':hashlib.sha256(jf.media_content).hexdigest(),
                         'jellyfin':'isolated HTTP fixture; actual Jellyfin is a separate Docker test',

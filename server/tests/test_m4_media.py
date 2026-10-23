@@ -48,11 +48,19 @@ def catalog(members, monkeypatch):
                 if ids and not selected:return httpx.Response(401)
                 search = request.url.params.get('SearchTerm','')
                 selected = [i for i in selected if search in i['Name']]
+                if request.url.params.get('Filters') == 'IsResumable':
+                    assert request.url.params['IsPlayed'] == 'false'
+                    assert request.url.params['SortBy'] == 'DatePlayed'
+                    selected = [i for i in selected if i['UserData'].get('PlaybackPositionTicks', 0)>0
+                                and not i['UserData'].get('Played')]
                 return httpx.Response(200,json={'Items':selected,'TotalRecordCount':len(selected)})
             if path.endswith('/Ancestors'):
                 target=path.split('/')[2]
                 ancestors=[{'Id':members.fixture_libs[i]['id']} for i,value in enumerate(items) if value['Id']==target]
                 return httpx.Response(200,json=ancestors)
+            if path.endswith('/Images/Primary'):
+                assert request.url.params['MaxWidth']=='320' and request.url.params['MaxHeight']=='480'
+                return httpx.Response(200, content=b'fixture-jpeg', headers={'Content-Type':'image/jpeg'})
             if path.startswith('/Sessions/Playing'):
                 import json
                 data=json.loads(request.content); events.append(data)
@@ -222,3 +230,62 @@ def test_policy_change_during_request_discards_result(catalog):
         return result
     service.setup._request=revoke
     assert client.get(url(service),headers=auth(tokens)).status_code==401
+
+
+def test_continue_watching_respects_account_and_completed_titles(catalog):
+    service,client,tokens,items,_,_=catalog
+    endpoint=url(service)+'?kind=continue'
+    assert client.get(endpoint,headers=auth(tokens)).json()['items']==[]
+    items[0]['UserData']['PlaybackPositionTicks']=100000000
+    items[1]['UserData']['PlaybackPositionTicks']=200000000
+    assert [i['id'] for i in client.get(endpoint,headers=auth(tokens)).json()['items']]==[items[0]['Id']]
+    items[0]['UserData']['Played']=True
+    assert client.get(endpoint,headers=auth(tokens)).json()['items']==[]
+
+
+def test_images_authorization_membership_and_no_upstream_headers(catalog):
+    service,client,tokens,items,_,_=catalog
+    endpoint=url(service,suffix='/'+items[0]['Id']+'/image')
+    assert client.get(endpoint).status_code==401
+    assert client.get(endpoint,headers=auth(tokens,1)).status_code==404
+    assert client.get(url(service,suffix='/'+items[1]['Id']+'/image'),headers=auth(tokens)).status_code==404
+    result=client.get(endpoint,headers=auth(tokens))
+    assert result.status_code==200 and result.content==b'fixture-jpeg'
+    assert result.headers['Cache-Control']=='no-store' and result.headers['Content-Type']=='image/jpeg'
+    assert not any(h in result.headers for h in ('Location','Authorization','Set-Cookie'))
+    Devices(service.store).revoke(tokens[0]['device_id'])
+    assert client.get(endpoint,headers=auth(tokens)).status_code==401
+
+
+@pytest.mark.parametrize('status,mime,body,extra,expected',[
+    (404,'text/plain',b'',{},204),
+    (302,'image/jpeg',b'abc',{'Location':'https://external.invalid/secret'},502),
+    (200,'image/svg+xml',b'<svg/>',{},502),
+    (200,'image/jpeg',b'abc',{'Content-Encoding':'br'},502),
+    (200,'image/jpeg',b'x'*1048577,{},502),
+    (200,'image/jpeg',b'abc',{'Content-Length':'4'},502),
+    (200,'image/jpeg',b'',{},502),
+], ids=['missing','redirect','svg','compression','oversize','short-body','empty'])
+def test_images_reject_unbounded_active_content_and_redirects(catalog,status,mime,body,extra,expected):
+    service,client,tokens,items,_,_=catalog
+    original=service.transport
+    async def hostile(request):
+        if request.url.path.endswith('/Images/Primary'):
+            return httpx.Response(status,stream=httpx.ByteStream(body),headers={'Content-Type':mime,**extra})
+        return await original.handle_async_request(request)
+    service.transport=httpx.MockTransport(hostile)
+    result=client.get(url(service,suffix='/'+items[0]['Id']+'/image'),headers=auth(tokens))
+    assert result.status_code==expected and 'Location' not in result.headers
+
+
+def test_image_permission_removed_while_loading_is_discarded(catalog):
+    service,client,tokens,items,_,_=catalog
+    original=service.transport
+    async def revoke(request):
+        response=await original.handle_async_request(request)
+        if request.url.path.endswith('/Images/Primary'):
+            Devices(service.store).revoke(tokens[0]['device_id'])
+        return response
+    service.transport=httpx.MockTransport(revoke)
+    result=client.get(url(service,suffix='/'+items[0]['Id']+'/image'),headers=auth(tokens))
+    assert result.status_code==401 and b'fixture-jpeg' not in result.content

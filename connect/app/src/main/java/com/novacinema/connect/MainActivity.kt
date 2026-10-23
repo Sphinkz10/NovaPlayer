@@ -2,74 +2,59 @@ package com.novacinema.connect
 
 import android.app.Activity
 import android.content.Intent
-import android.net.VpnService
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.*
-import com.novacinema.connect.core.*
+import android.widget.Button
+import android.widget.TextView
 import java.util.concurrent.Executors
-import java.util.concurrent.atomic.AtomicBoolean
 
-/** Functional TV entrypoint. Remote identity verification precedes Cinema. */
+/** TV home: configuration, account and connection details live outside the catalogue. */
 class MainActivity : Activity() {
-    private val io=Executors.newSingleThreadExecutor()
-    private val busy=AtomicBoolean(false)
-    private lateinit var status:TextView
-    override fun onCreate(savedInstanceState:Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val io = Executors.newSingleThreadExecutor()
+    private lateinit var status: TextView
+    private lateinit var primary: Button
+    private var generation = 0
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        val root=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;setPadding(46,36,46,36) }
-        root.addView(TextView(this).apply { text="NOVA Cinema · "+packageManager.getPackageInfo(packageName,0).versionName;textSize=28f })
-        status=TextView(this).apply { textSize=20f;text=if(RemoteWireGuardRuntime.selected(this@MainActivity))
-            "WireGuard selecionado. Liga e verifica o servidor para abrir o Cinema." else "Ligação local selecionada." }
-        root.addView(status)
-        fun button(label:String,action:()->Unit)=Button(this).apply { text=label;setOnClickListener { action() };root.addView(this) }
-        val directory=button("Entrar na NOVA · Directory") { startActivity(Intent(this,DirectoryActivity::class.java)) }
-        button("Associar ao NOVA Server") { startActivity(Intent(this,DevicePairingActivity::class.java)) }
-        button("Abrir NOVA Cinema") { startActivity(Intent(this,CinemaActivity::class.java)) }
-        button("Preparar WireGuard nesta TV") { work {
-            when(RemoteWireGuardRuntime.prepare(applicationContext)) {
-                "pending" -> {
-                    val saved=DeviceSessionStore(applicationContext).loadBase() ?: error("Association unavailable")
-                    "Pedido enviado. Compara esta impressão digital no Control e aprova a TV. Depois volta a preparar:\n"+
-                        WireGuardEnrollmentStore(applicationContext).fingerprint(saved)
-                }
-                "approved" -> "Configuração recebida pela ligação segura e guardada nesta TV. Podes ligar o WireGuard."
-                else -> "WireGuard revogado. O proprietário deve rever esta associação."
-            }
-        } }
-        button("Ligar WireGuard") {
-            val consent=VpnService.prepare(this)
-            if(consent!=null)startActivityForResult(consent,401) else connect()
-        }
-        button("Renovar WireGuard pela ligação atual") { work {
-            check(RemoteWireGuardRuntime.renew(applicationContext))
-            "Perfil renovado pelo túnel seguro. Podes continuar a usar o Cinema."
-        } }
-        button("Desligar WireGuard e usar LAN") { work {
-            RemoteWireGuardRuntime.disconnectToLan(applicationContext);"Túnel desligado. Ligação local selecionada."
-        } }
-        root.addView(TextView(this).apply { textSize=17f;text="Prepara o WireGuard na rede local, depois da associação e aprovação no Control. O perfil dura 24 horas e renova-se pelo túnel enquanto ligado. Se expirar sem ligação, prepara-o novamente na LAN.\nTailscale e NetBird: integração nativa ainda indisponível nesta versão." })
-        setContentView(ScrollView(this).apply { addView(root) });directory.requestFocus()
+        val root = TvUi.screen(this, "O teu cinema. Em casa ou contigo.", "Os teus filmes e séries, nas bibliotecas partilhadas contigo.")
+        status = TvUi.label(root, "A ler a configuração desta TV…", 18f, TvUi.accent)
+        primary = TvUi.button(root, "Entrar na NOVA", "home-primary") { open(DirectoryActivity::class.java) }
+        val row = TvUi.row(root)
+        TvUi.button(row, "Ligação", "home-connection") { open(ConnectionActivity::class.java) }
+        TvUi.button(row, "Conta e associação", "home-account") { open(DevicePairingActivity::class.java) }
+        TvUi.button(row, "Configurar TV", "home-setup") { open(DirectorySetupActivity::class.java) }
+        TvUi.label(root, "Usa as setas e OK para escolher. Voltar regressa ao ecrã anterior.", 15f, TvUi.muted)
+        TvUi.label(root, "NOVA Cinema · " + packageManager.getPackageInfo(packageName, 0).versionName, 13f, TvUi.muted)
+        primary.requestFocus()
     }
-    private fun note(value:String) { runOnUiThread { if(!isDestroyed)status.text=value } }
-    private fun work(action:()->String) {
-        if(!busy.compareAndSet(false,true))return
-        note("A verificar…")
+    private fun open(target: Class<out Activity>) { startActivity(Intent(this, target)) }
+    override fun onStart() {
+        super.onStart()
+        val current = ++generation
         io.execute {
-            try { note(action()) }
-            catch (_:Exception) { note("Ligação não confirmada. Verifica a associação, a aprovação no Control e a configuração do gateway. A seleção de rede foi mantida.") }
-            finally { busy.set(false) }
+            val saved = runCatching { DeviceSessionStore(applicationContext).loadBase() }
+            val configured = runCatching { DirectoryProfile.load(applicationContext) }.isSuccess
+            val remote = RemoteWireGuardRuntime.selected(applicationContext)
+            runOnUiThread {
+                if (isDestroyed || current != generation) return@runOnUiThread
+                val associated = saved.getOrNull() != null
+                status.text = when {
+                    saved.isFailure -> "Não foi possível ler a associação. Abre Conta e associação para recuperar."
+                    associated && remote -> "WireGuard selecionado. A identidade do servidor será verificada antes de abrir a biblioteca."
+                    associated -> "TV associada · Rede local. Escolhe a tua biblioteca para começar."
+                    configured -> "Configuração pronta. Entra com a conta que o proprietário partilhou contigo."
+                    else -> "Primeira utilização: configura esta TV com os dados fornecidos pelo proprietário."
+                }
+                primary.text = when { associated -> "Abrir biblioteca"; configured -> "Entrar na NOVA"; else -> "Entrar na NOVA · configurar TV" }
+                primary.setOnClickListener { open(when {
+                    associated -> CinemaActivity::class.java
+                    configured -> DirectoryActivity::class.java
+                    else -> DirectorySetupActivity::class.java
+                }) }
+            }
         }
     }
-    private fun connect() = work {
-        if(RemoteWireGuardRuntime.connect(applicationContext)) "Servidor NOVA verificado pelo WireGuard. Podes abrir o Cinema."
-        else "Servidor não confirmado pelo túnel. Verifica a rede e o gateway."
-    }
-    @Deprecated("Platform consent result for API 26 compatibility")
-    override fun onActivityResult(requestCode:Int,resultCode:Int,data:Intent?) {
-        super.onActivityResult(requestCode,resultCode,data)
-        if(requestCode==401) { if(resultCode==RESULT_OK)connect() else note("VPN não autorizada pelo Android.") }
-    }
-    override fun onDestroy() { io.shutdown();super.onDestroy() }
+    override fun onStop() { generation++; super.onStop() }
+    override fun onDestroy() { io.shutdown(); super.onDestroy() }
 }

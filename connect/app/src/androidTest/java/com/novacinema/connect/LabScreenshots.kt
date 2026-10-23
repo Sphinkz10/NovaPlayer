@@ -17,7 +17,7 @@ class LabScreenshots(private val runner: Instrumentation) {
         check(runner.targetContext.packageName == "com.novacinema.connect.poc")
         check(runner.targetContext.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
         check(name in setOf("tv-libraries", "tv-catalogue", "tv-detail", "tv-player"))
-        check(activity is CinemaActivity || activity is PlayerActivity)
+        check(activity is CinemaActivity || activity is PlayerActivity || activity is MainActivity)
         var wasSecure = false
         runner.runOnMainSync {
             check(activity.hasWindowFocus())

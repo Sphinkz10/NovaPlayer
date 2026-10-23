@@ -25,28 +25,28 @@ class DirectoryActivity:Activity() {
 
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState);window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        val root=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;setPadding(44,36,44,36) }
-        fun text(value:String,size:Float=20f)=TextView(this).apply { text=value;textSize=size;root.addView(this) }
+        val root = TvUi.screen(this, "Conta e configuração")
+        fun text(value:String,size:Float=20f)=TextView(this).apply { setTextColor(TvUi.ink); text=value;textSize=size;root.addView(this) }
         text("Entrar na NOVA",28f)
         text("Usa a tua conta Directory. Depois escolhe um servidor partilhado contigo e confirma a TV com o proprietário.")
-        username=EditText(this).apply {
+        username=EditText(this).apply { setTextColor(TvUi.ink);setHintTextColor(TvUi.muted);
             hint="Conta Directory";tag="directory-username";maxLines=1;isSingleLine=true
             inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             importantForAutofill=View.IMPORTANT_FOR_AUTOFILL_NO;imeOptions=EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
         };root.addView(username)
-        password=EditText(this).apply {
+        password=EditText(this).apply { setTextColor(TvUi.ink);setHintTextColor(TvUi.muted);
             hint="Palavra-passe Directory";tag="directory-password";maxLines=1;isSingleLine=true
             inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             importantForAutofill=View.IMPORTANT_FOR_AUTOFILL_NO;imeOptions=EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
         };root.addView(password)
-        login=Button(this).apply { text="Entrar e encontrar servidores";setOnClickListener { discover() } };root.addView(login)
+        login=TvUi.style(Button(this)).apply { text="Entrar e encontrar servidores";setOnClickListener { discover() } };root.addView(login)
         message=text("A verificar configuração do Directory…")
         servers=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL };root.addView(servers)
-        root.addView(Button(this).apply { text="Voltar";setOnClickListener { finish() } })
-        root.addView(Button(this).apply { text="Configurar nesta TV";setOnClickListener {
+        root.addView(TvUi.style(Button(this)).apply { text="Voltar";setOnClickListener { finish() } })
+        root.addView(TvUi.style(Button(this)).apply { text="Configurar nesta TV";setOnClickListener {
             startActivity(Intent(this@DirectoryActivity,DirectorySetupActivity::class.java))
         } })
-        setContentView(ScrollView(this).apply { addView(root) })
+
         profile=runCatching { DirectoryProfile.load(this) }.getOrNull()
         login.isEnabled=profile!=null
         message.text=if(profile==null)"O proprietário precisa de configurar o Directory nesta instalação da app. Não introduzas endereços ou credenciais administrativas na TV."
@@ -82,7 +82,7 @@ class DirectoryActivity:Activity() {
                     if(!foreground || current!=generation || isDestroyed)return@runOnUiThread
                     message.text=if(entries.isEmpty())"Não tens servidores autorizados neste momento. Pede ao proprietário que partilhe o servidor contigo."
                         else "Escolhe o servidor para esta conta. Trocar de conta/servidor exige uma nova associação."
-                    entries.forEach { entry -> servers.addView(Button(this).apply {
+                    entries.forEach { entry -> servers.addView(TvUi.style(Button(this)).apply {
                         text="Associar a "+entry.name;tag="directory-entry-"+entry.id
                         setOnClickListener { select(connection,selected,entry) }
                     }) }

@@ -46,11 +46,21 @@ class M4Steps(private val runner:Instrumentation) {
         val client=MediaClient(context);val library=data.string("library");val item=data.string("item")
         check(client.page(library).items.single().id==item)
         check(client.page(library,search="absent").items.isEmpty())
+        check(client.page(library,kind="continue").items.isEmpty())
+        check(client.image(library,item,client.session())?.width==160)
         var denied=false
         try { client.page(data.string("other_library")) } catch(_:Exception) { denied=true }
         check(denied)
         val monitor=runner.addMonitor(PlayerActivity::class.java.name,null,false)
-        val cinema=runner.startActivitySync(Intent(context,CinemaActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        val home=runner.startActivitySync(Intent(context,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        val catalogueMonitor=runner.addMonitor(CinemaActivity::class.java.name,null,false)
+        runner.setInTouchMode(false)
+        waitUntil { var ready=false;main { ready=views(home.window.decorView).filterIsInstance<Button>()
+            .any { it.tag=="home-primary" && it.text.toString()=="Abrir biblioteca" } };ready }
+        if(captureScreens)LabScreenshots(runner).capture(home,"tv-home")
+        click(home,"home-primary")
+        val cinema=runner.waitForMonitorWithTimeout(catalogueMonitor,30000) ?: error("Home did not open catalogue")
+        runner.removeMonitor(catalogueMonitor)
         var playback:PlayerActivity?=null
         fun capture(activity:Activity,tag:String,name:String) {
             if(!captureScreens)return
@@ -64,6 +74,11 @@ class M4Steps(private val runner:Instrumentation) {
             click(cinema,"cinema-library-$library")
             capture(cinema,"cinema-item-$item","tv-catalogue")
             click(cinema,"cinema-item-$item")
+            // Real Back must restore the catalogue and the selected card's focus.
+            click(cinema,"cinema-back")
+            waitUntil { var focused=false;main { focused=views(cinema.window.decorView)
+                .any { it.tag=="cinema-item-$item" && it.hasFocus() } };focused }
+            click(cinema,"cinema-item-$item")
             capture(cinema,"cinema-play","tv-detail")
             click(cinema,"cinema-play")
             playback=runner.waitForMonitorWithTimeout(monitor,30000) as? PlayerActivity ?: error("Player not opened")
@@ -73,14 +88,22 @@ class M4Steps(private val runner:Instrumentation) {
             runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD)
             waitUntil(5000) { var ok=false;main { ok=playback!!.observedPosition>=before+9000 };ok }
             runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PAUSE)
+            waitUntil { var paused=false;main { paused=!playback!!.observedPlaying };paused }
+            val settings=runner.startActivitySync(Intent(context,ConnectionActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            main { settings.finish() }
+            waitUntil { var paused=false;main { paused=playback!!.renderedFrame && !playback!!.observedPlaying };paused }
+            var pausedAt=0L;main { pausedAt=playback!!.observedPosition }
+            Thread.sleep(1200)
+            main { check(!playback!!.observedPlaying && kotlin.math.abs(playback!!.observedPosition-pausedAt)<250) }
             main { playback!!.finish() };playback=null
             waitUntil { client.detail(library,item).position>=100000000 }
             val resumed=client.detail(library,item).position/10000
+            check(client.page(library,kind="continue").items.single().id==item)
             playback=runner.startActivitySync(Intent(context,PlayerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra("library",library).putExtra("item",item).putExtra("position",resumed)) as PlayerActivity
             waitUntil { var ok=false;main { ok=playback!!.renderedFrame && playback!!.observedPosition>=resumed };ok }
         } finally {
-            main { playback?.finish();cinema.finish() };runner.removeMonitor(monitor)
+            main { playback?.finish();cinema.finish();home.finish() };runner.removeMonitor(monitor)
         }
     }
 }

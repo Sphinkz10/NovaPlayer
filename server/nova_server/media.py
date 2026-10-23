@@ -6,7 +6,7 @@ import time
 
 import httpx
 from cryptography.exceptions import InvalidTag
-from fastapi.responses import StreamingResponse
+from fastapi.responses import Response, StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from .devices import Devices, DeviceError
@@ -131,11 +131,13 @@ class Media:
     async def catalog(self, access, library, start=0, search='', kind='all'):
         if type(start) is not int or not 0 <= start <= 100000 or len(search) > 100 or any(ord(c)<32 for c in search):
             raise DeviceError('invalid_catalog_query', 422)
-        if kind not in ('all', 'movies', 'episodes'):
+        if kind not in ('all', 'movies', 'episodes', 'continue'):
             raise DeviceError('invalid_catalog_query', 422)
         async with self.session(access, library) as (client, uid, grant, guard):
+            filters = {'Filters': 'IsResumable', 'IsPlayed': 'false', 'SortBy': 'DatePlayed', 'SortOrder': 'Descending'} if kind == 'continue' else {}
             data = await self.query(client, uid, library, StartIndex=start, Limit=24, SearchTerm=search,
-                                    IncludeItemTypes={'all':'Movie,Episode','movies':'Movie','episodes':'Episode'}[kind])
+                                    IncludeItemTypes={'all':'Movie,Episode','movies':'Movie','episodes':'Episode',
+                                                      'continue':'Movie,Episode'}[kind], **filters)
             if not isinstance(data, dict) or not isinstance(data.get('Items'), list) or len(data['Items']) > 24:
                 raise SetupError('jellyfin_invalid_media')
             if any(not isinstance(item, dict) or not self.within_library(library, item.get('Path')) for item in data['Items']):
@@ -164,6 +166,32 @@ class Media:
             guard()
             await self.members.setup._request(client, 'POST', '/Sessions/Playing'+path, json=body)
             return {'recorded': True}
+
+    async def image(self, access, library, item):
+        # Images use the same account, root and ancestor checks as playback.
+        # Never return an upstream URL, headers, credentials or an SVG document.
+        async with self.session(access, library) as (client, uid, grant, guard):
+            await self.item(client, uid, library, item)
+            async with client.stream('GET', '/Items/'+item+'/Images/Primary',
+                                     params={'MaxWidth':320, 'MaxHeight':480, 'Quality':85, 'Format':'Jpg'}) as upstream:
+                if upstream.status_code == 404:
+                    return Response(status_code=204)
+                mime = upstream.headers.get('Content-Type', '').split(';')[0].lower()
+                if (upstream.status_code != 200 or mime not in ('image/jpeg', 'image/png', 'image/webp') or
+                        upstream.headers.get('Content-Encoding', 'identity') != 'identity'):
+                    raise DeviceError('image_unavailable', 502)
+                size = upstream.headers.get('Content-Length')
+                if size is not None and (not size.isdecimal() or not 0 < int(size) <= 1048576):
+                    raise DeviceError('image_unavailable', 502)
+                body = bytearray()
+                async for chunk in upstream.aiter_bytes(chunk_size=16384):
+                    if len(body)+len(chunk) > 1048576:
+                        raise DeviceError('image_unavailable', 502)
+                    body.extend(chunk)
+                if not body or (size is not None and len(body) != int(size)):
+                    raise DeviceError('image_unavailable', 502)
+                guard()
+                return Response(bytes(body), media_type=mime, headers={'Cache-Control':'no-store'})
 
     async def stream(self, access, library, item, range_header=None):
         if range_header is not None:
@@ -262,6 +290,10 @@ def mount_media(api, store, base_url):
     @api.get('/api/v1/media/libraries/{library}/items/{item}/stream')
     async def stream(library: str, item: str, request: Request):
         return await safely(service().stream(access(request), library, item, request.headers.get('Range')))
+
+    @api.get('/api/v1/media/libraries/{library}/items/{item}/image')
+    async def image(library: str, item: str, request: Request):
+        return await safely(service().image(access(request), library, item))
 
     @api.post('/api/v1/media/libraries/{library}/items/{item}/events')
     async def event(library: str, item: str, payload: PlaybackEvent, request: Request):

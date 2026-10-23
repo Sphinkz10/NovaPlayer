@@ -11,7 +11,8 @@ import org.conscrypt.Conscrypt
 
 internal val mediaId = Regex("[a-f0-9]{32}")
 internal data class CinemaItem(val id:String,val name:String,val type:String,val series:String,
-    val year:Int,val overview:String,val runtime:Long,val position:Long,val played:Boolean)
+    val year:Int,val overview:String,val runtime:Long,val position:Long,val played:Boolean,
+    val season:Int=0,val episode:Int=0)
 internal data class CinemaPage(val items:List<CinemaItem>,val next:Int?)
 
 internal class MediaClient(private val context:Context) {
@@ -52,10 +53,12 @@ internal class MediaClient(private val context:Context) {
         val id=j.string("id");val name=j.string("name");val type=j.string("type")
         require(mediaId.matches(id) && name.length<=200 && type in setOf("Movie","Episode"))
         return CinemaItem(id,name,type,j.string("series"),j.integer("year"),j.string("overview"),
-            j.getLong("runtime_ticks").also { require(it>=0) },j.getLong("position_ticks").also { require(it>=0) },j.getBoolean("played"))
+            j.getLong("runtime_ticks").also { require(it in 0..10000000000000000L) },
+            j.getLong("position_ticks").also { require(it in 0..10000000000000000L) },j.getBoolean("played"),
+            j.optInt("season",0).also { require(it in 0..10000) }, j.optInt("episode",0).also { require(it in 0..100000) })
     }
     fun page(library:String,start:Int=0,search:String="",kind:String="all"):CinemaPage {
-        require(start in 0..100000 && search.length<=100 && kind in setOf("all","movies","episodes"))
+        require(start in 0..100000 && search.length<=100 && kind in setOf("all","movies","episodes","continue"))
         val data=request(path(library)+"?start=$start&kind=$kind&search="+java.net.URLEncoder.encode(search,"UTF-8"))
         val saved=DeviceSessionStore(context).load() ?: throw DeviceProtocolFailure()
         require(data.string("server_id")==saved.trust.serverId && data.string("account_id")==saved.accountId && data.string("library_id")==library)
@@ -70,7 +73,26 @@ internal class MediaClient(private val context:Context) {
         return item(data.getJSONObject("item")).also { require(it.id==id) }
     }
     fun event(library:String,id:String,event:String,position:Long,paused:Boolean) {
-        require(event in setOf("start","progress","stop") && position>=0)
+        require(event in setOf("start","progress","stop") && position in 0..1000000000000L)
         request(path(library,id)+"/events",JSONObject().put("event",event).put("position_ticks",position*10000).put("paused",paused))
+    }
+
+    fun image(library:String,id:String,saved:SavedDevice):android.graphics.Bitmap? {
+        // No disk cache: artwork is account-scoped and discarded on screen exit.
+        val c=connection(path(library,id)+"/image",saved)
+        try {
+            c.setRequestProperty("Accept","image/jpeg,image/png,image/webp")
+            if(c.responseCode in setOf(204,404))return null
+            require(c.responseCode==200 && c.contentType?.substringBefore(';') in setOf("image/jpeg","image/png","image/webp") &&
+                c.contentEncoding?.let { it!="identity" }!=true)
+            val raw=c.inputStream.use { it.bounded(1048576) }
+            val bounds=android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds=true }
+            android.graphics.BitmapFactory.decodeByteArray(raw,0,raw.size,bounds)
+            require(bounds.outWidth in 1..4096 && bounds.outHeight in 1..4096 && bounds.outWidth.toLong()*bounds.outHeight<=16777216)
+            val options=android.graphics.BitmapFactory.Options().apply {
+                while(bounds.outWidth/inSampleSize>320 || bounds.outHeight/inSampleSize>480)inSampleSize*=2
+            }
+            return android.graphics.BitmapFactory.decodeByteArray(raw,0,raw.size,options)
+        } finally { c.disconnect() }
     }
 }

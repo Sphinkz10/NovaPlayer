@@ -37,12 +37,12 @@ class DevicePairingActivity : Activity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         manager = DeviceAssociationRuntime.get(this)
         if(intent.getBooleanExtra("directory_selection",false))selection=runCatching { DirectorySelectionRuntime.take() }.getOrNull()
-        val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(44, 36, 44, 36) }
-        fun text(value: String, size: Float = 20f) = TextView(this).apply { text = value; textSize = size; root.addView(this) }
-        fun button(label: String, action: () -> Unit) = Button(this).apply {
+        val root = TvUi.screen(this, "Conta e configuração")
+        fun text(value: String, size: Float = 20f) = TextView(this).apply { setTextColor(TvUi.ink); text = value; textSize = size; root.addView(this) }
+        fun button(label: String, action: () -> Unit) = TvUi.style(Button(this)).apply {
             text = label; isFocusable = true; setOnClickListener { action() }; root.addView(this)
         }
-        text("Associar ao NOVA Server · Laboratório", 28f)
+        text("Associar esta TV", 28f)
         text(if(selection!=null)"Confirma esta TV com o proprietário. As bibliotecas atribuídas aparecem após a aprovação."
              else "Para entrar com a tua conta, usa Entrar na NOVA no ecrã inicial. A importação de ficheiro serve para diagnóstico.")
         status = text("A verificar associação…")
@@ -69,12 +69,18 @@ class DevicePairingActivity : Activity() {
         }.apply { visibility = android.view.View.GONE }
         refresh = button("Verificar associação") { work { manager.check() } }
         forget = button("Esquecer associação nesta TV") {
-            invitation = null; review.text = ""; confirm.visibility = android.view.View.GONE
-            work { manager.forget(); PairingView(PairingState.EMPTY) }
+            android.app.AlertDialog.Builder(this).setTitle("Esquecer esta TV?")
+                .setMessage("Terás de entrar e pedir aprovação novamente. Se estiveres offline, o proprietário pode revogar a TV no Control.")
+                .setNegativeButton("Manter associação",null)
+                .setPositiveButton("Esquecer") { _,_ ->
+                    invitation = null; review.text = ""; confirm.visibility = android.view.View.GONE
+                    work { manager.forget(); PairingView(PairingState.EMPTY) }
+                }.show()
         }
+        button("Entrar na NOVA") { startActivity(Intent(this,DirectoryActivity::class.java)) }
         button("Voltar") { finish() }
         button("Abrir NOVA Cinema") { startActivity(Intent(this,CinemaActivity::class.java)) }
-        setContentView(ScrollView(this).apply { addView(root) })
+
         importButton.requestFocus()
         if(selection!=null) {
             importButton.visibility=android.view.View.GONE
@@ -171,9 +177,9 @@ class DevicePairingActivity : Activity() {
             PairingState.WAITING -> "No NOVA Control, introduz este código e confirma este dispositivo. Aguarda a aprovação."
             PairingState.ASSOCIATED -> "Dispositivo associado e identidade confirmada. A NOVA Cinema disponibiliza os títulos autorizados."
             PairingState.OFFLINE -> "Servidor indisponível. A associação foi preservada; volta a verificar quando houver ligação."
-            PairingState.EXPIRED -> "Código expirado. Importa a ligação para pedir um novo código."
+            PairingState.EXPIRED -> "Código expirado. Volta a entrar na NOVA para pedir um novo código."
             PairingState.DENIED -> "O proprietário recusou este pedido."
-            PairingState.REASSOCIATE -> "É necessário associar novamente. Verifica a ligação e importa um ficheiro válido do proprietário."
+            PairingState.REASSOCIATE -> "É necessário associar novamente. Verifica a ligação e volta a entrar na NOVA."
             PairingState.SECURITY_ERROR -> "Identidade ou certificado não corresponde ao aprovado. Ligação bloqueada; contacta o proprietário."
         }
         importButton.isEnabled = value.state !in setOf(PairingState.WAITING, PairingState.ASSOCIATED, PairingState.OFFLINE)

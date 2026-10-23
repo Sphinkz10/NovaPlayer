@@ -12,14 +12,14 @@ class DirectorySetupActivity:Activity() {
     private var generation=0
     override fun onCreate(state:Bundle?) {
         super.onCreate(state);window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        val root=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;setPadding(44,32,44,32) }
-        fun label(value:String)=TextView(this).apply { text=value;textSize=21f;root.addView(this) }
+        val root = TvUi.screen(this, "Conta e configuração")
+        fun label(value:String)=TextView(this).apply { setTextColor(TvUi.ink); text=value;textSize=21f;root.addView(this) }
         label("Configurar NOVA nesta TV")
         label("O proprietário encontra estes dois valores no NOVA Control ou no pacote de instalação. Compara a impressão digital completa antes de confirmar.")
-        val origin=EditText(this).apply { hint="Directory · https://192.168.x.x:9443";tag="setup-origin";setSingleLine();root.addView(this) }
-        val pin=EditText(this).apply { hint="Impressão digital TLS · 64 caracteres";tag="setup-fingerprint";setSingleLine();root.addView(this) }
+        val origin=EditText(this).apply { setTextColor(TvUi.ink);setHintTextColor(TvUi.muted); hint="Directory · https://192.168.x.x:9443";tag="setup-origin";setSingleLine();root.addView(this) }
+        val pin=EditText(this).apply { setTextColor(TvUi.ink);setHintTextColor(TvUi.muted); hint="Impressão digital TLS · 64 caracteres";tag="setup-fingerprint";setSingleLine();root.addView(this) }
         val message=label("A configuração só é guardada depois de validar a identidade e o certificado.")
-        val confirm=Button(this).apply { text="Confirmar identidade e configurar";tag="setup-confirm";root.addView(this) }
+        val confirm=TvUi.style(Button(this)).apply { text="Confirmar identidade e configurar";tag="setup-confirm";root.addView(this) }
         confirm.setOnClickListener {
             val url=origin.text.toString().trim();val fingerprint=pin.text.toString().trim().lowercase()
             val approved=runCatching { DirectoryProfile.load(this) }.getOrNull()
@@ -40,8 +40,8 @@ class DirectorySetupActivity:Activity() {
                 }
             }
         }
-        root.addView(Button(this).apply { text="Voltar à entrada";setOnClickListener { finish() } })
-        setContentView(ScrollView(this).apply { addView(root) });origin.requestFocus()
+        root.addView(TvUi.style(Button(this)).apply { text="Voltar à entrada";setOnClickListener { finish() } })
+        ;origin.requestFocus()
     }
     override fun onStart() { super.onStart();foreground=true }
     override fun onStop() { foreground=false;generation++;super.onStop() }

@@ -20,6 +20,7 @@
         <activity android:name=".DirectoryActivity" android:exported="false" />
         <activity android:name=".DirectorySetupActivity" android:exported="false" />
         <activity android:name=".CinemaActivity" android:exported="false" />
+        <activity android:name=".ConnectionActivity" android:exported="false" />
         <activity android:name=".PlayerActivity" android:exported="false" android:configChanges="keyboardHidden|orientation|screenSize" />
         <!-- The official WireGuard tunnel AAR merges GoBackend.VpnService into this manifest. -->
     </application>

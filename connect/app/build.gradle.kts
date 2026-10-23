@@ -5,14 +5,14 @@ val wireGuardProof = providers.gradleProperty("novaWireGuardProof").orNull == "t
 val tailscaleProof = providers.gradleProperty("novaTailscaleProof").orNull == "true"
 require(!wireGuardProof || nativeProofAar == null) { "Network and combined-runtime proofs are separate variants" }
 require(!tailscaleProof || (nativeProofAar != null && !wireGuardProof)) { "Tailscale requires the pinned combined AAR" }
-val distributionCode = providers.gradleProperty("novaVersionCode").orElse("9").get().toInt()
+val distributionCode = providers.gradleProperty("novaVersionCode").orElse("12").get().toInt()
 require(distributionCode >= 9) { "Distribution version codes must not go backwards" }
 android {
     namespace = "com.novacinema.connect"
     compileSdk = 35
     defaultConfig {
         applicationId = "com.novacinema.connect.poc"; minSdk = 26; targetSdk = 35
-        versionCode = distributionCode; versionName = providers.gradleProperty("novaVersionName").orElse("0.9-m4-lan").get()
+        versionCode = distributionCode; versionName = providers.gradleProperty("novaVersionName").orElse("0.12-tv-preview").get()
         testInstrumentationRunner = "com.novacinema.connect.DevicePairingInstrumentation"
     }
     if (nativeProofAar != null) {

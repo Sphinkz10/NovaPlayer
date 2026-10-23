@@ -27,6 +27,18 @@ class JellyfinMembers:
             token=uuid.uuid4().hex;self.tokens[token]=user['Id']
             return httpx.Response(200,json={'AccessToken':token,'ServerId':self.sid,'User':copy.deepcopy(user)})
         if not uid:return httpx.Response(401)
+        if re.fullmatch('/Items/[a-f0-9]{32}/Images/Primary',path):
+            item_id=path.split('/')[2]
+            if not any(item['Id']==item_id for library,items in self.media_items.items()
+                       if library in self.users[uid]['Policy'].get('EnabledFolders',[]) for item in items):
+                return httpx.Response(404)
+            # Deterministic PNG test pattern, not artwork or metadata from a real library.
+            import struct, zlib
+            def chunk(kind, data):
+                return struct.pack('!I',len(data))+kind+data+struct.pack('!I',zlib.crc32(kind+data))
+            pixels=b''.join(b'\x00'+bytes((30+y//5,70+y//4,100+y//4))*160 for y in range(240))
+            image=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('!IIBBBBB',160,240,8,2,0,0,0))+chunk(b'IDAT',zlib.compress(pixels))+chunk(b'IEND',b'')
+            return httpx.Response(200,content=image,headers={'Content-Type':'image/png'})
         if re.fullmatch('/Items/[a-f0-9]{32}/Ancestors',path) and self.media_items:
             target=path.split('/')[2]
             return httpx.Response(200,json=[{'Id':library} for library,items in self.media_items.items()
@@ -38,6 +50,9 @@ class JellyfinMembers:
             if request.url.params.get('Ids'):values=[v for v in values if v['Id']==request.url.params['Ids']]
             search=request.url.params.get('SearchTerm','').casefold()
             values=[v for v in values if search in v['Name'].casefold()]
+            if request.url.params.get('Filters')=='IsResumable':
+                values=[v for v in values if v.get('UserData',{}).get('PlaybackPositionTicks',0)>0
+                        and not v.get('UserData',{}).get('Played')]
             start=int(request.url.params.get('StartIndex',0));limit=int(request.url.params.get('Limit',24))
             return httpx.Response(200,json={'Items':values[start:start+limit],'TotalRecordCount':len(values)})
         if path.startswith('/Sessions/Playing') and self.media_items:
