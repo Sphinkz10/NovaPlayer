@@ -2,7 +2,9 @@
 
 **Atualização:** 23-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
-**Entrega de teste disponível:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada, e o incremento WireGuard 0.11. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. A aceitação física M4 continua pendente. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
+**App disponível para ensaio:** [NOVA Cinema 0.12](NOVA_CINEMA_0_12.md), assinada com a identidade persistente, catálogo em grelha, capas por conta, retoma e player com controlos Android. API 26/35 aprovadas por LAN/WireGuard; servidor e recuperação aprovados em Docker. Não fecha Tailscale/NetBird ou a aceitação física.
+
+**Base das entregas anteriores:** [M4 — Distribuição Android](M4_DISTRIBUICAO_ANDROID.md), após instalação LAN, catálogo/player e recuperação integrada, e o incremento WireGuard 0.11. A APK tem identificador próprio, debug desativado e assinatura persistente offline; o servidor mantém a imagem verificada. A aceitação física M4 continua pendente. Guardar a cópia offline da chave de assinatura separadamente da palavra-passe.
 
 **Incremento M5:** [gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md), seguido de [renovação pelo túnel e recuperação cifrada](M5_RENOVACAO_RECUPERACAO.md). O gerador prepara cinco serviços e os certificados; o gateway aplica aprovações/revogações; a TV usa o motor nativo para catálogo/player. O perfil de 24 horas pode ser renovado enquanto ligado. Preparação inicial e recuperação depois de expirar offline ainda exigem LAN.
 

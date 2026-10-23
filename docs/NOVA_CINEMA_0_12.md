@@ -8,6 +8,7 @@ A 0.12 reúne o acesso à conta, bibliotecas e reprodução numa interface para 
 - Catálogo em grelha, capas obtidas pela API NOVA autenticada, pesquisa, filtros de filmes/episódios e **Continuar a ver** por biblioteca/conta.
 - Detalhe com sinopse, duração, temporada/episódio e retoma. Voltar preserva página, filtro e título selecionado.
 - Player ocupa o ecrã; os controlos desaparecem durante a reprodução. Áudio, legendas, repetição e regresso ficam acessíveis pelo comando.
+- Controlos do comando integrados na sessão de reprodução do Android, com foco de áudio e libertação da sessão ao sair do player.
 - Uma reprodução pausada continua pausada depois de sair para outro ecrã e regressar. O progresso é limitado à duração declarada pelo servidor.
 - Erros de ligação permitem repetir ou abrir as definições sem pedir imediatamente nova associação. Esquecer a TV exige confirmação na própria app.
 
@@ -34,3 +35,19 @@ Percurso: configurar TV → entrar na conta → escolher servidor → aprovar no
 - M5 e validações finais SEC-01…12 permanecem abertas. Esta entrega não constitui fecho da aplicação familiar completa.
 
 Resultados, revisões e hashes da entrega constam de `NOVA_CINEMA_0_12_RESULTADOS.json` e do guia incluído ao lado da APK. Não usar resultados históricos como se tivessem sido executados nesta revisão.
+
+## Validação desta entrega
+
+**15/15 jobs aprovados**, reunindo a revisão executável `dde3a030216bfc7ff1d3d56dd5ce03eee25d3f40` e a instrumentação de capturas `a032cad34e225dfbc6d1bd2728aa8e04ce2f9e80`. A aplicação, núcleo e servidor são idênticos entre as duas revisões; a segunda trata apenas o aviso Android de primeira utilização do ecrã inteiro nas capturas. A permissão VPN continua a ser aprovada no diálogo real do sistema.
+
+- [Base, Docker e imagem exata](https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461): 8 jobs; Linux Python 3.12/3.13 com 402 aprovados + 1 exclusão em cada; Windows com 394 aprovados + 9 exclusões em cada; 203 verificações JVM, compilação e lint Android.
+- [Assinatura/instalação/atualização](https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609443): API 26/35; identidade descartável na CI, recusa de assinatura diferente/downgrade e preservação do estado ao atualizar de 12 para 13.
+- [Conta, catálogo/player e configuração LAN](https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550341): API 26/35, incluindo 12 critérios do player e capturas reais.
+- [WireGuard nativo](https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550238): 38 verificações em cada API 26/35, com catálogo/vídeo, renovação e revogação.
+- [Gateway gerado e recuperação](https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609441): 9 verificações remotas e 15 da recuperação cifrada. Jellyfin real confirma capas e consulta de títulos retomáveis.
+
+A sessão de reprodução usa a [API MediaSession do Android](https://developer.android.com/reference/android/media/session/MediaSession). Os controlos são ativos apenas durante a reprodução em primeiro plano; não se acrescenta um serviço de reprodução em background.
+
+APK final: `770f3d6c2a7e605b889bd368c8631fdb5dab562e211e2f7be29e41e666173108`. Build CI sem assinatura: `5e4ede95a4ef5ad86d2d1384a937b99552a499f1f1b20f04e13a21af3396a059` (idêntico nas duas APIs). A assinatura foi aplicada localmente com a identidade persistente. A instalação dessa assinatura nos aparelhos físicos continua por ensaiar.
+
+As tentativas falhadas e respetivas correções estão conservadas no relatório JSON. Incluem amostragem de capa, variável do ensaio Docker, encaminhamento de teclas multimédia e o aviso de ecrã inteiro do Android 35. A aprovação desta entrega não apaga esses resultados.
