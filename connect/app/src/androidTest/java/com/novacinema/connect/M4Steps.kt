@@ -87,7 +87,14 @@ class M4Steps(private val runner:Instrumentation) {
             if(captureScreens)LabScreenshots(runner).capture(playback!!,"tv-player")
             var before=0L;main { before=playback!!.observedPosition }
             stage("seek");runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD)
-            waitUntil(5000) { var ok=false;main { ok=playback!!.observedPosition>=before+9000 };ok }
+            try { waitUntil(5000) { var ok=false;main { ok=playback!!.observedPosition>=before+9000 };ok } }
+            catch(error:Exception) {
+                val state=android.os.Bundle()
+                main { state.putBoolean("seekable",playback!!.observedSeekable);state.putLong("duration",playback!!.observedDuration)
+                    state.putBoolean("has_player",playback!!.observedHasPlayer);state.putLong("before",before)
+                    state.putLong("position",playback!!.observedPosition);state.putBoolean("window_focus",playback!!.hasWindowFocus()) }
+                runner.sendStatus(1,state);throw error
+            }
             stage("pause");runner.sendKeyDownUpSync(KeyEvent.KEYCODE_MEDIA_PAUSE)
             waitUntil { var paused=false;main { paused=!playback!!.observedPlaying };paused }
             stage("background");val settings=runner.startActivitySync(Intent(context,ConnectionActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

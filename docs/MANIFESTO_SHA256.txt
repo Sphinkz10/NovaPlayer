@@ -22,7 +22,7 @@ ddbf9bef1a3d9cce24b0cc2f29df53306a26f13713283b2109b0548e16977d03  connect/app/gr
 1f1b2bca8e0931c1a9bb1b0f324678494bcc585189cb6c6a2605d4446ef61763  connect/app/src/androidTest/java/com/novacinema/connect/LabScreenshots.kt
 7d8835f9456c721691e088317806bc3c4ddef03058a0901e51adcfd471eee673  connect/app/src/androidTest/java/com/novacinema/connect/LanSteps.kt
 c53833f733acc4d379b58f529b6ba23fe9f4f469f3793f54ba58c302ac07c3d3  connect/app/src/androidTest/java/com/novacinema/connect/M3Steps.kt
-ff353acf11206bd5ea1984ce902544f03ad49ddbb0e632130b83e2f6fd4d0a34  connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt
+2286590639985b6ed29b57b8004cd2a01c684f47cce1c67a1db34e292f286635  connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt
 8f15cf8528bfbe5d72cdf1c3341d37dd4b9c1a320f3c588e62ffe42652d2f45b  connect/app/src/main/AndroidManifest.xml
 afaf5bd0b0d869dc86b71711e1b775b204948634c9710a35a9a70d1613a2ab14  connect/app/src/main/assets/licenses/bouncycastle-1.86.html
 eebc1e08d5edeea3b0866243385c0ec20bda335a1e4adaed3874525ede3d6e0c  connect/app/src/main/assets/licenses/conscrypt-2.7.0.txt
@@ -44,7 +44,7 @@ bdd4e03d74e240333a877468f4e2a4598a643bdbfeefa6cd7cfe1c8b7e62d974  connect/app/sr
 fc2655fa7db8016ed0ea5b74815aaeb5c0680e4c4e396f619be3bc8518fd731a  connect/app/src/main/java/com/novacinema/connect/MainActivity.kt
 b0973e4ace4e0a2e7df7680b1d1dfc1fcfb0dac1092f6717e47fca8838046049  connect/app/src/main/java/com/novacinema/connect/MediaClient.kt
 832e46c71a6d69c4b29f1de69a3a945e33edea8fc0956b26f66af806ba3515ed  connect/app/src/main/java/com/novacinema/connect/NovaMediaSource.kt
-55626fa3b4f93d76f70b2301eaeedba81f01d11131baaeaf044f02912791df03  connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt
+6dd7272a202e234a65bd0035a5f9984ac402332b52583a71a988b3fd1e707570  connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt
 ca70715a54a56232b7bde1b50d0dfd26a6f49bad0502434b307a9660db4f4915  connect/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt
 0cc7cef3ad88cec8a58dce7fb27e88f69f7503b4e108237a30d8456d7c28e3ba  connect/app/src/main/java/com/novacinema/connect/RemoteWireGuard.kt
 784b74ce7ff7b817ff871d7294cdca5a991a23b687f32a1552bb18d9289577e5  connect/app/src/main/java/com/novacinema/connect/TvUi.kt

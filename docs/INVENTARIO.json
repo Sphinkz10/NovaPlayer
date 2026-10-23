@@ -130,8 +130,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt",
-      "bytes": 6972,
-      "sha256": "ff353acf11206bd5ea1984ce902544f03ad49ddbb0e632130b83e2f6fd4d0a34"
+      "bytes": 7514,
+      "sha256": "2286590639985b6ed29b57b8004cd2a01c684f47cce1c67a1db34e292f286635"
     },
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
@@ -240,8 +240,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt",
-      "bytes": 9841,
-      "sha256": "55626fa3b4f93d76f70b2301eaeedba81f01d11131baaeaf044f02912791df03"
+      "bytes": 13174,
+      "sha256": "6dd7272a202e234a65bd0035a5f9984ac402332b52583a71a988b3fd1e707570"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt",
