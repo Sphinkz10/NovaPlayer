@@ -13,6 +13,22 @@ import java.io.File
  * debug screenshot and restore it before returning, including on failure.
  */
 class LabScreenshots(private val runner: Instrumentation) {
+    /** Handle only Android's observed first-use fullscreen tutorial, never VPN consent. */
+    private fun fullscreenHint() {
+        val automation=runner.uiAutomation
+        automation.serviceInfo=automation.serviceInfo.apply {
+            flags=flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or
+                android.accessibilityservice.AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
+        }
+        val root=automation.rootInActiveWindow ?: return
+        if(root.packageName?.toString() !in setOf("android","com.android.systemui"))return
+        val marker=root.findAccessibilityNodeInfosByViewId("android:id/immersive_cling_icon")
+        val buttons=root.findAccessibilityNodeInfosByViewId("android:id/ok")
+        if(marker.isNotEmpty() && buttons.size==1 && buttons[0].isClickable && buttons[0].isEnabled) {
+            if(buttons[0].performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK))
+                runner.sendStatus(1,Bundle().apply { putString("fullscreen_hint","dismissed") })
+        }
+    }
     private fun main(action:()->Unit) {
         var failure:Throwable?=null
         runner.runOnMainSync { try { action() } catch(error:Throwable) { failure=error } }
@@ -35,7 +51,10 @@ class LabScreenshots(private val runner: Instrumentation) {
                     ready=true
                 }
             }
-            if(!ready)Thread.sleep(50)
+            if(!ready) {
+                if(activity is PlayerActivity)fullscreenHint()
+                Thread.sleep(50)
+            }
         }
         check(ready) { "Screenshot window did not receive focus" }
         try {
