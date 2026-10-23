@@ -714,6 +714,11 @@
       "sha256": "958006e302cd0424b6aa70559f7932cfcd7324ddd2cdfe739d692e904f26a35a"
     },
     {
+      "path": "docs/NOVA_CINEMA_0_12.md",
+      "bytes": 4098,
+      "sha256": "1c1ae854e4258d8e9d890e7e0c147fbee557d80e305c43278be745a908f78a9f"
+    },
+    {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
       "bytes": 23945,
       "sha256": "186c72375279a02ff160a683732016c9b0d38f3c338577ea9684b0708c5a7a1f"
@@ -1205,8 +1210,8 @@
     },
     {
       "path": "server/scripts/smoke_lan_compose.py",
-      "bytes": 12981,
-      "sha256": "8f948bbd0391a00345ccd56a4d865553cf50c9361980bb6cd2b5555a289a520e"
+      "bytes": 14359,
+      "sha256": "053b1a91c96126239e9562f41dae28f3629c3154474bc6a0d10b1ff10f0f78eb"
     },
     {
       "path": "server/scripts/smoke_lan_recovery.py",

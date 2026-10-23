@@ -86,7 +86,12 @@ def run():
                 assert profile['origin']==info['tv_directory'] and 'PRIVATE KEY' not in json.dumps(profile)
                 compose('exec','-T','jellyfin','/usr/lib/jellyfin-ffmpeg/ffmpeg','-hide_banner','-loglevel','error',
                         '-f','lavfi','-i','color=c=black:s=64x64:r=10','-t','600','-c:v','libx264','-pix_fmt','yuv420p','/cache/fixture.mp4')
-                for name,folder in (('A',a),('B',b)):compose('cp','jellyfin:/cache/fixture.mp4',str(folder/('Film '+name+'.mp4')))
+                compose('exec','-T','jellyfin','/usr/lib/jellyfin-ffmpeg/ffmpeg','-hide_banner','-loglevel','error',
+                        '-f','lavfi','-i','color=c=teal:s=160x240','-frames:v','1','-threads','1','/cache/cover.png')
+                for name,folder in (('A',a),('B',b)):
+                    movie_folder=folder/('Film '+name);movie_folder.mkdir()
+                    compose('cp','jellyfin:/cache/fixture.mp4',str(movie_folder/('Film '+name+'.mp4')))
+                    compose('cp','jellyfin:/cache/cover.png',str(movie_folder/'cover.png'))
                 credentials={'username':'mediaowner','password':__import__('secrets').token_urlsafe(24)}
                 setup=client.post(info['control']+'/api/v1/admin/setup/jellyfin',headers=admin,json={**credentials,
                     'server_name':'NOVA LAN fixture','libraries':[{'name':'Filmes A','collection_type':'movies','roots':['source-a']},
@@ -131,6 +136,16 @@ def run():
                 stream=client.get(info['client']+'/api/v1/media/libraries/'+selected+'/items/'+item+'/stream',
                                   headers={**device,'Range':'bytes=0-255'})
                 assert stream.status_code==206 and len(stream.content)==256
+                media_base=info['client']+'/api/v1/media/libraries/'+selected+'/items'
+                image=client.get(media_base+'/'+item+'/image',headers=device)
+                assert image.status_code==200 and image.headers['Content-Type']=='image/jpeg'
+                assert image.content[:2]==b'\xff\xd8' and image.headers['Cache-Control']=='no-store'
+                assert client.get(media_base+'?kind=continue',headers=device).json()['items']==[]
+                event=client.post(media_base+'/'+item+'/events',headers=device,
+                                  json={'event':'stop','position_ticks':1200000000,'paused':True})
+                assert event.status_code==200
+                resumed=client.get(media_base+'?kind=continue',headers=device)
+                assert resumed.status_code==200 and [i['id'] for i in resumed.json()['items']]==[item]
                 for service in ('client','tv_directory'):
                     assert client.get(info[service]+'/api/v1/admin/overview',headers=admin).status_code==404
                 assert client.get(info['control']+'/api/v1/admin/overview',headers=device).status_code==401
@@ -147,7 +162,8 @@ def run():
                 report={'result':'passed','profile':'generated private LAN','physical_truenas':False,
                     'checks':['three_https_roles','ca_hostname_tls13','control_login','public_pinned_bootstrap',
                     'jellyfin_setup_two_roots','publication_from_container','owner_only_family_creation','directory_discovery',
-                    'restricted_account_pairing','catalog_and_range_video','admin_surface_isolation','restart_identity_continuity'],
+                    'restricted_account_pairing','catalog_and_range_video','authenticated_jellyfin_artwork',
+                    'jellyfin_continue_watching','admin_surface_isolation','restart_identity_continuity'],
                     'image':'exact supplied image' if os.environ.get('NOVA_TEST_IMAGE') else 'locally built fixture image'}
                 out=Path(os.environ.get('NOVA_EVIDENCE_DIR','server/test-results/lan'));out.mkdir(parents=True,exist_ok=True)
                 (out/'lan-server.json').write_text(json.dumps(report,indent=2),encoding='utf8');print(json.dumps(report))
