@@ -115,8 +115,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/LabScreenshots.kt",
-      "bytes": 2350,
-      "sha256": "3a7d65ca46bb2eb6fe3b5d22c52d44080ce7de6244f33fb06544da9d34e741e2"
+      "bytes": 2932,
+      "sha256": "1f1b2bca8e0931c1a9bb1b0f324678494bcc585189cb6c6a2605d4446ef61763"
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/LanSteps.kt",
