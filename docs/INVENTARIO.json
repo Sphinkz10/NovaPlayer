@@ -595,8 +595,8 @@
     },
     {
       "path": "docs/ESTADO_REAL.md",
-      "bytes": 2603,
-      "sha256": "65ebb9e6004207466bd24ef6d1b6e3db817b2445e772e67e1d3a683fc6c86de7"
+      "bytes": 2678,
+      "sha256": "aa823e3bf72cba81c509c8be1d8ada745cfa75d5dbd543e4356f94588a1412dd"
     },
     {
       "path": "docs/FASE_1_RESULTADOS.md",
@@ -715,13 +715,18 @@
     },
     {
       "path": "docs/M5_TAILSCALE_CINEMA.md",
-      "bytes": 2744,
-      "sha256": "66ccfa92472581deae60b38525f18b824847a562506f6f09186734b199d3b97d"
+      "bytes": 4912,
+      "sha256": "f614e06cf642a4fefac55f1cb1ceaddc4ab358d36a960564b89c18b77fb82f4e"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_CINEMA_RESULTADOS.json",
+      "bytes": 16878,
+      "sha256": "63d34bb138e293e7ba13d8827f6b48df9b6a85c09851a0d4d0b20212deaf2fb7"
     },
     {
       "path": "docs/M5_TAILSCALE_NATIVO.md",
-      "bytes": 5640,
-      "sha256": "55fa633d38091ce365763b2d295d601c5bd14c6b4740e5f21710cd5f168eda9a"
+      "bytes": 5896,
+      "sha256": "9b4635c4c16b350df10cf0e3778152a4e7cf872ea888ec69d104db9e19f91e20"
     },
     {
       "path": "docs/M5_TAILSCALE_RESULTADOS.json",
@@ -770,8 +775,8 @@
     },
     {
       "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
-      "bytes": 29557,
-      "sha256": "c16672f5d52e1e864a77a689b9fffc6139998725819c5309066d3fb8ce46cb20"
+      "bytes": 29575,
+      "sha256": "768f518557d9abb4bb61a76dea806889c22b01df1474cdb57b005c80ddeb16e8"
     },
     {
       "path": "docs/screenshots/PROVENIENCIA.json",

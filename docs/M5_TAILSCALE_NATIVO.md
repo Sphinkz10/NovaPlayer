@@ -6,7 +6,7 @@ fonte `66d78529e10550e985614a78e22e10cc50b34f33`. Cada API passou 29 verificaç�
 Android e sete verificações do harness; a política passou 42 casos JVM.
 A perda da chave Keystore foi recusada antes do arranque, sem regeneração da
 identidade. [Resultados e proveniência](M5_TAILSCALE_RESULTADOS.json).
-A entrega instalável continua a ser a 0.11 WireGuard. A M5 completa permanece aberta.
+A entrega instalável na data deste ensaio era a 0.11. A versão atual é a [0.12 LAN/WireGuard](NOVA_CINEMA_0_12.md). Em 24 outubro, o [catálogo/player Tailscale também passou nas APIs 26/35](M5_TAILSCALE_CINEMA.md), ainda na variante de laboratório. A M5 completa permanece aberta.
 
 Fecho em **23 outubro 2026**: a regressão da revisão
 `ab7fbc6eadef3db3a92c1b9b0d015b8322013f3c` passou **15/15 jobs**, incluindo
@@ -74,7 +74,7 @@ APK de distribuição nem ativa Tailscale no menu normal.
 
 Ainda faltam a inscrição/configuração pelo NOVA Control, o instalador do gateway
 Tailscale no servidor, autenticação numa conta Tailscale SaaS, troca segura entre
-fornecedores e reprodução Media3 por este transporte. Este ensaio não certifica
+fornecedores e distribuição normal. A reprodução Media3 foi entretanto validada no incremento ligado acima. Este ensaio não certifica
 TrueNAS nem boxes físicas e não equivale às 12 validações finais de segurança.
 
 Referências primárias para a configuração do laboratório:
