@@ -198,6 +198,8 @@ def revoke_restored_sessions(state):
     nova, jf = validate_state(state)
     with closing(sqlite3.connect(nova)) as db,db:
         db.execute('DELETE FROM sessions')
+        if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='tailscale_approval'").fetchone():
+            db.execute("UPDATE tailscale_approval SET approved=0,revision=revision+1,updated_at=strftime('%s','now')")
         if db.execute('PRAGMA user_version').fetchone()[0] >= 2:
             db.execute('DELETE FROM device_access')
             db.execute('DELETE FROM device_refresh')
@@ -211,6 +213,8 @@ def revoke_restored_sessions(state):
         db.execute('UPDATE jellyfin_setup SET lease=NULL,lease_until=0,report=NULL')
         db.execute("INSERT INTO audit(event,created_at) VALUES('recovery.sessions_revoked',strftime('%s','now'))")
         checks=['SELECT COUNT(*) FROM sessions']
+        if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='tailscale_approval'").fetchone():
+            checks+=['SELECT COUNT(*) FROM tailscale_approval WHERE approved!=0']
         schema=db.execute('PRAGMA user_version').fetchone()[0]
         if schema>=2:checks+=['SELECT COUNT(*) FROM '+table for table in ('device_access','device_refresh','device_requests')]+['SELECT COUNT(*) FROM devices WHERE revoked=0']
         if schema>=3:checks+=['SELECT COUNT(*) FROM member_accounts WHERE disabled=0 OR credential IS NOT NULL']

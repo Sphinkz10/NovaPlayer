@@ -13,6 +13,23 @@ from nova_server.devices import DeviceError, Devices
 from nova_server.media import Media
 
 
+def test_transport_disable_interrupts_already_open_video_without_revoking_lan_account(catalog):
+    service,_,tokens,items,content,_=catalog
+    allowed=[True]
+    def guard():
+        if not allowed[0]:raise DeviceError('tailscale_owner_approval_required',403)
+    async def exercise():
+        media=Media(service,transport_guard=guard)
+        response=await media.stream(tokens[0]['access_token'],service.fixture_libs[0]['id'],items[0]['Id'])
+        iterator=response.body_iterator
+        assert await anext(iterator)==content[:65536]
+        allowed[0]=False
+        with pytest.raises(DeviceError):await anext(iterator)
+        # The member/device authorization is still usable over a different approved transport.
+        assert (await Media(service).catalog(tokens[0]['access_token'],service.fixture_libs[0]['id']))['items']
+    asyncio.run(exercise())
+
+
 @pytest.fixture
 def catalog(members, monkeypatch):
     configure(members, 0); configure(members, 1)

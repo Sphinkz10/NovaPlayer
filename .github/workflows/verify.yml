@@ -37,6 +37,8 @@ jobs:
         if: runner.os != 'Windows'
       - run: python scripts/smoke_browser.py --output test-results/browser ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
         working-directory: server
+      - run: python scripts/smoke_tailscale_control.py --output test-results/tailscale-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
+        working-directory: server
       - run: python scripts/smoke_directory_control.py --output test-results/directory-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
         working-directory: server
       - run: python scripts/smoke_m3_control.py --output test-results/m3-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}

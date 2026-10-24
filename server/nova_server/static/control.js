@@ -21,6 +21,7 @@ async function loadOverview(){
  el('overview').replaceChildren(d);
  await loadConnect();
  await loadWireGuardEnrollments();
+ await loadTailscale();
  await loadSetup();
  await loadDevices();
  await loadMembers();
@@ -109,6 +110,51 @@ async function loadConnect(){
  connectDrafts=(await response.json()).drafts;showProviderFields();
  write(el('connectMessage'),'Acesso remoto desativado. Três fornecedores previstos; ligações ainda por implementar e validar.');
 }
+let tailscalePolicy=null;
+let tailscaleBusy=false;
+let tailscaleGeneration=0;
+function tailscaleButtons(){
+ el('tailscaleApprove').disabled=tailscaleBusy||!tailscalePolicy||tailscalePolicy.profile_approved;
+ el('tailscaleDisable').disabled=tailscaleBusy||!tailscalePolicy||!tailscalePolicy.profile_approved;
+ el('tailscaleRefresh').disabled=tailscaleBusy;
+}
+function showTailscale(data){
+ const prepared=['approved','approval_required'].includes(data.state);
+ tailscalePolicy=prepared?data:null;el('tailscalePolicy').replaceChildren();
+ write(el('tailscaleStatus'),!prepared?'Perfil não preparado. Usa o preparador no PC antes da associação das TVs.':
+  data.profile_approved?'Perfil aprovado para entrega às TVs associadas. A disponibilidade do túnel ainda tem de ser confirmada na TV.':
+   'Perfil preparado. Compara os endereços e o certificado antes de aprovar.');
+ if(prepared)for(const [name,value] of [['Coordenador',data.control_origin],['NOVA no Tailscale',data.client_origin],
+  ['NOVA na LAN',data.base_origin],['Certificado TLS · SHA-256',data.certificate_sha256]]){
+  const dt=document.createElement('dt');dt.textContent=name;const dd=document.createElement('dd');dd.textContent=value;el('tailscalePolicy').append(dt,dd);
+ }
+ tailscaleButtons();
+}
+async function loadTailscale(){
+ if(!token)return;const session=token;const generation=tailscaleGeneration;
+ try{const r=await fetch('/api/v1/admin/connect/tailscale',{headers:{Authorization:'Bearer '+session},cache:'no-store'});
+  if(token!==session||generation!==tailscaleGeneration)return;
+  if(!r.ok){tailscalePolicy=null;tailscaleButtons();write(el('tailscaleStatus'),'Não foi possível verificar o perfil preparado.');return;}
+  const data=await r.json();if(token===session&&generation===tailscaleGeneration)showTailscale(data);
+ }catch{if(token===session&&generation===tailscaleGeneration){tailscalePolicy=null;tailscaleButtons();write(el('tailscaleStatus'),'Perfil indisponível. Atualiza antes de aprovar.');}}
+}
+async function decideTailscale(approve){
+ if(!token||tailscaleBusy||!tailscalePolicy)return;
+ const session=token;const generation=++tailscaleGeneration;
+ const payload={revision:tailscalePolicy.revision,policy_digest:tailscalePolicy.policy_digest,approve};
+ tailscaleBusy=true;tailscaleButtons();
+ try{const r=await fetch('/api/v1/admin/connect/tailscale',{method:'POST',headers:{Authorization:'Bearer '+session,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(token!==session||generation!==tailscaleGeneration)return;
+  const data=await r.json();if(token!==session||generation!==tailscaleGeneration)return;
+  if(r.ok){showTailscale(data);write(el('tailscaleMessage'),approve?'Perfil aprovado. A TV ainda precisa de confirmar o túnel e a identidade NOVA.':'Perfil desativado. A API NOVA recusa o transporte Tailscale. A remoção do peer no tailnet é uma operação separada.');}
+  else{tailscalePolicy=null;write(el('tailscaleMessage'),r.status===409?'O perfil mudou. Atualiza e verifica os dados antes de decidir.':'Decisão recusada. Verifica a sessão e o perfil preparado.');}
+ }catch{if(token===session&&generation===tailscaleGeneration){tailscalePolicy=null;write(el('tailscaleMessage'),'Ligação interrompida. Atualiza o estado antes de repetir.');}}
+ finally{if(generation===tailscaleGeneration){tailscaleBusy=false;tailscaleButtons();}}
+}
+el('tailscaleRefresh').addEventListener('click',loadTailscale);
+el('tailscaleApprove').addEventListener('click',()=>decideTailscale(true));
+el('tailscaleDisable').addEventListener('click',()=>decideTailscale(false));
+el('logout').addEventListener('click',()=>{tailscaleGeneration++;tailscaleBusy=false;tailscalePolicy=null;el('tailscalePolicy').replaceChildren();write(el('tailscaleStatus'),'');write(el('tailscaleMessage'),'');tailscaleButtons();});
 el('provider').addEventListener('change',showProviderFields);
 el('connectDraft').addEventListener('submit',async ev=>{
  ev.preventDefault();if(!token)return;

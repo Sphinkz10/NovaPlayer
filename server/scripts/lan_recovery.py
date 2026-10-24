@@ -44,6 +44,18 @@ def validate_lan(state,*,wireguard=False):
     state=Path(state);identity=state/'identity'
     expected={role+'/'+name for role,names in IDENTITY_FILES.items() for name in names}
     gateway=None
+    tailscale=None
+    if (identity/'admin/tailscale-public.json').exists() or (identity/'client/tailscale-public.json').exists():
+        if wireguard:raise ValueError('Perfil combinado WireGuard/Tailscale ainda não suportado para restauro.')
+        from nova_server.tailscale_profile import control_origin,gateway_origin
+        tailscale=read_json(identity/'admin/tailscale-public.json',8192)
+        if (tailscale!=read_json(identity/'client/tailscale-public.json',8192) or
+                set(tailscale)!={'schema_version','server_id','revision','control_origin','client_origin'} or
+                type(tailscale['schema_version']) is not int or tailscale['schema_version']!=1 or
+                type(tailscale['revision']) is not int or not 1<=tailscale['revision']<=2147483647):
+            raise ValueError('Política Tailscale inválida.')
+        control_origin(tailscale['control_origin']);gateway_origin(tailscale['client_origin'])
+        expected.update({'admin/tailscale-public.json','client/tailscale-public.json'})
     if wireguard:
         from scripts.wireguard_recovery import validate_gateway_identity
         gateway=validate_gateway_identity(state)
@@ -83,6 +95,9 @@ def validate_lan(state,*,wireguard=False):
         names=cert.extensions.get_extension_for_class(x509.SubjectAlternativeName).value
         addresses=[ipaddress.ip_address(config['ip'])]
         if gateway and role=='client':addresses.append(ipaddress.ip_address(gateway.gateway))
+        if tailscale and role=='client':
+            from urllib.parse import urlsplit
+            addresses.append(ipaddress.ip_address(urlsplit(tailscale['client_origin']).hostname))
         if names.get_values_for_type(x509.IPAddress)!=addresses:
             raise ValueError('IP do certificado LAN diferente.')
         certificates[role]=cert
@@ -120,6 +135,10 @@ def validate_lan(state,*,wireguard=False):
         profile['public_key']!=public or der(x509.load_pem_x509_certificate(profile['certificate_pem'].encode()))!=der(certificates['directory'])):
         raise ValueError('Bootstrap Directory não corresponde à identidade.')
     sid,signing=server_identity(state/'nova')
+    if tailscale:
+        from urllib.parse import urlsplit
+        if tailscale['server_id']!=sid or urlsplit(tailscale['client_origin']).port!=config['ports']['client']:
+            raise ValueError('Identidade/porta Tailscale diferente da instalação.')
     if gateway and gateway.server_id!=sid:raise ValueError('Identidade WireGuard diferente da NOVA.')
     control=state/'nova/directory-control.sqlite3'
     if control.is_file():
@@ -158,7 +177,11 @@ def deployment_values(state,text,*,wireguard=False):
     if wireguard:
         from scripts.wireguard_install import render as renderer
         values['gateway_image']=services['nova-gateway']['image']
-    if raw!=renderer(config,**values):raise ValueError('Deployment difere do perfil LAN suportado.')
+    expected=renderer(config,**values)
+    if (state/'identity/client/tailscale-public.json').is_file():
+        from scripts.tailscale_prepare import environment
+        environment(expected,origin(config,'client'))
+    if raw!=expected:raise ValueError('Deployment difere do perfil LAN suportado.')
     return values
 
 
@@ -188,11 +211,16 @@ def write_restored_guidance(staging,manifest,*,state_root,image,gateway_image=No
         from scripts.wireguard_install import render as renderer
         values['gateway_image']=gateway_image
     rendered=renderer(identity['config'],**values)
+    if (state/'identity/client/tailscale-public.json').is_file():
+        from scripts.tailscale_prepare import environment
+        environment(rendered,origin(identity['config'],'client'))
     def write(name,value):
         path=staging/name;path.write_text(value,encoding='utf8');path.chmod(0o600)
     write('instalar-no-truenas.yaml',json.dumps(rendered,indent=2)+'\n')
     write('NOVA-LAN-CA.crt',(state/'identity/admin/lan-ca.crt').read_text(encoding='ascii'))
     report={**{k:v for k,v in identity.items() if k!='config'},'state_root':state_root,'image':image,
+        **({'tailscale_profile_approval_required':True,'tailscale_gateway_restored':False}
+            if (state/'identity/client/tailscale-public.json').is_file() else {}),
         **({'gateway_image':gateway_image,'wireguard_reapproval_required':True,'gateway_runtime_restored':False} if wireguard else {}),
         'control':origin(identity['config'],'admin'),'directory':origin(identity['config'],'directory'),
         'requires_republication':True,'media_grants_revoked':True,'directory_accounts_and_shares':'snapshot configuration retained; review before republication'}
@@ -213,5 +241,6 @@ Fingerprint: {report['fingerprint']}
 
 Certificados expirados são preservados para recuperação, mas o runtime continua a recusar a ligação até uma rotação autorizada. A chave privada da CA offline e a chave privada age não pertencem a este estado recuperado. Media e cache não estão na cópia. Não iniciar em simultâneo duas instâncias com esta identidade/IP. Aceitação física TrueNAS/TV continua por executar.
 {'WireGuard: chave e política do gateway preservadas; canal local rodado e planos, observações e leases antigos descartados. Aprovar novamente cada TV e preparar o perfil na LAN. Rever o endpoint UDP e reiniciar/atualizar os cinco serviços em conjunto.' if wireguard else ''}
+{'Tailscale: perfil público e certificado preservados; aprovação revogada. Rever o peer e aprovar novamente o perfil no Control. O estado/instalação do gateway Tailscale não pertence a esta cópia.' if (state/'identity/client/tailscale-public.json').is_file() else ''}
 ''')
     return report

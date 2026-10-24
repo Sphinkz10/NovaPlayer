@@ -39,9 +39,10 @@ class PlaybackEvent(BaseModel):
 
 
 class Media:
-    def __init__(self, members: Members):
+    def __init__(self, members: Members,transport_guard=None):
         self.members = members
         self.store = members.store
+        self.transport_guard=transport_guard
 
     @asynccontextmanager
     async def session(self, access, library, active_transfer=False):
@@ -60,6 +61,7 @@ class Media:
         headers['Authorization'] += ', Token="'+credential+'"'
 
         def guard():
+            if self.transport_guard:self.transport_guard()
             if not active_transfer:
                 Devices(self.store).authenticate(access)
             with self.store._db() as db:
@@ -260,8 +262,9 @@ class Media:
 
 
 def mount_media(api, store, base_url):
-    def service():
-        return Media(Members(store, base_url))
+    def service(request):
+        callback=getattr(api.state,'media_transport_guard',None)
+        return Media(Members(store, base_url),(lambda:callback(request)) if callback else None)
 
     def access(request):
         source = request.client.host if request.client else 'unknown'
@@ -281,20 +284,20 @@ def mount_media(api, store, base_url):
 
     @api.get('/api/v1/media/libraries/{library}/items')
     async def catalog(library: str, request: Request, start: int = 0, search: str = '', kind: str = 'all'):
-        return await safely(service().catalog(access(request), library, start, search, kind))
+        return await safely(service(request).catalog(access(request), library, start, search, kind))
 
     @api.get('/api/v1/media/libraries/{library}/items/{item}')
     async def detail(library: str, item: str, request: Request):
-        return await safely(service().detail(access(request), library, item))
+        return await safely(service(request).detail(access(request), library, item))
 
     @api.get('/api/v1/media/libraries/{library}/items/{item}/stream')
     async def stream(library: str, item: str, request: Request):
-        return await safely(service().stream(access(request), library, item, request.headers.get('Range')))
+        return await safely(service(request).stream(access(request), library, item, request.headers.get('Range')))
 
     @api.get('/api/v1/media/libraries/{library}/items/{item}/image')
     async def image(library: str, item: str, request: Request):
-        return await safely(service().image(access(request), library, item))
+        return await safely(service(request).image(access(request), library, item))
 
     @api.post('/api/v1/media/libraries/{library}/items/{item}/events')
     async def event(library: str, item: str, payload: PlaybackEvent, request: Request):
-        return await safely(service().event(access(request), library, item, payload))
+        return await safely(service(request).event(access(request), library, item, payload))

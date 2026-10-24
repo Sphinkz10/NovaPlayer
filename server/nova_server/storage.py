@@ -72,6 +72,11 @@ CREATE TABLE IF NOT EXISTS wireguard_enrollments (
  state TEXT NOT NULL DEFAULT 'pending' CHECK(state IN ('pending','approved','revoked')),
  revision INTEGER NOT NULL DEFAULT 1, updated_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS tailscale_approval (
+ id INTEGER PRIMARY KEY CHECK(id=1), policy_digest TEXT NOT NULL,
+ approved INTEGER NOT NULL CHECK(approved IN (0,1)), revision INTEGER NOT NULL,
+ updated_at INTEGER NOT NULL
+);
 """
 
 class Store:

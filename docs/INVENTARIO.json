@@ -29,6 +29,11 @@
       "sha256": "82af44fb68ae83de86b5cadc68abe76aec7a5e2f90128c25ec18b3143c5957af"
     },
     {
+      "path": ".github/workflows/native-engine-cache.yml",
+      "bytes": 1565,
+      "sha256": "982e984c65a2ad2be83d8cf135543aa1ef3c5f05801fcf9d4c0b66b2c591bcad"
+    },
+    {
       "path": ".github/workflows/native-engines.yml",
       "bytes": 1563,
       "sha256": "760691331e792c9f17fb55ea211de7e307ed030a2eb6eca30bbe6efd49baa531"
@@ -45,8 +50,8 @@
     },
     {
       "path": ".github/workflows/verify.yml",
-      "bytes": 6402,
-      "sha256": "d7407c5c432822ee65c09fa6548dd85a1ff8a4bc7f7546e27f0a4b25751f996b"
+      "bytes": 6589,
+      "sha256": "683c133273f4d4fd17b08ca688654185caa6949b09919577234a1bde9ecb71d6"
     },
     {
       "path": ".github/workflows/wireguard-network.yml",
@@ -515,13 +520,13 @@
     },
     {
       "path": "connect/tailscale-native/network.py",
-      "bytes": 26727,
-      "sha256": "4ac1502737cfa5d1259ebc96dd5928edc966eb05ef47e936933bc30d85259b8f"
+      "bytes": 28668,
+      "sha256": "5c1432b62463c3f76652d6db2ae389f6432d09d726cbb81797a4ca673068ab37"
     },
     {
       "path": "connect/tailscale-native/src/androidTest/kotlin/com/novacinema/connect/TailscaleNetworkInstrumentation.kt",
-      "bytes": 13590,
-      "sha256": "239b8c2aaf7afa3ce566eee3651c25b3a68a317f0d80d52ea0fdfd5fdd0f4942"
+      "bytes": 14531,
+      "sha256": "b53a699f0af764bcd5ed13c2d8b6ac90dbd9f82448ca28eeaf4305df1b66f269"
     },
     {
       "path": "connect/tailscale-native/src/debug/AndroidManifest.xml",
@@ -722,6 +727,11 @@
       "path": "docs/M5_TAILSCALE_CINEMA_RESULTADOS.json",
       "bytes": 16878,
       "sha256": "63d34bb138e293e7ba13d8827f6b48df9b6a85c09851a0d4d0b20212deaf2fb7"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_CONTROL.md",
+      "bytes": 3176,
+      "sha256": "2ba8d1446f3aabc3230bd0bb5c49bf8385cc1a1afabee68f0123b0754793ba7b"
     },
     {
       "path": "docs/M5_TAILSCALE_NATIVO.md",
@@ -985,13 +995,13 @@
     },
     {
       "path": "server/nova_server/app.py",
-      "bytes": 18759,
-      "sha256": "2a125d1d8171eb9b6eb8a44e5f38346972b9a05f46b7ad4f92d7f1b9b7c2e31e"
+      "bytes": 19752,
+      "sha256": "f18ff11a651bc836dc7d19b779721d46b8f78587975323a4713185e10e138275"
     },
     {
       "path": "server/nova_server/client_api.py",
-      "bytes": 10827,
-      "sha256": "0bbdde764b9cc0e5a6ade69ff343d20b42909c87023598aa7d6a930fb4eab29e"
+      "bytes": 11985,
+      "sha256": "9a6820dc99a254aee942c1d14bb3cea5fea7d240ef69c7bb57a81d26033c763a"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -1055,8 +1065,8 @@
     },
     {
       "path": "server/nova_server/media.py",
-      "bytes": 17003,
-      "sha256": "18c40358a9b27b344433ed0b04825e56840269b43e144ebd5979dc5410897e03"
+      "bytes": 17284,
+      "sha256": "cea0ff39f0b832c75cba3d9bc4f87805bb730fdc4b1cb6efbfef28bb228b2e7e"
     },
     {
       "path": "server/nova_server/members.py",
@@ -1085,23 +1095,28 @@
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 28934,
-      "sha256": "e079b7d298e7a97485e57a6f3edfc94893420b26a6de6915223552490564e111"
+      "bytes": 32776,
+      "sha256": "22680a0cdc155008f84a1b89380992ffd8177e0f16a9a79aee26c197d08419f5"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 9872,
-      "sha256": "f9bcd45a72216b87158d14edab6e8fe9a5261fa25e33c9cc5d58faf33bea235c"
+      "bytes": 10726,
+      "sha256": "479e85c0e5d96a804c2ac745b966615e9316742a45099b135e30dc99a3045ead"
     },
     {
       "path": "server/nova_server/storage.py",
-      "bytes": 10774,
-      "sha256": "4b337c574c4b9f8fb78f6a67b656ed226d64f349ba875372705493a21f4a8ab5"
+      "bytes": 11000,
+      "sha256": "9b789455e3be978048c089656d70bb499eaa2a408a6ed711e944b09a938463a5"
+    },
+    {
+      "path": "server/nova_server/tailscale_control.py",
+      "bytes": 5468,
+      "sha256": "c34fd137bb88d1e9d799d53d075f8ac7fad3b4f80162a6ee2bba710224eca1dc"
     },
     {
       "path": "server/nova_server/tailscale_profile.py",
-      "bytes": 3346,
-      "sha256": "bc4cc7787cb11b247a56244dcaed0e4b28a218293b28fd160e50b22ec6267a5e"
+      "bytes": 3469,
+      "sha256": "782e671c05df08e0773b39dd28cc0219bcb2aa305164ee901ac7092a21558832"
     },
     {
       "path": "server/nova_server/wireguard.py",
@@ -1185,8 +1200,8 @@
     },
     {
       "path": "server/scripts/lan_recovery.py",
-      "bytes": 15831,
-      "sha256": "d3f5382fbeea69f117977282d317fbc296fac4defbbf816affffc484a1fe60bf"
+      "bytes": 18148,
+      "sha256": "4704c3a6c4cdcdbf82f5ae53e886499a8e55b6a69e3df1ec6f29b42c394e5334"
     },
     {
       "path": "server/scripts/lock_dependencies.py",
@@ -1205,8 +1220,8 @@
     },
     {
       "path": "server/scripts/recovery.py",
-      "bytes": 17794,
-      "sha256": "7a980403798037f1ee0ed38e9c2aa050d4e41be9b1b952d362ab177054b90129"
+      "bytes": 18223,
+      "sha256": "3cf4d970ce705669c5481e05c70a90d963833bde8bc74711dde83aa827ed06f1"
     },
     {
       "path": "server/scripts/smoke_browser.py",
@@ -1262,6 +1277,16 @@
       "path": "server/scripts/smoke_m3_server.py",
       "bytes": 11233,
       "sha256": "da6fb50db3420896785be627407c52296dbeacbfda7805428d9d1a43d037a3fc"
+    },
+    {
+      "path": "server/scripts/smoke_tailscale_control.py",
+      "bytes": 6292,
+      "sha256": "ca3d2b84cf7dde18f1bc88aee6e54699da0b840e0b1f1095dd7c6d30c4c4602e"
+    },
+    {
+      "path": "server/scripts/tailscale_prepare.py",
+      "bytes": 9402,
+      "sha256": "fd5836f9bbc1cb94e1275d3ac6e42d5597f0f3cdbfcad07e2fb5ddac315e4d34"
     },
     {
       "path": "server/scripts/truenas.py",
@@ -1370,8 +1395,8 @@
     },
     {
       "path": "server/tests/test_m4_media.py",
-      "bytes": 16008,
-      "sha256": "5a7c06f1c75a68bc84508f799431d39092389b9649113b7eac75942b357cf93c"
+      "bytes": 16873,
+      "sha256": "de1dbd7d7d3e16a0377d877aab1b2a5a620a071e791ef1894b825da25ddf1fb8"
     },
     {
       "path": "server/tests/test_recovery.py",
@@ -1387,6 +1412,11 @@
       "path": "server/tests/test_setup.py",
       "bytes": 7283,
       "sha256": "2242982abc99507852acb99f51c46e8b49e1edd70a53dc5e7fbee0d41eebf0a3"
+    },
+    {
+      "path": "server/tests/test_tailscale_control.py",
+      "bytes": 13973,
+      "sha256": "9093f5592d928a3075b5630a7c75759805deca77aef5c2f2ca128d9151b2acac"
     },
     {
       "path": "server/tests/test_tailscale_profile.py",

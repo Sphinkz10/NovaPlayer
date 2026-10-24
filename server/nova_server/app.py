@@ -25,6 +25,7 @@ from .device_api import Payload, UserCode, DeviceDecision, device_error
 from .client_api import SmallBody
 from .members import MemberConfiguration
 from .wireguard import WireGuardEnrollments, EnrollmentDecision
+from .tailscale_control import TailscaleControl,TailscaleDecision
 
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z][a-zA-Z0-9_.-]{2,39}$')
 DUMMY_HASH = '$argon2id$v=19$m=65536,t=3,p=2$bsLfU/8cH1R+4e68utTSNQ$8Tk5/U5Y6zx5/ZrURl0G7DtU5y3EXazaQ+3mifoBRLI'
@@ -54,7 +55,7 @@ class DirectoryNewAccount(DirectoryCredentials):
 
 
 def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_server_id=None, directory_options=None,
-             gateway_options=None):
+             gateway_options=None,tailscale_options=None):
     state_dir=Path(state_dir or os.environ.get('NOVA_STATE_DIR','./state/nova'))
     jellyfin_url=jellyfin_url or os.environ.get('NOVA_JELLYFIN_URL','http://jellyfin:8096')
     store=Store(state_dir)
@@ -62,6 +63,9 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     api.state.store=store
     devices = Devices(store)
     api.state.devices = devices
+    tailscale_options=tailscale_options or TailscaleControl.options()
+    tailscale_control=TailscaleControl.local(store,**tailscale_options) if tailscale_options else None
+    api.state.tailscale_control=tailscale_control
     if directory_options is None and os.environ.get('NOVA_DIRECTORY_ORIGIN'):
         directory_options = dict(origin=os.environ['NOVA_DIRECTORY_ORIGIN'],
             ca=os.environ.get('NOVA_DIRECTORY_CA',''), client_origin=os.environ.get('NOVA_CLIENT_ORIGIN',''),
@@ -260,6 +264,18 @@ def make_app(state_dir=None, jellyfin_url=None, *, allowed_hosts=None, jellyfin_
     def connect_settings(token:str=Depends(owner)):
         return {'schema_version':1, 'active_provider':None, 'remote_access_enabled':False,
                 'providers':provider_catalog(), 'drafts':store.connect_drafts()}
+
+    @api.get('/api/v1/admin/connect/tailscale')
+    def tailscale_status(token:str=Depends(owner)):
+        if tailscale_control is None:
+            return {'state':'not_prepared','profile_approved':False,'gateway_verified':False,'remote_access_enabled':False}
+        return tailscale_control.status()
+
+    @api.post('/api/v1/admin/connect/tailscale')
+    def tailscale_decision(payload:TailscaleDecision,token:str=Depends(owner)):
+        devices.limit('owner.tailscale','owner',30,30,60)
+        if tailscale_control is None:raise DeviceError('tailscale_policy_not_prepared',409)
+        return tailscale_control.decide(payload.revision,payload.approve,payload.policy_digest)
 
     @api.get('/api/v1/admin/connect/wireguard/enrollments')
     def wireguard_enrollments(token:str=Depends(owner)):

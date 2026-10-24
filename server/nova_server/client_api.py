@@ -80,20 +80,39 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False, wir
     if tailscale_profiles is None and os.environ.get('NOVA_TAILSCALE_PUBLIC_CONFIG'):
         from .tailscale_profile import TailscaleProfiles
         tailscale_profiles=TailscaleProfiles.local(store,os.environ['NOVA_TAILSCALE_PUBLIC_CONFIG'],origin)
+    from .tailscale_control import TailscaleControl
+    tailscale_options=TailscaleControl.options()
+    if tailscale_options:
+        if tailscale_profiles is None:raise ValueError('Prepared Tailscale policy required')
+        if origin!=tailscale_options['base_origin']:raise ValueError('Tailscale base origin mismatch')
+        tailscale_profiles.approval=TailscaleControl.local(store,**tailscale_options)
     remote_origins=[value for value in (remote_origin,tailscale_profiles.origin if tailscale_profiles else None) if value]
     if len(remote_origins)!=len(set(urlsplit(value).hostname for value in remote_origins)):
         raise ValueError('Remote providers require distinct gateway addresses')
     api = FastAPI(title='NOVA device laboratory', docs_url=None, redoc_url=None, openapi_url=None)
     api.state.devices = devices
+    def media_transport_guard(request):
+        if (tailscale_profiles and tailscale_profiles.approval and
+                request.url.hostname==urlsplit(tailscale_profiles.origin).hostname):
+            tailscale_profiles.approval.authorization()
+    api.state.media_transport_guard=media_transport_guard
     api.add_exception_handler(DeviceError, device_error)
     api.add_exception_handler(RequestValidationError, invalid_device_payload)
     api.add_middleware(SmallBody)
     api.add_middleware(TrustedHostMiddleware, allowed_hosts=[host]+[urlsplit(value).hostname for value in remote_origins], www_redirect=False)
 
+    def tailscale_approved():
+        try:return tailscale_profiles.approval.status()['profile_approved']
+        except DeviceError:return False
+
     @api.middleware('http')
     async def transport(request: Request, call_next):
         if request.url.scheme != 'https':
             response = JSONResponse({'error': 'https_required'}, status_code=400)
+        elif (tailscale_profiles and tailscale_profiles.approval and
+                request.url.hostname==urlsplit(tailscale_profiles.origin).hostname and
+                not tailscale_approved()):
+            response=JSONResponse({'error':'tailscale_owner_approval_required'},status_code=403)
         else:
             response = await call_next(request)
         response.headers['Cache-Control'] = 'no-store'

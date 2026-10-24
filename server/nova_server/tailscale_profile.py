@@ -38,7 +38,7 @@ def gateway_origin(value):
 
 
 class TailscaleProfiles:
-    def __init__(self,store,config,base_origin,*,clock=time.time):
+    def __init__(self,store,config,base_origin,*,clock=time.time,approval=None):
         from .lan import lan_ip
         parsed=urlsplit(base_origin)
         # Policy is anchored in an existing LAN identity; never accept a remote
@@ -55,6 +55,7 @@ class TailscaleProfiles:
         self.origin=gateway_origin(config['client_origin'])
         self.revision=config['revision']
         self.base_origin,self.devices,self.clock=base_origin,Devices(store,clock=clock),clock
+        self.approval=approval
 
     @classmethod
     def local(cls,store,path,base_origin):
@@ -62,8 +63,9 @@ class TailscaleProfiles:
 
     def issue(self,access):
         device=self.devices.authenticate(access)
+        revision=self.approval.authorization() if self.approval else self.revision
         now=int(self.clock())
         return {'schema_version':1,'provider':'tailscale','server_id':device['server_id'],
                 'device_id':device['device_id'],'account_id':device['account_id'],
                 'base_origin':self.base_origin,'control_origin':self.control,'client_origin':self.origin,
-                'revision':self.revision,'issued_at':now,'expires_at':now+86400}
+                'revision':revision,'issued_at':now,'expires_at':now+86400}

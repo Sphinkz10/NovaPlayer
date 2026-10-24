@@ -53,7 +53,7 @@ def push(name, data):
     command('adb', 'shell', '-T', 'run-as', PACKAGE, 'tee', 'files/'+name, data=data)
 
 
-def certificate(root, name, addresses):
+def certificate(root, name, addresses,ca=True):
     from cryptography import x509
     from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
@@ -65,7 +65,7 @@ def certificate(root, name, addresses):
             .serial_number(x509.random_serial_number()).not_valid_before(now-timedelta(days=2))
             .not_valid_after(now+timedelta(days=2))
             .add_extension(x509.SubjectAlternativeName([x509.IPAddress(ipaddress.ip_address(ip)) for ip in addresses]), False)
-            .add_extension(x509.BasicConstraints(ca=True, path_length=0), True)
+            .add_extension(x509.BasicConstraints(ca=ca, path_length=0 if ca else None), True)
             .add_extension(x509.ExtendedKeyUsage([ExtendedKeyUsageOID.SERVER_AUTH]), False).sign(key, hashes.SHA256()))
     pem = cert.public_bytes(serialization.Encoding.PEM)
     (root/(name+'.crt')).write_bytes(pem)
@@ -131,6 +131,8 @@ def serve(root,bootstrap=False):
     if not bootstrap:
         for port in (22, 9443): threading.Thread(target=canary, args=(port,), daemon=True).start()
     profiles=TailscaleProfiles(state,json.loads((root/'tailscale-public.json').read_text()),BASE_ORIGIN)
+    from nova_server.tailscale_control import TailscaleControl
+    profiles.approval=TailscaleControl(state,json.loads((root/'tailscale-public.json').read_text()),BASE_ORIGIN,root/'gateway.crt')
     config = uvicorn.Config(make_client_app(root/'state', BASE_ORIGIN,tailscale_profiles=profiles),
                             host='127.0.0.1' if bootstrap else GATEWAY, port=19444 if bootstrap else 9444,
                             ssl_certfile=str(root/'gateway.crt'), ssl_keyfile=str(root/'gateway.key'),
@@ -210,8 +212,8 @@ def run():
         try:
             tools(root)
             control_ca = certificate(root, 'control', ['10.0.2.2', '127.0.0.1', '10.203.0.1'])
-            gateway_ca = certificate(root, 'gateway', [GATEWAY,'10.0.2.2'])
-            wrong = certificate(root, 'wrong', [GATEWAY])
+            gateway_ca = certificate(root, 'gateway', [GATEWAY,'10.0.2.2'],ca=False)
+            wrong = certificate(root, 'wrong', [GATEWAY],ca=False)
             config = {
                 'server_url': CONTROL, 'listen_addr': '0.0.0.0:18443', 'metrics_listen_addr': '127.0.0.1:19090',
                 'grpc_listen_addr': '127.0.0.1:15443', 'unix_socket': str(root/'headscale.sock'),
@@ -287,6 +289,23 @@ def run():
                 '-g','24','-pix_fmt','yuv420p','-c:a','aac','-movflags','+faststart',root/'synthetic.mp4',timeout=60)
             (root/'tailscale-public.json').write_text(json.dumps({'schema_version':1,'server_id':devices.identity(),
                 'revision':1,'control_origin':CONTROL,'client_origin':'https://'+GATEWAY+':9444'}))
+            (root/'tailscale-public.json').chmod(0o600)
+            from fastapi.testclient import TestClient
+            from nova_server.app import make_app
+            owner_session=secrets.token_urlsafe(48);store.save_session(owner_session)
+            owner=TestClient(make_app(store.dir,allowed_hosts=['testserver'],tailscale_options={
+                'configuration':root/'tailscale-public.json','base_origin':BASE_ORIGIN,'certificate':root/'gateway.crt'}))
+            owner.__enter__();owner.headers['Authorization']='Bearer '+owner_session
+            admin_path='/api/v1/admin/connect/tailscale'
+            def decide_profile(approve):
+                current=owner.get(admin_path);assert current.status_code==200
+                state=current.json()
+                result=owner.post(admin_path,json={'revision':state['revision'],'policy_digest':state['policy_digest'],'approve':approve})
+                assert result.status_code==200 and result.json()['profile_approved']==approve
+                assert not result.json()['gateway_verified'] and not result.json()['remote_access_enabled']
+            assert owner.get(admin_path).json()['profile_approved'] is False
+            decide_profile(True)
+            checks.append('owner Control approves only the prepared certificate-bound public profile; it does not claim tailnet enrollment')
             spawn(['sudo', 'ip', 'netns', 'exec', namespace, sys.executable, Path(__file__).resolve(), '--serve', root], 'nova')
             for _ in range(100):
                 probe = ns(sys.executable, '-c', "import socket;s=socket.create_connection(('100.64.0.1',9444),1);s.close()", check=False)
@@ -317,6 +336,10 @@ def run():
                 'tokens':tokens,'library':'a'*32,'item':'1'*32,'other_library':'b'*32}).encode())
             def callback(stage):
                 if stage == 'consent': consent()
+                elif stage=='profile-disable':
+                    decide_profile(False);push('tailscale-gate.txt',b'profile-disabled')
+                elif stage=='profile-enable':
+                    decide_profile(True);push('tailscale-gate.txt',b'profile-enabled')
                 elif stage == 'revoke':
                     assert devices.authenticate(tokens['access_token'])['device_id'] == tokens['device_id']
                     nodes = json.loads(hs('nodes', 'list', '-o', 'json').stdout)
@@ -380,7 +403,7 @@ def run():
             for handle in handles: handle.close()
             # Error-level logs only; redact any disposable fixture credentials before export.
             available = locals()
-            secret_values = [available[name] for name in ('peer_key', 'android_key') if name in available]
+            secret_values = [available[name] for name in ('peer_key', 'android_key','owner_session') if name in available]
             if 'tokens' in locals(): secret_values.extend((tokens['access_token'], tokens['refresh_token']))
             for name in ('headscale', 'tailscaled', 'nova', 'bootstrap'):
                 file = root/(name+'.log')
@@ -392,6 +415,7 @@ def run():
             crash = adb('logcat', '-d', '-b', 'crash')
             for secret in secret_values: crash = crash.replace(secret, '[redacted]')
             (OUT/'crash.txt').write_text(crash[-20000:])
+            if 'owner' in locals():owner.__exit__(None,None,None)
             ip('netns', 'delete', namespace, check=False); ip('link', 'delete', host_link, check=False)
             command('sudo', 'chown', '-R', str(os.getuid())+':'+str(os.getgid()), str(root), check=False)
 

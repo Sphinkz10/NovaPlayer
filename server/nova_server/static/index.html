@@ -28,6 +28,13 @@
 <div id="providerFields"></div><button>Guardar rascunho</button></form><p id="connectMessage" role="status" aria-live="polite"></p>
 <h3>Pedidos WireGuard das TVs · laboratório</h3><p>A TV gera e guarda a própria chave privada. Compara a impressão digital completa apresentada na TV antes de aprovar. O serviço de gateway, quando configurado localmente, aplica os pedidos aprovados e comunica a configuração observada. O acesso remoto continua desativado até concluir o percurso remoto.</p>
 <p id="wireguardGateway" role="status" aria-live="polite">Gateway por confirmar.</p>
-<button id="wireguardRefresh" type="button">Atualizar pedidos WireGuard</button><p id="wireguardMessage" role="status" aria-live="polite"></p><div id="wireguardEnrollments"></div></section>
+<button id="wireguardRefresh" type="button">Atualizar pedidos WireGuard</button><p id="wireguardMessage" role="status" aria-live="polite"></p><div id="wireguardEnrollments"></div>
+<section id="tailscalePanel" aria-labelledby="tailscaleHeading"><h3 id="tailscaleHeading">Perfil Tailscale das TVs · laboratório</h3>
+<p>Prepara primeiro o perfil e o certificado no PC do proprietário para o IP do peer Tailscale do servidor. A aprovação permite entregar a configuração às TVs já associadas. A inscrição no tailnet e a ligação do gateway têm de ser confirmadas separadamente.</p>
+<p id="tailscaleStatus" role="status" aria-live="polite">Perfil por verificar.</p><dl id="tailscalePolicy"></dl>
+<button id="tailscaleRefresh" type="button">Atualizar perfil Tailscale</button>
+<button id="tailscaleApprove" type="button" disabled>Aprovar perfil para as TVs</button>
+<button id="tailscaleDisable" type="button" disabled>Desativar perfil Tailscale</button>
+<p id="tailscaleMessage" role="status" aria-live="polite"></p></section></section>
 <footer>JELLYFIN · NOVA CORE · LIGAÇÃO REMOTA BLOQUEADA ATÉ VALIDAÇÃO</footer></main>
 <script src="/static/control.js" defer></script></body></html>
