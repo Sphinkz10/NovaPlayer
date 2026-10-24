@@ -5,7 +5,7 @@ on:
       native_build_run:
         description: Successful native-engines run containing the AAR artifact
         required: true
-        default: '39069358627'
+        default: '40116217702'
         type: string
   push:
     branches: [codex/phase-one]
@@ -32,12 +32,23 @@ jobs:
           distribution: temurin
           java-version: '17'
       # Immutable artifact from the successful pinned-source compilation.
-      # Retained for seven days; rerun native-engines and update this provenance when expired.
+      # The verified original bytes are preserved by native-engine-cache, not rebuilt.
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: native-engine-feasibility
-          run-id: ${{ inputs.native_build_run || '39069358627' }}
+          run-id: ${{ inputs.native_build_run || '40116217702' }}
+          path: .native-cache
           github-token: ${{ github.token }}
+      - name: Normalize and verify pinned AAR before loading any JNI
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,shutil
+          root=Path('.native-cache')
+          source=root/'native-output' if (root/'native-output/nova-engines.aar').is_file() else root
+          assert hashlib.sha256((source/'nova-engines.aar').read_bytes()).hexdigest()=='224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0'
+          shutil.copytree(source,'native-output')
+          PY
       - name: Build test APK with the same native engines
         working-directory: connect
         run: bash gradlew :app:assembleDebug :app:assembleDebugAndroidTest -PnovaNativeProofAar="$GITHUB_WORKSPACE/native-output/nova-engines.aar" --no-daemon --console plain

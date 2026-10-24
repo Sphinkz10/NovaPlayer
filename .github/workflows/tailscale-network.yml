@@ -34,7 +34,8 @@ jobs:
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: native-engine-feasibility
-          run-id: '39069358627'
+          run-id: '40116217702'
+          path: native-output
           github-token: ${{ github.token }}
       - name: Verify AAR content identity
         run: echo '224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0  native-output/nova-engines.aar' | sha256sum -c -

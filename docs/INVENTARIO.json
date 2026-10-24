@@ -40,13 +40,13 @@
     },
     {
       "path": ".github/workflows/native-runtime.yml",
-      "bytes": 2283,
-      "sha256": "36ebfd44463a7b28ba99a0f7f4db30579a198a5b9199a0e6fe67292059a78000"
+      "bytes": 2838,
+      "sha256": "98b1909c7b9f68f86a382c11da595bf38a6452343d904b46578b7c39f7cc7688"
     },
     {
       "path": ".github/workflows/tailscale-network.yml",
-      "bytes": 2554,
-      "sha256": "0828b4fe9306d477b98ac05df49a399c4f9f76fb13d013c51d6f95439d03d4b1"
+      "bytes": 2584,
+      "sha256": "610d69a28a1f1b9a1ee444c29a3080d8caab2bd6138879019172a98e31980b34"
     },
     {
       "path": ".github/workflows/verify.yml",
