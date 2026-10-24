@@ -45,7 +45,13 @@ def run(output=None,channel=None):
                     page.goto(base)
                     page.locator('#login [name=username]').fill('owner')
                     page.locator('#login [name=password]').fill(password)
-                    page.locator('#login button').click()
+                    # Overview also checks offline Jellyfin before loading this
+                    # panel. Synchronize with its actual API response instead of
+                    # racing the browser's five-second assertion on a busy runner.
+                    with page.expect_response(lambda response:response.url==base+'/api/v1/admin/connect/tailscale'
+                                              and response.request.method=='GET',timeout=30000) as initial:
+                        page.locator('#login button').click()
+                    assert initial.value.status==200
                     expect(page.locator('#tailscaleStatus')).to_contain_text('Perfil preparado')
                     expect(page.locator('#tailscalePolicy')).to_contain_text(profile['certificate_sha256'])
                     expect(page.locator('#tailscalePolicy')).to_contain_text('https://100.64.0.1:8920')
@@ -63,7 +69,10 @@ def run(output=None,channel=None):
                     expect(page.locator('#ownerPanel')).to_be_hidden()
                     page.locator('#login [name=username]').fill('owner')
                     page.locator('#login [name=password]').fill(password)
-                    page.locator('#login button').click()
+                    with page.expect_response(lambda response:response.url==base+'/api/v1/admin/connect/tailscale'
+                                              and response.request.method=='GET',timeout=30000) as restored:
+                        page.locator('#login button').click()
+                    assert restored.value.status==200
                     expect(page.locator('#tailscaleStatus')).to_contain_text('Perfil aprovado')
                     page.locator('#tailscaleDisable').click()
                     expect(page.locator('#tailscaleStatus')).to_contain_text('Perfil preparado')

@@ -1280,8 +1280,8 @@
     },
     {
       "path": "server/scripts/smoke_tailscale_control.py",
-      "bytes": 6292,
-      "sha256": "ca3d2b84cf7dde18f1bc88aee6e54699da0b840e0b1f1095dd7c6d30c4c4602e"
+      "bytes": 7098,
+      "sha256": "36e4c2d1383ae266b8428ee853ede0b7c1ced1b53b09ca036c955b6f666aab6b"
     },
     {
       "path": "server/scripts/tailscale_prepare.py",
