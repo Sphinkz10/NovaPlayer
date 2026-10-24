@@ -1,0 +1,62 @@
+name: Native Tailscale private HTTPS
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/phase-one]
+    paths:
+      - 'connect/tailscale-native/**'
+      - 'connect/core/src/main/kotlin/com/novacinema/connect/core/TailscaleProfile.kt'
+      - 'connect/app/src/main/java/com/novacinema/connect/RemoteTailscale.kt'
+      - 'server/nova_server/tailscale_profile.py'
+      - '.github/workflows/tailscale-network.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  tailscale:
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 35]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --require-hashes -r server/requirements-directory.txt
+      - name: Download pinned native engine build
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: native-engine-feasibility
+          run-id: '40116217702'
+          path: native-output
+          github-token: ${{ github.token }}
+      - name: Verify AAR content identity
+        run: echo '224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0  native-output/nova-engines.aar' | sha256sum -c -
+      - name: Build explicit Tailscale proof APK
+        working-directory: connect
+        run: bash gradlew :app:verifyTailscalePolicy :app:assembleDebug :app:assembleDebugAndroidTest -PnovaTailscaleProof=true -PnovaNativeProofAar="$GITHUB_WORKSPACE/native-output/nova-engines.aar" --no-daemon --console plain
+      - name: Namespace tooling and emulator acceleration
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iproute2 iptables ffmpeg
+          sudo chown "$(id -u):$(id -g)" /dev/kvm
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: ${{ matrix.api }}
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: python connect/tailscale-native/network.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: tailscale-network-api-${{ matrix.api }}
+          retention-days: 7
+          path: connect/test-results/tailscale/

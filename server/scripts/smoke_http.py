@@ -47,8 +47,8 @@ def run():
             assert overview['jellyfin']['state']=='offline'
             assert overview['connect']['state']=='disabled'
             assert len(overview['library_roots'])==2
-            assert all(x['read_only'] for x in overview['library_roots'])
-            print('PASS real HTTP loopback: health → bootstrap → login → overview → offline Jellyfin (fail closed)')
+            assert all(x['configured_read_only'] and x['read_only'] is None for x in overview['library_roots'])
+            print('PASS real HTTP loopback: health -> bootstrap -> login -> overview -> offline Jellyfin (fail closed)')
         finally:
             proc.terminate()
             try:proc.wait(timeout=4)

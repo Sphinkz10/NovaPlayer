@@ -1,0 +1,302 @@
+{
+  "tested_commit": "1b6402a2a40eefe995a528cecda9dc3064b4d793",
+  "ci_merge_commit": "71acb3dbb6ec47e6191082cab80b41890e4dc511",
+  "ci_tree_equals_tested_tree": true,
+  "ci": [
+    {
+      "name": "main",
+      "run_id": 39504206346,
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206346",
+      "jobs": [
+        {
+          "id": 118908917505,
+          "name": "compose-lab",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908917688,
+          "name": "android",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908917756,
+          "name": "server (ubuntu-latest, 3.13)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908917887,
+          "name": "server (ubuntu-latest, 3.12)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908917915,
+          "name": "server (windows-latest, 3.12)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908918004,
+          "name": "dependencies",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908918238,
+          "name": "server (windows-latest, 3.13)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118910664046,
+          "name": "server-image",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "wireguard",
+      "run_id": 39504206366,
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206366",
+      "jobs": [
+        {
+          "id": 118908917475,
+          "name": "wireguard (35)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908917738,
+          "name": "wireguard (26)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "pairing",
+      "run_id": 39504206356,
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206356",
+      "jobs": [
+        {
+          "id": 118912597702,
+          "name": "pairing (35)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118912600800,
+          "name": "pairing (26)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "distribution",
+      "run_id": 39504206409,
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39504206409",
+      "jobs": [
+        {
+          "id": 118908917695,
+          "name": "distribution (26)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118908917986,
+          "name": "distribution (35)",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "reruns": [
+    {
+      "run_id": 39504206356,
+      "original_job_id": 118908918124,
+      "reason": "Pairing window did not gain focus on disposable API 35 emulator; rerun kept assertions unchanged",
+      "result": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12301794891,
+      "name": "android-pairing-api-26",
+      "digest": "sha256:01e5b3045757086aaeeb4fc56ed6e5cf799f1dcc84ccdd59ae9cfce8b856fd22",
+      "size_in_bytes": 18118832,
+      "created_at": "2026-10-20T22:01:27Z",
+      "workflow_run": {
+        "id": 39504206356,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "1b6402a2a40eefe995a528cecda9dc3064b4d793"
+      }
+    },
+    {
+      "id": 12303087325,
+      "name": "server-ubuntu-latest-3.13",
+      "digest": "sha256:130bc12021208184e0953f3ceb590c79f949ddd92672ba0b3769341c28be37b8",
+      "size_in_bytes": 1226324,
+      "created_at": "2026-10-20T21:57:10Z",
+      "workflow_run": {
+        "id": 39504206346,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "1b6402a2a40eefe995a528cecda9dc3064b4d793"
+      }
+    },
+    {
+      "id": 12301399739,
+      "name": "server-windows-latest-3.13",
+      "digest": "sha256:562a09c6c6f9016624340380bb47edb00c3eafe5d3be53cbb9eebbdf4056de92",
+      "size_in_bytes": 853990,
+      "created_at": "2026-10-20T21:59:23Z",
+      "workflow_run": {
+        "id": 39504206346,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "1b6402a2a40eefe995a528cecda9dc3064b4d793"
+      }
+    },
+    {
+      "id": 12301709705,
+      "name": "wireguard-network-api-35",
+      "digest": "sha256:3660f1c50f3bf63807fe2380fd21bd3390350e4a250935a2794a738b91fa4614",
+      "size_in_bytes": 18032692,
+      "created_at": "2026-10-20T22:00:41Z",
+      "workflow_run": {
+        "id": 39504206366,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "1b6402a2a40eefe995a528cecda9dc3064b4d793"
+      }
+    },
+    {
+      "id": 12301409968,
+      "name": "wireguard-network-api-26",
+      "digest": "sha256:130eba9faed3128f122e81a6fb435eda235e24648c4f74e8bbb6e8988f98e57e",
+      "size_in_bytes": 18032686,
+      "created_at": "2026-10-20T22:00:29Z",
+      "workflow_run": {
+        "id": 39504206366,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "1b6402a2a40eefe995a528cecda9dc3064b4d793"
+      }
+    },
+    {
+      "id": 12304060612,
+      "name": "android-pairing-api-35",
+      "digest": "sha256:b82d0b0cb7777ac0b3fa991191c93bb088f48278191c4a8b29f9004cc4ddea50",
+      "size_in_bytes": 18245804,
+      "created_at": "2026-10-20T22:11:32Z",
+      "workflow_run": {
+        "id": 39504206356,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "1b6402a2a40eefe995a528cecda9dc3064b4d793"
+      }
+    }
+  ],
+  "description": "Original screenshots, no image generation or retouching",
+  "screen_data": "Synthetic disposable fixtures; no physical NAS or TV",
+  "display": "Landscape Android phone emulator; screenshots do not certify Android TV hardware",
+  "production_capture_policy": "FLAG_SECURE unchanged; debug instrumentation temporarily clears/restores synthetic content windows only",
+  "images": [
+    {
+      "name": "tv-libraries.png",
+      "api": 26,
+      "sha256": "e92086196362633352942c26e883aa0362c19b24a9311b160156060520d53195",
+      "artifact": "android-pairing-api-26",
+      "artifact_path": "test-results/lan/screenshots/tv-libraries.png",
+      "width": 640,
+      "height": 320,
+      "file": "api-26/tv-libraries.png"
+    },
+    {
+      "name": "tv-catalogue.png",
+      "api": 26,
+      "sha256": "7828633f98d378eb97eab001d9e9cea596f64a65a6eae0146d5d791910d0b905",
+      "artifact": "android-pairing-api-26",
+      "artifact_path": "test-results/lan/screenshots/tv-catalogue.png",
+      "width": 640,
+      "height": 320,
+      "file": "api-26/tv-catalogue.png"
+    },
+    {
+      "name": "tv-detail.png",
+      "api": 26,
+      "sha256": "38eaf3d666159859a0c7b5beb17a0ecadf08f9fd47b69b2b8b6442fbf26451de",
+      "artifact": "android-pairing-api-26",
+      "artifact_path": "test-results/lan/screenshots/tv-detail.png",
+      "width": 640,
+      "height": 320,
+      "file": "api-26/tv-detail.png"
+    },
+    {
+      "name": "tv-player.png",
+      "api": 26,
+      "sha256": "af9806b31a961e81df6fef4fe7f7bc3bdd37a948cc0de27164413fba8407e942",
+      "artifact": "android-pairing-api-26",
+      "artifact_path": "test-results/lan/screenshots/tv-player.png",
+      "width": 640,
+      "height": 320,
+      "file": "api-26/tv-player.png"
+    },
+    {
+      "name": "tv-libraries.png",
+      "api": 35,
+      "sha256": "d5dfb4a4371c2e98779710c2d9edd28d6fcf3d1aab79e0d1ee6808bbf2eb9679",
+      "artifact": "android-pairing-api-35",
+      "artifact_path": "test-results/lan/screenshots/tv-libraries.png",
+      "width": 1280,
+      "height": 720,
+      "file": "tv-libraries.png"
+    },
+    {
+      "name": "tv-catalogue.png",
+      "api": 35,
+      "sha256": "4987faf8cd6a6689f711b92ebdfe8d9d147aec09c2c661c2db7241862290e1a2",
+      "artifact": "android-pairing-api-35",
+      "artifact_path": "test-results/lan/screenshots/tv-catalogue.png",
+      "width": 1280,
+      "height": 720,
+      "file": "tv-catalogue.png"
+    },
+    {
+      "name": "tv-detail.png",
+      "api": 35,
+      "sha256": "cc9ed983d7a955ec74e560cf2fe2a0db0b6ebcb169418de71c85d0f24f55f01e",
+      "artifact": "android-pairing-api-35",
+      "artifact_path": "test-results/lan/screenshots/tv-detail.png",
+      "width": 1280,
+      "height": 720,
+      "file": "tv-detail.png"
+    },
+    {
+      "name": "tv-player.png",
+      "api": 35,
+      "sha256": "7cd7d6f8ac88d4bb6683271543bf08fe382232db5f31691c3c1fb6c48d27da79",
+      "artifact": "android-pairing-api-35",
+      "artifact_path": "test-results/lan/screenshots/tv-player.png",
+      "width": 1280,
+      "height": 720,
+      "file": "tv-player.png"
+    },
+    {
+      "name": "control-overview.png",
+      "api": null,
+      "sha256": "cef6acce69fb0724e2a627eb2e36abc505c46f2e0e546ad2b9fd029289ccc4ca",
+      "artifact": "server-windows-latest-3.13",
+      "artifact_path": "m3-control/control-overview.png",
+      "file": "control-overview.png"
+    },
+    {
+      "name": "control-wireguard-approved.png",
+      "api": null,
+      "sha256": "5799a34092ec352c3ec84eb89d20adb0787095832289679181da7c113a1b7b26",
+      "artifact": "server-windows-latest-3.13",
+      "artifact_path": "m3-control/control-wireguard-approved.png",
+      "file": "control-wireguard-approved.png"
+    }
+  ],
+  "stable_installation": "../NOVA_M5_INSCRICAO_2026-10-20/ABRIR_PRIMEIRO.md"
+}

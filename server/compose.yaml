@@ -17,10 +17,14 @@ services:
         source: ${NOVA_MEDIA_A:?}
         target: /media/source-a
         read_only: true
+        bind:
+          create_host_path: false
       - type: bind
         source: ${NOVA_MEDIA_B:?}
         target: /media/source-b
         read_only: true
+        bind:
+          create_host_path: false
     networks:
       - nova_internal
 

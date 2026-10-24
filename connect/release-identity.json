@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "package": "com.novacinema.cinema",
+  "alias": "nova-cinema-v1",
+  "certificate_sha256": "50ec5556fb11d5d13ef6983f6d374aab2c3a82d0252891e38ea2a05a90d0cd72",
+  "minimum_version_code": 9
+}

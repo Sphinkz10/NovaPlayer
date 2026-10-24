@@ -1,0 +1,39 @@
+name: Preserve verified native engine artifact
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/phase-one]
+    paths: ['.github/workflows/native-engine-cache.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  preserve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: native-engine-feasibility
+          run-id: '39069358627'
+          github-token: ${{ github.token }}
+      - name: Verify original compiled engine identity
+        run: |
+          echo '224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0  native-output/nova-engines.aar' | sha256sum -c -
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          Path('native-output/CACHE_PROVENANCE.json').write_text(json.dumps({
+            'action':'preserve verified original artifact; not a rebuild',
+            'original_run':39069358627,'original_artifact':12114488900,
+            'original_source':'bf0702583978e61254418fe3d8d94c1cbdff3533',
+            'tailscale_android':'264102cc702fbd844e900227ee02e5cbb4d7f801',
+            'netbird_go':'01185ba3536bcc037481578420d73cb7cee96094',
+            'aar_sha256':'224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0'
+          },indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-engine-feasibility
+          retention-days: 30
+          path: native-output/

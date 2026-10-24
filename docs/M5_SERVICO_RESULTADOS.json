@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "tested_commit": "9dffd36aa3249d8309f7d21f97afe5359351e8b0",
+  "ci_merge_commit": "1ac5c352add9798b3887d354829d23d2e2794715",
+  "ci": [
+    {
+      "run_id": 39509347834,
+      "name": "Verify NOVA foundation",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39509347834",
+      "jobs": [
+        {
+          "id": 118929901677,
+          "name": "server (windows-latest, 3.13)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118929902627,
+          "name": "server (ubuntu-latest, 3.13)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118929903653,
+          "name": "compose-lab",
+          "conclusion": "success"
+        },
+        {
+          "id": 118929936097,
+          "name": "server (windows-latest, 3.12)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118929947299,
+          "name": "server (ubuntu-latest, 3.12)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118929953660,
+          "name": "dependencies",
+          "conclusion": "success"
+        },
+        {
+          "id": 118929953872,
+          "name": "android",
+          "conclusion": "success"
+        },
+        {
+          "id": 118931243371,
+          "name": "server-image",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 39509348259,
+      "name": "Android device pairing TLS",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39509348259",
+      "jobs": [
+        {
+          "id": 118926175716,
+          "name": "pairing (35)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118926176092,
+          "name": "pairing (26)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 39509348053,
+      "name": "Native WireGuard private HTTPS",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39509348053",
+      "jobs": [
+        {
+          "id": 118926174847,
+          "name": "wireguard (35)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118926175141,
+          "name": "wireguard (26)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 39509348027,
+      "name": "Android distribution and update",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39509348027",
+      "jobs": [
+        {
+          "id": 118926174836,
+          "name": "distribution (35)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118926174971,
+          "name": "distribution (26)",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "reruns": [
+    {
+      "run_id": 39509347834,
+      "original_job_id": 118926174556,
+      "reason": "Windows/Python 3.13 browser fixture exceeded its unchanged five-second expectation while Jellyfin permissions were still being configured, before WireGuard interaction",
+      "assertions_unchanged": true,
+      "source_unchanged": true,
+      "replacement_job_id": 118929901677,
+      "result": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12305945544,
+      "name": "wireguard-network-api-35",
+      "digest": "sha256:bbc45546fb28654f1bfd477b571ebd1fe19fc3e340ed95fdc9745e82d01cc96c",
+      "created_at": "2026-10-20T22:41:55Z",
+      "workflow_run": {
+        "id": 39509348053,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "9dffd36aa3249d8309f7d21f97afe5359351e8b0"
+      }
+    },
+    {
+      "id": 12304723722,
+      "name": "wireguard-network-api-26",
+      "digest": "sha256:c822fcc1eea6cdcd148857438a695eaaedcf12b82bce549ae08403e79d21ef86",
+      "created_at": "2026-10-20T22:41:51Z",
+      "workflow_run": {
+        "id": 39509348053,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "9dffd36aa3249d8309f7d21f97afe5359351e8b0"
+      }
+    },
+    {
+      "id": 12305145928,
+      "name": "server-ubuntu-latest-3.13",
+      "digest": "sha256:ad96bad7d46758bc2fcb987990f79b2653a9a0f0de67550a3f8a0c24f09f56df",
+      "created_at": "2026-10-20T22:39:19Z",
+      "workflow_run": {
+        "id": 39509347834,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "9dffd36aa3249d8309f7d21f97afe5359351e8b0"
+      }
+    },
+    {
+      "id": 12304438889,
+      "name": "server-windows-latest-3.12",
+      "digest": "sha256:747310a744288baf134b9e7f5c41238f7c94cbe58f9e379e3c4da1a5fd81e953",
+      "created_at": "2026-10-20T22:40:58Z",
+      "workflow_run": {
+        "id": 39509347834,
+        "repository_id": 1423512152,
+        "head_repository_id": 1423512152,
+        "head_branch": "codex/phase-one",
+        "head_sha": "9dffd36aa3249d8309f7d21f97afe5359351e8b0"
+      }
+    }
+  ],
+  "tested_tree": "44a2d9c2adcd0d13cfdc5a4812c3de379fef22d4",
+  "ci_tree_equals_tested_tree": true,
+  "native_wireguard": [
+    {
+      "api": 26,
+      "report_sha256": "8757d4a03424f92461c387e054ac7f9f7232084b7b6de4654f154f6eca5c02b2",
+      "report": {
+        "result": "passed",
+        "provider": "wireguard",
+        "api": 26,
+        "checks": [
+          "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+          "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+          "host has no route or TCP forwarder to the service overlay address",
+          "restricted adapter removes stale and broad peers before applying approved per-device host route",
+          "process restart restores durable per-device lease after confirmed peer cleanup",
+          "Control accepts only fresh authenticated kernel observations and never claims handshake",
+          "repeated live worker tick performs zero kernel writes",
+          "device revocation invalidates the previous Control observation immediately",
+          "private service unreachable before VPN",
+          "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+          "encrypted enrollment key bound to NOVA server origin and device",
+          "owner approval checked before constructing local lab tunnel profile",
+          "WireGuard profile encrypted by Android Keystore",
+          "Android system VPN consent explicitly approved",
+          "full-tunnel and other-application profiles rejected",
+          "authenticated NOVA device API over native WireGuard and TLS 1.3",
+          "wrong HTTPS identity rejected inside tunnel",
+          "client surface does not mount administrative routes",
+          "firewall blocks live SSH/admin canaries and underlay ingress",
+          "revoked access credential refused even while tunnel remains UP",
+          "gateway peer removal prevents further private traffic",
+          "disconnect stops tunnel without public fallback",
+          "encrypted profile survives process restart",
+          "Android-generated enrollment key survives process restart",
+          "enrollment tampering fails closed without replacing key",
+          "missing wrapping key never regenerates enrollment identity",
+          "forgetting NOVA association erases local WireGuard enrollment",
+          "tampered encrypted profile fails closed",
+          "local profile revocation removes decryption material"
+        ],
+        "gateway_handshake": {
+          "observed": true,
+          "received_bytes": 8452,
+          "sent_bytes": 8700,
+          "firewall_dropped_packets": 6
+        },
+        "adb_reverse": false,
+        "tls": "TLS 1.3, exact certificate and hostname validation",
+        "gateway": "isolated Linux kernel WireGuard namespace",
+        "client": "official embedded Android GoBackend",
+        "consent": "actual system dialog, no appops bypass",
+        "private_profile_delivery": "Android-generated private key never leaves app; public key enrolled over pinned LAN HTTPS",
+        "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+        "physical_nas": false,
+        "physical_tv": false,
+        "production_remote_access_enabled": false,
+        "apk_sha256": "bdcc1ce952a3a3dcb25cc93700aecf9312b8c4ff5ddf32fdec5806a144841f4c",
+        "source_commit": "1ac5c352add9798b3887d354829d23d2e2794715"
+      }
+    },
+    {
+      "api": 35,
+      "report_sha256": "9991e953cbff3f8b3642d0c0df7aa3bb26672b0904f7d42ecced13ce90acb41e",
+      "report": {
+        "result": "passed",
+        "provider": "wireguard",
+        "api": 35,
+        "checks": [
+          "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+          "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+          "host has no route or TCP forwarder to the service overlay address",
+          "restricted adapter removes stale and broad peers before applying approved per-device host route",
+          "process restart restores durable per-device lease after confirmed peer cleanup",
+          "Control accepts only fresh authenticated kernel observations and never claims handshake",
+          "repeated live worker tick performs zero kernel writes",
+          "device revocation invalidates the previous Control observation immediately",
+          "private service unreachable before VPN",
+          "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+          "encrypted enrollment key bound to NOVA server origin and device",
+          "owner approval checked before constructing local lab tunnel profile",
+          "WireGuard profile encrypted by Android Keystore",
+          "Android system VPN consent explicitly approved",
+          "full-tunnel and other-application profiles rejected",
+          "authenticated NOVA device API over native WireGuard and TLS 1.3",
+          "wrong HTTPS identity rejected inside tunnel",
+          "client surface does not mount administrative routes",
+          "firewall blocks live SSH/admin canaries and underlay ingress",
+          "revoked access credential refused even while tunnel remains UP",
+          "gateway peer removal prevents further private traffic",
+          "disconnect stops tunnel without public fallback",
+          "encrypted profile survives process restart",
+          "Android-generated enrollment key survives process restart",
+          "enrollment tampering fails closed without replacing key",
+          "missing wrapping key never regenerates enrollment identity",
+          "forgetting NOVA association erases local WireGuard enrollment",
+          "tampered encrypted profile fails closed",
+          "local profile revocation removes decryption material"
+        ],
+        "gateway_handshake": {
+          "observed": true,
+          "received_bytes": 8340,
+          "sent_bytes": 8700,
+          "firewall_dropped_packets": 6
+        },
+        "adb_reverse": false,
+        "tls": "TLS 1.3, exact certificate and hostname validation",
+        "gateway": "isolated Linux kernel WireGuard namespace",
+        "client": "official embedded Android GoBackend",
+        "consent": "actual system dialog, no appops bypass",
+        "private_profile_delivery": "Android-generated private key never leaves app; public key enrolled over pinned LAN HTTPS",
+        "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+        "physical_nas": false,
+        "physical_tv": false,
+        "production_remote_access_enabled": false,
+        "apk_sha256": "269670a11e570e623f1a0bae15e7992c18e47bfb95cce9882b024a8547da19b0",
+        "source_commit": "1ac5c352add9798b3887d354829d23d2e2794715"
+      }
+    }
+  ],
+  "server_tests": [
+    {
+      "platform_artifact": "server-ubuntu-latest-3_13",
+      "passed": 369,
+      "skipped": 0,
+      "report_sha256": "92a4c3842848ed4b785561f4eb5b56115a8f9a26a8f9b2de6d67a5c3d0f33917"
+    },
+    {
+      "platform_artifact": "server-windows-latest-3_12",
+      "passed": 361,
+      "skipped": 8,
+      "report_sha256": "3a724d225af06e0f1138256a16ae9c1fd4503de0e4d96fd0bde8db2f7763274c"
+    }
+  ],
+  "local_windows_tests": {
+    "passed": 361,
+    "skipped_posix": 8
+  },
+  "scope": {
+    "standalone_linux_worker": true,
+    "authenticated_local_mailbox": true,
+    "durable_peer_addresses": true,
+    "fresh_control_observations": true,
+    "nas_network_provisioner": false,
+    "nas_installer_and_abrupt_failure_supervisor": false,
+    "authenticated_remote_parameters_to_tv": false,
+    "complete_remote_catalogue_player": false,
+    "native_tailscale_netbird_https_journeys": false,
+    "physical_nas": false,
+    "physical_tv": false,
+    "final_security_acceptances": "0/12"
+  }
+}

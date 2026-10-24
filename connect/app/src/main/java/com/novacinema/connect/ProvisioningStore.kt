@@ -87,4 +87,24 @@ class ProvisioningStore(private val context: Context) {
         prefs.edit().remove("sealed").commit()
         if (store.containsAlias(alias)) store.deleteEntry(alias)
     }
+
+    internal fun saveRemote(raw: String) {
+        require(raw.length in 1..8192)
+        val cipher=Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE,secretKey())
+        cipher.updateAAD((context.packageName+":remote-wireguard-v1").toByteArray(Charsets.UTF_8))
+        val sealed=cipher.iv+cipher.doFinal(raw.toByteArray(Charsets.UTF_8))
+        check(prefs.edit().putString("remote",Base64.encodeToString(sealed,Base64.NO_WRAP)).commit())
+    }
+    internal fun loadRemote():String? = try {
+        prefs.getString("remote",null)?.let { value ->
+            require(value.length<=16384)
+            val bytes=Base64.decode(value,Base64.NO_WRAP);require(bytes.size in 29..12288)
+            val cipher=Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.DECRYPT_MODE,secretKey(),GCMParameterSpec(128,bytes.copyOfRange(0,12)))
+            cipher.updateAAD((context.packageName+":remote-wireguard-v1").toByteArray(Charsets.UTF_8))
+            String(cipher.doFinal(bytes.copyOfRange(12,bytes.size)),Charsets.UTF_8)
+        }
+    } catch (_:Exception) { null }
+    internal fun clearRemote() { check(prefs.edit().remove("remote").commit()) }
 }
