@@ -96,6 +96,7 @@ def test_owner_approval_profile_and_disable_preserve_lan_and_role_boundaries(pre
         assert not state['gateway_verified'] and not state['remote_access_enabled']
         assert client.get(PROFILE).status_code==403
         assert client.get(remote+'/api/v1/device/me').status_code==403
+        assert client.get(remote+'/api/v1/device/me',headers={'Host':'192.168.50.20:8920'}).status_code==403
         assert client.get('/api/v1/device/me').status_code==200
         approved=decision(admin,state);assert approved.status_code==200
         approved=approved.json();assert approved['revision']==2 and approved['profile_approved']
@@ -107,6 +108,7 @@ def test_owner_approval_profile_and_disable_preserve_lan_and_role_boundaries(pre
         assert decision(admin,state).status_code==409
         disabled=decision(admin,approved,False).json();assert disabled['revision']==3 and not disabled['profile_approved']
         assert client.get(PROFILE).status_code==403 and client.get(remote+'/api/v1/device/me').status_code==403
+        assert client.get(remote+'/api/v1/device/me',headers={'Host':'192.168.50.20:8920'}).status_code==403
         assert client.get('/api/v1/device/me').status_code==200
         assert admin.get(ADMIN).json()['gateway_verified'] is False
 

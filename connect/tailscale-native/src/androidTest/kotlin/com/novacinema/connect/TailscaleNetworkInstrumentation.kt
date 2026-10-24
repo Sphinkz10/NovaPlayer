@@ -144,6 +144,8 @@ class TailscaleNetworkInstrumentation : Instrumentation() {
                     check(runCatching { identity() }.isFailure && runCatching { MediaClient(targetContext).page("a".repeat(32)) }.isFailure)
                     check(request(2).getBoolean("tun") && RemoteTailscaleRuntime.selected(targetContext))
                     checks.add("Control profile disable blocks NOVA identity and catalogue while the Tailscale tunnel remains selected and up")
+                    check(TailscaleHttps.hostStatus(profile.trust,base.tokens.access,java.net.URI(base.trust.origin).rawAuthority)==403)
+                    checks.add("forging the LAN HTTP Host over the real Tailscale TLS socket cannot bypass owner disable")
                     stage("profile-enable");waitFor { gate("profile-enabled") }
                     check(DeviceAssociationRuntime.get(targetContext).check().state==PairingState.ASSOCIATED)
                     checks.add("new owner approval restores the same certificate-bound Cinema session without changing its device identity")

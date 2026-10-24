@@ -525,8 +525,8 @@
     },
     {
       "path": "connect/tailscale-native/src/androidTest/kotlin/com/novacinema/connect/TailscaleNetworkInstrumentation.kt",
-      "bytes": 14531,
-      "sha256": "b53a699f0af764bcd5ed13c2d8b6ac90dbd9f82448ca28eeaf4305df1b66f269"
+      "bytes": 14791,
+      "sha256": "517451e00ea04da049a10e81389a43b026318c4b4a5b65b6645d39bbd9572478"
     },
     {
       "path": "connect/tailscale-native/src/debug/AndroidManifest.xml",
@@ -540,8 +540,8 @@
     },
     {
       "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleHttps.kt",
-      "bytes": 3926,
-      "sha256": "2b19d71c4fab9f1ac584122941d27870acf4cace4ee72775a44b1079a87591d6"
+      "bytes": 5493,
+      "sha256": "53b6a3df5004027d11b733bc5a22f4ee053fa065a9fc119d89ccb08868615ea4"
     },
     {
       "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscalePlatform.kt",
@@ -1000,8 +1000,8 @@
     },
     {
       "path": "server/nova_server/client_api.py",
-      "bytes": 11985,
-      "sha256": "9a6820dc99a254aee942c1d14bb3cea5fea7d240ef69c7bb57a81d26033c763a"
+      "bytes": 12571,
+      "sha256": "1aa4b7c62a8786f967b0dc6dfaee346346b4568afe5f0c923d3e6dca34b65f86"
     },
     {
       "path": "server/nova_server/connect.py",
@@ -1415,8 +1415,8 @@
     },
     {
       "path": "server/tests/test_tailscale_control.py",
-      "bytes": 13973,
-      "sha256": "9093f5592d928a3075b5630a7c75759805deca77aef5c2f2ca128d9151b2acac"
+      "bytes": 14191,
+      "sha256": "30fe7b9a477f484c152acdc0e16f9f8513e96fcad24409ed0ad023f3be3124d4"
     },
     {
       "path": "server/tests/test_tailscale_profile.py",

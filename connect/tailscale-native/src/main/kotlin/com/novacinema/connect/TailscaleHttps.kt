@@ -14,6 +14,31 @@ import javax.net.ssl.*
 
 /** Exact approved CGNAT gateway, PKIX + leaf pin + platform hostname verification + TLS 1.3. */
 internal object TailscaleHttps {
+    /** Real TLS socket with an intentionally different HTTP Host, for policy bypass tests. */
+    fun hostStatus(trust:com.novacinema.connect.core.ServerTrust,token:String,host:String):Int {
+        require(com.novacinema.connect.core.validToken(token) &&
+            com.novacinema.connect.core.ServerTrust.validOrigin("https://$host"))
+        val destination=java.net.URI(trust.origin)
+        val factory=com.novacinema.connect.core.PinnedServerTls.socketFactory(trust,Conscrypt.newProvider(),tls13=true)
+        Socket().use { raw ->
+            raw.connect(java.net.InetSocketAddress(destination.host,destination.port),2500)
+            (factory.createSocket(raw,destination.host,destination.port,true) as SSLSocket).use { socket ->
+                socket.soTimeout=2500
+                socket.sslParameters=socket.sslParameters.apply { endpointIdentificationAlgorithm="HTTPS" }
+                socket.startHandshake()
+                socket.outputStream.write(("GET /api/v1/device/me HTTP/1.1\r\nHost: $host\r\n"+
+                    "Authorization: Bearer $token\r\nConnection: close\r\n\r\n").toByteArray(Charsets.US_ASCII))
+                socket.outputStream.flush()
+                val line=StringBuilder()
+                repeat(128) {
+                    val value=socket.inputStream.read();check(value>=0)
+                    if(value==10)return line.toString().trim().split(' ')[1].toInt()
+                    line.append(value.toChar())
+                }
+                error("Response status line exceeded boundary")
+            }
+        }
+    }
     fun identity(gateway: String, port: Int, certificate: ByteArray, token: String): JSONObject {
         require(TailscaleRoutePolicy.isOverlayV4(gateway) && port in 1..65535)
         require(token.matches(Regex("[A-Za-z0-9_-]{40,128}")) && certificate.size in 128..8192)

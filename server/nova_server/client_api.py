@@ -91,9 +91,19 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False, wir
         raise ValueError('Remote providers require distinct gateway addresses')
     api = FastAPI(title='NOVA device laboratory', docs_url=None, redoc_url=None, openapi_url=None)
     api.state.devices = devices
+    def uses_tailscale(request):
+        if not tailscale_profiles:return False
+        gateway=urlsplit(tailscale_profiles.origin).hostname
+        destination=request.scope.get('server')
+        # Host is client-controlled. The actual accepted socket destination and
+        # CGNAT peer source also identify the transport in its dedicated namespace.
+        source=request.client.host if request.client else ''
+        try:overlay_source=ipaddress.IPv4Address(source) in ipaddress.IPv4Network('100.64.0.0/10')
+        except ValueError:overlay_source=False
+        return request.url.hostname==gateway or bool(destination and destination[0]==gateway) or overlay_source
     def media_transport_guard(request):
         if (tailscale_profiles and tailscale_profiles.approval and
-                request.url.hostname==urlsplit(tailscale_profiles.origin).hostname):
+                uses_tailscale(request)):
             tailscale_profiles.approval.authorization()
     api.state.media_transport_guard=media_transport_guard
     api.add_exception_handler(DeviceError, device_error)
@@ -110,7 +120,7 @@ def make_client_app(state_dir=None, origin=None, *, require_directory=False, wir
         if request.url.scheme != 'https':
             response = JSONResponse({'error': 'https_required'}, status_code=400)
         elif (tailscale_profiles and tailscale_profiles.approval and
-                request.url.hostname==urlsplit(tailscale_profiles.origin).hostname and
+                uses_tailscale(request) and
                 not tailscale_approved()):
             response=JSONResponse({'error':'tailscale_owner_approval_required'},status_code=403)
         else:
