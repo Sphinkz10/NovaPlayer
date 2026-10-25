@@ -42,7 +42,7 @@ def main():
         common = ['--identity', owner/'identity.json', '--keystore', owner/'nova-cinema.p12']
         released = args.output/'candidate.apk';upgraded = args.output/'upgrade.apk'
         release = run(['sign', '--input', args.unsigned, '--output', released, *common])
-        assert release['version_code'] == 13
+        assert release['version_code'] == 14
         checks.append('release package, SDK, TV launcher, four ABIs, no debug, v2 signature and 16K ZIP alignment')
         run(['verify', '--apk', released, '--identity', owner/'identity.json'])
         checks.append('independent verification against certificate pin')
@@ -63,7 +63,7 @@ def main():
              '--previous', released, *common], succeeds=False)
         checks.append('non-increasing versionCode rejected')
         upgrade = run(['sign', '--input', args.upgrade, '--output', upgraded, '--previous', released, *common])
-        assert upgrade['version_code'] == 14 and upgrade['certificate_sha256'] == release['certificate_sha256']
+        assert upgrade['version_code'] == 15 and upgrade['certificate_sha256'] == release['certificate_sha256']
         checks.append('next version signed by the same identity')
         altered = base/'altered.apk';data = bytearray(released.read_bytes());data[len(data)//2] ^= 1;altered.write_bytes(data)
         run(['verify', '--apk', altered, '--identity', owner/'identity.json'], succeeds=False)

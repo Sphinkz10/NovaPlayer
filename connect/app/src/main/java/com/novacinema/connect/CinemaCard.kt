@@ -18,6 +18,7 @@ internal class CinemaCard(context:Context,val item:CinemaItem):Button(context) {
     init {
         text=item.name;contentDescription=listOf(item.series,item.name,metadata()).filter { it.isNotBlank() }.joinToString(" · ")
         background=null;backgroundTintList=null;isAllCaps=false
+        defaultFocusHighlightEnabled=false
         isFocusable=true;isFocusableInTouchMode=false;setPadding(0,0,0,0)
         setWillNotDraw(false);clipToOutline=false
     }

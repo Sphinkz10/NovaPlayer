@@ -14,45 +14,73 @@ import android.widget.*
 
 /** One focus language for the remote, with no touch-only actions. */
 internal object TvUi {
-    val background = Color.rgb(10, 13, 19)
-    val surface = Color.rgb(24, 30, 40)
-    val ink = Color.rgb(238, 244, 252)
-    val muted = Color.rgb(170, 187, 207)
-    val accent = Color.rgb(109, 226, 216)
+    val background = Color.rgb(16, 17, 20)
+    val surface = Color.rgb(25, 27, 32)
+    val ink = Color.rgb(244, 243, 247)
+    val muted = Color.rgb(176, 178, 189)
+    val accent = Color.rgb(200, 181, 255)
+    data class Destination(val label:String,val tag:String,val selected:Boolean=false,val open:()->Unit)
+    fun railWidth(activity:Activity)=if(activity.resources.configuration.screenWidthDp<900)132 else 156
+    fun contentWidth(activity:Activity)=(activity.resources.configuration.screenWidthDp-railWidth(activity)-64).coerceAtLeast(240)
     fun dp(context: Context, value: Int) = (value * context.resources.displayMetrics.density).toInt()
     fun shape(color: Int, stroke: Int = Color.TRANSPARENT) = GradientDrawable().apply {
         setColor(color); cornerRadius = 14f; setStroke(3, stroke)
     }
     fun focusBackground() = StateListDrawable().apply {
         addState(intArrayOf(-android.R.attr.state_enabled), shape(Color.rgb(20, 27, 39)))
-        addState(intArrayOf(android.R.attr.state_focused), shape(Color.rgb(30, 64, 79), accent))
-        addState(intArrayOf(android.R.attr.state_pressed), shape(Color.rgb(30, 64, 79), accent))
+        addState(intArrayOf(android.R.attr.state_focused), shape(Color.rgb(55, 46, 73), accent))
+        addState(intArrayOf(android.R.attr.state_pressed), shape(Color.rgb(55, 46, 73), accent))
+        addState(intArrayOf(android.R.attr.state_selected), shape(Color.rgb(43, 37, 57)))
         addState(intArrayOf(), shape(surface))
     }
     /** TV chrome is deliberately quieter than the content. */
-    fun stage(activity: Activity, section: String): LinearLayout {
+    fun stage(activity: Activity, section: String, navigation:List<Destination> = emptyList()): LinearLayout {
         activity.window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         activity.window.navigationBarColor = background
         val root=LinearLayout(activity).apply {
             orientation=LinearLayout.VERTICAL
-            setPadding(dp(context,48),dp(context,24),dp(context,48),dp(context,32))
+            setPadding(dp(context,32),dp(context,20),dp(context,32),dp(context,24))
         }
         val scroll=ScrollView(activity).apply {
             background=GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                intArrayOf(Color.rgb(19,27,38),TvUi.background,TvUi.background))
+                intArrayOf(Color.rgb(27,25,34),TvUi.background,TvUi.background))
             isFillViewport=true;clipToPadding=false;isVerticalScrollBarEnabled=false;addView(root)
         }
-        activity.setContentView(scroll)
+        if(navigation.isEmpty())activity.setContentView(scroll) else {
+            val shell=LinearLayout(activity).apply { orientation=LinearLayout.HORIZONTAL;setBackgroundColor(TvUi.background) }
+            val rail=LinearLayout(activity).apply {
+                orientation=LinearLayout.VERTICAL
+                setPadding(dp(context,16),dp(context,26),dp(context,12),dp(context,24))
+                setBackgroundColor(Color.rgb(20,21,25))
+            }
+            label(rail,"NOVA",23f).apply { letterSpacing=0.16f;typeface=Typeface.create("sans-serif-medium",Typeface.NORMAL) }
+            label(rail,"C I N E M A",10f,accent).setPadding(0,0,0,dp(activity,30))
+            navigation.forEach { destination ->
+                action(rail,destination.label,destination.tag,destination.open).apply {
+                    textSize=16f
+                    layoutParams=LinearLayout.LayoutParams(-1,dp(activity,48)).apply { bottomMargin=dp(activity,8) }
+                    setPadding(dp(activity,12),0,dp(activity,8),0)
+                    isSelected=destination.selected
+                    if(destination.selected) {
+                        setTextColor(accent)
+                    }
+                }
+            }
+            val side=ScrollView(activity).apply { isVerticalScrollBarEnabled=false;isFillViewport=true;addView(rail) }
+            shell.addView(side,LinearLayout.LayoutParams(dp(activity,railWidth(activity)),-1))
+            shell.addView(scroll,LinearLayout.LayoutParams(0,-1,1f))
+            activity.setContentView(shell)
+        }
         val top=row(root).apply { setPadding(0,0,0,dp(context,22)) }
-        label(top,"NOVA",22f,ink).apply {
+        label(top,if(navigation.isEmpty())"NOVA" else section.uppercase(java.util.Locale.ROOT),if(navigation.isEmpty())22f else 12f,if(navigation.isEmpty())ink else accent).apply {
             letterSpacing=0.18f;typeface=Typeface.create("sans-serif-black",Typeface.NORMAL)
             layoutParams=LinearLayout.LayoutParams(-2,-2)
         }
-        label(top,"CINEMA",11f,accent).apply {
+        if(navigation.isEmpty())label(top,"CINEMA",11f,accent).apply {
             letterSpacing=0.25f
             layoutParams=LinearLayout.LayoutParams(-2,-2).apply { leftMargin=dp(context,12) }
         }
-        label(top,section,13f,muted).apply {
+        label(top,if(navigation.isEmpty())section else "O teu cinema, em casa",12f,muted).apply {
             gravity=Gravity.END
             layoutParams=LinearLayout.LayoutParams(0,-2,1f)
         }

@@ -30,7 +30,7 @@ jobs:
           bash gradlew :app:assembleDebug :app:assembleRelease :app:lintRelease --no-daemon --console plain
           mkdir -p test-results/distribution
           cp app/build/outputs/apk/release/app-release-unsigned.apk test-results/distribution/unsigned.apk
-          bash gradlew :app:assembleRelease -PnovaVersionCode=14 --no-daemon --console plain
+          bash gradlew :app:assembleRelease -PnovaVersionCode=15 --no-daemon --console plain
           cp app/build/outputs/apk/release/app-release-unsigned.apk test-results/distribution/unsigned-upgrade.apk
       - name: SDK signing gate with temporary identities
         run: >-

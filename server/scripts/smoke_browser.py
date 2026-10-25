@@ -80,7 +80,7 @@ def run(channel=None, output=None):
                         # Export an inert, offline copy of this real test UI, without
                         # scripts, session token, form values or network operations.
                         output.mkdir(parents=True,exist_ok=True)
-                        page.wait_for_function("document.querySelector('#directoryStatus').textContent !== 'A consultar configuração…'")
+                        expect(page.locator('#directoryStatus')).not_to_have_text('A consultar configuração…')
                         shell=page.locator('#ownerPanel').evaluate('''node=>{
                             const copy=node.cloneNode(true);
                             copy.querySelectorAll('input,select,button').forEach(item=>{item.disabled=true;});

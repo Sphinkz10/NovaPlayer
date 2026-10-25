@@ -17,19 +17,30 @@ class MainActivity : Activity() {
     private lateinit var primary: Button
     @Volatile private var generation = 0
     private var lastFocus:String?=null
+    private var libraryTarget:Class<out Activity> = DirectorySetupActivity::class.java
+    private var firstLibrary:Pair<String,String>?=null
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        home=CinemaHomeView(this,{ open(DirectoryActivity::class.java) },{ open(ConnectionActivity::class.java) },
+        home=CinemaHomeView(this,{ openLibrary() },{ openLibrary(true) },{ open(ConnectionActivity::class.java) },
             { open(DevicePairingActivity::class.java) },{ open(DirectorySetupActivity::class.java) })
         status=home.status;primary=home.primary
         primary.isFocusableInTouchMode=true
         primary.requestFocus()
     }
     private fun open(target: Class<out Activity>) { startActivity(Intent(this, target)) }
+    private fun openLibrary(search:Boolean=false) {
+        val destination=Intent(this,libraryTarget)
+        if(search && libraryTarget==CinemaActivity::class.java) {
+            destination.putExtra("openSearch",true)
+            firstLibrary?.let { destination.putExtra("library",it.first).putExtra("libraryName",it.second) }
+        }
+        startActivity(destination)
+    }
     override fun onStart() {
         super.onStart()
         home.resetPreview()
+        firstLibrary=null
         val current = ++generation
         io.execute {
             val saved = runCatching { DeviceSessionStore(applicationContext).loadBase() }
@@ -38,6 +49,7 @@ class MainActivity : Activity() {
             runOnUiThread {
                 if (isDestroyed || current != generation) return@runOnUiThread
                 val associated = saved.getOrNull() != null
+                libraryTarget=when { associated -> CinemaActivity::class.java;configured -> DirectoryActivity::class.java;else -> DirectorySetupActivity::class.java }
                 status.text = when {
                     saved.isFailure -> "Não foi possível ler a associação. Abre Conta e associação para recuperar."
                     associated -> "$network · A verificar a tua biblioteca…"
@@ -65,6 +77,7 @@ class MainActivity : Activity() {
                 if(isDestroyed || generation!=current)return@runOnUiThread
                 result.fold({ (library,items,saved) ->
                     status.text="Conta e servidor verificados · ${TvUi.network(this)}"
+                    firstLibrary=library
                     home.preview(library?.first.orEmpty(),items,{ item ->
                         startActivity(Intent(this,CinemaActivity::class.java).putExtra("library",library?.first)
                             .putExtra("libraryName",library?.second).putExtra("selected",item.id))
@@ -85,6 +98,6 @@ class MainActivity : Activity() {
             }
         }
     }
-    override fun onStop() { lastFocus=home.focusedItem();generation++;images.queue.clear();home.resetPreview();super.onStop() }
+    override fun onStop() { lastFocus=home.focusedItem();firstLibrary=null;generation++;images.queue.clear();home.resetPreview();super.onStop() }
     override fun onDestroy() { io.shutdown();images.shutdownNow();super.onDestroy() }
 }

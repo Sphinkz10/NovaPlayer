@@ -16,7 +16,7 @@
     {
       "path": ".github/workflows/android-distribution.yml",
       "bytes": 2309,
-      "sha256": "dd1c51e32fe4b4eb983b6a540addc5a56496d1ab67dc16a0960bb98bcc141ddf"
+      "sha256": "2881202af9099bf8dffe01b87ab7470aae2ab67167a756746e776277ed30e2f4"
     },
     {
       "path": ".github/workflows/device-pairing.yml",
@@ -106,7 +106,7 @@
     {
       "path": "connect/app/build.gradle.kts",
       "bytes": 5849,
-      "sha256": "d4c3fd249822dba6c9248602a1560a9cf89805475f66b9cdbe23d993fd8c61f9"
+      "sha256": "a6c824846664f14697e842d69877a919468b97474e0d8975a1fb6a5215dde6a0"
     },
     {
       "path": "connect/app/gradle.lockfile",
@@ -135,8 +135,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt",
-      "bytes": 8902,
-      "sha256": "4c1d371cb5db56f50eb4f847a9b0bd45a8fe2a41fc5912ae0d6f90f92fb52f2d"
+      "bytes": 10804,
+      "sha256": "08485890d11a077b43fc57b8c63bb8056f2aad6c3b1f7cd63b699298d8a6ba62"
     },
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
@@ -170,8 +170,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaActivity.kt",
-      "bytes": 12284,
-      "sha256": "b126097ac8e436da9870196b117b8b845789b64aaa0128ecc088fe5a51bab1c0"
+      "bytes": 13281,
+      "sha256": "4221e48f38cbc9b9251ff2c13a4ab5510635ab2c0ba89042fc53aa73bc3a64bd"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaArtwork.kt",
@@ -180,13 +180,13 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaCard.kt",
-      "bytes": 3490,
-      "sha256": "4124085f6a0273e0d2e3f0ab934565eeb1358257b528952827794612d2ee8631"
+      "bytes": 3533,
+      "sha256": "a84bf73f4280aec631f808714492677e4ccdb60c8b258032589663a7b885b6fd"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaHomeView.kt",
-      "bytes": 6096,
-      "sha256": "c1245d85bab78fe58e5935d575b84b1e1226791791978f2003588f11851d13ee"
+      "bytes": 7186,
+      "sha256": "c59362187ab29551e5d2ac5103767a49698d174d68101422f1697c5a0ad8ce05"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ConnectionActivity.kt",
@@ -240,8 +240,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MainActivity.kt",
-      "bytes": 4838,
-      "sha256": "de5ae8b4fa055662d8ed1175155708b532d27a1d758854bdd3db43b9d8f536a5"
+      "bytes": 5613,
+      "sha256": "14b3c34a218bb87fd2fd38208c62c3a4742b94262eb60501d7b078027a9e38bf"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",
@@ -275,8 +275,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/TvUi.kt",
-      "bytes": 6670,
-      "sha256": "6cd938e4567e340ffe26b93f56aab95e6cc781bc8d4a67f71ee688dc32befde3"
+      "bytes": 8875,
+      "sha256": "50941ce6c0226a697fa56e8629197e39ac2852ee6ca88e81d3497cf4b7f35aec"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/WireGuardBridge.kt",
@@ -476,7 +476,7 @@
     {
       "path": "connect/scripts/check_distribution.py",
       "bytes": 5132,
-      "sha256": "39a41dadb6ece51478728ad12ac5b63db5286ea383d5f5c3e46e82db5a2a83f7"
+      "sha256": "7dc605a79e84d3b554f1962cacf232fe046960e068225e37f763e1c8b7d1ad2f"
     },
     {
       "path": "connect/scripts/check_source_hygiene.py",
@@ -501,7 +501,7 @@
     {
       "path": "connect/scripts/smoke_distribution_android.py",
       "bytes": 5202,
-      "sha256": "c7757c2ae91f34f4882280294a9ace718b6bf0663a9db13a15fa04710b495e74"
+      "sha256": "2cef84830b1507827e4545f09c90a01a5c18a45becc72e6fd87c662c16360891"
     },
     {
       "path": "connect/scripts/smoke_lan_android.py",
@@ -787,6 +787,11 @@
       "path": "docs/NOVA_CINEMA_0_13_RESULTADOS.json",
       "bytes": 42573,
       "sha256": "6e657ac3d62c03b3f483557c69c2c09bdfeae56f6d6e8c97f8dcac5962bf6e70"
+    },
+    {
+      "path": "docs/NOVA_CINEMA_0_14.md",
+      "bytes": 2136,
+      "sha256": "ca24670cb05e6fc6d3ac79957f66d642582bbe0d5ab9ecb111dc110fe4d399d1"
     },
     {
       "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
@@ -1255,8 +1260,8 @@
     },
     {
       "path": "server/scripts/smoke_browser.py",
-      "bytes": 15697,
-      "sha256": "9e786c3181ec3412482ea3e2fed3011d38d5182cc915dfef9295c02c6bb04c41"
+      "bytes": 15671,
+      "sha256": "d4360e447d52a13cb48cc4ab65b0a5899e6d2608e3f78252d74a342a32027c89"
     },
     {
       "path": "server/scripts/smoke_compose.py",

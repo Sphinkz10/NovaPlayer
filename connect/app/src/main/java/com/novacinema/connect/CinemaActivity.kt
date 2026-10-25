@@ -24,11 +24,13 @@ class CinemaActivity:Activity() {
     private var selected:String?=null
     private var offset=0
     private var focusedItem:String?=null
+    private var focusSearch=false
     override fun onCreate(state:Bundle?) {
         super.onCreate(state);window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         library=state?.getString("library");libraryName=state?.getString("libraryName").orEmpty()
         search=state?.getString("search").orEmpty();kind=state?.getString("kind") ?: "all"
         selected=state?.getString("selected");offset=state?.getInt("offset") ?: 0;focusedItem=state?.getString("focus")
+        focusSearch=state?.getBoolean("focusSearch") ?: intent.getBooleanExtra("openSearch",false)
         if(state==null) {
             library=intent.getStringExtra("library")?.takeIf { mediaId.matches(it) }
             libraryName=intent.getStringExtra("libraryName").orEmpty().take(200)
@@ -44,9 +46,20 @@ class CinemaActivity:Activity() {
         out.putString("library",library);out.putString("libraryName",libraryName)
         out.putString("search",search);out.putString("kind",kind);out.putString("selected",selected)
         out.putInt("offset",offset);out.putString("focus",focusedItem);super.onSaveInstanceState(out)
+        out.putBoolean("focusSearch",focusSearch)
     }
+    private fun chrome(section:String):LinearLayout=TvUi.stage(this,section,listOf(
+        TvUi.Destination("Início","cinema-home") {
+            startActivity(Intent(this,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP));finish()
+        },
+        TvUi.Destination("Bibliotecas","cinema-nav-libraries",!focusSearch) { libraries() },
+        TvUi.Destination("Pesquisar","cinema-nav-search",focusSearch) { focusSearch=true
+            library?.let { selected=null;page(it,0) } ?: libraries() },
+        TvUi.Destination("Conta","cinema-account") { startActivity(Intent(this,DevicePairingActivity::class.java)) },
+        TvUi.Destination("Ligação","cinema-connection") { startActivity(Intent(this,ConnectionActivity::class.java)) },
+        TvUi.Destination("Configurar","cinema-setup") { startActivity(Intent(this,DirectorySetupActivity::class.java)) }))
     private fun screen(title:String,subtitle:String?=null) {
-        root=TvUi.stage(this,"Biblioteca");TvUi.heading(root,title)
+        root=chrome("Biblioteca");TvUi.heading(root,title)
         subtitle?.let { TvUi.label(root,it,14f,TvUi.muted) }
     }
     private fun label(value:String,size:Float=18f)=TvUi.label(root,value,size)
@@ -84,10 +97,6 @@ class CinemaActivity:Activity() {
             }
             if(values.size%2==1)row.addView(android.view.View(this),LinearLayout.LayoutParams(0,1,1f))
             if(values.isEmpty())label("Ainda não tens bibliotecas atribuídas. O proprietário pode partilhá-las no NOVA Control.")
-            val navigation=TvUi.row(root)
-            TvUi.action(navigation,"Conta") { startActivity(Intent(this,DevicePairingActivity::class.java)) }
-            TvUi.action(navigation,"Ligação") { startActivity(Intent(this,ConnectionActivity::class.java)) }
-            TvUi.action(navigation,"← Início") { finish() }
         }
     }
     private fun page(lib:String,start:Int) {
@@ -107,7 +116,7 @@ class CinemaActivity:Activity() {
             query.imeOptions=android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
             query.setOnEditorActionListener { _,action,_ -> if(action==android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) { submit();true } else false }
             TvUi.action(searchRow,"Pesquisar","cinema-search-submit") { submit() }
-            val available=(resources.configuration.screenWidthDp-96).coerceAtLeast(240)
+            val available=TvUi.contentWidth(this)
             val columns=(available/152).coerceIn(2,7)
             val cardHeight=((available-(columns-1)*16)/columns*1.45+54).toInt()
             var preferred:Button?=null;var first:Button?=null
@@ -137,7 +146,8 @@ class CinemaActivity:Activity() {
             data.next?.let { TvUi.action(navigation,"Seguinte →","cinema-next") { focusedItem=null;page(lib,it) } }
             TvUi.action(navigation,"← Bibliotecas","cinema-libraries") { libraries() }
             TvUi.label(navigation,"Página ${start/24+1}",12f,TvUi.muted)
-            (preferred ?: first ?: query).requestFocus()
+            (if(focusSearch)query else preferred ?: first ?: query).requestFocus()
+            focusSearch=false
         }
     }
     private fun artwork(view:android.view.View,drawing:CinemaArtwork,lib:String,item:CinemaItem,saved:SavedDevice) {
@@ -153,17 +163,19 @@ class CinemaActivity:Activity() {
     private fun detail(lib:String,id:String) {
         selected=id
         work({val client=MediaClient(this);client.detail(lib,id) to client.session()}) { (item,saved) ->
-            root=TvUi.stage(this,"Detalhe")
+            root=chrome("Detalhe")
             val metadata=listOfNotNull(item.year.takeIf { it>0 }?.toString(),
                 if(item.type=="Episode")"Temporada ${item.season} · Episódio ${item.episode}" else null,
                 if(item.runtime>0)TvUi.time(item.runtime/10000) else null,if(item.played)"Visto" else null).joinToString(" · ")
             val resume=if(item.played)0 else item.position/10000
             fun play(position:Long) { startActivity(Intent(this,PlayerActivity::class.java)
                 .putExtra("library",lib).putExtra("item",id).putExtra("position",position)) }
-            val row=TvUi.row(root).apply { gravity=Gravity.TOP;if(resources.configuration.screenWidthDp<540)orientation=LinearLayout.VERTICAL }
+            TvUi.label(root,libraryName.ifBlank { "A tua biblioteca" },13f,TvUi.muted).setPadding(0,0,0,TvUi.dp(this,20))
+            val row=TvUi.row(root).apply { gravity=Gravity.TOP;if(TvUi.contentWidth(this@CinemaActivity)<440)orientation=LinearLayout.VERTICAL }
             val drawing=CinemaArtwork(item.name)
             val poster=ImageView(this).apply { setImageDrawable(drawing);scaleType=ImageView.ScaleType.FIT_XY;importantForAccessibility=android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO }
-            row.addView(poster,LinearLayout.LayoutParams(TvUi.dp(this,190),TvUi.dp(this,282)))
+            val posterWidth=if(TvUi.contentWidth(this)<650)132 else 210
+            row.addView(poster,LinearLayout.LayoutParams(TvUi.dp(this,posterWidth),TvUi.dp(this,(posterWidth*1.48).toInt())))
             artwork(poster,drawing,lib,item,saved)
             val summary=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
             row.addView(summary,if(row.orientation==LinearLayout.HORIZONTAL)LinearLayout.LayoutParams(0,-2,1f).apply { setMargins(TvUi.dp(this@CinemaActivity,30),0,0,0) } else LinearLayout.LayoutParams(-1,-2))

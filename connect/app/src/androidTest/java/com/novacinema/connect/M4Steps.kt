@@ -57,7 +57,7 @@ class M4Steps(private val runner:Instrumentation) {
         val catalogueMonitor=runner.addMonitor(CinemaActivity::class.java.name,null,false)
         runner.setInTouchMode(false)
         waitUntil { var ready=false;main { ready=views(home.window.decorView).filterIsInstance<Button>()
-            .any { it.tag=="home-primary" && it.text.toString()=="Abrir biblioteca" } };ready }
+            .any { it.tag=="home-library" } };ready }
         // The home shelf is actual account data. Open its title with the remote,
         // then use real Back to return to the catalogue, before the library path.
         waitUntil { var ready=false;main { ready=views(home.window.decorView)
@@ -74,9 +74,34 @@ class M4Steps(private val runner:Instrumentation) {
         // stale account's shelf or pin a previous network session in the UI.
         waitUntil { var ready=false;main { ready=home.hasWindowFocus() && views(home.window.decorView)
             .any { it.tag=="home-item-$item" && it.hasFocus() } };ready }
+        stage("home-feature-action")
+        val featureActionMonitor=runner.addMonitor(CinemaActivity::class.java.name,null,false)
+        click(home,"home-primary")
+        val featureAction=runner.waitForMonitorWithTimeout(featureActionMonitor,30000) ?: error("Hero action did not open title")
+        waitUntil { var ready=false;main { ready=views(featureAction.window.decorView).any { it.tag=="cinema-play" } };ready }
+        main { featureAction.finish() }
+        waitUntil { var ready=false;main { ready=home.hasWindowFocus() && views(home.window.decorView)
+            .any { it.tag=="home-content-loaded-$library" } };ready }
+        // Move through the real rail with directional keys, then search. Focus
+        // must enter the field rather than silently landing on the first film.
+        stage("rail-search")
+        main { check(views(home.window.decorView).first { it.tag=="home-start" }.requestFocus()) }
+        runner.sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_DOWN)
+        main { check(home.window.decorView.findFocus()?.tag=="home-library") }
+        runner.sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_DOWN)
+        main { check(home.window.decorView.findFocus()?.tag=="home-search") }
+        val searchMonitor=runner.addMonitor(CinemaActivity::class.java.name,null,false)
+        runner.sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_CENTER)
+        val searchActivity=runner.waitForMonitorWithTimeout(searchMonitor,30000) ?: error("Rail search did not open")
+        waitUntil { var ready=false;main { ready=searchActivity.hasWindowFocus() &&
+            searchActivity.window.decorView.findFocus()?.tag=="cinema-search" };ready }
+        if(captureScreens)LabScreenshots(runner).capture(searchActivity,"tv-search")
+        main { searchActivity.finish() }
+        waitUntil { var ready=false;main { ready=home.hasWindowFocus() && views(home.window.decorView)
+            .any { it.tag=="home-content-loaded-$library" } };ready }
         // waitForMonitorWithTimeout consumes/removes its monitor after one hit.
         val libraryMonitor=runner.addMonitor(CinemaActivity::class.java.name,null,false)
-        click(home,"home-primary")
+        click(home,"home-library")
         val cinema=runner.waitForMonitorWithTimeout(libraryMonitor,30000) ?: error("Home did not open catalogue")
         runner.removeMonitor(libraryMonitor)
         var playback:PlayerActivity?=null
