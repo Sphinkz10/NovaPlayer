@@ -4,16 +4,38 @@ let connectDrafts = {};
 let libraryChoices=[];
 const el=id=>document.getElementById(id);
 const write=(target,message)=>{target.textContent=message};
+const controlPages=new Set(['overview','libraries','people','directory','connections']);
+function showControlPage(page,focus=false){
+ if(!controlPages.has(page))page='overview';
+ document.querySelectorAll('.control-view').forEach(view=>{view.hidden=view.id!=='view-'+page;});
+ document.querySelectorAll('.sidebar nav [data-page]').forEach(link=>{
+  if(link.dataset.page===page)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');
+ });
+ document.title=(el('heading-'+page)?.textContent||'NOVA')+' · NOVA Control';
+ if(focus&&token){el('heading-'+page).focus();window.scrollTo({top:0,behavior:'instant'});}
+}
+function syncSession(){
+ el('ownerPanel').hidden=!token;el('publicPanel').hidden=Boolean(token);
+ if(token)showControlPage(location.hash.slice(1),true);else{document.title='Entrar · NOVA Control';el('login').elements.username.focus();}
+}
+document.querySelectorAll('[data-page]').forEach(link=>link.addEventListener('click',event=>{
+ event.preventDefault();if(!token)return;
+ const page=link.dataset.page;
+ if(location.hash!=='#'+page)history.pushState(null,'','#'+page);
+ showControlPage(page,true);
+}));
+window.addEventListener('popstate',()=>{if(token)showControlPage(location.hash.slice(1),true);});
+window.addEventListener('hashchange',()=>{if(token)showControlPage(location.hash.slice(1),true);});
 async function status(){
  try {const r=await fetch('/api/v1/status',{cache:'no-store'});const j=await r.json();
  el('bootstrapPanel').hidden=!j.owner_setup_required;
- write(el('publicStatus'),j.owner_setup_required?'Cria o proprietário para iniciar a configuração.':'NOVA Core ativo · Proprietário configurado · Acesso remoto desativado.');}
+ write(el('publicStatus'),j.owner_setup_required?'Cria o proprietário para iniciar a configuração.':'NOVA Core ativo · Proprietário configurado.');}
  catch {write(el('publicStatus'),'Serviço temporariamente indisponível.');}
 }
 async function loadOverview(){
  if(!token)return;
  const r=await fetch('/api/v1/admin/overview',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
- if(r.status===401){token=null;el('ownerPanel').hidden=true;write(el('loginError'),'Sessão expirada.');return;}
+ if(r.status===401){token=null;syncSession();write(el('loginError'),'Sessão expirada.');return;}
  if(!r.ok){write(el('overview'),'Falha ao consultar diagnóstico.');return;}
  const j=await r.json();const d=document.createElement('dl');
  const entries=[['NOVA Core',j.nova_core],['Jellyfin',j.jellyfin.state],['Info Jellyfin',j.jellyfin.reason||j.jellyfin.version||'—'],['Diretórios configurados',j.library_roots.map(x=>x.container_path+' (leitura e permissões por verificar)').join(' · ')],['NOVA Connect',j.connect.state],['NOVA Directory',j.directory.state]];
@@ -162,7 +184,7 @@ el('connectDraft').addEventListener('submit',async ev=>{
  if(data.provider==='wireguard')data.endpoint_port=Number(data.endpoint_port);
  try{
   const response=await fetch('/api/v1/admin/connect/draft',{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(data)});
-  if(response.status===401){token=null;el('ownerPanel').hidden=true;write(el('loginError'),'Sessão expirada.');return;}
+  if(response.status===401){token=null;syncSession();write(el('loginError'),'Sessão expirada.');return;}
   if(!response.ok){write(el('connectMessage'),'Configuração inválida. Usa um gateway HTTPS com IPv4 privado e verifica os campos do fornecedor.');return;}
   connectDrafts[data.provider]=data;write(el('connectMessage'),'Rascunho guardado. A ligação remota continua desativada.');
  }catch{write(el('connectMessage'),'Não foi possível guardar o rascunho.');}
@@ -171,10 +193,10 @@ el('login').addEventListener('submit',async ev=>{
  ev.preventDefault();const form=ev.currentTarget;write(el('loginError'),'');const fd=new FormData(form);
  try{const r=await fetch('/api/v1/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:fd.get('username'),password:fd.get('password')})});
  if(!r.ok){write(el('loginError'),r.status===429?'Muitas tentativas. Aguarda 15 minutos.':'Login inválido.');return;}
- const j=await r.json();token=j.access_token;form.reset();el('ownerPanel').hidden=false;await loadOverview();}
+ const j=await r.json();token=j.access_token;form.reset();syncSession();await loadOverview();}
  catch{write(el('loginError'),'Não foi possível ligar ao servidor.');}
 });
-el('logout').addEventListener('click',async()=>{if(token){await fetch('/api/v1/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}}).catch(()=>{});}token=null;el('ownerPanel').hidden=true;});
+el('logout').addEventListener('click',async()=>{const session=token;token=null;syncSession();el('login').elements.username.focus();if(session){await fetch('/api/v1/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+session}}).catch(()=>{});}});
 el('refresh').addEventListener('click',loadOverview);status();
 
 // Explicit review before approval. Client labels are untrusted text, never HTML.

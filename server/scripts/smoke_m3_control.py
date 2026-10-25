@@ -32,6 +32,8 @@ def run(output=None,channel=None):
                     page.locator('#login [name=username]').fill(lab.owner['username'])
                     page.locator('#login [name=password]').fill(lab.owner['password'])
                     page.locator('#login button').click();expect(page.locator('#ownerPanel')).to_be_visible()
+                    def navigate(view):page.locator(f'.sidebar nav [data-page={view}]').click()
+                    navigate('people')
                     def inspect():
                         page.locator('[name=user_code]').fill(grant['user_code'])
                         page.locator('#deviceLookup button').click()
@@ -57,7 +59,7 @@ def run(output=None,channel=None):
                     public=base64.b64encode(X25519PrivateKey.generate().public_key().public_bytes_raw()).decode()
                     enrolled=lab.tv.post('/api/v1/device/wireguard',headers=auth,json={'public_key':public})
                     assert enrolled.status_code==200
-                    page.locator('#wireguardRefresh').click()
+                    navigate('connections');page.locator('#wireguardRefresh').click()
                     expect(page.locator('#wireguardEnrollments')).to_contain_text(enrolled.json()['fingerprint'])
                     expect(page.locator('#wireguardEnrollments')).to_contain_text('A aguardar aprovação')
                     page.locator('#wireguardEnrollments').get_by_role('button',name='Aprovar esta chave').click()
@@ -65,21 +67,22 @@ def run(output=None,channel=None):
                     assert lab.tv.get('/api/v1/device/wireguard',headers=auth).json()['gateway_state']=='not_verified'
                     if output:
                         Path(output).mkdir(parents=True,exist_ok=True)
-                        page.locator('#overview').scroll_into_view_if_needed()
+                        navigate('overview');page.locator('#overview').scroll_into_view_if_needed()
                         page.screenshot(path=str(Path(output)/'control-overview.png'))
-                        page.locator('#wireguardEnrollments').scroll_into_view_if_needed()
+                        navigate('connections');page.locator('#wireguardEnrollments').scroll_into_view_if_needed()
                         page.screenshot(path=str(Path(output)/'control-wireguard-approved.png'))
-                    page.locator('#memberList button').click()
+                    navigate('people');page.locator('#memberList button').click()
                     expect(page.locator('#memberMessage')).to_contain_text('Conta revogada')
                     assert lab.tv.get('/api/v1/device/libraries',headers=auth).status_code==401
-                    page.locator('#wireguardRefresh').click()
+                    navigate('connections');page.locator('#wireguardRefresh').click()
                     expect(page.locator('#wireguardEnrollments')).to_contain_text('Revogado')
                     expect(page.locator('#wireguardEnrollments button')).to_have_count(0)
                     assert page.evaluate('localStorage.length')==0 and page.evaluate('sessionStorage.length')==0
                     assert not page.context.cookies() and not errors
                     if output:
                         Path(output).mkdir(parents=True,exist_ok=True)
-                        page.locator('#memberList').screenshot(path=str(Path(output)/'members.png'))
+                        navigate('people');page.locator('#memberList').screenshot(path=str(Path(output)/'members.png'))
+                        navigate('connections')
                         page.locator('#wireguardEnrollments').screenshot(path=str(Path(output)/'wireguard-enrollment.png'))
                 finally:browser.close()
             report={'result':'passed','checks':['signed_account_review','approval_blocked_until_grant',

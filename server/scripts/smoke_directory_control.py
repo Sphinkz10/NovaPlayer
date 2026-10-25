@@ -60,6 +60,7 @@ def run(output=None, channel=None):
                         page.locator('#login [name=password]').fill(owner_password)
                         page.locator('#login button').click()
                         expect(page.locator('#ownerPanel')).to_be_visible()
+                        page.locator('.sidebar nav [data-page=directory]').click()
                         expect(page.locator('#directoryActions')).to_be_visible()
                     def directory_password(username='owner',value=None):
                         page.locator('[name=directory_username]').fill(username)

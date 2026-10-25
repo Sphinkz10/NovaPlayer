@@ -52,6 +52,7 @@ def run(output=None,channel=None):
                                               and response.request.method=='GET',timeout=30000) as initial:
                         page.locator('#login button').click()
                     assert initial.value.status==200
+                    page.locator('.sidebar nav [data-page=connections]').click()
                     expect(page.locator('#tailscaleStatus')).to_contain_text('Perfil preparado')
                     expect(page.locator('#tailscalePolicy')).to_contain_text(profile['certificate_sha256'])
                     expect(page.locator('#tailscalePolicy')).to_contain_text('https://100.64.0.1:8920')
@@ -73,6 +74,7 @@ def run(output=None,channel=None):
                                               and response.request.method=='GET',timeout=30000) as restored:
                         page.locator('#login button').click()
                     assert restored.value.status==200
+                    page.locator('.sidebar nav [data-page=connections]').click()
                     expect(page.locator('#tailscaleStatus')).to_contain_text('Perfil aprovado')
                     page.locator('#tailscaleDisable').click()
                     expect(page.locator('#tailscaleStatus')).to_contain_text('Perfil preparado')

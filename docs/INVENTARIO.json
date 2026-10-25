@@ -65,8 +65,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3539,
-      "sha256": "3a839c53f59a1310d3550ff20037c7895238ca736115fab64d98e5ea12486ee5"
+      "bytes": 3810,
+      "sha256": "ebaf2acf8ec1135ce8941004b056db47427f0fa2bd62f1a7adc0c310a71d6655"
     },
     {
       "path": "archives/NOVA_Connect_POC_v0.3.zip",
@@ -609,6 +609,11 @@
       "sha256": "039861c968ee6e5cec65e6521e5809569447c61870916b0375e8ab3d7f9554ea"
     },
     {
+      "path": "docs/CONTROL_VISUAL_NAVEGACAO.md",
+      "bytes": 1993,
+      "sha256": "44c5c563f3d58187e49500fb4512044ce54358f6b16dab0ad70574b9de6ae734"
+    },
+    {
       "path": "docs/ESTADO_REAL.md",
       "bytes": 2963,
       "sha256": "e1fea4ddd12ab5ea366a7e5e3f657392a5b8e2452d0edcd7df53fa7013f39f43"
@@ -1115,18 +1120,18 @@
     },
     {
       "path": "server/nova_server/static/control.css",
-      "bytes": 2451,
-      "sha256": "e4eb9dc0d381ea5ba0ab15713ac8c86c0b2a439c81a6e9783d6dbb7611062128"
+      "bytes": 9320,
+      "sha256": "c3b61dd327daab7c945079897a751e6985e236fbc3bdb0df751140db9403fcd6"
     },
     {
       "path": "server/nova_server/static/control.js",
-      "bytes": 32776,
-      "sha256": "22680a0cdc155008f84a1b89380992ffd8177e0f16a9a79aee26c197d08419f5"
+      "bytes": 34092,
+      "sha256": "cb72e60f9bd2e5450f3b0ef8ce3f1311981ad65527d1136d0f177b9a3ec8df8a"
     },
     {
       "path": "server/nova_server/static/index.html",
-      "bytes": 10726,
-      "sha256": "479e85c0e5d96a804c2ac745b966615e9316742a45099b135e30dc99a3045ead"
+      "bytes": 14683,
+      "sha256": "f4833810d5fd18d6c91b25e712bd9f65fa2a62f4adc296dd8d66a485ae1bd101"
     },
     {
       "path": "server/nova_server/storage.py",
@@ -1250,8 +1255,8 @@
     },
     {
       "path": "server/scripts/smoke_browser.py",
-      "bytes": 10576,
-      "sha256": "b5db8b254c53e99038720e64cf564549a7281590bb6a5057d86badcfd3645d87"
+      "bytes": 15697,
+      "sha256": "9e786c3181ec3412482ea3e2fed3011d38d5182cc915dfef9295c02c6bb04c41"
     },
     {
       "path": "server/scripts/smoke_compose.py",
@@ -1265,8 +1270,8 @@
     },
     {
       "path": "server/scripts/smoke_directory_control.py",
-      "bytes": 9261,
-      "sha256": "b1b0b707e257600e084cd84636fe141d7a4b2672eb003f85087a577365f076dc"
+      "bytes": 9344,
+      "sha256": "c47a8bf175e898ccfd9a6336f1a3800f6ecd8f4d2619f742b2aaed3a25d8d722"
     },
     {
       "path": "server/scripts/smoke_directory_tls.py",
@@ -1295,8 +1300,8 @@
     },
     {
       "path": "server/scripts/smoke_m3_control.py",
-      "bytes": 6988,
-      "sha256": "95371d5a91dc869e759dcc1717329c6ea43993e0dd6fb6a9fb7b3c179ffd2b1b"
+      "bytes": 7302,
+      "sha256": "55131b074c0ce52db5b4901b21e3d45e10414f5c40d2625b4281dd7fed0eb798"
     },
     {
       "path": "server/scripts/smoke_m3_server.py",
@@ -1305,8 +1310,8 @@
     },
     {
       "path": "server/scripts/smoke_tailscale_control.py",
-      "bytes": 7098,
-      "sha256": "36e4c2d1383ae266b8428ee853ede0b7c1ced1b53b09ca036c955b6f666aab6b"
+      "bytes": 7260,
+      "sha256": "940c159f0a0e896f7f100a27a24dcd3cd92e272083bdc2117c9e8f1ad7cf0a4f"
     },
     {
       "path": "server/scripts/tailscale_prepare.py",

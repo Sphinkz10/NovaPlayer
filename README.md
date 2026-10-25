@@ -2,7 +2,9 @@
 
 Plataforma privada de cinema auto-hospedado (em desenvolvimento).
 
-**Entrega atual:** [NOVA Cinema 0.12](docs/NOVA_CINEMA_0_12.md): início guiado, grelha com capas autenticadas, pesquisa, Continuar a ver e player com controlos Android. APK assinada e servidor correspondentes aprovados em laboratório; instalação física pendente. [Resultados e proveniência](docs/NOVA_CINEMA_0_12_RESULTADOS.json).
+**Entrega atual:** [NOVA Cinema 0.13](docs/NOVA_CINEMA_0_13.md): início com títulos reais, grelha de capas, detalhe e navegação por comando. APK assinada e servidor correspondentes aprovados em laboratório; instalação física pendente. [Resultados e proveniência](docs/NOVA_CINEMA_0_13_RESULTADOS.json).
+
+**Revisão do Control no código:** [aspeto visual e navegação por áreas](docs/CONTROL_VISUAL_NAVEGACAO.md), com início, bibliotecas, pessoas e TVs, Directory e ligação privada. Validada no navegador local; este incremento não altera a APK 0.13 nem as imagens Docker da entrega anterior.
 
 **Base de distribuição:** [M4 — Distribuição Android](docs/M4_DISTRIBUICAO_ANDROID.md) prepara a NOVA Cinema com identificador próprio, debug desativado e assinatura persistente offline. O [perfil LAN com recuperação integrada](docs/M4_RECUPERACAO_LAN.md) continua aplicável. Resultados e limites estão no guia de distribuição. A [M3 de identidade e permissões](docs/M3_FECHO.md) está concluída em laboratório. A aceitação física mantém a M4 aberta.
 
@@ -34,4 +36,4 @@ bash gradlew :core:verifyCore :app:assembleDebug :app:lintDebug
 
 Em Windows usar `gradlew.bat`; os testes de navegador aceitam `--channel msedge`, usado também no runner Windows da CI. Os testes POSIX de permissões/caminhos são executados em Linux. Os gates Docker são `python server/scripts/smoke_compose.py` e `python server/scripts/smoke_lan_compose.py`, num anfitrião Linux descartável com Docker; o primeiro exige portas 8096/8787 livres.
 
-O pacote atual e as execuções são registados em [NOVA_CINEMA_0_12.md](docs/NOVA_CINEMA_0_12.md); as provas anteriores estão nos guias de recuperação, instalação LAN e player. Os ZIPs originais em `archives/` preservam o histórico e não recebem as alterações atuais.
+O pacote atual e as execuções são registados em [NOVA_CINEMA_0_13.md](docs/NOVA_CINEMA_0_13.md); as provas anteriores estão nos guias de recuperação, instalação LAN e player. Os ZIPs originais em `archives/` preservam o histórico e não recebem as alterações atuais.
