@@ -1,0 +1,1001 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-25",
+  "result": "passed_tv_013_lan_wireguard_lab",
+  "executable_commit": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+  "ci_merge_commit": "293125a5481555ae4dcae13ed14274ceda9d479b",
+  "entire_git_tree_identical_between_source_and_merge": true,
+  "delivered_apk": {
+    "package": "com.novacinema.cinema",
+    "version_code": 13,
+    "version_name": "0.13-tv-preview",
+    "debuggable": false,
+    "min_sdk": 26,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86",
+      "x86_64"
+    ],
+    "certificate_sha256": "50ec5556fb11d5d13ef6983f6d374aab2c3a82d0252891e38ea2a05a90d0cd72",
+    "signature_v2": true,
+    "zip_alignment_16k": true,
+    "sha256": "2fc48a33ecdb61395932fcf1b6f7980de2bacb0dd100b2bb720cbf70125bbcaf",
+    "unsigned_sha256": "3a69db9c49513d19c9feea6d571a8cdc840737ae3ce14a6bfe087aef140398eb",
+    "result": "passed",
+    "previous_sha256": "770f3d6c2a7e605b889bd368c8631fdb5dab562e211e2f7be29e41e666173108"
+  },
+  "server_image": "ghcr.io/sphinkz10/nova-core@sha256:acc88bc25577d73b57ec452a6c903018ad5df34bd673ddfc4393c9ab30486b11",
+  "gateway_image": "ghcr.io/sphinkz10/nova-gateway@sha256:897abab59bcdc86d64c71028423356a84b9b872ea0cc9eaef630784d62832350",
+  "ci": [
+    {
+      "run_id": 40160117743,
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743",
+      "jobs": [
+        {
+          "id": 121071411133,
+          "name": "server (windows-latest, 3.12)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121071411133"
+        },
+        {
+          "id": 121071411842,
+          "name": "server (ubuntu-latest, 3.12)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121071411842"
+        },
+        {
+          "id": 121071412407,
+          "name": "android",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121071412407"
+        },
+        {
+          "id": 121071429806,
+          "name": "server (ubuntu-latest, 3.13)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121071429806"
+        },
+        {
+          "id": 121071432908,
+          "name": "compose-lab",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121071432908"
+        },
+        {
+          "id": 121071433179,
+          "name": "server (windows-latest, 3.13)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121071433179"
+        },
+        {
+          "id": 121071433716,
+          "name": "dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121071433716"
+        },
+        {
+          "id": 121072371162,
+          "name": "server-image",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117743/job/121072371162"
+        }
+      ]
+    },
+    {
+      "run_id": 40160117733,
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117733",
+      "jobs": [
+        {
+          "id": 121069715286,
+          "name": "pairing (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117733/job/121069715286"
+        },
+        {
+          "id": 121069715406,
+          "name": "pairing (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117733/job/121069715406"
+        }
+      ]
+    },
+    {
+      "run_id": 40160117752,
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117752",
+      "jobs": [
+        {
+          "id": 121069715505,
+          "name": "distribution (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117752/job/121069715505"
+        },
+        {
+          "id": 121069715664,
+          "name": "distribution (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117752/job/121069715664"
+        }
+      ]
+    },
+    {
+      "run_id": 40160117751,
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117751",
+      "jobs": [
+        {
+          "id": 121069715395,
+          "name": "wireguard (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117751/job/121069715395"
+        },
+        {
+          "id": 121069715529,
+          "name": "wireguard (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117751/job/121069715529"
+        }
+      ]
+    },
+    {
+      "run_id": 40160117734,
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117734",
+      "jobs": [
+        {
+          "id": 121069715367,
+          "name": "gateway",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160117734/job/121069715367"
+        }
+      ]
+    },
+    {
+      "run_id": 40160114193,
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160114193",
+      "jobs": [
+        {
+          "id": 121069703812,
+          "name": "tailscale (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160114193/job/121069703812"
+        },
+        {
+          "id": 121069704011,
+          "name": "tailscale (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40160114193/job/121069704011"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12586900188,
+      "name": "server-ubuntu-latest-3.12",
+      "digest": "sha256:eed8f085f9b2ef8c7e4d568769e0071422fb86f9c35afeaa755ed90d8ad79c8f",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586727670,
+      "name": "nova-server-lab-install",
+      "digest": "sha256:6fd9686c72600d47ebfd76b9b74a125fa7a7b40642b8f7e386aac8e2a12a36c7",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586525924,
+      "name": "server-windows-latest-3.13",
+      "digest": "sha256:6146238a805bc592e2ccc34007bd7583417a1870f536e88524af802b26ab86bb",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586261698,
+      "name": "connect-phase1-debug",
+      "digest": "sha256:a5d9610b323e7baee5e1f310191b2317d98e194dc70ab89fdca6fe06ef5814ec",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586032237,
+      "name": "server-compose-recovery",
+      "digest": "sha256:c4c8a1881c2abb21a5dacfc2e94fa343b2c94595aa37232463b01e26363544b2",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586013153,
+      "name": "server-windows-latest-3.12",
+      "digest": "sha256:5d1a6a352c25d7e8a4c053ebde18b753706ff1fddbe5a82a5ab18985e9dbfe5a",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586006864,
+      "name": "server-ubuntu-latest-3.13",
+      "digest": "sha256:c2eabe18d0b8f7403b2e576ef38ebdb82f58ebff9ec4d4bd8af89f82af1a608e",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586765700,
+      "name": "android-pairing-api-26",
+      "digest": "sha256:37b6339b185076cf7fdb6b2cd56f420c9824497dab6339b0582d0806b6fb8618",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12585807696,
+      "name": "android-pairing-api-35",
+      "digest": "sha256:db9a5223a34b91187028f104f1cf2ccd7be47998d6d64cc1bb792c56f4f78a3d",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12585952522,
+      "name": "android-distribution-api-35",
+      "digest": "sha256:09516518f50d9ae66a8c4c2e8736f86d5930da55da4e9fc743cb2a145f55c2b8",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12585882808,
+      "name": "android-distribution-api-26",
+      "digest": "sha256:7778560651ff74ff85f4f16b492199a56c4d45cc6ef648586bef07e09d05e198",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586765659,
+      "name": "wireguard-network-api-26",
+      "digest": "sha256:b2fb2a13ee971a70c5bb698fba86ee4b83bd7d394ec88ed42feab30d47513c00",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12585742148,
+      "name": "wireguard-network-api-35",
+      "digest": "sha256:10d1e18b047045b668db91398b31f0d5b3d39ee4ace015d93eb287f43b43aaea",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12585961242,
+      "name": "gateway-container",
+      "digest": "sha256:b8828c84ca83a9ca60101b7524857027574e90cfa8218ae7fe69cd20af911d0f",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586381116,
+      "name": "tailscale-network-api-26",
+      "digest": "sha256:60937aee4c151009a2b625eca96ed75d83dbc8ccb2e4b2c025f5ddb88eb7903f",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    },
+    {
+      "id": 12586107051,
+      "name": "tailscale-network-api-35",
+      "digest": "sha256:4438448ee98add2fcd55ffb84794d41cdccaeebb6b47fe652cf524f64e2a5ac8",
+      "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+    }
+  ],
+  "anonymous_image_pull": {
+    "server": {
+      "result": "passed",
+      "image": "ghcr.io/sphinkz10/nova-core@sha256:acc88bc25577d73b57ec452a6c903018ad5df34bd673ddfc4393c9ab30486b11",
+      "anonymous_manifest_pull": true,
+      "date": "2026-10-25"
+    },
+    "gateway": {
+      "result": "passed",
+      "image": "ghcr.io/sphinkz10/nova-gateway@sha256:897abab59bcdc86d64c71028423356a84b9b872ea0cc9eaef630784d62832350",
+      "anonymous_manifest_pull": true,
+      "date": "2026-10-25"
+    }
+  },
+  "reports": {
+    "26": {
+      "signing": {
+        "result": "passed",
+        "purpose": "disposable CI signing identity; not the distribution key",
+        "checks": [
+          "private identity creation is exclusive",
+          "release package, SDK, TV launcher, four ABIs, no debug, v2 signature and 16K ZIP alignment",
+          "independent verification against certificate pin",
+          "existing output cannot be overwritten",
+          "debug/laboratory package rejected",
+          "private key mismatch rejected before signing",
+          "wrong keystore password rejected",
+          "non-increasing versionCode rejected",
+          "next version signed by the same identity",
+          "modified signed APK rejected",
+          "valid foreign signature rejected by pinned verifier"
+        ],
+        "candidate": {
+          "package": "com.novacinema.cinema",
+          "version_code": 13,
+          "version_name": "0.13-tv-preview",
+          "debuggable": false,
+          "min_sdk": 26,
+          "abis": [
+            "arm64-v8a",
+            "armeabi-v7a",
+            "x86",
+            "x86_64"
+          ],
+          "certificate_sha256": "3099516f5ca8c282e3663879eb14afa8a02c5987f14e6ad033607064c9742617",
+          "signature_v2": true,
+          "zip_alignment_16k": true,
+          "sha256": "34a4af0ab71a88faf2d5868de9e133ad80f96eeca5ac9d5b4a7ecc2c60afd00e",
+          "unsigned_sha256": "3a69db9c49513d19c9feea6d571a8cdc840737ae3ce14a6bfe087aef140398eb",
+          "result": "passed",
+          "previous_sha256": null
+        },
+        "upgrade": {
+          "package": "com.novacinema.cinema",
+          "version_code": 14,
+          "version_name": "0.13-tv-preview",
+          "debuggable": false,
+          "min_sdk": 26,
+          "abis": [
+            "arm64-v8a",
+            "armeabi-v7a",
+            "x86",
+            "x86_64"
+          ],
+          "certificate_sha256": "3099516f5ca8c282e3663879eb14afa8a02c5987f14e6ad033607064c9742617",
+          "signature_v2": true,
+          "zip_alignment_16k": true,
+          "sha256": "5466bc931accfd1108b07a989659dbceda1b65f171bb5f65ceffaa48d62f8f64",
+          "unsigned_sha256": "a618ee0a993b8e8d299ccf927fc67d51fc3617850af3b8dcd2967fc1ad0bc101",
+          "result": "passed",
+          "previous_sha256": "34a4af0ab71a88faf2d5868de9e133ad80f96eeca5ac9d5b4a7ecc2c60afd00e"
+        },
+        "foreign_sha256": "2bff4689dd036a23252e5efa40909b8093b80d07832964d4414ae6bcbba2cae0",
+        "source_commit": "293125a5481555ae4dcae13ed14274ceda9d479b"
+      },
+      "distribution": {
+        "result": "passed",
+        "api": 26,
+        "checks": [
+          "release installed; run-as denied for non-debug application",
+          "release launcher renders Directory entry and D-pad focuses it",
+          "foreign signing identity refused by Android; original sandbox retained",
+          "higher version with same signer preserves sandbox and UID",
+          "version downgrade refused by Android",
+          "updated non-debug release launches"
+        ],
+        "physical_device": false,
+        "candidate_sha256": "34a4af0ab71a88faf2d5868de9e133ad80f96eeca5ac9d5b4a7ecc2c60afd00e",
+        "upgrade_sha256": "5466bc931accfd1108b07a989659dbceda1b65f171bb5f65ceffaa48d62f8f64",
+        "signing_identity": "disposable CI key; production key never uploaded"
+      },
+      "m4": {
+        "result": "passed",
+        "api": 26,
+        "checks": [
+          "catalog_dpad",
+          "detail_dpad",
+          "first_video_frame",
+          "seek",
+          "pause",
+          "progress_stop",
+          "resume_after_reopen",
+          "cross_library_denied",
+          "authenticated_artwork",
+          "continue_filter",
+          "back_restores_focus",
+          "pause_survives_background"
+        ],
+        "apk_sha256": "1f5a7f753a00aef7624f302bac1ac370e55a50971d801c190b648603ada64c35",
+        "synthetic_video_sha256": "6d94f9b689c947abfa4402ad53cc30c56a32387217809802af57661928f69f14",
+        "jellyfin": "isolated HTTP fixture; actual Jellyfin is a separate Docker test",
+        "physical_tv": false,
+        "method": "static original bytes; Media3 progressive decode"
+      },
+      "lan": {
+        "result": "passed",
+        "api": 26,
+        "adb_reverse": false,
+        "checks": [
+          "wrong_fingerprint_denied",
+          "http_denied",
+          "native_setup_dpad",
+          "persisted_authenticated_config",
+          "profile_replacement_denied",
+          "directory_login_and_owner_approval",
+          "first_video_frame_over_private_ip",
+          "tampered_config_fails_closed"
+        ],
+        "apk_sha256": "1f5a7f753a00aef7624f302bac1ac370e55a50971d801c190b648603ada64c35",
+        "screenshots": [
+          {
+            "name": "tv-libraries.png",
+            "sha256": "ac126d0567a21cb0e953e8cb08f6c39df5b239e6faeed109ce3dab3506dc8aaa",
+            "width": 640,
+            "height": 320
+          },
+          {
+            "name": "tv-catalogue.png",
+            "sha256": "81c447fe45c060d082215526c4c0b349a2cf32d937fbd97e586ac67caeb7061f",
+            "width": 640,
+            "height": 320
+          },
+          {
+            "name": "tv-detail.png",
+            "sha256": "050d59f8e40b4a78c407e341d10eddf084c09762f6d954459a00aa9067dc7f7a",
+            "width": 640,
+            "height": 320
+          },
+          {
+            "name": "tv-player.png",
+            "sha256": "b1f04d419a81c42cda1885c7872815c63a083f1489c5e1dbcb32a6cfbc9237f7",
+            "width": 640,
+            "height": 320
+          }
+        ],
+        "screen_data": "synthetic disposable LAN fixture",
+        "display": "landscape phone emulator; not physical Android TV",
+        "source_commit": "293125a5481555ae4dcae13ed14274ceda9d479b",
+        "production_capture_policy": "FLAG_SECURE unchanged; temporarily cleared/restored only by debug test APK",
+        "jellyfin": "isolated fixture; real Jellyfin covered by generated Docker LAN gate",
+        "physical_tv": false
+      },
+      "wireguard": {
+        "result": "passed",
+        "provider": "wireguard",
+        "api": 26,
+        "checks": [
+          "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+          "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+          "host has no route or TCP forwarder to the service overlay address",
+          "restricted adapter removes stale and broad peers before applying approved per-device host route",
+          "process restart restores durable per-device lease after confirmed peer cleanup",
+          "Control accepts only fresh authenticated kernel observations and never claims handshake",
+          "repeated live worker tick performs zero kernel writes",
+          "device revocation invalidates the previous Control observation immediately",
+          "private service unreachable before VPN",
+          "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+          "encrypted enrollment key bound to NOVA server origin and device",
+          "owner approval checked before constructing local lab tunnel profile",
+          "public gateway configuration delivered by authenticated pinned device API",
+          "remote profile rejects foreign device broad route injection public gateway and expiry",
+          "clock skew bounded to thirty seconds without extending expiry or disabling TLS validation",
+          "WireGuard profile encrypted by Android Keystore",
+          "Android system VPN consent explicitly approved",
+          "full-tunnel and other-application profiles rejected",
+          "Cinema session uses verified tunnel origin while durable association remains bound to LAN identity",
+          "actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard",
+          "authenticated profile renewal extends shortened test lease through the tunnel without LAN or engine restart",
+          "authenticated NOVA device API over native WireGuard and TLS 1.3",
+          "wrong HTTPS identity rejected inside tunnel",
+          "client surface does not mount administrative routes",
+          "firewall blocks live SSH/admin canaries and underlay ingress",
+          "revoked access credential refused even while tunnel remains UP",
+          "gateway peer removal prevents further private traffic",
+          "explicit disconnect restores selected LAN transport",
+          "disconnect stops tunnel without public fallback",
+          "failed remote reconnection preserves selection and blocks implicit LAN credentials",
+          "process restart with remote selected refuses silent LAN fallback and preserves association",
+          "encrypted profile survives process restart",
+          "Android-generated enrollment key survives process restart",
+          "enrollment tampering fails closed without replacing key",
+          "missing wrapping key never regenerates enrollment identity",
+          "forgetting NOVA association erases local WireGuard enrollment",
+          "tampered encrypted profile fails closed",
+          "local profile revocation removes decryption material"
+        ],
+        "gateway_handshake": {
+          "observed": true,
+          "received_bytes": 396100,
+          "sent_bytes": 10166972,
+          "firewall_dropped_packets": 6
+        },
+        "adb_reverse": false,
+        "tls": "TLS 1.3, exact certificate and hostname validation",
+        "gateway": "isolated Linux kernel WireGuard namespace",
+        "client": "official embedded Android GoBackend",
+        "consent": "actual system dialog, no appops bypass",
+        "playback": "actual Media3 frame/seek/pause/resume over WireGuard; synthetic Jellyfin HTTP fixture inside namespace",
+        "private_profile_delivery": "authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation",
+        "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+        "physical_nas": false,
+        "physical_tv": false,
+        "production_remote_access_enabled": false,
+        "apk_sha256": "2cf2df1ac9f5b351fdf9f4f5825617e02ff277c312dcc9846dadbe42f5c2df77",
+        "source_commit": "293125a5481555ae4dcae13ed14274ceda9d479b"
+      },
+      "tailscale": {
+        "result": "passed",
+        "provider": "tailscale",
+        "api": 26,
+        "android_checks": 39,
+        "harness_checks": [
+          "pinned real Linux Tailscale peer enrolled with a one-use ten-minute key",
+          "host has no overlay route or TCP proxy to NOVA",
+          "owner Control approves only the prepared certificate-bound public profile; it does not claim tailnet enrollment",
+          "real NOVA Core HTTPS and live blocked administration/SSH canaries",
+          "persisted identity sealed with Android Keystore; no enrollment key or NOVA token in engine preferences",
+          "overlay revocation proven while NOVA access credential remains valid",
+          "corrupted state remains corrupted after refusal, without silently replacing identity",
+          "sealed identity preserved when its missing Android wrapping key is refused"
+        ],
+        "native_engine_aar_sha256": "224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0",
+        "coordinator": "Headscale 0.29.5, disposable TLS coordinator",
+        "linux_peer": "Tailscale 1.104.2",
+        "source_commit": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+        "apk_sha256": "df9eb17249cc8638c46b55ad80eba82aba34a1ebcd70936fb87c9f87fb16343d",
+        "external_android_vpn_app": false,
+        "adb_reverse": false,
+        "physical_nas": false,
+        "physical_tv": false,
+        "tailscale_saas_account": false,
+        "production_provider_enabled": false,
+        "media_playback_tested": true,
+        "playback": "actual Cinema catalogue, artwork, Media3 frame/seek/pause/resume over native Tailscale; synthetic Jellyfin upstream",
+        "profile_delivery": "associated NOVA device API over pinned LAN HTTPS, existing leaf and server/device/account identity retained"
+      },
+      "home_title_open_back_and_focus_gate": "passed as part of M4Steps for both native transports and LAN journey"
+    },
+    "35": {
+      "signing": {
+        "result": "passed",
+        "purpose": "disposable CI signing identity; not the distribution key",
+        "checks": [
+          "private identity creation is exclusive",
+          "release package, SDK, TV launcher, four ABIs, no debug, v2 signature and 16K ZIP alignment",
+          "independent verification against certificate pin",
+          "existing output cannot be overwritten",
+          "debug/laboratory package rejected",
+          "private key mismatch rejected before signing",
+          "wrong keystore password rejected",
+          "non-increasing versionCode rejected",
+          "next version signed by the same identity",
+          "modified signed APK rejected",
+          "valid foreign signature rejected by pinned verifier"
+        ],
+        "candidate": {
+          "package": "com.novacinema.cinema",
+          "version_code": 13,
+          "version_name": "0.13-tv-preview",
+          "debuggable": false,
+          "min_sdk": 26,
+          "abis": [
+            "arm64-v8a",
+            "armeabi-v7a",
+            "x86",
+            "x86_64"
+          ],
+          "certificate_sha256": "eacff24d8ab307048d6a0fe1871b8e9a28b308baffbd2c22419d36dc815a575a",
+          "signature_v2": true,
+          "zip_alignment_16k": true,
+          "sha256": "603172f213e8cab9bf3e9c70fceff6d455b2d4f6b25c2faa5512bf8481ebb54b",
+          "unsigned_sha256": "3a69db9c49513d19c9feea6d571a8cdc840737ae3ce14a6bfe087aef140398eb",
+          "result": "passed",
+          "previous_sha256": null
+        },
+        "upgrade": {
+          "package": "com.novacinema.cinema",
+          "version_code": 14,
+          "version_name": "0.13-tv-preview",
+          "debuggable": false,
+          "min_sdk": 26,
+          "abis": [
+            "arm64-v8a",
+            "armeabi-v7a",
+            "x86",
+            "x86_64"
+          ],
+          "certificate_sha256": "eacff24d8ab307048d6a0fe1871b8e9a28b308baffbd2c22419d36dc815a575a",
+          "signature_v2": true,
+          "zip_alignment_16k": true,
+          "sha256": "425f66eb6eb518df0ed4728825e12cd84a64cd6b6573925f32a7bd3b6d3e0b2d",
+          "unsigned_sha256": "a618ee0a993b8e8d299ccf927fc67d51fc3617850af3b8dcd2967fc1ad0bc101",
+          "result": "passed",
+          "previous_sha256": "603172f213e8cab9bf3e9c70fceff6d455b2d4f6b25c2faa5512bf8481ebb54b"
+        },
+        "foreign_sha256": "6c07fccba1f04d54bf7492bdff98edc7f78fe3d080618e565eac5ab18153a6fd",
+        "source_commit": "293125a5481555ae4dcae13ed14274ceda9d479b"
+      },
+      "distribution": {
+        "result": "passed",
+        "api": 35,
+        "checks": [
+          "release installed; run-as denied for non-debug application",
+          "release launcher renders Directory entry and D-pad focuses it",
+          "foreign signing identity refused by Android; original sandbox retained",
+          "higher version with same signer preserves sandbox and UID",
+          "version downgrade refused by Android",
+          "updated non-debug release launches"
+        ],
+        "physical_device": false,
+        "candidate_sha256": "603172f213e8cab9bf3e9c70fceff6d455b2d4f6b25c2faa5512bf8481ebb54b",
+        "upgrade_sha256": "425f66eb6eb518df0ed4728825e12cd84a64cd6b6573925f32a7bd3b6d3e0b2d",
+        "signing_identity": "disposable CI key; production key never uploaded"
+      },
+      "m4": {
+        "result": "passed",
+        "api": 35,
+        "checks": [
+          "catalog_dpad",
+          "detail_dpad",
+          "first_video_frame",
+          "seek",
+          "pause",
+          "progress_stop",
+          "resume_after_reopen",
+          "cross_library_denied",
+          "authenticated_artwork",
+          "continue_filter",
+          "back_restores_focus",
+          "pause_survives_background"
+        ],
+        "apk_sha256": "bd9e84fad70e01cde9e9ae378a4fdbbf23cbb49c71026aaecd696ff62b94c498",
+        "synthetic_video_sha256": "6d94f9b689c947abfa4402ad53cc30c56a32387217809802af57661928f69f14",
+        "jellyfin": "isolated HTTP fixture; actual Jellyfin is a separate Docker test",
+        "physical_tv": false,
+        "method": "static original bytes; Media3 progressive decode"
+      },
+      "lan": {
+        "result": "passed",
+        "api": 35,
+        "adb_reverse": false,
+        "checks": [
+          "wrong_fingerprint_denied",
+          "http_denied",
+          "native_setup_dpad",
+          "persisted_authenticated_config",
+          "profile_replacement_denied",
+          "directory_login_and_owner_approval",
+          "first_video_frame_over_private_ip",
+          "tampered_config_fails_closed"
+        ],
+        "apk_sha256": "bd9e84fad70e01cde9e9ae378a4fdbbf23cbb49c71026aaecd696ff62b94c498",
+        "screenshots": [
+          {
+            "name": "tv-libraries.png",
+            "sha256": "44d3d7b5a7662f1d711b54a29518938f75e5f8848315f50f9a086eb1c407f7ba",
+            "width": 1280,
+            "height": 720
+          },
+          {
+            "name": "tv-catalogue.png",
+            "sha256": "4c5f6e99b66bb8a617c951db4c804b55cb92ff662e71ae02a54e75864ab7592e",
+            "width": 1280,
+            "height": 720
+          },
+          {
+            "name": "tv-detail.png",
+            "sha256": "693e45bc36e8457efb8e48d328a1cf626c46e5bfef2af218e6940bb891f953b3",
+            "width": 1280,
+            "height": 720
+          },
+          {
+            "name": "tv-player.png",
+            "sha256": "b3e82f4f29b356a1e23fde20b0e952e000c37d415cce641b79b0239d5ecc1cd0",
+            "width": 1280,
+            "height": 720
+          }
+        ],
+        "screen_data": "synthetic disposable LAN fixture",
+        "display": "landscape phone emulator; not physical Android TV",
+        "source_commit": "293125a5481555ae4dcae13ed14274ceda9d479b",
+        "production_capture_policy": "FLAG_SECURE unchanged; temporarily cleared/restored only by debug test APK",
+        "jellyfin": "isolated fixture; real Jellyfin covered by generated Docker LAN gate",
+        "physical_tv": false
+      },
+      "wireguard": {
+        "result": "passed",
+        "provider": "wireguard",
+        "api": 35,
+        "checks": [
+          "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+          "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+          "host has no route or TCP forwarder to the service overlay address",
+          "restricted adapter removes stale and broad peers before applying approved per-device host route",
+          "process restart restores durable per-device lease after confirmed peer cleanup",
+          "Control accepts only fresh authenticated kernel observations and never claims handshake",
+          "repeated live worker tick performs zero kernel writes",
+          "device revocation invalidates the previous Control observation immediately",
+          "private service unreachable before VPN",
+          "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+          "encrypted enrollment key bound to NOVA server origin and device",
+          "owner approval checked before constructing local lab tunnel profile",
+          "public gateway configuration delivered by authenticated pinned device API",
+          "remote profile rejects foreign device broad route injection public gateway and expiry",
+          "clock skew bounded to thirty seconds without extending expiry or disabling TLS validation",
+          "WireGuard profile encrypted by Android Keystore",
+          "Android system VPN consent explicitly approved",
+          "full-tunnel and other-application profiles rejected",
+          "Cinema session uses verified tunnel origin while durable association remains bound to LAN identity",
+          "actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard",
+          "authenticated profile renewal extends shortened test lease through the tunnel without LAN or engine restart",
+          "authenticated NOVA device API over native WireGuard and TLS 1.3",
+          "wrong HTTPS identity rejected inside tunnel",
+          "client surface does not mount administrative routes",
+          "firewall blocks live SSH/admin canaries and underlay ingress",
+          "revoked access credential refused even while tunnel remains UP",
+          "gateway peer removal prevents further private traffic",
+          "explicit disconnect restores selected LAN transport",
+          "disconnect stops tunnel without public fallback",
+          "failed remote reconnection preserves selection and blocks implicit LAN credentials",
+          "process restart with remote selected refuses silent LAN fallback and preserves association",
+          "encrypted profile survives process restart",
+          "Android-generated enrollment key survives process restart",
+          "enrollment tampering fails closed without replacing key",
+          "missing wrapping key never regenerates enrollment identity",
+          "forgetting NOVA association erases local WireGuard enrollment",
+          "tampered encrypted profile fails closed",
+          "local profile revocation removes decryption material"
+        ],
+        "gateway_handshake": {
+          "observed": true,
+          "received_bytes": 362340,
+          "sent_bytes": 6782972,
+          "firewall_dropped_packets": 6
+        },
+        "adb_reverse": false,
+        "tls": "TLS 1.3, exact certificate and hostname validation",
+        "gateway": "isolated Linux kernel WireGuard namespace",
+        "client": "official embedded Android GoBackend",
+        "consent": "actual system dialog, no appops bypass",
+        "playback": "actual Media3 frame/seek/pause/resume over WireGuard; synthetic Jellyfin HTTP fixture inside namespace",
+        "private_profile_delivery": "authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation",
+        "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+        "physical_nas": false,
+        "physical_tv": false,
+        "production_remote_access_enabled": false,
+        "apk_sha256": "110c69a6cb8f601403909504e3d057781336c7c51c910dbe23c3020f22b89b5b",
+        "source_commit": "293125a5481555ae4dcae13ed14274ceda9d479b"
+      },
+      "tailscale": {
+        "result": "passed",
+        "provider": "tailscale",
+        "api": 35,
+        "android_checks": 39,
+        "harness_checks": [
+          "pinned real Linux Tailscale peer enrolled with a one-use ten-minute key",
+          "host has no overlay route or TCP proxy to NOVA",
+          "owner Control approves only the prepared certificate-bound public profile; it does not claim tailnet enrollment",
+          "real NOVA Core HTTPS and live blocked administration/SSH canaries",
+          "persisted identity sealed with Android Keystore; no enrollment key or NOVA token in engine preferences",
+          "overlay revocation proven while NOVA access credential remains valid",
+          "corrupted state remains corrupted after refusal, without silently replacing identity",
+          "sealed identity preserved when its missing Android wrapping key is refused"
+        ],
+        "native_engine_aar_sha256": "224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0",
+        "coordinator": "Headscale 0.29.5, disposable TLS coordinator",
+        "linux_peer": "Tailscale 1.104.2",
+        "source_commit": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134",
+        "apk_sha256": "570dbdc91a1c3ed16196192b81cea68d006536aa170f2644ea4848eb9fe9e71a",
+        "external_android_vpn_app": false,
+        "adb_reverse": false,
+        "physical_nas": false,
+        "physical_tv": false,
+        "tailscale_saas_account": false,
+        "production_provider_enabled": false,
+        "media_playback_tested": true,
+        "playback": "actual Cinema catalogue, artwork, Media3 frame/seek/pause/resume over native Tailscale; synthetic Jellyfin upstream",
+        "profile_delivery": "associated NOVA device API over pinned LAN HTTPS, existing leaf and server/device/account identity retained"
+      },
+      "home_title_open_back_and_focus_gate": "passed as part of M4Steps for both native transports and LAN journey"
+    }
+  },
+  "local_build": {
+    "debug": "passed",
+    "instrumentation_compile": "passed",
+    "release": "passed",
+    "lint_errors": 0,
+    "lint_warnings": 63
+  },
+  "superseded_runs": [
+    {
+      "run_id": 40159256527,
+      "source": "f5186f7635f4ebd7212247013de901447eeff1d7",
+      "name": "Verify NOVA foundation",
+      "previous_status": "in_progress",
+      "previous_conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "run_id": 40159256514,
+      "source": "f5186f7635f4ebd7212247013de901447eeff1d7",
+      "name": "Android device pairing TLS",
+      "previous_status": "in_progress",
+      "previous_conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "run_id": 40159256524,
+      "source": "f5186f7635f4ebd7212247013de901447eeff1d7",
+      "name": "Android distribution and update",
+      "previous_status": "in_progress",
+      "previous_conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "run_id": 40159256510,
+      "source": "f5186f7635f4ebd7212247013de901447eeff1d7",
+      "name": "Native WireGuard private HTTPS",
+      "previous_status": "in_progress",
+      "previous_conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "run_id": 40159256511,
+      "source": "f5186f7635f4ebd7212247013de901447eeff1d7",
+      "name": "WireGuard generated container and remote media",
+      "previous_status": "in_progress",
+      "previous_conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "run_id": 40159252281,
+      "source": "f5186f7635f4ebd7212247013de901447eeff1d7",
+      "name": "Native Tailscale private HTTPS",
+      "previous_status": "in_progress",
+      "previous_conclusion": null,
+      "cancel_requested": true
+    }
+  ],
+  "later_attempts": [
+    {
+      "id": 40159498576,
+      "head_sha": "839321352cd62321a03e48bddba5b53c9cc12441",
+      "name": "WireGuard generated container and remote media",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 40159498560,
+      "head_sha": "839321352cd62321a03e48bddba5b53c9cc12441",
+      "name": "Native WireGuard private HTTPS",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 40159498548,
+      "head_sha": "839321352cd62321a03e48bddba5b53c9cc12441",
+      "name": "Android device pairing TLS",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 40159498633,
+      "head_sha": "839321352cd62321a03e48bddba5b53c9cc12441",
+      "name": "Android distribution and update",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 40159498646,
+      "head_sha": "839321352cd62321a03e48bddba5b53c9cc12441",
+      "name": "Verify NOVA foundation",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 40159495708,
+      "head_sha": "839321352cd62321a03e48bddba5b53c9cc12441",
+      "name": "Native Tailscale private HTTPS",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 40160053003,
+      "head_sha": "4fe14ab37994f8e791b28d22b88dc5019da11de7",
+      "name": "WireGuard generated container and remote media",
+      "status": "in_progress",
+      "conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "id": 40160052979,
+      "head_sha": "4fe14ab37994f8e791b28d22b88dc5019da11de7",
+      "name": "Android device pairing TLS",
+      "status": "in_progress",
+      "conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "id": 40160052898,
+      "head_sha": "4fe14ab37994f8e791b28d22b88dc5019da11de7",
+      "name": "Android distribution and update",
+      "status": "in_progress",
+      "conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "id": 40160052954,
+      "head_sha": "4fe14ab37994f8e791b28d22b88dc5019da11de7",
+      "name": "Native WireGuard private HTTPS",
+      "status": "in_progress",
+      "conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "id": 40160053018,
+      "head_sha": "4fe14ab37994f8e791b28d22b88dc5019da11de7",
+      "name": "Verify NOVA foundation",
+      "status": "in_progress",
+      "conclusion": null,
+      "cancel_requested": true
+    },
+    {
+      "id": 40160049781,
+      "head_sha": "4fe14ab37994f8e791b28d22b88dc5019da11de7",
+      "name": "Native Tailscale private HTTPS",
+      "status": "in_progress",
+      "conclusion": null,
+      "cancel_requested": true
+    }
+  ],
+  "corrected_test_failure": {
+    "source": "839321352cd62321a03e48bddba5b53c9cc12441",
+    "failed_runs": [
+      40159498548,
+      40159498560,
+      40159495708
+    ],
+    "cause": "M4Steps reused ActivityMonitor after waitForMonitorWithTimeout had consumed it; the home title, Back and focus checks had passed before the second launch was not detected",
+    "correction": "fresh monitor for each launch; no opening, Back, focus or playback assertion removed",
+    "screenshots": "remote harness now rotates the real display and asserts every PNG is landscape"
+  },
+  "same_source_ci_retry": {
+    "run_id": 40160117743,
+    "initial_failed_job": 121069715467,
+    "initial_skipped_image_job": 121070912899,
+    "reason": "Windows 3.12 M3 browser ownerPanel remained hidden beyond the initial 5-second assertion; all other Python/browser matrices passed; failed job and dependent image rerun on the same source without weakening assertions"
+  },
+  "failed_artifact_preserved": {
+    "artifact_id": 12586625838,
+    "digest": "sha256:193f75f610de8c00c5ee3b0d9f3b2332a0ef798590cb97db322010fed3a4fb8d",
+    "local_backup": "tv013-failed-windows312",
+    "action": "preserved verified failed attempt locally, then removed only its remote artifact to free its immutable name for the same-source retry",
+    "run_id": 40160117743,
+    "source": "93e0cd4ab2e2de380931b73b89fc10d5ef83f134"
+  },
+  "additional_native_runtime": {
+    "run_id": 40159252295,
+    "source": "f5186f7635f4ebd7212247013de901447eeff1d7",
+    "engine_and_build_configuration_identical_to_release_source": true,
+    "jobs": [
+      {
+        "id": 121067140406,
+        "name": "runtime (26)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121067140556,
+        "name": "runtime (35)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "normal_distribution_providers": [
+    "lan",
+    "wireguard"
+  ],
+  "tailscale_distribution_enabled": false,
+  "netbird_distribution_enabled": false,
+  "content_previews": "only actual titles from the first authorized library; no bundled demo catalogue",
+  "preview_storage": "memory only; discarded on stop and reauthorized on return; late loads ignored",
+  "m5_complete": false,
+  "physical_nas_tested": false,
+  "physical_tv_tested": false,
+  "final_security_acceptances": {
+    "passed": 0,
+    "total": 12
+  }
+}

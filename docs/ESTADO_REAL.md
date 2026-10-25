@@ -1,6 +1,6 @@
 # Estado atual — 25 outubro 2026
 
-**Aplicação de teste atual:** [NOVA Cinema 0.12](NOVA_CINEMA_0_12.md), com catálogo TV, capas autenticadas, retoma e controlos de reprodução Android. 15 jobs aprovados com fontes e resultados identificados. M5 completa mantém os limites abaixo.
+**Aplicação de teste atual:** [NOVA Cinema 0.13](NOVA_CINEMA_0_13.md), com início centrado em títulos reais da conta, catálogo de posters, detalhe e foco por comando. Atualização assinada da 0.12; 17 jobs aprovados com fontes e resultados identificados. M5 completa mantém os limites abaixo.
 
 O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias M3 anteriores são registos de incrementos; não devem ser usados para decidir o estado atual.
 
@@ -9,7 +9,7 @@ O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias
 | M1 — base | Implementada e testada |
 | M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. [Imagem atualizada](M5_INSCRICAO_WIREGUARD.md#correções-no-servidor-lan) corrige arranque concorrente SQLite e atualiza `certifi`. Aceitação no TrueNAS físico pendente |
 | M3 — identidade e permissões | Concluída no software de laboratório: login Directory na TV, prova assinada de conta, aprovação, bibliotecas Jellyfin limitadas, renovação e revogação. Sete critérios aprovados; CI 8/8, API 26/35 e Docker real. Ver evidências no documento único |
-| M4 — primeiro filme local | Instalação LAN, configuração TV, catálogo/player e recuperação integrada aprovados em laboratório. [Distribuição 0.12](NOVA_CINEMA_0_12.md): pacote NOVA Cinema próprio, não depurável e com assinatura persistente offline; manter a chave privada e uma cópia de recuperação separada. Aceitação física pendente |
+| M4 — primeiro filme local | Instalação LAN, configuração TV, catálogo/player e recuperação integrada aprovados em laboratório. [Distribuição 0.13](NOVA_CINEMA_0_13.md): pacote NOVA Cinema próprio, não depurável e com assinatura persistente offline; manter a chave privada e uma cópia de recuperação separada. Aceitação física pendente |
 | M5 — ligação remota | [Gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md), com [renovação pelo túnel e recuperação dos cinco serviços](M5_RENOVACAO_RECUPERACAO.md). [Tailscale no Cinema](M5_TAILSCALE_CINEMA.md) passou catálogo, capas e player nativos nas APIs 26/35, incluindo reconexão e revogação: 36 verificações Android + sete de laboratório em cada API; regressão 17/17 jobs. [Control Tailscale](M5_TAILSCALE_CONTROL.md): aprovação/desativação do perfil, preparação TLS e recuperação aprovadas; 39 verificações Android + oito de laboratório por API, regressão 17/17 jobs. Faltam inscrição na tailnet pelo Control, instalador/distribuição Tailscale, jornada NetBird e descoberta/reconexão após expiração offline |
 | M6/M7 — utilização familiar | Exigem matriz física, rede externa e validações finais de segurança |
 

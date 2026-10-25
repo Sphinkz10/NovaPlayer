@@ -1,6 +1,6 @@
 # NOVA Cinema 0.13 — revisão da experiência TV
 
-Em validação. Esta revisão substitui o início centrado em configuração por um
+**Validada em laboratório nas APIs 26 e 35; APK 0.13 assinada para teste.** Esta revisão substitui o início centrado em configuração por um
 ecrã de cinema com destaque e uma fila de títulos reais da conta. Não introduz
 filmes de demonstração nem permissões novas na aplicação.
 
@@ -18,7 +18,9 @@ não instala o gateway Tailscale nem implementa NetBird. O servidor e o contrato
 de confiança não mudam. A versão usa o mesmo pacote e identidade de assinatura
 persistente; os ensaios CI usam identidades de assinatura descartáveis.
 
-Antes da entrega: build/lint, instalação/atualização API 26/35, associação,
+Validação concluída: build/lint, instalação/atualização API 26/35, associação,
 reprodução LAN/WireGuard e regressão da variante Tailscale. O percurso por comando
 inclui abrir o destaque do início e voltar à grelha, além de reprodução,
-pausa/retoma e recuperação do foco. As capturas finais têm de sair da app real.
+pausa/retoma e recuperação do foco. As capturas foram recolhidas na app real, com biblioteca e vídeo sintéticos. [Resultados e proveniência](NOVA_CINEMA_0_13_RESULTADOS.json): 17/17 jobs aprovados. A compilação release local teve zero erros de lint e 63 avisos, sem supressões novas.
+
+A APK usa o mesmo certificado público da 0.12 e pode atualizá-la sem desinstalar. As imagens de servidor/gateway estão fixadas por digest no relatório; a chave privada de assinatura fica fora do Git e da CI.
