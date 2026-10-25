@@ -74,9 +74,11 @@ class M4Steps(private val runner:Instrumentation) {
         // stale account's shelf or pin a previous network session in the UI.
         waitUntil { var ready=false;main { ready=home.hasWindowFocus() && views(home.window.decorView)
             .any { it.tag=="home-item-$item" && it.hasFocus() } };ready }
+        // waitForMonitorWithTimeout consumes/removes its monitor after one hit.
+        val libraryMonitor=runner.addMonitor(CinemaActivity::class.java.name,null,false)
         click(home,"home-primary")
-        val cinema=runner.waitForMonitorWithTimeout(catalogueMonitor,30000) ?: error("Home did not open catalogue")
-        runner.removeMonitor(catalogueMonitor)
+        val cinema=runner.waitForMonitorWithTimeout(libraryMonitor,30000) ?: error("Home did not open catalogue")
+        runner.removeMonitor(libraryMonitor)
         var playback:PlayerActivity?=null
         fun capture(activity:Activity,tag:String,name:String) {
             if(!captureScreens)return

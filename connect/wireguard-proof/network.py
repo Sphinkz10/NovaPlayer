@@ -202,6 +202,8 @@ def instrument(mode, callback=lambda stage: None):
                 remote='/sdcard/nova-wireguard-'+name+'.png'
                 adb('shell','screencap','-p',remote)
                 adb('pull',remote,str(screenshots/(name+'.png')))
+                png=(screenshots/(name+'.png')).read_bytes()
+                assert png[:8]==b'\x89PNG\r\n\x1a\n' and int.from_bytes(png[16:20],'big')>int.from_bytes(png[20:24],'big')
                 push_private('lab-screenshot-gate.txt',name.encode('ascii'))
         process.wait(timeout=10)
     finally:
@@ -231,6 +233,11 @@ def run():
     assert adb('shell', 'id', '-u').strip() == '0'
     adb('shell', 'date', '-u', datetime.now(timezone.utc).strftime('%m%d%H%M%Y.%S'))
     assert abs(int(adb('shell', 'date', '+%s').strip())-time.time()) < 5
+    # A real landscape display, as in the LAN fixture. Logical wm dimensions
+    # alone do not rotate API 26 screencap on a naturally portrait emulator.
+    adb('shell','settings','put','system','accelerometer_rotation','0')
+    adb('shell','settings','put','system','user_rotation','1')
+    adb('shell','wm','size','720x1280');adb('shell','wm','density','160')
     for path in ('app/build/outputs/apk/debug/app-debug.apk',
                  'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk'):
         adb('install', '-r', '-t', str(ROOT/'connect'/path), timeout=120)

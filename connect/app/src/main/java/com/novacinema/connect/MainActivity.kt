@@ -23,6 +23,7 @@ class MainActivity : Activity() {
         home=CinemaHomeView(this,{ open(DirectoryActivity::class.java) },{ open(ConnectionActivity::class.java) },
             { open(DevicePairingActivity::class.java) },{ open(DirectorySetupActivity::class.java) })
         status=home.status;primary=home.primary
+        primary.isFocusableInTouchMode=true
         primary.requestFocus()
     }
     private fun open(target: Class<out Activity>) { startActivity(Intent(this, target)) }

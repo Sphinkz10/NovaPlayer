@@ -176,6 +176,8 @@ def instrument(mode, callback):
                 remote='/sdcard/nova-tailscale-'+name+'.png'
                 adb('shell','screencap','-p',remote)
                 adb('pull',remote,str(screenshots/(name+'.png')))
+                png=(screenshots/(name+'.png')).read_bytes()
+                assert png[:8]==b'\x89PNG\r\n\x1a\n' and int.from_bytes(png[16:20],'big')>int.from_bytes(png[20:24],'big')
                 push('lab-screenshot-gate.txt',name.encode('ascii'))
         process.wait(timeout=10)
     finally:
@@ -195,7 +197,9 @@ def run():
     OUT.mkdir(parents=True, exist_ok=True)
     for apk in ('debug/app-debug.apk', 'androidTest/debug/app-debug-androidTest.apk'):
         adb('install', '-r', '-t', str(ROOT/'connect/app/build/outputs/apk'/apk), timeout=180)
-    adb('shell','wm','size','1280x720');adb('shell','wm','density','160')
+    adb('shell','settings','put','system','accelerometer_rotation','0')
+    adb('shell','settings','put','system','user_rotation','1')
+    adb('shell','wm','size','720x1280');adb('shell','wm','density','160')
     # Create the app's private files directory before run-as receives the fixture.
     adb('shell', 'am', 'start', '-n', PACKAGE+'/com.novacinema.connect.MainActivity')
     adb('shell', 'run-as', PACKAGE, 'mkdir', '-p', 'files')
