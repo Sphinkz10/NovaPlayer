@@ -1,6 +1,6 @@
 # NOVA — Roadmap até à instalação no servidor e na TV
 
-**Atualização:** 24-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
+**Atualização:** 25-10-2026. M3 de software concluída em laboratório. Acompanhamento único: [M3_FECHO.md](M3_FECHO.md).
 
 **App disponível para ensaio:** [NOVA Cinema 0.12](NOVA_CINEMA_0_12.md), assinada com a identidade persistente, catálogo em grelha, capas por conta, retoma e player com controlos Android. API 26/35 aprovadas por LAN/WireGuard; servidor e recuperação aprovados em Docker. Não fecha Tailscale/NetBird ou a aceitação física.
 
@@ -8,9 +8,9 @@
 
 **Incremento M5:** [gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md), seguido de [renovação pelo túnel e recuperação cifrada](M5_RENOVACAO_RECUPERACAO.md). O gerador prepara cinco serviços e os certificados; o gateway aplica aprovações/revogações; a TV usa o motor nativo para catálogo/player. O perfil de 24 horas pode ser renovado enquanto ligado. Preparação inicial e recuperação depois de expirar offline ainda exigem LAN.
 
-**Tailscale na M5:** [catálogo, capas e player nativos aprovados nas APIs 26/35](M5_TAILSCALE_CINEMA.md), com perfil da TV associado recebido por HTTPS LAN, identidade/certificado preservados, pausa/retoma, reconexão e revogação. 36 verificações Android e sete de laboratório por API; regressão 17/17 jobs. Faltam Control, instalador do peer e distribuição da opção normal. O arranque usa instrumentação e Headscale; a conta Tailscale SaaS ainda não foi ensaiada.
+**Tailscale na M5:** [catálogo, capas e player nativos aprovados nas APIs 26/35](M5_TAILSCALE_CINEMA.md), com perfil da TV associado recebido por HTTPS LAN, identidade/certificado preservados, pausa/retoma, reconexão e revogação. [Aprovação/desativação do perfil no Control, preparação TLS e recuperação](M5_TAILSCALE_CONTROL.md) também aprovadas: 39 verificações Android e oito de laboratório por API; regressão 17/17 jobs. Faltam inscrição na tailnet, instalador do peer e distribuição da opção normal. O arranque usa instrumentação e Headscale; a conta Tailscale SaaS ainda não foi ensaiada.
 
-**Próximos passos para fechar M5:** (1) concluir Control, instalador e distribuição Tailscale; (2) autenticação, ligação, reprodução e revogação nativas com NetBird; (3) descoberta/reconexão remota após expiração offline; (4) rede externa e os dois aparelhos físicos. Compilar as bibliotecas dos fornecedores não satisfaz estes critérios.
+**Próximos passos para fechar M5:** (1) concluir inscrição no Control, instalador e distribuição Tailscale; (2) autenticação, ligação, reprodução e revogação nativas com NetBird; (3) descoberta/reconexão remota após expiração offline; (4) rede externa e os dois aparelhos físicos. Compilar as bibliotecas dos fornecedores não satisfaz estes critérios.
 
 | Quando instalar/testar | O que permite |
 |---|---|

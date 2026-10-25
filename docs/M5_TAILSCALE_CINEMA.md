@@ -74,3 +74,5 @@ Control, instalação do peer no servidor, gestão da autorização inicial fora
 instrumentação, SaaS, expiração/renovação do perfil e ciclo de vida/troca de
 fornecedor. NetBird completo, reconexão após expiração offline, rede externa,
 TrueNAS/Xiaomi/Chromecast físicos e SEC 0/12 permanecem pendentes. **M5 aberta.**
+
+Atualização posterior: [aprovação/desativação do perfil no Control, preparação TLS e recuperação](M5_TAILSCALE_CONTROL.md) validadas com 39 verificações Android + oito de laboratório por API. Este documento conserva os resultados históricos do percurso Cinema anterior.
