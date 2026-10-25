@@ -89,6 +89,11 @@ internal class CinemaHomeView(activity:Activity,openLibrary:()->Unit,connection:
         if(bitmap!=null)poster.setImageBitmap(bitmap) else poster.setImageDrawable(CinemaArtwork(item.name))
     }
     fun artworkLoaded(card:CinemaCard) { if(featured==card.item.id)feature(card.item,card.artwork.bitmap) }
+    fun focusedItem()=(root.findFocus() as? CinemaCard)?.item?.id
+    fun restoreFocus(id:String?) {
+        if(id!=null)(0 until shelf.childCount).map { shelf.getChildAt(it) }
+            .filterIsInstance<CinemaCard>().firstOrNull { it.item.id==id }?.requestFocus()
+    }
     fun resetPreview() {
         root.tag=null;featured=null;poster.setImageDrawable(null);poster.visibility=View.GONE
         title.text="Uma boa história\ncomeça aqui."

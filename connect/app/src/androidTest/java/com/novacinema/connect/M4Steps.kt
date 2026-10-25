@@ -73,7 +73,7 @@ class M4Steps(private val runner:Instrumentation) {
         // Foregrounding must re-authorize and reload the home, never reuse a
         // stale account's shelf or pin a previous network session in the UI.
         waitUntil { var ready=false;main { ready=home.hasWindowFocus() && views(home.window.decorView)
-            .any { it.tag=="home-content-loaded-$library" } };ready }
+            .any { it.tag=="home-item-$item" && it.hasFocus() } };ready }
         click(home,"home-primary")
         val cinema=runner.waitForMonitorWithTimeout(catalogueMonitor,30000) ?: error("Home did not open catalogue")
         runner.removeMonitor(catalogueMonitor)

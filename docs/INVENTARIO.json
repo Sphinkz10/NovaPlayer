@@ -135,8 +135,8 @@
     },
     {
       "path": "connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt",
-      "bytes": 8732,
-      "sha256": "d21280b6c9ec30f4b9a13b58cfccf2a7c0c91d4c8b65818499a880241546fee0"
+      "bytes": 8736,
+      "sha256": "68185b9a1d34682817b9ce76f8b2b7b5edb3cd64adb5325613dcba14826fb2d7"
     },
     {
       "path": "connect/app/src/main/AndroidManifest.xml",
@@ -170,8 +170,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaActivity.kt",
-      "bytes": 12251,
-      "sha256": "d5b561b259de988c756cd1ccdb3006496e93376a0a0fe94da5c866d90d40b5bd"
+      "bytes": 12284,
+      "sha256": "b126097ac8e436da9870196b117b8b845789b64aaa0128ecc088fe5a51bab1c0"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaArtwork.kt",
@@ -185,8 +185,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaHomeView.kt",
-      "bytes": 5615,
-      "sha256": "1c0ef6a61167aa376a03083a66ad7e5841f531681632f44642a2eff11121ab04"
+      "bytes": 5889,
+      "sha256": "11e337bc7aea8f82f851edc19e60d0b322e0b939c4f971c9840d2353a0b73569"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ConnectionActivity.kt",
@@ -240,8 +240,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MainActivity.kt",
-      "bytes": 4677,
-      "sha256": "00946ef10687769082e59f853357af22296e79b5269a2cf9f768fbf0227d3bd7"
+      "bytes": 4794,
+      "sha256": "19e36fea1b26466440059e35b433839f092c06e8e82880a15f13e94161272cf8"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",

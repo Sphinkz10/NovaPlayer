@@ -16,6 +16,7 @@ class MainActivity : Activity() {
     private lateinit var status: TextView
     private lateinit var primary: Button
     @Volatile private var generation = 0
+    private var lastFocus:String?=null
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
@@ -78,10 +79,11 @@ class MainActivity : Activity() {
                             }
                         }
                     })
+                    home.restoreFocus(lastFocus)
                 },{ status.text="Não foi possível verificar a biblioteca. Consulta a ligação ou tenta abri-la novamente.";home.unavailable() })
             }
         }
     }
-    override fun onStop() { generation++;images.queue.clear();home.resetPreview();super.onStop() }
+    override fun onStop() { lastFocus=home.focusedItem();generation++;images.queue.clear();home.resetPreview();super.onStop() }
     override fun onDestroy() { io.shutdown();images.shutdownNow();super.onDestroy() }
 }

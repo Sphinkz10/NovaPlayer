@@ -33,6 +33,7 @@ class CinemaActivity:Activity() {
             library=intent.getStringExtra("library")?.takeIf { mediaId.matches(it) }
             libraryName=intent.getStringExtra("libraryName").orEmpty().take(200)
             selected=intent.getStringExtra("selected")?.takeIf { mediaId.matches(it) && library!=null }
+            focusedItem=selected
         }
     }
     override fun onStart() { super.onStart();foreground=true;val lib=library
