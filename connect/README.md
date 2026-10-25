@@ -1,10 +1,20 @@
-# NOVA Connect — Prova Técnica v0.3
+# NOVA Cinema / Connect — Distribuição LAN 0.9
 
-**12 outubro 2026 · Estado: código-fonte experimental + lógica testada localmente. NÃO é APK nem uma VPN funcional aprovada.**
+> Estado atual: [M4 Distribuição Android](../docs/M4_DISTRIBUICAO_ANDROID.md), com pacote de distribuição próprio e assinatura persistente offline. Instalação LAN, catálogo/player e recuperação integrada foram ensaiados em laboratório. A [M3](../docs/M3_FECHO.md) está concluída em software. Aparelhos físicos e jornadas VPN permanecem pendentes. Os detalhes da fase 1 abaixo são históricos onde divergirem destes documentos.
+
+**Base inicial de 17 outubro 2026:** diagnóstico e lógica de domínio. A reprodução local foi acrescentada e ensaiada na M4 em 20 outubro.
+
+Esta fase acrescenta deteção de SDK/ABIs/Leanback, contratos WireGuard/Tailscale/NetBird e estados que não confundem túnel UP com serviço autorizado. Não há restrição a Xiaomi/Chromecast: Android API 26+ e ABIs compatíveis definem a base. Tailscale e NetBird são explicitamente não implementados; o motor WireGuard conserva a prova existente.
+
+Build reproduzível por dependências fixadas: JDK 17, SDK 35, `gradlew.bat :core:verifyCore :app:assembleDebug :app:lintDebug` em Windows, ou `bash gradlew ...` em Linux. Wrapper 8.11.1, checksum oficial da distribuição e do JAR, locks e checksums de dependências incluídos. Isto não promete APKs bit a bit iguais: a assinatura debug é local.
+
+Para atualizar checksums após revisão: `bash gradlew -I scripts/resolve_build_tools.gradle :app:resolveBuildToolArtifacts :core:verifyCore :app:assembleDebug :app:lintDebug --write-locks --write-verification-metadata sha256`. Rever o diff; a CI normal não regenera nem aceita novos checksums automaticamente.
+
+A política de domínio distingue remux, conversão de áudio, vídeo autorizado e codecs/legendas incompatíveis. O primeiro player M4 usa apenas o ficheiro original: as rotas de remux/transcodificação continuam pendentes. [Resultados históricos da fase 1](../docs/FASE_1_RESULTADOS.md).
 
 ## Objetivo
 
-Uma única app Android TV incorpora o motor WireGuard (biblioteca oficial `com.wireguard.android:tunnel:1.0.20260102`). Familiares não precisam de instalar outro cliente VPN. O Android continua a exigir o consentimento do sistema na primeira utilização quando aplicável. A configuração e aprovação de dispositivos pertencem ao administrador; **a associação por convite ainda NÃO foi implementada**.
+Uma única app Android TV deve incorporar os motores dos três fornecedores. A APK normal contém a base WireGuard (`com.wireguard.android:tunnel:1.0.20260102`); as jornadas remotas completas pertencem à M5. O Android exige consentimento do sistema quando aplicável. A associação por código e aprovação do proprietário já está implementada na M3; não fornece ainda perfis VPN.
 
 Este projeto **não faz alterações à UniFi Dream Router, TrueNAS, Jellyfin ou repositórios existentes**. Não guarda nem fornece chaves de produção.
 
@@ -29,24 +39,27 @@ JDK 17+, `kotlinc` instalado:
 python3 scripts/check_source_hygiene.py
 ```
 
-Resultado local verificado em 12/10/2026:
+Resultado local verificado em 17/10/2026 (fase 1):
 
 | Testes | Resultado |
 |---|---|
-| Políticas Kotlin: conexão, privacidade, saúde, reprodução, rotas, identidade | **112/112 PASS** |
+| Políticas Kotlin: conexão, privacidade, saúde, reprodução, rotas, identidade | **116/116 PASS** |
 | Transportes HTTP falsos, TLS e identity mismatch | **19/19 PASS** |
-| Total Kotlin/HTTP | **131/131 PASS** |
+| Contratos de fornecedor e compatibilidade | **30/30 PASS** |
+| Total Kotlin/HTTP/fornecedores | **165/165 PASS** |
 | Inspeção estática heurística de fonte | **11/11 PASS** |
-| Gradle / SDK / APK / emulador | **NÃO executados** |
+| Gradle Wrapper / build APK / assinatura debug | **Aprovados em Windows, JDK 17 / SDK 35** |
+| Android lint | **0 erros; 10 avisos**, descritos no relatório de fase |
+| TV / emulador | **Não executados nesta fase** |
 | WireGuard handshake e Jellyfin reais | **NÃO executados** |
 
 Os testes HTTP são locais, com servidores de resposta fictícios. Não confirmam autenticação Jellyfin nem reprodução.
 
-## Build Android — ainda PENDENTE
+## Build Android — verificado localmente
 
 Requer Android Studio, SDK 35, Java 17 e resolução de dependências Gradle AGP `8.9.2`, Kotlin `2.0.21` e `com.wireguard.android:tunnel:1.0.20260102`.
 
-O código não inclui `gradlew` porque não foi possível validar nem gerar o wrapper oficial neste ambiente. Abrir a pasta no Android Studio com Gradle instalado, realizar um sync e compilar um APK **debug** numa máquina Android SDK. O `applicationId` da prova é `com.novacinema.connect.poc`. A versão foi incrementada para `0.3` (versionCode 3).
+O código inclui `gradlew` e `gradlew.bat`. O `applicationId` da prova é `com.novacinema.connect.poc`, versão `0.4-phase1` (versionCode 4). A APK gerada fica em `app/build/outputs/apk/debug/app-debug.apk`. Os resultados `LOCAL_TEST_RESULTS.txt`, `LOCAL_STATIC_RESULTS.txt` e o gate em `docs/ANDROID_BUILD_GATE.md` preservam evidência histórica v0.3; o estado atual está no relatório da fase 1.
 
 **Não instalar em familiares nem ligar a chaves de produção** antes dos testes obrigatórios. A classe `ProvisioningStore.provisionAdminOnly` é uma API interna de demonstração, **não** um endpoint de associação seguro.
 
@@ -70,3 +83,7 @@ docs/           Matriz Jellyfin, segurança, gates de build, changelog
 ```
 
 **Não é a interface Premium NOVA Cinema final nem uma prova de túnel funcional.** Acesso remoto e configuração da UniFi ficam inalterados.
+
+## Associação Android M3 · 0.5-pairing-lab
+
+A APK normal inclui agora a interface de associação por código ao NOVA Server, confirmação da identidade importada, HTTPS com certificado fixado e sessão cifrada com Android Keystore. Seguir [o guia de laboratório](../docs/M3_CLIENTE_ANDROID.md). Não disponibiliza ainda filmes, Directory ou ligação VPN automática. O workflow Android device pairing TLS verifica API 26/35 contra o servidor real.

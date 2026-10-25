@@ -2,6 +2,8 @@ package com.novacinema.connect
 
 import android.content.Context
 import android.net.VpnService
+import com.novacinema.connect.core.NativeProviderEngine
+import com.novacinema.connect.core.ProviderId
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.config.Config
@@ -12,7 +14,8 @@ import com.novacinema.connect.core.EndpointValidator
 import java.net.URI
 
 /** A real tunnel adapter; tunnel negotiation cannot be tested without an Android device + endpoint. */
-class WireGuardBridge(context: Context) {
+class WireGuardBridge(context: Context) : NativeProviderEngine {
+    override val provider = ProviderId.WIREGUARD
     private val installedPackageName = context.packageName
     private val backend by lazy { GoBackend(context.applicationContext) }
     private val tunnel = object : Tunnel {
@@ -33,6 +36,6 @@ class WireGuardBridge(context: Context) {
         return backend.setState(tunnel, Tunnel.State.UP, profile) == Tunnel.State.UP
     }
 
-    fun disconnect() { backend.setState(tunnel, Tunnel.State.DOWN, null) }
-    fun isConnected(): Boolean = backend.getState(tunnel) == Tunnel.State.UP
+    override fun disconnect() { backend.setState(tunnel, Tunnel.State.DOWN, null) }
+    override fun isTunnelUp(): Boolean = backend.getState(tunnel) == Tunnel.State.UP
 }

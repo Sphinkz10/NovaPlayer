@@ -1,0 +1,15 @@
+NOVA Cinema laboratory player
+
+AndroidX Media3 1.9.4 (common, container, database, datasource, decoder,
+exoplayer, extractor and ui) and AndroidX dependencies:
+Copyright The Android Open Source Project / Google LLC and contributors.
+https://github.com/androidx/media/tree/1.9.4
+Licensed under Apache License 2.0; see media3-1.9.4-apache2.txt.
+
+Guava 33.3.1-android and failureaccess 1.0.2:
+Copyright The Guava Authors / Google LLC.
+https://github.com/google/guava
+Licensed under Apache License 2.0; see media3-1.9.4-apache2.txt.
+
+Exact runtime and build-only dependency versions and verified checksums are
+recorded in connect/app/gradle.lockfile and connect/gradle/verification-metadata.xml.

@@ -1,0 +1,42 @@
+name: Native engine feasibility
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/phase-one]
+    paths:
+      - '.github/workflows/native-engines.yml'
+      - 'connect/native-proof/build.sh'
+permissions:
+  contents: read
+jobs:
+  combined-bindings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: '1.27.1'
+          cache: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned Android NDK
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$SDKMANAGER"
+          "$SDKMANAGER" 'ndk;23.1.7779620' 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Build one gomobile AAR containing both engines
+        run: bash connect/native-proof/build.sh
+      - name: Compile NOVA APK with WireGuard and combined bindings
+        working-directory: connect
+        run: bash gradlew :app:assembleDebug -PnovaNativeProofAar="$GITHUB_WORKSPACE/native-output/nova-engines.aar" --no-daemon --console plain
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-engine-feasibility
+          retention-days: 7
+          path: |
+            native-output/
+            connect/app/build/outputs/apk/debug/*.apk

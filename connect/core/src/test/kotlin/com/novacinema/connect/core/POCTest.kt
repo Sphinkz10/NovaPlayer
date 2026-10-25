@@ -8,7 +8,7 @@ object POCTest {
         catch (e: Throwable) { throw AssertionError("FAILED $name", e) }
     }
     private fun eq(want: Any?, actual: Any?) { check(want == actual) { "Expected $want, obtained $actual" } }
-    private val info = PublicServerInfo("server-123", "Jellyfin", true)
+    private val info = PublicServerInfo("server-123", "Jellyfin Server", true)
     private val lan = "https://192.168.50.10:8920"
     private val remote = "https://10.90.0.1:8920"
     private fun conn(lanOk:Boolean=false,hasProfile:Boolean=true,consent:Boolean=true,vpnUp:Boolean=true,lanUrl:String?=lan,remoteUrl:String?=remote)=
@@ -68,6 +68,7 @@ object POCTest {
         test("empty pinned identity blocked") { eq(JellyfinStatus.SERVER_IDENTITY_MISMATCH, JellyfinHealth.evaluate(200,info,expectedServerId="").status) }
         test("server mismatch not retryable") { check(!JellyfinHealth.evaluate(200,info,expectedServerId="untrusted").retryable) }
         test("server mismatch requires admin action") { eq(RetryAction.REQUIRE_USER_ACTION,RecoveryPolicy.action(JellyfinHealth.evaluate(200,info,expectedServerId="untrusted"))) }
+        test("noncanonical Jellyfin product rejected") { eq(JellyfinStatus.UNEXPECTED_RESPONSE, JellyfinHealth.evaluate(200,info.copy(productName="Jellyfin")).status) }
         test("fake Jellyfin server rejected") { eq(JellyfinStatus.UNEXPECTED_RESPONSE, JellyfinHealth.evaluate(200,info.copy(productName="Fake Gateway")).status) }
         test("empty server ID rejected") { eq(JellyfinStatus.UNEXPECTED_RESPONSE, JellyfinHealth.evaluate(200,info.copy(serverId="")).status) }
         listOf(500,502,503,504,408,425).forEach { n -> test("transient server $n") {
@@ -96,8 +97,12 @@ object POCTest {
         test("direct play allowed") { eq(PlaybackOutcome.DIRECT_PLAY, PlaybackPolicy.decide(play())) }
         test("never play unauthorized") { eq(PlaybackOutcome.BLOCK_NO_ACCESS, PlaybackPolicy.decide(play(granted=false))) }
         test("never play missing media") { eq(PlaybackOutcome.BLOCK_NO_MEDIA, PlaybackPolicy.decide(play(has=false))) }
-        test("audio remux if allowed") { eq(PlaybackOutcome.AUDIO_REMUX, PlaybackPolicy.decide(play(aCodec=false))) }
-        test("audio codec mismatch blocked") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(aCodec=false,remux=false))) }
+        test("unsupported audio requires conversion, not remux") { eq(PlaybackOutcome.AUDIO_TRANSCODE, PlaybackPolicy.decide(play(aCodec=false))) }
+        test("audio codec mismatch blocked") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_AUDIO, PlaybackPolicy.decide(play(aCodec=false,remux=false))) }
+        test("container mismatch can use remux without changing codecs") { eq(PlaybackOutcome.CONTAINER_REMUX, PlaybackPolicy.decide(play().copy(containerSupported=false, containerRemuxAllowed=true))) }
+        test("unsupported container requires remux permission") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_CONTAINER, PlaybackPolicy.decide(play().copy(containerSupported=false))) }
+        test("container remux cannot fix unsupported audio") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_AUDIO, PlaybackPolicy.decide(play(aCodec=false,remux=false).copy(containerSupported=false,containerRemuxAllowed=true))) }
+        test("unsupported subtitle cannot silently burn into video") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_SUBTITLE, PlaybackPolicy.decide(play().copy(subtitleSupported=false))) }
         test("unsupported video blocked by default") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(vCodec=false))) }
         test("admin alone insufficient for video transcode") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(vCodec=false,admin=true))) }
         test("user alone insufficient for video transcode") { eq(PlaybackOutcome.BLOCK_UNSUPPORTED_VIDEO, PlaybackPolicy.decide(play(vCodec=false,optin=true))) }
@@ -122,6 +127,8 @@ object POCTest {
         test("deny missing playable path") { check(!AuthorizationPolicy.mayIssuePlaybackSession(SessionAuthorization(true,true,true,false))) }
         test("allow fully authorized session") { check(AuthorizationPolicy.mayIssuePlaybackSession(SessionAuthorization(true,true,true,true))) }
         val networkTests = JellyfinTransportTest.run()
-        println("NOVA Connect v0.3: $executed / $executed policy tests PASS; $networkTests / $networkTests local HTTP transport tests PASS; total ${executed + networkTests}")
+        val providerTests = ProviderContractTest.run()
+        val pairingTests = DevicePairingTest.run()
+        println("NOVA Connect: $executed policy tests PASS; $networkTests HTTP transport tests PASS; $providerTests provider tests PASS; $pairingTests pairing tests PASS; total ${executed + networkTests + providerTests + pairingTests}")
     }
 }

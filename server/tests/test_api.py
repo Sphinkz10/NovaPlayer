@@ -1,5 +1,6 @@
 import pytest
 import sqlite3
+from html.parser import HTMLParser
 
 TOKEN='unit-'+'x'*60
 PASS='long-passphrase-at-least-14'
@@ -60,7 +61,7 @@ def test_login_and_overview_authorization(test_client,monkeypatch):
     assert bootstrap(client).status_code==201
     assert client.get('/api/v1/admin/overview').status_code==401
     assert client.get('/api/v1/admin/overview',headers={'Authorization':'Bearer wrong'}).status_code==401
-    async def fake(_):
+    async def fake(_, **kwargs):
         return {'state':'ready','server_id':'abcd','version':'12.2'}
     monkeypatch.setattr('nova_server.app.probe_jellyfin',fake)
     r=login(client)
@@ -72,7 +73,9 @@ def test_login_and_overview_authorization(test_client,monkeypatch):
     data=response.json()
     assert data['jellyfin']['state']=='ready'
     assert data['connect']['state']=='disabled'
-    assert all(root['read_only'] for root in data['library_roots'])
+    assert all(root['configured_read_only'] and root['verification']=='not_checked'
+               and root['read_only'] is None and root['readable'] is None
+               and root['indexed'] is None for root in data['library_roots'])
     assert response.headers['cache-control']=='no-store'
     assert response.headers['x-frame-options']=='DENY'
     assert 'frame-ancestors' in response.headers['content-security-policy']
@@ -115,7 +118,12 @@ def test_headers_on_errors_and_page(test_client):
         assert 'nosniff' == r.headers['x-content-type-options']
         assert r.headers['referrer-policy']=='no-referrer'
         assert 'default-src' in r.headers['content-security-policy']
-    assert 'https://' not in client.get('/').text
+    class Assets(HTMLParser):
+        def handle_starttag(self, tag, attrs):
+            for name, value in attrs:
+                if name in ('src', 'href'):
+                    assert value.startswith('/') and not value.startswith('//')
+    Assets().feed(client.get('/').text)
 
 def test_static_js_does_not_persist_token(test_client):
     client,_=test_client

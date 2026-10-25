@@ -1,24 +1,27 @@
-# NOVA — Arquivo consolidado do projeto
+# NOVA — Guia das fontes atuais
 
-**Data de compilação do arquivo:** 17 outubro 2026
-**Conteúdo:** toda a documentação e os projetos de código-fonte disponíveis na sessão, mais ligações ao Figma.
+**Atualização:** 20 outubro 2026. Começar por [M3_FECHO.md](M3_FECHO.md): critérios únicos, resultado consolidado e procedimento de ensaio. Aceitação física TrueNAS/TV continua separada.
+
+**Trabalho atual:** [M4_CINEMA_LOCAL.md](M4_CINEMA_LOCAL.md) reúne catálogo/player aprovados em laboratório e os critérios pendentes de instalação LAN e aceitação física.
+
+As fontes atuais incluem M3 e M4. O Core mantém `0.3.0-dev`; o digest M4 identifica a imagem testada atual. O cliente Android é `0.7-m4-lab`. Os guias anteriores de associação, cliente e Directory preservam o histórico.
 
 ## Como usar este arquivo
 
-1. Ler `ESTADO_REAL.md` para distinguir o que está pronto do que ainda é prova técnica.
-2. Consultar `01_DOCUMENTACAO/` para os requisitos e planeamento.
-3. Abrir `02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/README.md` para conhecer o código do servidor e as instruções de laboratório.
-4. Abrir `03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/README.md` para a prova Android/WireGuard.
-5. Usar `04_FIGMA_E_DESIGN/LINKS_FIGMA.md` para abrir os protótipos e a arquitetura mais recente.
-6. `05_ZIPS_ORIGINAIS/` preserva os dois ZIPs anteriores intactos, para comparação e backup.
-7. `MANIFESTO_SHA256.txt` permite verificar a integridade de todos os ficheiros internos.
+1. Ler [M2_SERVIDOR_LAB.md](M2_SERVIDOR_LAB.md), [FASE_1_RESULTADOS.md](FASE_1_RESULTADOS.md) e [ESTADO_REAL.md](ESTADO_REAL.md).
+2. Consultar [roadmap](ROADMAP_INSTALACAO_SERVER_TV_v0_2.md) e [contrato nativo](ADR_001_CONNECT_NATIVO.md); as especificações G0/F00/F01 são históricas onde divergirem destes documentos.
+3. [../server/README.md](../server/README.md) contém instruções do servidor de laboratório. Para Apps e backup/restauro, seguir [M2_TRUENAS_RECUPERACAO.md](M2_TRUENAS_RECUPERACAO.md).
+4. [../connect/README.md](../connect/README.md) contém build Android e testes.
+5. [../design/LINKS_FIGMA.md](../design/LINKS_FIGMA.md) aponta para os designs remotos.
+6. `../archives/` preserva os ZIPs originais. `../archives/inventory-original/` preserva os manifests históricos, cujos caminhos se referiam à organização antiga.
+7. O inventário atual usa caminhos relativos à raiz do repositório. Validar com `python scripts/inventory.py` a partir dessa raiz. Para regenerar após alterações: `python scripts/inventory.py --write`. Exclui os próprios manifests, dados, segredos e resultados de build ignorados por Git.
 
 ## Limites do pacote
 
 - **Não** é uma única instalação pronta a usar: são fontes de código e documentos.
 - **Não** contém ficheiro `.fig` editável offline; o original reside no Figma.
-- **Não** contém APK Android compilada, NOVA Directory funcional, VPN ativa ou vídeo funcional.
+- O build produz a APK 0.7-m4-lab, com login Directory, associação, catálogo e player local em validação. O Directory continua separado; instalação LAN guiada, túneis completos e aceitação física permanecem pendentes.
 - O pacote servidor é apenas uma primeira prova local, **não instalar em produção nem expor na Internet**.
-- Pode haver requisitos históricos que foram alterados: a arquitetura multi-proprietário do `04_FIGMA_E_DESIGN/LINKS_FIGMA.md` é a versão de produto mais recente.
+- WireGuard, Tailscale e NetBird compilaram juntos numa APK experimental. A APK normal ainda inclui apenas WireGuard; nenhum dos três tem a jornada remota completa aprovada.
 
-Este ZIP foi construído a partir de ficheiros efetivamente existentes, preservando os nomes e versões de origem.
+Os ZIPs originais não recebem as correções atuais. Usar as fontes atuais ou o pacote NOVA Server 0.2.0-lab; a pasta interna `NOVA_Fase1` mantém o nome histórico do empacotador.

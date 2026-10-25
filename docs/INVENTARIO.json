@@ -1,310 +1,1477 @@
 {
-  "created_at_utc": "2026-10-17T16:02:03.532000+00:00",
-  "package": "NOVA_Projeto_Completo_2026-10-17",
-  "origins": {
-    "documents": [
-      "NOVA_Cinema_G0_Especificacao_Mestre_v1.md",
-      "NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
-      "NOVA_Cinema_3_0_F01_Arquitetura_v0_1.md",
-      "NOVA_Platform_Security_Architecture_v0_1.md"
-    ],
-    "archives_originals": [
-      "NOVA_Server_P01_v0.1.zip",
-      "NOVA_Connect_POC_v0.3.zip"
-    ],
-    "figma_file_url": "https://www.figma.com/design/AAwpusB10YU5tXg4y8Z6P3",
-    "figma_offline_export_included": false
-  },
+  "schema_version": 2,
+  "package": "NOVA-foundation-phase1",
+  "base_commit": "57391fcc64e9e65220d6ed59f02dfa98f052db38",
+  "excluded": [
+    "docs/INVENTARIO.json",
+    "docs/MANIFESTO_SHA256.txt",
+    "Git-ignored build/runtime files"
+  ],
   "files": [
     {
-      "path": "01_DOCUMENTACAO/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
-      "bytes": 23945,
-      "sha256": "186c72375279a02ff160a683732016c9b0d38f3c338577ea9684b0708c5a7a1f"
+      "path": ".gitattributes",
+      "bytes": 113,
+      "sha256": "1d16f330a5ac1574310cdec40475de980a65110f78176dde48669d550a27e09a"
     },
     {
-      "path": "01_DOCUMENTACAO/NOVA_Cinema_3_0_F01_Arquitetura_v0_1.md",
-      "bytes": 23539,
-      "sha256": "46687c67b91e727055d51e263df905cde64402610ae154a4588f648b930fb72d"
+      "path": ".github/workflows/android-distribution.yml",
+      "bytes": 2309,
+      "sha256": "2881202af9099bf8dffe01b87ab7470aae2ab67167a756746e776277ed30e2f4"
     },
     {
-      "path": "01_DOCUMENTACAO/NOVA_Cinema_G0_Especificacao_Mestre_v1.md",
-      "bytes": 24835,
-      "sha256": "48814707b2b0e21d30793710c8afc6774b1c16271b0a7894f1644ad5005ba948"
+      "path": ".github/workflows/device-pairing.yml",
+      "bytes": 2172,
+      "sha256": "16c68799c586b031070e50ffbfd7124232fb3e61f6e534e6ec7a577b47f2dcfb"
     },
     {
-      "path": "01_DOCUMENTACAO/NOVA_Platform_Security_Architecture_v0_1.md",
-      "bytes": 10572,
-      "sha256": "e8ef755cb0e185fd9a7ecfae2b70c276a931535d47f2be7dd328e990ffeea689"
+      "path": ".github/workflows/gateway-container.yml",
+      "bytes": 2039,
+      "sha256": "82af44fb68ae83de86b5cadc68abe76aec7a5e2f90128c25ec18b3143c5957af"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/.env.example",
-      "bytes": 150,
-      "sha256": "a3de96706cf153f0265fd1ba4567a5b391f726837babf32161e8c957af734539"
+      "path": ".github/workflows/native-engine-cache.yml",
+      "bytes": 1565,
+      "sha256": "982e984c65a2ad2be83d8cf135543aa1ef3c5f05801fcf9d4c0b66b2c591bcad"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/.gitignore",
-      "bytes": 74,
-      "sha256": "a6f86e1b0a0b4f06bb153d14ec10ccec8489f675f732dce18a8099fbe58d1a0f"
+      "path": ".github/workflows/native-engines.yml",
+      "bytes": 1563,
+      "sha256": "760691331e792c9f17fb55ea211de7e307ed030a2eb6eca30bbe6efd49baa531"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/Dockerfile",
-      "bytes": 341,
-      "sha256": "8e251dc8a284b937de03962b77cee5dbb5fab97185aea95258bad3b617deb232"
+      "path": ".github/workflows/native-runtime.yml",
+      "bytes": 2838,
+      "sha256": "98b1909c7b9f68f86a382c11da595bf38a6452343d904b46578b7c39f7cc7688"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/README.md",
-      "bytes": 8152,
-      "sha256": "9275545092e8bd7771d6c7c565ca5ed5a02fd2bf2fdbac95e85a83df11f0bbaf"
+      "path": ".github/workflows/tailscale-network.yml",
+      "bytes": 2734,
+      "sha256": "4c07a26a936956c9e777d33b52c76a4596e874847fca1516c4b7d028ea5f757b"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/compose.yaml",
-      "bytes": 1208,
-      "sha256": "b436148ecb99395d49ef5807e9f918c14e6cccbdb26866e6578cf619cdd00047"
+      "path": ".github/workflows/verify.yml",
+      "bytes": 6589,
+      "sha256": "683c133273f4d4fd17b08ca688654185caa6949b09919577234a1bde9ecb71d6"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/docs/DELIVERY_STATUS.md",
-      "bytes": 1794,
-      "sha256": "bbdc4c68748985c9509bf822b0ce8ae0f321d224ef9c603ec5f2bf981ab15746"
+      "path": ".github/workflows/wireguard-network.yml",
+      "bytes": 1844,
+      "sha256": "2aee49d375210e07ff4dec3c2bf69691a6b177978f60fdd4dbefd20fc930c486"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/__init__.py",
-      "bytes": 99,
-      "sha256": "5b66dfe846f1154f33198d3c3bd1d9473f863ced67b4c94cf4959bb333e584fb"
+      "path": ".gitignore",
+      "bytes": 226,
+      "sha256": "dca00ae690b349f6d1f84d9371548ab365668ad94527bdb06ef9530ff1be5aee"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/app.py",
-      "bytes": 6123,
-      "sha256": "c0b785243b5e3b4d236756fb6a159e826275f95372fc919be501515a5ffef0a1"
+      "path": "README.md",
+      "bytes": 3810,
+      "sha256": "ebaf2acf8ec1135ce8941004b056db47427f0fa2bd62f1a7adc0c310a71d6655"
     },
     {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/jellyfin.py",
-      "bytes": 1586,
-      "sha256": "b1d3883722049fc301e58a802d6df4d5dfad44737294a3c5e870f906cd044ed7"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/security.py",
-      "bytes": 1309,
-      "sha256": "e5b2876d1cd5f5f3202d7179a8c9bdc9144b31c2fe9eaa21567c111c7340f695"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/static/control.css",
-      "bytes": 2013,
-      "sha256": "3f7c6c13c98509b0436e7d985c87995ffd8a396ce323f89954fa74315e8b1341"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/static/control.js",
-      "bytes": 2368,
-      "sha256": "dce5f0cb110217e33c9ebc34d26a601e6b12316ff0bb64bbe6583bde7ea60b89"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/static/index.html",
-      "bytes": 1730,
-      "sha256": "5f9ac9c91ceb8041965ee5580de98e7dc157c1ad802439268ac9eea56879f4e7"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/nova_server/storage.py",
-      "bytes": 4066,
-      "sha256": "37b5a57ced4e25b19cf08c749518eb39ff4539d89d0972e5e45ad789f99bc9e2"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/pytest.ini",
-      "bytes": 29,
-      "sha256": "e28a989e765f6f1fc37e02fb00a351f56391f749cafcd3f93057abbfb17ba26b"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/requirements-dev.txt",
-      "bytes": 70,
-      "sha256": "67e8e5b0cf1ba4a69293e8e6c8cdefcb5cd95f4ef71bd06ab781e91fda5f58cd"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/requirements.txt",
-      "bytes": 67,
-      "sha256": "c1feb82a407a74eb57fc45e993b40f8ea2ae9845638018e676b2304f455c44fc"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/scripts/first_run.py",
-      "bytes": 1631,
-      "sha256": "4ad428a05b73226042fc403fe9411919e5aa37ae752daac3874e55ec36f27e7e"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/scripts/install.py",
-      "bytes": 3380,
-      "sha256": "cfcf153b0e27f9a9421c566d0fd8b37d7018bc2859834fd5f49122b5778b9027"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/scripts/smoke_http.py",
-      "bytes": 2727,
-      "sha256": "ec9890b81eece16a3dfc7c478010da1cafff4e620a36c1034c6aa5162a167503"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/conftest.py",
-      "bytes": 386,
-      "sha256": "d2012d89115f313e35b1133a9fa3c1ad0b2fd9e0f330c599a0f0f8f36ce6cb74"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_api.py",
-      "bytes": 5336,
-      "sha256": "13e8891139c66d2fd81772f6afe67f3709181ff55ae1bb2c7dd4661ebf1d5024"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_compose.py",
-      "bytes": 1474,
-      "sha256": "05e204d344a82bf60a63a7a8d7e2952e5726677fac1977e14c665418a13ca535"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_installer.py",
-      "bytes": 1581,
-      "sha256": "1fa26e75d084971a148e53c3f624be0c120b0abfe07e63f1e7c5addf24bbbcdd"
-    },
-    {
-      "path": "02_CODIGO_NOVA_SERVER/NOVA_Server_P01_v0.1/tests/test_jellyfin.py",
-      "bytes": 2609,
-      "sha256": "e1a6aaef4f73108b81e4a5641c26f629e94cc71ce130d8023cc932382576919e"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/LOCAL_STATIC_RESULTS.txt",
-      "bytes": 461,
-      "sha256": "224dcd53e2c96423c1d4d5b5fe018112ac6e8e4a9a0a6831a2e501db7a178490"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/LOCAL_TEST_RESULTS.txt",
-      "bytes": 148,
-      "sha256": "d9a3a35222bdf3fac0ac3cf31e976f1a2d2d0a3de03db7158a3bc9db95df8e14"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/README.md",
-      "bytes": 5424,
-      "sha256": "037b0d3a93fc0edbefc8fd06e201ddd42657ec7437e4becde739baf9ac9c0a9a"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/build.gradle.kts",
-      "bytes": 640,
-      "sha256": "f7ea7e8ac13788eae50f3fba96a77f37fb2a2796f0d9d67a49a4ef9d48158c18"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/AndroidManifest.xml",
-      "bytes": 1035,
-      "sha256": "49ebce19fc71efe1111ed9595056b4966dd9de6fcf76835521bf5378de4172ab"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/JellyfinHttpProbe.kt",
-      "bytes": 940,
-      "sha256": "bdd4e03d74e240333a877468f4e2a4598a643bdbfeefa6cd7cfe1c8b7e62d974"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/MainActivity.kt",
-      "bytes": 5043,
-      "sha256": "f381fe2560931b590d2e86a5808a61702227060e756f2c7cb032df1d213ed4ac"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt",
-      "bytes": 4303,
-      "sha256": "5bc94ea1a660cc759e69f6b9248f4a62e1f90a26d2766554ec59cbb1313bd47d"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/app/src/main/java/com/novacinema/connect/WireGuardBridge.kt",
-      "bytes": 2184,
-      "sha256": "803ff0a33ba77c8b1f57d73e3292ebe41f4a35ace676e8ac76b2cbd253b4531b"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/build.gradle.kts",
-      "bytes": 142,
-      "sha256": "1ab4e60f89de7a2c805a3b2d820e3b9b1c0d4657cb8fe2f26253179e5eba3fa2"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/ConnectionPolicy.kt",
-      "bytes": 3289,
-      "sha256": "595e3bbfd0764e032daac9d0d34d3f0f3112dd27863bc34ead4b28f787872280"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/JellyfinHealth.kt",
-      "bytes": 2930,
-      "sha256": "ff7f0f4a9d46e0714cef1fc36b56de9bb5144a9e72b2a0ea78fbad64fe033ec9"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/JellyfinNetworkProbe.kt",
-      "bytes": 2819,
-      "sha256": "aae46d746b63402eb94054c4230124144c5483b846a1df3c559f6183bcac1a35"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/main/kotlin/com/novacinema/connect/core/SecurityPolicies.kt",
-      "bytes": 3155,
-      "sha256": "073ba96d3cae47713318bd4501f6aa3189a80295b4eefe1bad87074fc420155c"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/test/kotlin/com/novacinema/connect/core/JellyfinTransportTest.kt",
-      "bytes": 7299,
-      "sha256": "10db3cb3115f93354d1f64d81640f23b79003aebdd3caf7fff8de526fbf25425"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/core/src/test/kotlin/com/novacinema/connect/core/POCTest.kt",
-      "bytes": 13996,
-      "sha256": "728dc939b4d465ab2585487b7f95598ae4273ce9b8fbbdb096c7df81844a9b25"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/ANDROID_BUILD_GATE.md",
-      "bytes": 2363,
-      "sha256": "e6ddb82b3002d9add97d9b1fa5c4b452886b998106b21775f4edcada857ec724"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/CHANGELOG.md",
-      "bytes": 1351,
-      "sha256": "30cad82536af5451fb817ceff5035cdd744adfbb283fbeea424ee872fdec34cc"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/JELLYFIN_HEALTH_MATRIX.md",
-      "bytes": 1768,
-      "sha256": "6fcae61f7b536ea489dba2086e9d8a58cbf8284715afd82db2825258b81cdddf"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/docs/SECURITY_REVIEW.md",
-      "bytes": 3273,
-      "sha256": "8032bff2be46bb09f410fda372b3907f8eaee54523cd351b98f6cfc45dce5651"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/gradle.properties",
-      "bytes": 103,
-      "sha256": "fa078c27c9e4bde28a029d673875b028884505efa436b68cf60e1ac0be5b679b"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/scripts/check_source_hygiene.py",
-      "bytes": 2341,
-      "sha256": "ec6df90f84847efbb0f3d77ceca79cdff6c2e39c973a1b6a4ca0c3c1384bcdf0"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/scripts/run_core_tests.sh",
-      "bytes": 315,
-      "sha256": "26da91767b8bb5b31bc9687dc7a646ea17f650cb53eb47464434aa84f62fc5e5"
-    },
-    {
-      "path": "03_CODIGO_NOVA_CONNECT/NOVA_Connect_POC_v0.3/settings.gradle.kts",
-      "bytes": 283,
-      "sha256": "3c27eaab2c0cbaae85fced0c27ab4d8f5c6de3a67cea40be4a69eb1e2a7434b7"
-    },
-    {
-      "path": "04_FIGMA_E_DESIGN/LINKS_FIGMA.md",
-      "bytes": 3759,
-      "sha256": "2a1d65edf373d83ca21cf5ba33669e0c93bf708bccd92719ef9bb0ad61085219"
-    },
-    {
-      "path": "05_ZIPS_ORIGINAIS/NOVA_Connect_POC_v0.3.zip",
+      "path": "archives/NOVA_Connect_POC_v0.3.zip",
       "bytes": 36831,
       "sha256": "715f5a1fe4abb32d038e53d0b2af6989eae8a730caa2f52a3751bda19687b9a4"
     },
     {
-      "path": "05_ZIPS_ORIGINAIS/NOVA_Server_P01_v0.1.zip",
+      "path": "archives/NOVA_Server_P01_v0.1.zip",
       "bytes": 24709,
       "sha256": "34308fbd113b693bfb0690498fbce4d74770424f98e41ce9ceb547989ce9c04a"
     },
     {
-      "path": "ESTADO_REAL.md",
-      "bytes": 2651,
-      "sha256": "38f4dcb25ad2fbcd1db289a7307c429bed03a818d57df83b082e13b6cb9b88d2"
+      "path": "archives/inventory-original/INVENTARIO.json",
+      "bytes": 12366,
+      "sha256": "54826ea54ccedc9e3f0fe11f30acf38e04a2cb9528bf0edc581cc7b4a568cb1c"
     },
     {
-      "path": "LER_PRIMEIRO.md",
-      "bytes": 1605,
-      "sha256": "ce6a66a5685b40e4a5dd77a4d6672ede5f7763ff2ae7de57b63ab62afac3e9c0"
+      "path": "archives/inventory-original/MANIFESTO_SHA256.txt",
+      "bytes": 8046,
+      "sha256": "c4ba499304357b88e9ed1b4df0afd6ede9168ca4097098a8cdccd9de179e76ff"
+    },
+    {
+      "path": "connect/LOCAL_STATIC_RESULTS.txt",
+      "bytes": 461,
+      "sha256": "224dcd53e2c96423c1d4d5b5fe018112ac6e8e4a9a0a6831a2e501db7a178490"
+    },
+    {
+      "path": "connect/LOCAL_TEST_RESULTS.txt",
+      "bytes": 148,
+      "sha256": "d9a3a35222bdf3fac0ac3cf31e976f1a2d2d0a3de03db7158a3bc9db95df8e14"
+    },
+    {
+      "path": "connect/README.md",
+      "bytes": 7942,
+      "sha256": "bdbe38ac609bcac51176b27bdd46e48fe0b49e3e30ed4fb40d609fc90318a724"
+    },
+    {
+      "path": "connect/app/build.gradle.kts",
+      "bytes": 5849,
+      "sha256": "a6c824846664f14697e842d69877a919468b97474e0d8975a1fb6a5215dde6a0"
+    },
+    {
+      "path": "connect/app/gradle.lockfile",
+      "bytes": 52959,
+      "sha256": "ddbf9bef1a3d9cce24b0cc2f29df53306a26f13713283b2109b0548e16977d03"
+    },
+    {
+      "path": "connect/app/src/androidTest/java/com/novacinema/connect/DevicePairingInstrumentation.kt",
+      "bytes": 9230,
+      "sha256": "4f658db583e585d0fb45ed16effc868854673b5af703ecd063787d59ab9b4a25"
+    },
+    {
+      "path": "connect/app/src/androidTest/java/com/novacinema/connect/LabScreenshots.kt",
+      "bytes": 4117,
+      "sha256": "c00ba0fa6420b86514d54c20c52da3c98d80516cde8fc3f52ab9d9b54a8c02c6"
+    },
+    {
+      "path": "connect/app/src/androidTest/java/com/novacinema/connect/LanSteps.kt",
+      "bytes": 5609,
+      "sha256": "7d8835f9456c721691e088317806bc3c4ddef03058a0901e51adcfd471eee673"
+    },
+    {
+      "path": "connect/app/src/androidTest/java/com/novacinema/connect/M3Steps.kt",
+      "bytes": 9259,
+      "sha256": "c53833f733acc4d379b58f529b6ba23fe9f4f469f3793f54ba58c302ac07c3d3"
+    },
+    {
+      "path": "connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt",
+      "bytes": 10804,
+      "sha256": "08485890d11a077b43fc57b8c63bb8056f2aad6c3b1f7cd63b699298d8a6ba62"
+    },
+    {
+      "path": "connect/app/src/main/AndroidManifest.xml",
+      "bytes": 2248,
+      "sha256": "d1ce21c7cbe68048ca70f07cbc235c7d0083db2eb78b7576189f6a7d22309e24"
+    },
+    {
+      "path": "connect/app/src/main/assets/licenses/bouncycastle-1.86.html",
+      "bytes": 1259,
+      "sha256": "afaf5bd0b0d869dc86b71711e1b775b204948634c9710a35a9a70d1613a2ab14"
+    },
+    {
+      "path": "connect/app/src/main/assets/licenses/conscrypt-2.7.0.txt",
+      "bytes": 14212,
+      "sha256": "eebc1e08d5edeea3b0866243385c0ec20bda335a1e4adaed3874525ede3d6e0c"
+    },
+    {
+      "path": "connect/app/src/main/assets/licenses/media3-1.9.4-apache2.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "connect/app/src/main/assets/licenses/media3-dependencies.txt",
+      "bytes": 692,
+      "sha256": "99ffc3e54ca1989804ea5d03211e2df2b852f88da4c4e305d2c07f8a0459ed38"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/AndroidCapabilities.kt",
+      "bytes": 449,
+      "sha256": "27b645d8ff27fc1ef6cee14dae9faacd42319d8ab8899b92d7bf0e8a16b5dc7f"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/CinemaActivity.kt",
+      "bytes": 13281,
+      "sha256": "4221e48f38cbc9b9251ff2c13a4ab5510635ab2c0ba89042fc53aa73bc3a64bd"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/CinemaArtwork.kt",
+      "bytes": 1957,
+      "sha256": "c6c8daea38d34b50efa8e84e6378e1dce5c5ed807c897569a8fe038a3cfda237"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/CinemaCard.kt",
+      "bytes": 3533,
+      "sha256": "a84bf73f4280aec631f808714492677e4ccdb60c8b258032589663a7b885b6fd"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/CinemaHomeView.kt",
+      "bytes": 7186,
+      "sha256": "c59362187ab29551e5d2ac5103767a49698d174d68101422f1697c5a0ad8ce05"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/ConnectionActivity.kt",
+      "bytes": 4342,
+      "sha256": "59640bcb26dc042d02a0368a53e4cd456139007e12e155e06cb6ee354d922c52"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt",
+      "bytes": 10727,
+      "sha256": "d73fca28e693fa106db696b4e8481cfb5b1cf53c35c1c1b70b5eb4891952faa5"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DevicePairingActivity.kt",
+      "bytes": 10639,
+      "sha256": "1994fd461c178d4b746688b4fb5b665d29a4b4cc3f1b2124e2ff88c403a2faab"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DeviceSessionStore.kt",
+      "bytes": 5015,
+      "sha256": "77719cce9c48a6863ef2e6e540ab54b08ad5d412a19cf1d9d8dbf503c3d7c96e"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryActivity.kt",
+      "bytes": 7313,
+      "sha256": "ffe6b1fbd93d754952dc29f614e4739dbf3e961e6b72db76be77dd34ca771fdb"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryClient.kt",
+      "bytes": 10392,
+      "sha256": "f08efa7466c23298977ef891900b8b0d97b3c7cc58945045c83f554ca03a64cc"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DirectoryPins.kt",
+      "bytes": 3799,
+      "sha256": "d9886d6a7765edaa18c3771adb14a04fffd3948d0ce4b4c0fd0471061005d172"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DirectorySetup.kt",
+      "bytes": 5395,
+      "sha256": "ae5decaf8993cb9b6ac741c72b0c12f9475b8011d727c32bf4bc585c4fd63b34"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/DirectorySetupActivity.kt",
+      "bytes": 3426,
+      "sha256": "01a0080fe014f3b203989633f8e9a9a7211a56a73f99305db7f6e4787b416a07"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/JellyfinHttpProbe.kt",
+      "bytes": 940,
+      "sha256": "bdd4e03d74e240333a877468f4e2a4598a643bdbfeefa6cd7cfe1c8b7e62d974"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/MainActivity.kt",
+      "bytes": 5613,
+      "sha256": "14b3c34a218bb87fd2fd38208c62c3a4742b94262eb60501d7b078027a9e38bf"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/MediaClient.kt",
+      "bytes": 6464,
+      "sha256": "b0973e4ace4e0a2e7df7680b1d1dfc1fcfb0dac1092f6717e47fca8838046049"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/NovaMediaSource.kt",
+      "bytes": 3008,
+      "sha256": "832e46c71a6d69c4b29f1de69a3a945e33edea8fc0956b26f66af806ba3515ed"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/PlayerActivity.kt",
+      "bytes": 13174,
+      "sha256": "6dd7272a202e234a65bd0035a5f9984ac402332b52583a71a988b3fd1e707570"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/ProvisioningStore.kt",
+      "bytes": 5494,
+      "sha256": "ca70715a54a56232b7bde1b50d0dfd26a6f49bad0502434b307a9660db4f4915"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/RemoteTailscale.kt",
+      "bytes": 4159,
+      "sha256": "047426bfb0c2131b7213c4eae56d7ebf8cfd1a23649dc7d38e32147fb1b13637"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/RemoteWireGuard.kt",
+      "bytes": 12246,
+      "sha256": "dd5d63e78232ca8b5f3d61dea6cb8eee13136861602f4005154cac3a8715f7c8"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/TvUi.kt",
+      "bytes": 8875,
+      "sha256": "50941ce6c0226a697fa56e8629197e39ac2852ee6ca88e81d3497cf4b7f35aec"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/WireGuardBridge.kt",
+      "bytes": 2375,
+      "sha256": "e325767f15fe99446cabc75bca01684813f9c40ed98db6280bab42a7d5e68bad"
+    },
+    {
+      "path": "connect/app/src/main/java/com/novacinema/connect/WireGuardEnrollmentStore.kt",
+      "bytes": 4192,
+      "sha256": "79a7fa98303801b4ff81b0481cb3cc4771929718764e4a8d237f544298a3084d"
+    },
+    {
+      "path": "connect/app/src/main/res/drawable/nova_banner.xml",
+      "bytes": 526,
+      "sha256": "a7a0ad84e57faf2b615e737ecb3f5c21ea1cfc2304270a40d569d61274c2864e"
+    },
+    {
+      "path": "connect/app/src/main/res/drawable/nova_icon.xml",
+      "bytes": 351,
+      "sha256": "4810fc51fec350e1acc6baec91c2a73876df56fab0da92c7ddd8bc5cf4595afd"
+    },
+    {
+      "path": "connect/app/src/main/res/xml/data_extraction_rules.xml",
+      "bytes": 1050,
+      "sha256": "cb029b35db0e976c087100424e16e14a6256b46962398887520e51508c3b5842"
+    },
+    {
+      "path": "connect/build.gradle.kts",
+      "bytes": 206,
+      "sha256": "c817a1c7c0509d693ec28f8351b8035706fb5ee1eda77cf72086aa05c3283e37"
+    },
+    {
+      "path": "connect/core/build.gradle.kts",
+      "bytes": 302,
+      "sha256": "b3f3802dfba361f5c65f208e9b7e7ebb4f9ba7e5211f3b37490dfa8e32f6e0df"
+    },
+    {
+      "path": "connect/core/gradle.lockfile",
+      "bytes": 3115,
+      "sha256": "02344a314090aed45bb5da7dee953ea159d9e22d1268ebd46d02413a72bc724d"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/ConnectionPolicy.kt",
+      "bytes": 3289,
+      "sha256": "595e3bbfd0764e032daac9d0d34d3f0f3112dd27863bc34ead4b28f787872280"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/DevicePairing.kt",
+      "bytes": 11498,
+      "sha256": "93fe737c1205e4cf9a2c56d208f98bd314b3a18afa4a9cb1cbabb14f33deb756"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/JellyfinHealth.kt",
+      "bytes": 2937,
+      "sha256": "67ad75377c96c6c70f66f540ad431c8ad3d49f0b121b82eca54c4c2cc5e46cbb"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/JellyfinNetworkProbe.kt",
+      "bytes": 2819,
+      "sha256": "aae46d746b63402eb94054c4230124144c5483b846a1df3c559f6183bcac1a35"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/PinnedServerTls.kt",
+      "bytes": 3257,
+      "sha256": "df2b137f5ab7c30c713e6b1f22fa23534d2219d61c57180feea7d92a0d7e1b3c"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/ProviderContract.kt",
+      "bytes": 2737,
+      "sha256": "d624f3e4ba4abd3ab284a1422b7a92e0543f1f7d2b8897cc92bbad8f27aed857"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/SecurityPolicies.kt",
+      "bytes": 3677,
+      "sha256": "cfd5eba447b22ddb480f27080ff04c0ecb3c8281d2d7bdce755da3259d89221c"
+    },
+    {
+      "path": "connect/core/src/main/kotlin/com/novacinema/connect/core/TailscaleProfile.kt",
+      "bytes": 2409,
+      "sha256": "19168feb379757e2ed4381f8d3e2f574783ae144c89278441f8e9dd945e98857"
+    },
+    {
+      "path": "connect/core/src/test/kotlin/com/novacinema/connect/core/DevicePairingTest.kt",
+      "bytes": 18013,
+      "sha256": "cccb0dea1633e6b882189245aca7e4dd9c0dabc3e2518dba4f2213cf5516b781"
+    },
+    {
+      "path": "connect/core/src/test/kotlin/com/novacinema/connect/core/JellyfinTransportTest.kt",
+      "bytes": 7313,
+      "sha256": "8d8b2591793caf02b2779826bd7b02251e72253ba6583b2490b48207dc89313c"
+    },
+    {
+      "path": "connect/core/src/test/kotlin/com/novacinema/connect/core/POCTest.kt",
+      "bytes": 15154,
+      "sha256": "e1a399c817d4e5f7a145e60d52c7b544f7d316e0efb92f003ffa546411e9fa52"
+    },
+    {
+      "path": "connect/core/src/test/kotlin/com/novacinema/connect/core/ProviderContractTest.kt",
+      "bytes": 2322,
+      "sha256": "5f04289a41b73715aa8acce7003215704b370c397f4d395cf7bdb3a726336d86"
+    },
+    {
+      "path": "connect/docs/ANDROID_BUILD_GATE.md",
+      "bytes": 2363,
+      "sha256": "e6ddb82b3002d9add97d9b1fa5c4b452886b998106b21775f4edcada857ec724"
+    },
+    {
+      "path": "connect/docs/CHANGELOG.md",
+      "bytes": 1351,
+      "sha256": "30cad82536af5451fb817ceff5035cdd744adfbb283fbeea424ee872fdec34cc"
+    },
+    {
+      "path": "connect/docs/JELLYFIN_HEALTH_MATRIX.md",
+      "bytes": 1768,
+      "sha256": "6fcae61f7b536ea489dba2086e9d8a58cbf8284715afd82db2825258b81cdddf"
+    },
+    {
+      "path": "connect/docs/SECURITY_REVIEW.md",
+      "bytes": 3273,
+      "sha256": "8032bff2be46bb09f410fda372b3907f8eaee54523cd351b98f6cfc45dce5651"
+    },
+    {
+      "path": "connect/gradle.properties",
+      "bytes": 103,
+      "sha256": "fa078c27c9e4bde28a029d673875b028884505efa436b68cf60e1ac0be5b679b"
+    },
+    {
+      "path": "connect/gradle/verification-metadata.xml",
+      "bytes": 146037,
+      "sha256": "e4f70996c7f49496f271bdc5b1f331f9d85b3e127f77c653e663a15ef30a1238"
+    },
+    {
+      "path": "connect/gradle/wrapper/gradle-wrapper.jar",
+      "bytes": 43583,
+      "sha256": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+    },
+    {
+      "path": "connect/gradle/wrapper/gradle-wrapper.jar.sha256",
+      "bytes": 100,
+      "sha256": "b9cdc06634258da39fe9bc9e384ed7cf605c357595c49ccf525a3086100a78ff"
+    },
+    {
+      "path": "connect/gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 340,
+      "sha256": "fe90ff0d9944879f591a8c37b6dbaf5046d1051ccbb6b26b22081692c321f432"
+    },
+    {
+      "path": "connect/gradlew",
+      "bytes": 8762,
+      "sha256": "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3"
+    },
+    {
+      "path": "connect/gradlew.bat",
+      "bytes": 2872,
+      "sha256": "2209f919a22528af59a2af2ad97e8d056cca18e39f7d87aa3fd549a73b180150"
+    },
+    {
+      "path": "connect/native-proof/README.md",
+      "bytes": 2425,
+      "sha256": "1f32df630a9c7420ef00a6ef22c607ee66da71d6219081720ba2ecb63cf5099d"
+    },
+    {
+      "path": "connect/native-proof/build.sh",
+      "bytes": 2171,
+      "sha256": "c2ea3c98d82125db6cae7766ca4b2f375f0fde7b93cdaae9a1837a06b73c1e17"
+    },
+    {
+      "path": "connect/native-proof/smoke_runtime.py",
+      "bytes": 2168,
+      "sha256": "31f90b8c431041432eacb72323f7eb1b236b8e5fdc27eee28f56cf26eb473123"
+    },
+    {
+      "path": "connect/native-proof/src/androidTest/kotlin/com/novacinema/connect/NativeEngineSmokeInstrumentation.kt",
+      "bytes": 4295,
+      "sha256": "fef51d87a76d90829cae329b8e9ff5db7fdaebe2da09a5b6a9d32a07579025e7"
+    },
+    {
+      "path": "connect/native-proof/src/debug/AndroidManifest.xml",
+      "bytes": 271,
+      "sha256": "963bc5d8bb714412fb1b3bf33b2f4a70bf12f63bb30545b486c202d2d32d6e6d"
+    },
+    {
+      "path": "connect/native-proof/src/debug/kotlin/com/novacinema/connect/NativeEngineSmokeService.kt",
+      "bytes": 1373,
+      "sha256": "3e67a48363371a0d1bcffc4cf3c2660a83b62911855bccdf783735c244ef8818"
+    },
+    {
+      "path": "connect/release-identity.json",
+      "bytes": 206,
+      "sha256": "f20336501c31adf309ccfb6b7a6e7c80b416b475b064604166645e05b59db7ab"
+    },
+    {
+      "path": "connect/scripts/android_failure.py",
+      "bytes": 975,
+      "sha256": "73d2c4fdb02d231f0a92dc682a498648272a61a468e04c3d1ed5ec9b83d8a48d"
+    },
+    {
+      "path": "connect/scripts/check_distribution.py",
+      "bytes": 5132,
+      "sha256": "7dc605a79e84d3b554f1962cacf232fe046960e068225e37f763e1c8b7d1ad2f"
+    },
+    {
+      "path": "connect/scripts/check_source_hygiene.py",
+      "bytes": 2325,
+      "sha256": "f510c7f6d4264e468ba96688805086c3dad1144544727cdfb37002f4ed57b781"
+    },
+    {
+      "path": "connect/scripts/distribution.py",
+      "bytes": 10170,
+      "sha256": "4eeb47ed10e7703dc4acad9d56086f0f28c37eb30fd7d1b8b8911ee5b45be483"
+    },
+    {
+      "path": "connect/scripts/resolve_build_tools.gradle",
+      "bytes": 672,
+      "sha256": "36b9623034f7f3ca9dbec9d60504d397ac6721ac761b3c6f1fd2fa7c1d25bcdd"
+    },
+    {
+      "path": "connect/scripts/run_core_tests.sh",
+      "bytes": 315,
+      "sha256": "26da91767b8bb5b31bc9687dc7a646ea17f650cb53eb47464434aa84f62fc5e5"
+    },
+    {
+      "path": "connect/scripts/smoke_distribution_android.py",
+      "bytes": 5202,
+      "sha256": "2cef84830b1507827e4545f09c90a01a5c18a45becc72e6fd87c662c16360891"
+    },
+    {
+      "path": "connect/scripts/smoke_lan_android.py",
+      "bytes": 11379,
+      "sha256": "56bbc2174e923be465cb54993fc4289dd4aca4087bfe64bc790da089195772ca"
+    },
+    {
+      "path": "connect/scripts/smoke_m3_android.py",
+      "bytes": 6752,
+      "sha256": "833020548b18911e414ed38c357d612331344c02b3e6ac970bda0f9303641dff"
+    },
+    {
+      "path": "connect/scripts/smoke_m4_android.py",
+      "bytes": 4907,
+      "sha256": "cc6b65062e67011ff8bb61172c215b2eecb9db8e10422c95a7872fa9c2719722"
+    },
+    {
+      "path": "connect/scripts/smoke_pairing_android.py",
+      "bytes": 12977,
+      "sha256": "8c78996aaca0c39d0b7274e95cbb1e0f8b5c856fad24978aae0632c2c698d4d3"
+    },
+    {
+      "path": "connect/settings.gradle.kts",
+      "bytes": 300,
+      "sha256": "2116b2d6bfb6277d1a2293336476b1ae6e012ad2e5892da91de0ad2ab3311413"
+    },
+    {
+      "path": "connect/tailscale-native/network.py",
+      "bytes": 28987,
+      "sha256": "569320f75a19e7258b2218836a15c3e3eb0c3b145219011d490112ff940b49b8"
+    },
+    {
+      "path": "connect/tailscale-native/src/androidTest/kotlin/com/novacinema/connect/TailscaleNetworkInstrumentation.kt",
+      "bytes": 14791,
+      "sha256": "517451e00ea04da049a10e81389a43b026318c4b4a5b65b6645d39bbd9572478"
+    },
+    {
+      "path": "connect/tailscale-native/src/debug/AndroidManifest.xml",
+      "bytes": 922,
+      "sha256": "c8da3307953e215dbb805159a3264580b6474c4c8dcd93024db1a130cb96c187"
+    },
+    {
+      "path": "connect/tailscale-native/src/debug/kotlin/com/novacinema/connect/TailscaleConsentActivity.kt",
+      "bytes": 923,
+      "sha256": "b86a2842ee54dff751acb2305ef5bf046254f35520a68cb3d072a0e30b1f8c5b"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleHttps.kt",
+      "bytes": 5493,
+      "sha256": "53b6a3df5004027d11b733bc5a22f4ee053fa065a9fc119d89ccb08868615ea4"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscalePlatform.kt",
+      "bytes": 4397,
+      "sha256": "6a0ddb7663623642848f0c24cbfcb024bb025934315d34fe69c63ad186d244f1"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleRoutePolicy.kt",
+      "bytes": 2413,
+      "sha256": "8991d92cdd0ca3cee896a1918ef805cc2669bbba692056225b8981fbb2a05ea5"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleStateStore.kt",
+      "bytes": 2805,
+      "sha256": "6068c981071828a6283c847f3f9356424f5e2d28ec203b02e4b94dd393f59072"
+    },
+    {
+      "path": "connect/tailscale-native/src/main/kotlin/com/novacinema/connect/TailscaleVpnService.kt",
+      "bytes": 9767,
+      "sha256": "4180972cfb7b2106bd7a57d2bc0cfc93783b438a4717660a2431a24772477eeb"
+    },
+    {
+      "path": "connect/tailscale-native/src/policyTest/java/com/novacinema/connect/TailscalePolicyChecks.java",
+      "bytes": 3068,
+      "sha256": "46126dd4f028c12241239a6c1a75af6159d5d4463ddf0e40b4dfcb45bbd7bfd0"
+    },
+    {
+      "path": "connect/wireguard-proof/network.py",
+      "bytes": 32214,
+      "sha256": "6ed6693f51b0a57201577acfd13530fe94b0ea73ca20d260060a8ab2f6985db0"
+    },
+    {
+      "path": "connect/wireguard-proof/src/androidTest/kotlin/com/novacinema/connect/WireGuardNetworkInstrumentation.kt",
+      "bytes": 18768,
+      "sha256": "18ab092e679d2b892cc75e58466bf074dae625cad49bdf4cbe383a734c218d50"
+    },
+    {
+      "path": "connect/wireguard-proof/src/debug/AndroidManifest.xml",
+      "bytes": 228,
+      "sha256": "3660aea211d3d82d60ed5ee92019123744d260b1879e48a1496e2b5dcf5c8508"
+    },
+    {
+      "path": "connect/wireguard-proof/src/debug/kotlin/com/novacinema/connect/WireGuardConsentActivity.kt",
+      "bytes": 1075,
+      "sha256": "a4c95392216d4f4664788481cddcafaa29fd8a304e9aaa5c2808d93c8b6c7be9"
+    },
+    {
+      "path": "design/LINKS_FIGMA.md",
+      "bytes": 3759,
+      "sha256": "2a1d65edf373d83ca21cf5ba33669e0c93bf708bccd92719ef9bb0ad61085219"
+    },
+    {
+      "path": "docs/ADR_001_CONNECT_NATIVO.md",
+      "bytes": 7879,
+      "sha256": "039861c968ee6e5cec65e6521e5809569447c61870916b0375e8ab3d7f9554ea"
+    },
+    {
+      "path": "docs/CONTROL_VISUAL_NAVEGACAO.md",
+      "bytes": 1993,
+      "sha256": "44c5c563f3d58187e49500fb4512044ce54358f6b16dab0ad70574b9de6ae734"
+    },
+    {
+      "path": "docs/ESTADO_REAL.md",
+      "bytes": 2963,
+      "sha256": "e1fea4ddd12ab5ea366a7e5e3f657392a5b8e2452d0edcd7df53fa7013f39f43"
+    },
+    {
+      "path": "docs/FASE_1_RESULTADOS.md",
+      "bytes": 6590,
+      "sha256": "c938995d320a5dfd0f9688471139befbcf405be4e7345603696426d381119454"
+    },
+    {
+      "path": "docs/LER_PRIMEIRO.md",
+      "bytes": 2699,
+      "sha256": "230cac2f71d31503a86a33de78db832e18c4bf593a787205f501e818935d0859"
+    },
+    {
+      "path": "docs/M2_SERVIDOR_LAB.md",
+      "bytes": 6449,
+      "sha256": "a2098f3460b96bc5150686f17f7d1237cad46afc2eda92e8458ab2fa4697d6f3"
+    },
+    {
+      "path": "docs/M2_TRUENAS_RECUPERACAO.md",
+      "bytes": 10803,
+      "sha256": "37344ab6a4095b78ce58c9686b64b7cb7b8d846465729af5350a73c2955ee670"
+    },
+    {
+      "path": "docs/M3_ASSOCIACAO_DISPOSITIVOS.md",
+      "bytes": 7367,
+      "sha256": "e97d9c4f6927303b50c33a5331e4225563143374bad6487328fd08825e27b0b4"
+    },
+    {
+      "path": "docs/M3_CLIENTE_ANDROID.md",
+      "bytes": 7983,
+      "sha256": "31cd04798a2f74acc442c9865c0018db24d755a2322d0cbd02a2f951a9305924"
+    },
+    {
+      "path": "docs/M3_DIRECTORY_CONTROL.md",
+      "bytes": 6177,
+      "sha256": "b2d649c75714ac48f961a1a265488225472b402c94c98ec12040b000a9ab01eb"
+    },
+    {
+      "path": "docs/M3_DIRECTORY_LAB.md",
+      "bytes": 9662,
+      "sha256": "95c41151352ddf8b0d9eb41493a55f8f9e8bf65a18b6e0a2f966dcc0e9690654"
+    },
+    {
+      "path": "docs/M3_FECHO.md",
+      "bytes": 12185,
+      "sha256": "220a622a42f22aa73ff39777dc8c00d96dcd2d98bd4e7793bc6580cba5354281"
+    },
+    {
+      "path": "docs/M4_CINEMA_LOCAL.md",
+      "bytes": 7801,
+      "sha256": "04236cad637c3c65867c63b74506f9701a9699e84345b103f628b85ecc64420a"
+    },
+    {
+      "path": "docs/M4_DISTRIBUICAO_ANDROID.md",
+      "bytes": 8277,
+      "sha256": "b0a63272449e8e6231542644f48dcf5490b8d6d13363f47439e59f4114d4e254"
+    },
+    {
+      "path": "docs/M4_INSTALACAO_LAN.md",
+      "bytes": 9784,
+      "sha256": "985593966493335bf7a6d0b2fb4c1a317c567ebe680ff41b654397e56e22173e"
+    },
+    {
+      "path": "docs/M4_RECUPERACAO_LAN.md",
+      "bytes": 7971,
+      "sha256": "b42660b3e1f3044110626213a90df28a03ce29a9d6457bc21f3d82d85e6e24ed"
+    },
+    {
+      "path": "docs/M5_GATEWAY_CONTENTOR.md",
+      "bytes": 7693,
+      "sha256": "0ae316c6c195f92889533f2f59f4ffd5917e42091084c5de9c25c13f15b8fc9e"
+    },
+    {
+      "path": "docs/M5_GATEWAY_RESULTADOS.json",
+      "bytes": 16149,
+      "sha256": "d7ed48d4410f5419f50f4d78485a8df4d4ed2e0810fd79253b6bd74767e44565"
+    },
+    {
+      "path": "docs/M5_GATEWAY_WIREGUARD.md",
+      "bytes": 5528,
+      "sha256": "debdc6426a8a517da23e3432f34270fc1521a032384c997a1f1842857df0a6e0"
+    },
+    {
+      "path": "docs/M5_INSCRICAO_WIREGUARD.md",
+      "bytes": 10630,
+      "sha256": "0aa6de4ba3c5df06b93f848e2d75080fd430e7d9e9c3781d5e206ac7459cd2b1"
+    },
+    {
+      "path": "docs/M5_INSTALACAO_WIREGUARD.md",
+      "bytes": 5022,
+      "sha256": "0ade22791ebd9d6711a0b58e85744fe232c25aeb47d17dccfc435c13bbcc206f"
+    },
+    {
+      "path": "docs/M5_INSTALACAO_WIREGUARD_0_11.md",
+      "bytes": 5743,
+      "sha256": "0351f687881933388391d1d8bc72d8947cda61e97ca94773b7a030df0b1cf3b4"
+    },
+    {
+      "path": "docs/M5_RENOVACAO_RECUPERACAO.md",
+      "bytes": 6836,
+      "sha256": "fb26daab2f8849445b5d953acbecc1bb58be2860466d376d7fde93de6e6290cf"
+    },
+    {
+      "path": "docs/M5_RENOVACAO_RESULTADOS.json",
+      "bytes": 16451,
+      "sha256": "2288f149f1eaf55e9f14f2d687ac6cd4f2841d6e4d39cca7661816aadbefb5db"
+    },
+    {
+      "path": "docs/M5_SERVICO_GATEWAY.md",
+      "bytes": 8491,
+      "sha256": "e6408c72fb657b4275cec57ca3fc5055f4d117d5f0b5f2e7ffa0cb793059e555"
+    },
+    {
+      "path": "docs/M5_SERVICO_RESULTADOS.json",
+      "bytes": 12922,
+      "sha256": "27e37aae988561a730c92ae3265ed1d7fa0b52dfe7045d67e0d136c698ce0fa2"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_CINEMA.md",
+      "bytes": 5197,
+      "sha256": "99f7c61dcb8e25f97707b1188b47ad8c076c21914c43adfaa771c7b617e87b83"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_CINEMA_RESULTADOS.json",
+      "bytes": 16878,
+      "sha256": "63d34bb138e293e7ba13d8827f6b48df9b6a85c09851a0d4d0b20212deaf2fb7"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_CONTROL.md",
+      "bytes": 4322,
+      "sha256": "32bb036d946ee6cb115fbe3028842eaf539ac37d07f5d2e4acb478da6bfb951b"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_CONTROL_RESULTADOS.json",
+      "bytes": 17314,
+      "sha256": "bf7725c4fc53db45f4f06035b05447c85792a4e30d8697c47c4c402b4baa9798"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_NATIVO.md",
+      "bytes": 5896,
+      "sha256": "9b4635c4c16b350df10cf0e3778152a4e7cf872ea888ec69d104db9e19f91e20"
+    },
+    {
+      "path": "docs/M5_TAILSCALE_RESULTADOS.json",
+      "bytes": 16866,
+      "sha256": "9914fb9865ce7711b0f47ab6950c6f6099fad6ca3049586f922f987dca8b5794"
+    },
+    {
+      "path": "docs/M5_WIREGUARD_REDE.md",
+      "bytes": 7423,
+      "sha256": "958006e302cd0424b6aa70559f7932cfcd7324ddd2cdfe739d692e904f26a35a"
+    },
+    {
+      "path": "docs/NOVA_CINEMA_0_12.md",
+      "bytes": 6680,
+      "sha256": "f7e171c011a839b17e403f2f6ed2bd3f37c092393846df6911f2eb53b4a303a3"
+    },
+    {
+      "path": "docs/NOVA_CINEMA_0_12_RESULTADOS.json",
+      "bytes": 61955,
+      "sha256": "f9064e77f91565db5dbeaa481f2cc497af8f60c05fd6454fc24d819e9e071054"
+    },
+    {
+      "path": "docs/NOVA_CINEMA_0_13.md",
+      "bytes": 2047,
+      "sha256": "2d97572fa465d522476867208fc0d121aeadde43e1b076fc6b60027ac4f17ac8"
+    },
+    {
+      "path": "docs/NOVA_CINEMA_0_13_RESULTADOS.json",
+      "bytes": 42573,
+      "sha256": "6e657ac3d62c03b3f483557c69c2c09bdfeae56f6d6e8c97f8dcac5962bf6e70"
+    },
+    {
+      "path": "docs/NOVA_CINEMA_0_14.md",
+      "bytes": 2136,
+      "sha256": "ca24670cb05e6fc6d3ac79957f66d642582bbe0d5ab9ecb111dc110fe4d399d1"
+    },
+    {
+      "path": "docs/NOVA_Cinema_3_0_F00_Blueprint_v0_1.md",
+      "bytes": 23945,
+      "sha256": "186c72375279a02ff160a683732016c9b0d38f3c338577ea9684b0708c5a7a1f"
+    },
+    {
+      "path": "docs/NOVA_Cinema_3_0_F01_Arquitetura_v0_1.md",
+      "bytes": 23539,
+      "sha256": "46687c67b91e727055d51e263df905cde64402610ae154a4588f648b930fb72d"
+    },
+    {
+      "path": "docs/NOVA_Cinema_G0_Especificacao_Mestre_v1.md",
+      "bytes": 24835,
+      "sha256": "48814707b2b0e21d30793710c8afc6774b1c16271b0a7894f1644ad5005ba948"
+    },
+    {
+      "path": "docs/NOVA_Platform_Security_Architecture_v0_1.md",
+      "bytes": 10572,
+      "sha256": "e8ef755cb0e185fd9a7ecfae2b70c276a931535d47f2be7dd328e990ffeea689"
+    },
+    {
+      "path": "docs/PRINTS_APPS.md",
+      "bytes": 2049,
+      "sha256": "c9bae5eedc4b40879d82976de13d85541acb468ca9d31141868a7a291c4caad6"
+    },
+    {
+      "path": "docs/ROADMAP_INSTALACAO_SERVER_TV_v0_2.md",
+      "bytes": 29760,
+      "sha256": "3fb221df4bef1de1f4de49eb7b2dfb7a3544bb7093dd78cf0aa69bb7f486e04a"
+    },
+    {
+      "path": "docs/screenshots/PROVENIENCIA.json",
+      "bytes": 9619,
+      "sha256": "ff04e8aed1507f9efa32f88061cdb0c07e43779a923b8fe0d0a25a8a63f619d3"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-catalogue.png",
+      "bytes": 13783,
+      "sha256": "7828633f98d378eb97eab001d9e9cea596f64a65a6eae0146d5d791910d0b905"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-detail.png",
+      "bytes": 12117,
+      "sha256": "38eaf3d666159859a0c7b5beb17a0ecadf08f9fd47b69b2b8b6442fbf26451de"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-libraries.png",
+      "bytes": 9696,
+      "sha256": "e92086196362633352942c26e883aa0362c19b24a9311b160156060520d53195"
+    },
+    {
+      "path": "docs/screenshots/api-26/tv-player.png",
+      "bytes": 50440,
+      "sha256": "af9806b31a961e81df6fef4fe7f7bc3bdd37a948cc0de27164413fba8407e942"
+    },
+    {
+      "path": "docs/screenshots/control-overview.png",
+      "bytes": 170704,
+      "sha256": "cef6acce69fb0724e2a627eb2e36abc505c46f2e0e546ad2b9fd029289ccc4ca"
+    },
+    {
+      "path": "docs/screenshots/control-wireguard-approved.png",
+      "bytes": 68583,
+      "sha256": "5799a34092ec352c3ec84eb89d20adb0787095832289679181da7c113a1b7b26"
+    },
+    {
+      "path": "docs/screenshots/tv-catalogue.png",
+      "bytes": 25724,
+      "sha256": "4987faf8cd6a6689f711b92ebdfe8d9d147aec09c2c661c2db7241862290e1a2"
+    },
+    {
+      "path": "docs/screenshots/tv-detail.png",
+      "bytes": 20915,
+      "sha256": "cc9ed983d7a955ec74e560cf2fe2a0db0b6ebcb169418de71c85d0f24f55f01e"
+    },
+    {
+      "path": "docs/screenshots/tv-libraries.png",
+      "bytes": 19184,
+      "sha256": "d5dfb4a4371c2e98779710c2d9edd28d6fcf3d1aab79e0d1ee6808bbf2eb9679"
+    },
+    {
+      "path": "docs/screenshots/tv-player.png",
+      "bytes": 160983,
+      "sha256": "7cd7d6f8ac88d4bb6683271543bf08fe382232db5f31691c3c1fb6c48d27da79"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/PROVENIENCIA.json",
+      "bytes": 1929,
+      "sha256": "27d36f254b09f2389481c386c287abe5d77849f9942b7e125a33261c0bcc572f"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-26/tv-catalogue.png",
+      "bytes": 23071,
+      "sha256": "6fc018132bc520fb52240929c2e6087a0485bc05506f69d18bb8328828d0266e"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-26/tv-detail.png",
+      "bytes": 22283,
+      "sha256": "904df69393ddfa3c598b3b1f108c22ee595798edb403f9b4b55a08060edd13c2"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-26/tv-libraries.png",
+      "bytes": 17689,
+      "sha256": "de3d24a1b493de0073bfb5d799b7adb824d4ee6c6d98d7637c393c780fb0b6f2"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-26/tv-player.png",
+      "bytes": 36197,
+      "sha256": "967e7f5705665b50ab2b2db667ade0fc2b00a3432839f83701b79c1079b1dca6"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-35/tv-catalogue.png",
+      "bytes": 22667,
+      "sha256": "22e258b0bfcd724611b939bb07306bcc3e2e0fe575e71af94dd5f01ac0304bf5"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-35/tv-detail.png",
+      "bytes": 22300,
+      "sha256": "b7a53221e3aeb6288a4f21c85578a383e2f3fe8f8a18e9b38b0ac847a4807c34"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-35/tv-libraries.png",
+      "bytes": 17321,
+      "sha256": "cd5e3cec10f1a3112313a89366d8dfe0a2944c9571705413fe09aa4aa7f0bb21"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/api-35/tv-player.png",
+      "bytes": 37708,
+      "sha256": "1e728c63b32dc0527d2c50076bcf8b5098581c4d671f7985ef52161967252351"
+    },
+    {
+      "path": "docs/screenshots/wireguard-88efc1a/index.html",
+      "bytes": 2577,
+      "sha256": "94c69ea102c3a9e6f7104f48abeb02d45d6f4e6b7384034cdc8ac09f2bfac4a3"
+    },
+    {
+      "path": "scripts/inventory.py",
+      "bytes": 2049,
+      "sha256": "fa863caeb75a96b62b46b7f7a38f2b98266c18f2817c054cfbb5d1771ba791f3"
+    },
+    {
+      "path": "scripts/package_sources.py",
+      "bytes": 1131,
+      "sha256": "59ab368cb16cfacbe0946f9184038419967ab19edebb3a91043d96ab1f51a8f3"
+    },
+    {
+      "path": "server/.dockerignore",
+      "bytes": 81,
+      "sha256": "1b9bcc5b30375202ce60b461f8a189c3a8d1747d2a1319a06543b3029f908361"
+    },
+    {
+      "path": "server/.env.example",
+      "bytes": 150,
+      "sha256": "a3de96706cf153f0265fd1ba4567a5b391f726837babf32161e8c957af734539"
+    },
+    {
+      "path": "server/.gitignore",
+      "bytes": 74,
+      "sha256": "a6f86e1b0a0b4f06bb153d14ec10ccec8489f675f732dce18a8099fbe58d1a0f"
+    },
+    {
+      "path": "server/Dockerfile",
+      "bytes": 1106,
+      "sha256": "469032599fd90b4b71d3e356601bd466822cb44474057363f6eb3cd08e5058b1"
+    },
+    {
+      "path": "server/README.md",
+      "bytes": 12111,
+      "sha256": "fba8bef15a37f7b2ef65e740f3a6595f3adbe317d2b9f36eb98e4ebbb17ab3f1"
+    },
+    {
+      "path": "server/compose.yaml",
+      "bytes": 1304,
+      "sha256": "1bb45db5bfbd79bf4b55688849d18f8a5840dbdc4f46294a3999d029042cd94f"
+    },
+    {
+      "path": "server/docs/DELIVERY_STATUS.md",
+      "bytes": 1941,
+      "sha256": "56d85536f09de44a068152f40ad9eb9442ac5e69fd1b9d449c835b476db4eff2"
+    },
+    {
+      "path": "server/gateway/Dockerfile",
+      "bytes": 697,
+      "sha256": "415fa4fbb3ca60c11ccf9c61b0fd2a19d425f74c68dbd82dd36b003bd55417f8"
+    },
+    {
+      "path": "server/gateway/compose.channel.yaml",
+      "bytes": 644,
+      "sha256": "e81179accbd9f80cceec93f07f0259e71f9e1d5921d39c45d68c6aef6870db41"
+    },
+    {
+      "path": "server/gateway/gateway.example.json",
+      "bytes": 440,
+      "sha256": "fa675f34209ef14fe8e1584ce11ecac8e95e02cf0061e0be317806b88d82276c"
+    },
+    {
+      "path": "server/nova_directory/__init__.py",
+      "bytes": 76,
+      "sha256": "9b8c16ae534be537569837685828a7bb9a77bf635488ec6dcbf2af719e521727"
+    },
+    {
+      "path": "server/nova_directory/__main__.py",
+      "bytes": 2228,
+      "sha256": "b582b7cd0293b72af55ee50d7aa0b522945edf0f8e33278f00e1356055635607"
+    },
+    {
+      "path": "server/nova_directory/api.py",
+      "bytes": 7516,
+      "sha256": "9f52060e50c18907134d19ad416d327e347d7914f346959c64f9cdeb43b2db98"
+    },
+    {
+      "path": "server/nova_directory/client.py",
+      "bytes": 9120,
+      "sha256": "68aa49103da606b1e75fa43483b93c8d1edc148fd1eb06d9673597bda125987a"
+    },
+    {
+      "path": "server/nova_directory/identity.py",
+      "bytes": 3006,
+      "sha256": "92ccfc5c2104e033585a194efa4f5a3b713ba096a9b9f7024fac582a90fd39e9"
+    },
+    {
+      "path": "server/nova_directory/protocol.py",
+      "bytes": 5848,
+      "sha256": "8338bcf154f986549920f77b060fef7a8e434b8ba846e313ec89a13236c4a43f"
+    },
+    {
+      "path": "server/nova_directory/store.py",
+      "bytes": 18925,
+      "sha256": "d05f2075d48df991eff11017a2361b6af9636c93cf0244b7542e1c72aaf591d5"
+    },
+    {
+      "path": "server/nova_server/__init__.py",
+      "bytes": 99,
+      "sha256": "5b66dfe846f1154f33198d3c3bd1d9473f863ced67b4c94cf4959bb333e584fb"
+    },
+    {
+      "path": "server/nova_server/app.py",
+      "bytes": 19752,
+      "sha256": "f18ff11a651bc836dc7d19b779721d46b8f78587975323a4713185e10e138275"
+    },
+    {
+      "path": "server/nova_server/client_api.py",
+      "bytes": 12571,
+      "sha256": "1aa4b7c62a8786f967b0dc6dfaee346346b4568afe5f0c923d3e6dca34b65f86"
+    },
+    {
+      "path": "server/nova_server/connect.py",
+      "bytes": 3432,
+      "sha256": "adeb0f530176cf8cd63972aaf6afb4e40380e73049df772e589dc2c05353c273"
+    },
+    {
+      "path": "server/nova_server/device_api.py",
+      "bytes": 1471,
+      "sha256": "2ac712cd427279427bb6ca7d4885285e663e8d1321840b9c87f6870e59fd83a6"
+    },
+    {
+      "path": "server/nova_server/devices.py",
+      "bytes": 13364,
+      "sha256": "b96562ed03c103d0800ca6f3c676d099c9fcf1efd3c7cfa98502e05f79d7c11c"
+    },
+    {
+      "path": "server/nova_server/directory_control.py",
+      "bytes": 12577,
+      "sha256": "3b6745f7013765d9f93ec9244816a808c0bcdd06f6b34ffca077c2c8d82e9eb9"
+    },
+    {
+      "path": "server/nova_server/directory_proof.py",
+      "bytes": 1878,
+      "sha256": "af5f0dde226490327332e65cdbfbdee1e6a66fa1a1e852912428cb44881b6922"
+    },
+    {
+      "path": "server/nova_server/gateway_channel.py",
+      "bytes": 8403,
+      "sha256": "f223e9d081207c5d045b69ab96de8aea1135d04a0d96d14181ec2c31ae0f560e"
+    },
+    {
+      "path": "server/nova_server/gateway_container.py",
+      "bytes": 9122,
+      "sha256": "8d4fcddd641b9c183d74fb10cbd78dc8dd18435bbde68f3a31571e266c963650"
+    },
+    {
+      "path": "server/nova_server/gateway_service.py",
+      "bytes": 12063,
+      "sha256": "842d687d1980e5f3a7651edeac2f34d699013ef0f1bbf0024e28b625f85c2166"
+    },
+    {
+      "path": "server/nova_server/jellyfin.py",
+      "bytes": 3309,
+      "sha256": "5b0f7fb795e99f525cf0ed1a13fb9103ff8be9768dfae31e850167ef7030d221"
+    },
+    {
+      "path": "server/nova_server/lan.py",
+      "bytes": 1897,
+      "sha256": "4bf4ae97357289262b1baa9b966a7d5ea31a2b7eacaf4deb4b2141db696c623c"
+    },
+    {
+      "path": "server/nova_server/lan_launch.py",
+      "bytes": 3134,
+      "sha256": "9a6d3b2281aab11a44edbdb0c8f51fe26b62b1f4b07c33b8bd452f0038ee40d0"
+    },
+    {
+      "path": "server/nova_server/launch.py",
+      "bytes": 775,
+      "sha256": "f580fd040a463c86663230817902a5a29211ca59470439c7f6fcb79685bde6e2"
+    },
+    {
+      "path": "server/nova_server/media.py",
+      "bytes": 17284,
+      "sha256": "cea0ff39f0b832c75cba3d9bc4f87805bb730fdc4b1cb6efbfef28bb228b2e7e"
+    },
+    {
+      "path": "server/nova_server/members.py",
+      "bytes": 11243,
+      "sha256": "6357460f4f6e9aa23d9c0a81907e5d2d8974b900cce24285860c3fb0a6bb8a28"
+    },
+    {
+      "path": "server/nova_server/secret_vault.py",
+      "bytes": 1937,
+      "sha256": "520d72e1f3baa23fd1cf5720fa58346e416c3659f1158e399f0c8d2b3804c1fd"
+    },
+    {
+      "path": "server/nova_server/security.py",
+      "bytes": 1309,
+      "sha256": "e5b2876d1cd5f5f3202d7179a8c9bdc9144b31c2fe9eaa21567c111c7340f695"
+    },
+    {
+      "path": "server/nova_server/setup.py",
+      "bytes": 11552,
+      "sha256": "b9f91eb1252f468a996006c30eeaf13da80d80845c90838b621f885d395d0617"
+    },
+    {
+      "path": "server/nova_server/static/control.css",
+      "bytes": 9320,
+      "sha256": "c3b61dd327daab7c945079897a751e6985e236fbc3bdb0df751140db9403fcd6"
+    },
+    {
+      "path": "server/nova_server/static/control.js",
+      "bytes": 34092,
+      "sha256": "cb72e60f9bd2e5450f3b0ef8ce3f1311981ad65527d1136d0f177b9a3ec8df8a"
+    },
+    {
+      "path": "server/nova_server/static/index.html",
+      "bytes": 14683,
+      "sha256": "f4833810d5fd18d6c91b25e712bd9f65fa2a62f4adc296dd8d66a485ae1bd101"
+    },
+    {
+      "path": "server/nova_server/storage.py",
+      "bytes": 11000,
+      "sha256": "9b789455e3be978048c089656d70bb499eaa2a408a6ed711e944b09a938463a5"
+    },
+    {
+      "path": "server/nova_server/tailscale_control.py",
+      "bytes": 5468,
+      "sha256": "c34fd137bb88d1e9d799d53d075f8ac7fad3b4f80162a6ee2bba710224eca1dc"
+    },
+    {
+      "path": "server/nova_server/tailscale_profile.py",
+      "bytes": 3469,
+      "sha256": "782e671c05df08e0773b39dd28cc0219bcb2aa305164ee901ac7092a21558832"
+    },
+    {
+      "path": "server/nova_server/wireguard.py",
+      "bytes": 7445,
+      "sha256": "3b5a06ff5581a2584078cf7042bb713ae3d439470b74b538cb59f073ff425de3"
+    },
+    {
+      "path": "server/nova_server/wireguard_gateway.py",
+      "bytes": 10102,
+      "sha256": "f927593763c7c247a793d2a4eb1aae15ebe28972d1bcf054a7c925919daf382f"
+    },
+    {
+      "path": "server/nova_server/wireguard_profile.py",
+      "bytes": 5221,
+      "sha256": "5ead6e956b25b0628da2de22c8fb337cd75b0aa0ffe4353a65b8a2f1ee8ab44c"
+    },
+    {
+      "path": "server/pytest.ini",
+      "bytes": 29,
+      "sha256": "e28a989e765f6f1fc37e02fb00a351f56391f749cafcd3f93057abbfb17ba26b"
+    },
+    {
+      "path": "server/requirements-dev.in",
+      "bytes": 98,
+      "sha256": "ef5f43a071bb49dadf368fdf1792a9c4231dfe3f530a876aeb119eb9bfa57999"
+    },
+    {
+      "path": "server/requirements-dev.txt",
+      "bytes": 48669,
+      "sha256": "f0bf60f45310eb6ad4a05ec6640c87f749a1f36219950b099700bca3a96e4471"
+    },
+    {
+      "path": "server/requirements-directory.in",
+      "bytes": 40,
+      "sha256": "af3d15e85a85a06b6d0932437625318cd45cd97637c156ad3768f5e884bc0f01"
+    },
+    {
+      "path": "server/requirements-directory.txt",
+      "bytes": 33217,
+      "sha256": "20e5cc0fb5c514d656cb006ab54fa6d236fa9e2501db1f9e38a3803951203f55"
+    },
+    {
+      "path": "server/requirements.in",
+      "bytes": 284,
+      "sha256": "a3d752cf43bca0081d25056fd68823b05d6f12b048c4522b43364cd101b335a6"
+    },
+    {
+      "path": "server/requirements.txt",
+      "bytes": 33152,
+      "sha256": "dff16e62003eaa81e34eec59635085f93d6a7730e310b66332a3bdc602c048a3"
+    },
+    {
+      "path": "server/scripts/acceptance.py",
+      "bytes": 3780,
+      "sha256": "9fdf8ae004c9bf18ce2808564020ca9349603ae3ffb340f7faba17fe3ed0421c"
+    },
+    {
+      "path": "server/scripts/device_invitation.py",
+      "bytes": 3153,
+      "sha256": "3719a97ecb9cca56a33b71794b528ae0ee75cd35ccc92c66cb5b14bea3a7fae6"
+    },
+    {
+      "path": "server/scripts/directory_profile.py",
+      "bytes": 2218,
+      "sha256": "a69a9a05ad7e9e15f0fcf7aa30e453bd6da29ffa56686b546d161b2b9448beb2"
+    },
+    {
+      "path": "server/scripts/first_run.py",
+      "bytes": 1631,
+      "sha256": "4ad428a05b73226042fc403fe9411919e5aa37ae752daac3874e55ec36f27e7e"
+    },
+    {
+      "path": "server/scripts/install.py",
+      "bytes": 3974,
+      "sha256": "81220388108a443d7919228ab5aa90a5613b9624cf654a9bdab9e6f168983dca"
+    },
+    {
+      "path": "server/scripts/lan_install.py",
+      "bytes": 11770,
+      "sha256": "0036dd125fd080e8f3ccdc1a4fc82528e7a13bb98a02a5a2cdc08729d72ee0c8"
+    },
+    {
+      "path": "server/scripts/lan_recovery.py",
+      "bytes": 18148,
+      "sha256": "4704c3a6c4cdcdbf82f5ae53e886499a8e55b6a69e3df1ec6f29b42c394e5334"
+    },
+    {
+      "path": "server/scripts/lock_dependencies.py",
+      "bytes": 625,
+      "sha256": "365712949cb4508652aa3ad3ea0856cad839bfc7dabf8640de27b5d486e16f74"
+    },
+    {
+      "path": "server/scripts/m3_lab.py",
+      "bytes": 9282,
+      "sha256": "3a02e47713acd7ae31908a8fa0433f01bee29f023ecd76c006f5986ef152a61b"
+    },
+    {
+      "path": "server/scripts/preflight.py",
+      "bytes": 3506,
+      "sha256": "36b0f5333694e77f0f9c079dfc3b800808e68181f122062bbbfbaed7b217b9c7"
+    },
+    {
+      "path": "server/scripts/recovery.py",
+      "bytes": 18223,
+      "sha256": "3cf4d970ce705669c5481e05c70a90d963833bde8bc74711dde83aa827ed06f1"
+    },
+    {
+      "path": "server/scripts/smoke_browser.py",
+      "bytes": 15671,
+      "sha256": "d4360e447d52a13cb48cc4ab65b0a5899e6d2608e3f78252d74a342a32027c89"
+    },
+    {
+      "path": "server/scripts/smoke_compose.py",
+      "bytes": 18921,
+      "sha256": "9e741eb5680e16dfcce86d7ea0b540c04c12c33cd1cab9b080ed116debf15bd2"
+    },
+    {
+      "path": "server/scripts/smoke_devices_tls.py",
+      "bytes": 8222,
+      "sha256": "07eb5bfdeb5ae40dc63830982a2d2e0c65cf10e15b6ea3d1c82adda15e246a2d"
+    },
+    {
+      "path": "server/scripts/smoke_directory_control.py",
+      "bytes": 9344,
+      "sha256": "c47a8bf175e898ccfd9a6336f1a3800f6ecd8f4d2619f742b2aaed3a25d8d722"
+    },
+    {
+      "path": "server/scripts/smoke_directory_tls.py",
+      "bytes": 8650,
+      "sha256": "492e03619cc68b33603d112a3e1dff2108c81a927be61af48c52fa788a1e5b74"
+    },
+    {
+      "path": "server/scripts/smoke_gateway_remote.py",
+      "bytes": 8092,
+      "sha256": "c3ce92b5299b39b7adce521253177d4888b01c43b9797b0fa07ecd10e1049722"
+    },
+    {
+      "path": "server/scripts/smoke_http.py",
+      "bytes": 2761,
+      "sha256": "a5a5d0c578ca4ccc8cdc02cc0192a84e844c0e07dfae78b3176cab4382fefb9c"
+    },
+    {
+      "path": "server/scripts/smoke_lan_compose.py",
+      "bytes": 14369,
+      "sha256": "1a810efd419881c57e20cdb5e95efb2561d7973fe0bd8b7090d1e327992366d2"
+    },
+    {
+      "path": "server/scripts/smoke_lan_recovery.py",
+      "bytes": 12372,
+      "sha256": "5cb34b2536a37a62f1baec19c5a73af6824f6e624d2fd30a72efcf61903bb2a2"
+    },
+    {
+      "path": "server/scripts/smoke_m3_control.py",
+      "bytes": 7302,
+      "sha256": "55131b074c0ce52db5b4901b21e3d45e10414f5c40d2625b4281dd7fed0eb798"
+    },
+    {
+      "path": "server/scripts/smoke_m3_server.py",
+      "bytes": 11233,
+      "sha256": "da6fb50db3420896785be627407c52296dbeacbfda7805428d9d1a43d037a3fc"
+    },
+    {
+      "path": "server/scripts/smoke_tailscale_control.py",
+      "bytes": 7260,
+      "sha256": "940c159f0a0e896f7f100a27a24dcd3cd92e272083bdc2117c9e8f1ad7cf0a4f"
+    },
+    {
+      "path": "server/scripts/tailscale_prepare.py",
+      "bytes": 9402,
+      "sha256": "fd5836f9bbc1cb94e1275d3ac6e42d5597f0f3cdbfcad07e2fb5ddac315e4d34"
+    },
+    {
+      "path": "server/scripts/truenas.py",
+      "bytes": 3556,
+      "sha256": "871b8e127ce64fc3d55d362ba7c52d8850c55adba4b3ed8d59ae6d792c153c48"
+    },
+    {
+      "path": "server/scripts/wireguard_install.py",
+      "bytes": 9409,
+      "sha256": "dd37a2422447dcb9c029a46fa89b80ec6e5e79a45fc8730c4cc883a1ab866fef"
+    },
+    {
+      "path": "server/scripts/wireguard_recovery.py",
+      "bytes": 3574,
+      "sha256": "3ca6bf2d4dabd24fee8dd83b6b605d0780fd0d66a3189deadab06bc7757c28e9"
+    },
+    {
+      "path": "server/tests/conftest.py",
+      "bytes": 416,
+      "sha256": "1502579799c952fc89ed9604588e053ef1bf4897f4296561bff78e93f736d3e8"
+    },
+    {
+      "path": "server/tests/jellyfin_m3_fixture.py",
+      "bytes": 7739,
+      "sha256": "64fd3b93cc2881b30f58ed1be2964c29c9f8448181e77554afacf57a31cd68ba"
+    },
+    {
+      "path": "server/tests/test_api.py",
+      "bytes": 5778,
+      "sha256": "4fd034d625062473079d8b0c143ec15a831e8be2e2fb407151276536582b479d"
+    },
+    {
+      "path": "server/tests/test_compose.py",
+      "bytes": 2308,
+      "sha256": "f6669143499b56b79541b59aee31165062ddefb54ead66375bcc91effc71484d"
+    },
+    {
+      "path": "server/tests/test_connect.py",
+      "bytes": 3266,
+      "sha256": "55699dde4bf884a630c42d54e563dd58bd9d41d3e1be13e4aabc3c4dca3524cc"
+    },
+    {
+      "path": "server/tests/test_device_invitation.py",
+      "bytes": 2110,
+      "sha256": "bf4d88daf4424f51d4c0d0ed049b04b6da9503ad19030ab6fc28f55f647fddf6"
+    },
+    {
+      "path": "server/tests/test_devices.py",
+      "bytes": 14223,
+      "sha256": "4ffceae517848bfe49230dd4a04b9b059c7487f619274314f8fab7de32d907a6"
+    },
+    {
+      "path": "server/tests/test_directory.py",
+      "bytes": 18034,
+      "sha256": "1ddc26c83a0decb5a43f46ed0c71b5cb4bf4d8bb9be113913b253059d7b34369"
+    },
+    {
+      "path": "server/tests/test_directory_control.py",
+      "bytes": 10063,
+      "sha256": "bab39412635ee69f7f8dbdd1007e4967e4c661a8cc822057383f75b0a94efabf"
+    },
+    {
+      "path": "server/tests/test_gateway_container.py",
+      "bytes": 6869,
+      "sha256": "16a4096f77b9938e777be6244b05f12403525149e129ab44a6e5d9225ae87b13"
+    },
+    {
+      "path": "server/tests/test_gateway_service.py",
+      "bytes": 13627,
+      "sha256": "fbe621a8ce24c959f2d3ada7b0fac5a24531363f6bd81c97e9325b5f7ae7a8f8"
+    },
+    {
+      "path": "server/tests/test_installer.py",
+      "bytes": 2881,
+      "sha256": "51847848406eaa8e56b391f78ddd915ae314547ebd9a5ea6b6dc3b6a72ab3cc3"
+    },
+    {
+      "path": "server/tests/test_jellyfin.py",
+      "bytes": 2699,
+      "sha256": "cebaf231b1be65acc77e80ca16c1b8531f0512a5f3c915c35cc1a6fef998604d"
+    },
+    {
+      "path": "server/tests/test_lan.py",
+      "bytes": 6597,
+      "sha256": "4d9d0da1a321187334dcf837a76338e1b8d085537e7f44f8ab9285e519ecc8e9"
+    },
+    {
+      "path": "server/tests/test_lan_recovery.py",
+      "bytes": 10610,
+      "sha256": "d09db64a41a1e32fcd4f94950043337f70ac5c598f6b83f308d6bd9deaabde80"
+    },
+    {
+      "path": "server/tests/test_m3_identity.py",
+      "bytes": 4664,
+      "sha256": "f3a36399ac5613b586a47b40d9714f70ce88c35776af442d50eccd1db6c69adf"
+    },
+    {
+      "path": "server/tests/test_m3_members.py",
+      "bytes": 6875,
+      "sha256": "f88a74e21d1015de2e9ff0e548e62211cdc91b55df18d8f7834ef53a9a65a733"
+    },
+    {
+      "path": "server/tests/test_m3_renewal.py",
+      "bytes": 4430,
+      "sha256": "932d93c7b1503aaeacb7b704256c1c44fa13f56904ebc8200b65260b48d74338"
+    },
+    {
+      "path": "server/tests/test_m4_media.py",
+      "bytes": 16873,
+      "sha256": "de1dbd7d7d3e16a0377d877aab1b2a5a620a071e791ef1894b825da25ddf1fb8"
+    },
+    {
+      "path": "server/tests/test_recovery.py",
+      "bytes": 7401,
+      "sha256": "55f93bffb4df3ae40fc68d0b26790b1a0ca39a8e328f4cade8aee9f10174c388"
+    },
+    {
+      "path": "server/tests/test_regressions.py",
+      "bytes": 5795,
+      "sha256": "f5d09f386e755c2fa2cc629fa7d22e184c1652ddfe1397dff038938197a25176"
+    },
+    {
+      "path": "server/tests/test_setup.py",
+      "bytes": 7283,
+      "sha256": "2242982abc99507852acb99f51c46e8b49e1edd70a53dc5e7fbee0d41eebf0a3"
+    },
+    {
+      "path": "server/tests/test_tailscale_control.py",
+      "bytes": 14191,
+      "sha256": "30fe7b9a477f484c152acdc0e16f9f8513e96fcad24409ed0ad023f3be3124d4"
+    },
+    {
+      "path": "server/tests/test_tailscale_profile.py",
+      "bytes": 5925,
+      "sha256": "a45d7002a069f612cc58000cebc8661e2bcda2df2c1c84e12eb8df5c43b0d131"
+    },
+    {
+      "path": "server/tests/test_wireguard_enrollment.py",
+      "bytes": 9679,
+      "sha256": "7105be7f389fb0cef3148d969e8744e1de9e42cbc8b65052de9e1995eb4dfc0d"
+    },
+    {
+      "path": "server/tests/test_wireguard_gateway.py",
+      "bytes": 6483,
+      "sha256": "b8242537490117a4fa8f67fc42b5e11702c2c55c1e15bb3ce0f0d833ab8958d2"
+    },
+    {
+      "path": "server/tests/test_wireguard_recovery.py",
+      "bytes": 7378,
+      "sha256": "0741649b7c021474fb4900d685fa010bcbf353ae943b484bbdcbe62daa09aafc"
     }
   ]
 }

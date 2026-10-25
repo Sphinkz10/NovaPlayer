@@ -1,0 +1,71 @@
+name: Native engine runtime smoke
+on:
+  workflow_dispatch:
+    inputs:
+      native_build_run:
+        description: Successful native-engines run containing the AAR artifact
+        required: true
+        default: '40116217702'
+        type: string
+  push:
+    branches: [codex/phase-one]
+    paths:
+      - '.github/workflows/native-runtime.yml'
+      - 'connect/native-proof/src/**'
+      - 'connect/native-proof/smoke_runtime.py'
+      - 'connect/app/build.gradle.kts'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  runtime:
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 35]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '17'
+      # Immutable artifact from the successful pinned-source compilation.
+      # The verified original bytes are preserved by native-engine-cache, not rebuilt.
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: native-engine-feasibility
+          run-id: ${{ inputs.native_build_run || '40116217702' }}
+          path: .native-cache
+          github-token: ${{ github.token }}
+      - name: Normalize and verify pinned AAR before loading any JNI
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,shutil
+          root=Path('.native-cache')
+          source=root/'native-output' if (root/'native-output/nova-engines.aar').is_file() else root
+          assert hashlib.sha256((source/'nova-engines.aar').read_bytes()).hexdigest()=='224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0'
+          shutil.copytree(source,'native-output')
+          PY
+      - name: Build test APK with the same native engines
+        working-directory: connect
+        run: bash gradlew :app:assembleDebug :app:assembleDebugAndroidTest -PnovaNativeProofAar="$GITHUB_WORKSPACE/native-output/nova-engines.aar" --no-daemon --console plain
+      - name: Enable emulator acceleration on disposable runner
+        run: |
+          sudo chown "$(id -u):$(id -g)" /dev/kvm
+          test -r /dev/kvm && test -w /dev/kvm
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: ${{ matrix.api }}
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: python connect/native-proof/smoke_runtime.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-runtime-api-${{ matrix.api }}
+          retention-days: 7
+          path: native-output/runtime/

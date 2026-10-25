@@ -5,3 +5,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "NOVAConnectPOC"
 include(":app")
+include(":core")

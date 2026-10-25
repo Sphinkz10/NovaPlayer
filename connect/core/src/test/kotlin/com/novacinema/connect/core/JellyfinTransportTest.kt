@@ -14,8 +14,8 @@ object JellyfinTransportTest {
     }
 
     private fun fakeDecoder(body: String): PublicServerInfo? = when (body) {
-        "READY" -> PublicServerInfo("mock-server-id", "Jellyfin", true)
-        "NEEDS_SETUP" -> PublicServerInfo("mock-server-id", "Jellyfin", false)
+        "READY" -> PublicServerInfo("mock-server-id", "Jellyfin Server", true)
+        "NEEDS_SETUP" -> PublicServerInfo("mock-server-id", "Jellyfin Server", false)
         else -> null
     }
 

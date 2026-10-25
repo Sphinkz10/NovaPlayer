@@ -1,0 +1,1681 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "result": "passed_for_lan_wireguard_lab",
+  "m5_complete": false,
+  "executable_commit": "dde3a030216bfc7ff1d3d56dd5ce03eee25d3f40",
+  "instrumentation_commit": "a032cad34e225dfbc6d1bd2728aa8e04ce2f9e80",
+  "production_sources_identical_between_revisions": true,
+  "ci": [
+    {
+      "run_id": 40030609461,
+      "head_commit": "dde3a030216bfc7ff1d3d56dd5ce03eee25d3f40",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461",
+      "jobs": [
+        {
+          "id": 120677657955,
+          "name": "dependencies",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120677658129,
+          "name": "server (windows-latest, 3.13)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120677658145,
+          "name": "server (ubuntu-latest, 3.13)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120677658198,
+          "name": "compose-lab",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120677658354,
+          "name": "server (ubuntu-latest, 3.12)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120677658415,
+          "name": "android",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120677658468,
+          "name": "server (windows-latest, 3.12)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120679524151,
+          "name": "server-image",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12535300222,
+          "name": "server-ubuntu-latest-3.12",
+          "digest": "sha256:bafedf9229e9bef126019ea75bc22396a350b63c47cb04aa9ef6f9dbc9bcb6a6",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461/artifacts/12535300222"
+        },
+        {
+          "id": 12535137086,
+          "name": "nova-server-lab-install",
+          "digest": "sha256:962e3828ea911931cc48ab7e1ad82b1e55f3181a930ce2820bd8a7f625d0fd05",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461/artifacts/12535137086"
+        },
+        {
+          "id": 12535061629,
+          "name": "server-compose-recovery",
+          "digest": "sha256:cf5252a56e86e0b714fccf744e4b73899d21aac551e7a4733bf786beee013952",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461/artifacts/12535061629"
+        },
+        {
+          "id": 12534622317,
+          "name": "server-windows-latest-3.12",
+          "digest": "sha256:14e6cd4e5f9a03cc34565f60c2233838c0c6c00045f5dcc9ccdfc57ec65571e3",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461/artifacts/12534622317"
+        },
+        {
+          "id": 12534393777,
+          "name": "server-windows-latest-3.13",
+          "digest": "sha256:327b9d5680554af26fe034e671e94526c29a4e57127750992beb156a5fd99c81",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461/artifacts/12534393777"
+        },
+        {
+          "id": 12533989769,
+          "name": "server-ubuntu-latest-3.13",
+          "digest": "sha256:2a16e08c80bb0d315cf1d945b3c56fe45c81799ce05f4bb7485bd86ce12b8d3d",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461/artifacts/12533989769"
+        },
+        {
+          "id": 12533644619,
+          "name": "connect-phase1-debug",
+          "digest": "sha256:3951d308d9decd42dd776fb82007b4d0009e2531b46172a2ec77048db271b528",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609461/artifacts/12533644619"
+        }
+      ]
+    },
+    {
+      "run_id": 40030609443,
+      "head_commit": "dde3a030216bfc7ff1d3d56dd5ce03eee25d3f40",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609443",
+      "jobs": [
+        {
+          "id": 120677657814,
+          "name": "distribution (35)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120677658308,
+          "name": "distribution (26)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12535395712,
+          "name": "android-distribution-api-35",
+          "digest": "sha256:4c757b7d8bbdd6380e1ca7eb7165524b761b4b4f4057c980bcb22eba44c56aa9",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609443/artifacts/12535395712"
+        },
+        {
+          "id": 12534284946,
+          "name": "android-distribution-api-26",
+          "digest": "sha256:0664e3a9b39ffa8324161afff1771e6b07b09a72dfb7a0c441ad2b70ce1fcac6",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609443/artifacts/12534284946"
+        }
+      ]
+    },
+    {
+      "run_id": 40030609441,
+      "head_commit": "dde3a030216bfc7ff1d3d56dd5ce03eee25d3f40",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609441",
+      "jobs": [
+        {
+          "id": 120677657813,
+          "name": "gateway",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12534383904,
+          "name": "gateway-container",
+          "digest": "sha256:bf808c35929a5dc2a348e24b2f9bc641c79bbd53438a31422772aa946b20b49a",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40030609441/artifacts/12534383904"
+        }
+      ]
+    },
+    {
+      "run_id": 40031550341,
+      "head_commit": "a032cad34e225dfbc6d1bd2728aa8e04ce2f9e80",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550341",
+      "jobs": [
+        {
+          "id": 120680752610,
+          "name": "pairing (26)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120680753162,
+          "name": "pairing (35)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12535811296,
+          "name": "android-pairing-api-35",
+          "digest": "sha256:7e17f150c8248e3e39a2481463290b0f325df18a57a637575155dd50a7a22b26",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550341/artifacts/12535811296"
+        },
+        {
+          "id": 12535267836,
+          "name": "android-pairing-api-26",
+          "digest": "sha256:bcb570ed047926c49ac9a1deb08373caedc41c4fbafcd9c222def5d20b850962",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550341/artifacts/12535267836"
+        }
+      ]
+    },
+    {
+      "run_id": 40031550238,
+      "head_commit": "a032cad34e225dfbc6d1bd2728aa8e04ce2f9e80",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550238",
+      "jobs": [
+        {
+          "id": 120680753144,
+          "name": "wireguard (26)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 120680753333,
+          "name": "wireguard (35)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12535591962,
+          "name": "wireguard-network-api-26",
+          "digest": "sha256:c46dd1c2c907db99af404c447f83e82c341ccec0049fbc306decce8bb54c9d71",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550238/artifacts/12535591962"
+        },
+        {
+          "id": 12535276923,
+          "name": "wireguard-network-api-35",
+          "digest": "sha256:ff788b19b683ad41ab6122488f3aa6c253b39b5dede3112f2b5412ea39f173c0",
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40031550238/artifacts/12535276923"
+        }
+      ]
+    }
+  ],
+  "apk": {
+    "package": "com.novacinema.cinema",
+    "version_code": 12,
+    "version_name": "0.12-tv-preview",
+    "debuggable": false,
+    "min_sdk": 26,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86",
+      "x86_64"
+    ],
+    "certificate_sha256": "50ec5556fb11d5d13ef6983f6d374aab2c3a82d0252891e38ea2a05a90d0cd72",
+    "signature_v2": true,
+    "zip_alignment_16k": true,
+    "sha256": "770f3d6c2a7e605b889bd368c8631fdb5dab562e211e2f7be29e41e666173108",
+    "unsigned_sha256": "5e4ede95a4ef5ad86d2d1384a937b99552a499f1f1b20f04e13a21af3396a059",
+    "result": "passed",
+    "previous_sha256": "febfc8e29e7be3b726c4a5d56ef93a9e22d95ee57be1a025bda8e292d65b741c"
+  },
+  "apk_build": "Exact unsigned API 35 CI artifact, signed offline using the persistent identity",
+  "server_image": "ghcr.io/sphinkz10/nova-core@sha256:2a85f469fd46732ef07d80e057dbd8b817016bf9dc23f2ac4171709303bda6f6",
+  "gateway_image": "ghcr.io/sphinkz10/nova-gateway@sha256:f061a28a2f49d2a4bf7155d2829910642e46069f22cb264561bac8922b873807",
+  "anonymous_registry_manifest_pull": "Both pinned image manifests returned HTTP 200 anonymously and matched their digests",
+  "local_checks": {
+    "server": "394 passed, 9 skipped on Windows; unchanged Python implementation in final executable revision",
+    "core": "203 JVM checks passed",
+    "release_lint": "CI release build and lint passed; no error suppressed"
+  },
+  "python_ci": {
+    "linux_3_12": "402 passed, 1 skipped",
+    "linux_3_13": "402 passed, 1 skipped",
+    "windows_3_12": "394 passed, 9 skipped",
+    "windows_3_13": "394 passed, 9 skipped"
+  },
+  "reports": {
+    "pairing_api_26": {
+      "result": "passed",
+      "android_api": "26",
+      "apk_sha256": "22b44da2dcfa0d7f5ea79a3c04b2764c8d06844611cf9762115da4b0d09bf429",
+      "phases": [
+        {
+          "phase": "security",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "refresh",
+          "result": "passed"
+        },
+        {
+          "phase": "revoked",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "rotation-marker",
+          "result": "passed"
+        },
+        {
+          "phase": "after-marker",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "tamper",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "logout",
+          "result": "passed"
+        }
+      ],
+      "real_tls": true,
+      "owner_approval_api": true,
+      "keystore_persistence": true,
+      "process_restart": true,
+      "refresh_rotation": true,
+      "interrupted_refresh_not_replayed": true,
+      "tampered_storage_rejected": true,
+      "physical_tv": false,
+      "directory": false,
+      "media": false,
+      "vpn_tunnel": false
+    },
+    "identity_api_26": {
+      "result": "passed",
+      "api": 26,
+      "phases": [
+        {
+          "phase": "security",
+          "result": "passed"
+        },
+        {
+          "phase": "login",
+          "result": "passed"
+        },
+        {
+          "phase": "refresh",
+          "result": "passed"
+        },
+        {
+          "phase": "rotation",
+          "result": "passed"
+        },
+        {
+          "phase": "rollback",
+          "result": "passed"
+        },
+        {
+          "phase": "foreign",
+          "result": "passed"
+        },
+        {
+          "phase": "device-revoked",
+          "result": "passed"
+        },
+        {
+          "phase": "relogin",
+          "result": "passed"
+        },
+        {
+          "phase": "account-revoked",
+          "result": "passed"
+        },
+        {
+          "phase": "unshared",
+          "result": "passed"
+        },
+        {
+          "phase": "pins-tampered",
+          "result": "passed"
+        }
+      ],
+      "apk_sha256": "22b44da2dcfa0d7f5ea79a3c04b2764c8d06844611cf9762115da4b0d09bf429",
+      "directory_transport": "TLS 1.3 with pinned certificate and issuer",
+      "jellyfin": "isolated HTTP fixture; real Jellyfin tested by Docker job",
+      "physical_tv": false,
+      "playback": false
+    },
+    "cinema_api_26": {
+      "result": "passed",
+      "api": 26,
+      "checks": [
+        "catalog_dpad",
+        "detail_dpad",
+        "first_video_frame",
+        "seek",
+        "pause",
+        "progress_stop",
+        "resume_after_reopen",
+        "cross_library_denied",
+        "authenticated_artwork",
+        "continue_filter",
+        "back_restores_focus",
+        "pause_survives_background"
+      ],
+      "apk_sha256": "22b44da2dcfa0d7f5ea79a3c04b2764c8d06844611cf9762115da4b0d09bf429",
+      "synthetic_video_sha256": "6d94f9b689c947abfa4402ad53cc30c56a32387217809802af57661928f69f14",
+      "jellyfin": "isolated HTTP fixture; actual Jellyfin is a separate Docker test",
+      "physical_tv": false,
+      "method": "static original bytes; Media3 progressive decode"
+    },
+    "lan_api_26": {
+      "result": "passed",
+      "api": 26,
+      "adb_reverse": false,
+      "checks": [
+        "wrong_fingerprint_denied",
+        "http_denied",
+        "native_setup_dpad",
+        "persisted_authenticated_config",
+        "profile_replacement_denied",
+        "directory_login_and_owner_approval",
+        "first_video_frame_over_private_ip",
+        "tampered_config_fails_closed"
+      ],
+      "apk_sha256": "22b44da2dcfa0d7f5ea79a3c04b2764c8d06844611cf9762115da4b0d09bf429",
+      "screenshots": [
+        {
+          "name": "tv-libraries.png",
+          "sha256": "45d0a2d2979f726eacbdd282d7710eb45760096f702733cbd1dc542f5a349e6b",
+          "width": 640,
+          "height": 320
+        },
+        {
+          "name": "tv-catalogue.png",
+          "sha256": "91084ea33b3b124d7225d93829a0aa7b41005d07c49c456c9d50f17dbab1feee",
+          "width": 640,
+          "height": 320
+        },
+        {
+          "name": "tv-detail.png",
+          "sha256": "41fabcf3c49f1c98329fbd0ae8f92895966350a94b5040eb6cc6415bb338eac8",
+          "width": 640,
+          "height": 320
+        },
+        {
+          "name": "tv-player.png",
+          "sha256": "4f29a7a0687eef45baa6a1a8d2ef3fb162fbc3fe72eacf6aab9e2e34d77cdeb6",
+          "width": 640,
+          "height": 320
+        }
+      ],
+      "screen_data": "synthetic disposable LAN fixture",
+      "display": "landscape phone emulator; not physical Android TV",
+      "source_commit": "01559599672ceae10eaf6c9629d2cc44c56fa884",
+      "production_capture_policy": "FLAG_SECURE unchanged; temporarily cleared/restored only by debug test APK",
+      "jellyfin": "isolated fixture; real Jellyfin covered by generated Docker LAN gate",
+      "physical_tv": false
+    },
+    "wireguard_api_26": {
+      "result": "passed",
+      "provider": "wireguard",
+      "api": 26,
+      "checks": [
+        "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+        "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+        "host has no route or TCP forwarder to the service overlay address",
+        "restricted adapter removes stale and broad peers before applying approved per-device host route",
+        "process restart restores durable per-device lease after confirmed peer cleanup",
+        "Control accepts only fresh authenticated kernel observations and never claims handshake",
+        "repeated live worker tick performs zero kernel writes",
+        "device revocation invalidates the previous Control observation immediately",
+        "private service unreachable before VPN",
+        "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+        "encrypted enrollment key bound to NOVA server origin and device",
+        "owner approval checked before constructing local lab tunnel profile",
+        "public gateway configuration delivered by authenticated pinned device API",
+        "remote profile rejects foreign device broad route injection public gateway and expiry",
+        "clock skew bounded to thirty seconds without extending expiry or disabling TLS validation",
+        "WireGuard profile encrypted by Android Keystore",
+        "Android system VPN consent explicitly approved",
+        "full-tunnel and other-application profiles rejected",
+        "Cinema session uses verified tunnel origin while durable association remains bound to LAN identity",
+        "actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard",
+        "authenticated profile renewal extends shortened test lease through the tunnel without LAN or engine restart",
+        "authenticated NOVA device API over native WireGuard and TLS 1.3",
+        "wrong HTTPS identity rejected inside tunnel",
+        "client surface does not mount administrative routes",
+        "firewall blocks live SSH/admin canaries and underlay ingress",
+        "revoked access credential refused even while tunnel remains UP",
+        "gateway peer removal prevents further private traffic",
+        "explicit disconnect restores selected LAN transport",
+        "disconnect stops tunnel without public fallback",
+        "failed remote reconnection preserves selection and blocks implicit LAN credentials",
+        "process restart with remote selected refuses silent LAN fallback and preserves association",
+        "encrypted profile survives process restart",
+        "Android-generated enrollment key survives process restart",
+        "enrollment tampering fails closed without replacing key",
+        "missing wrapping key never regenerates enrollment identity",
+        "forgetting NOVA association erases local WireGuard enrollment",
+        "tampered encrypted profile fails closed",
+        "local profile revocation removes decryption material"
+      ],
+      "gateway_handshake": {
+        "observed": true,
+        "received_bytes": 325204,
+        "sent_bytes": 9513388,
+        "firewall_dropped_packets": 6
+      },
+      "adb_reverse": false,
+      "tls": "TLS 1.3, exact certificate and hostname validation",
+      "gateway": "isolated Linux kernel WireGuard namespace",
+      "client": "official embedded Android GoBackend",
+      "consent": "actual system dialog, no appops bypass",
+      "playback": "actual Media3 frame/seek/pause/resume over WireGuard; synthetic Jellyfin HTTP fixture inside namespace",
+      "private_profile_delivery": "authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation",
+      "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+      "physical_nas": false,
+      "physical_tv": false,
+      "production_remote_access_enabled": false,
+      "apk_sha256": "438a4168f5af1542eeeed680ee839e011f18acdccfec8b31211dc6ae3b3f3cb7",
+      "source_commit": "01559599672ceae10eaf6c9629d2cc44c56fa884"
+    },
+    "distribution_api_26": {
+      "result": "passed",
+      "api": 26,
+      "checks": [
+        "release installed; run-as denied for non-debug application",
+        "release launcher renders Directory entry and D-pad focuses it",
+        "foreign signing identity refused by Android; original sandbox retained",
+        "higher version with same signer preserves sandbox and UID",
+        "version downgrade refused by Android",
+        "updated non-debug release launches"
+      ],
+      "physical_device": false,
+      "candidate_sha256": "7af91497b24a99893998900b5fa0ac8e3b8242e6b9a4cd65f681422a4902f193",
+      "upgrade_sha256": "fd88f427303bfb6651e486373b856a4349eb4a8388a3698b432ab6d4ac823569",
+      "signing_identity": "disposable CI key; production key never uploaded"
+    },
+    "pairing_api_35": {
+      "result": "passed",
+      "android_api": "35",
+      "apk_sha256": "86d1999054357a28403217c8277d4adb50ce660eb5e5053ff5e16caf24366771",
+      "phases": [
+        {
+          "phase": "security",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "refresh",
+          "result": "passed"
+        },
+        {
+          "phase": "revoked",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "rotation-marker",
+          "result": "passed"
+        },
+        {
+          "phase": "after-marker",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "tamper",
+          "result": "passed"
+        },
+        {
+          "phase": "pair",
+          "result": "passed"
+        },
+        {
+          "phase": "logout",
+          "result": "passed"
+        }
+      ],
+      "real_tls": true,
+      "owner_approval_api": true,
+      "keystore_persistence": true,
+      "process_restart": true,
+      "refresh_rotation": true,
+      "interrupted_refresh_not_replayed": true,
+      "tampered_storage_rejected": true,
+      "physical_tv": false,
+      "directory": false,
+      "media": false,
+      "vpn_tunnel": false
+    },
+    "identity_api_35": {
+      "result": "passed",
+      "api": 35,
+      "phases": [
+        {
+          "phase": "security",
+          "result": "passed"
+        },
+        {
+          "phase": "login",
+          "result": "passed"
+        },
+        {
+          "phase": "refresh",
+          "result": "passed"
+        },
+        {
+          "phase": "rotation",
+          "result": "passed"
+        },
+        {
+          "phase": "rollback",
+          "result": "passed"
+        },
+        {
+          "phase": "foreign",
+          "result": "passed"
+        },
+        {
+          "phase": "device-revoked",
+          "result": "passed"
+        },
+        {
+          "phase": "relogin",
+          "result": "passed"
+        },
+        {
+          "phase": "account-revoked",
+          "result": "passed"
+        },
+        {
+          "phase": "unshared",
+          "result": "passed"
+        },
+        {
+          "phase": "pins-tampered",
+          "result": "passed"
+        }
+      ],
+      "apk_sha256": "86d1999054357a28403217c8277d4adb50ce660eb5e5053ff5e16caf24366771",
+      "directory_transport": "TLS 1.3 with pinned certificate and issuer",
+      "jellyfin": "isolated HTTP fixture; real Jellyfin tested by Docker job",
+      "physical_tv": false,
+      "playback": false
+    },
+    "cinema_api_35": {
+      "result": "passed",
+      "api": 35,
+      "checks": [
+        "catalog_dpad",
+        "detail_dpad",
+        "first_video_frame",
+        "seek",
+        "pause",
+        "progress_stop",
+        "resume_after_reopen",
+        "cross_library_denied",
+        "authenticated_artwork",
+        "continue_filter",
+        "back_restores_focus",
+        "pause_survives_background"
+      ],
+      "apk_sha256": "86d1999054357a28403217c8277d4adb50ce660eb5e5053ff5e16caf24366771",
+      "synthetic_video_sha256": "6d94f9b689c947abfa4402ad53cc30c56a32387217809802af57661928f69f14",
+      "jellyfin": "isolated HTTP fixture; actual Jellyfin is a separate Docker test",
+      "physical_tv": false,
+      "method": "static original bytes; Media3 progressive decode"
+    },
+    "lan_api_35": {
+      "result": "passed",
+      "api": 35,
+      "adb_reverse": false,
+      "checks": [
+        "wrong_fingerprint_denied",
+        "http_denied",
+        "native_setup_dpad",
+        "persisted_authenticated_config",
+        "profile_replacement_denied",
+        "directory_login_and_owner_approval",
+        "first_video_frame_over_private_ip",
+        "tampered_config_fails_closed"
+      ],
+      "apk_sha256": "86d1999054357a28403217c8277d4adb50ce660eb5e5053ff5e16caf24366771",
+      "screenshots": [
+        {
+          "name": "tv-libraries.png",
+          "sha256": "15f02686f7d9e272dafcb8a2a2c36cc5ca152cdf5fcb01e45ba4f127125075e9",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "name": "tv-catalogue.png",
+          "sha256": "b99592592609e6f3a988dc8e41bc1f72196bbaa7d8e85fd14844e9620cc1dcfe",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "name": "tv-detail.png",
+          "sha256": "86524139f28cd61139f96a62afc5a9b81e4cd0e46ea5d30daffe290aafce5163",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "name": "tv-player.png",
+          "sha256": "4e840013cbeb10a19ecdd08dea8719ddf7ccecb7fb3618e52b716796eee5d1f3",
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "screen_data": "synthetic disposable LAN fixture",
+      "display": "landscape phone emulator; not physical Android TV",
+      "source_commit": "01559599672ceae10eaf6c9629d2cc44c56fa884",
+      "production_capture_policy": "FLAG_SECURE unchanged; temporarily cleared/restored only by debug test APK",
+      "jellyfin": "isolated fixture; real Jellyfin covered by generated Docker LAN gate",
+      "physical_tv": false
+    },
+    "wireguard_api_35": {
+      "result": "passed",
+      "provider": "wireguard",
+      "api": 35,
+      "checks": [
+        "standalone gateway worker consumes authenticated local Core plans without admin credentials",
+        "real NOVA HTTPS and live denied-port canaries in isolated namespace",
+        "host has no route or TCP forwarder to the service overlay address",
+        "restricted adapter removes stale and broad peers before applying approved per-device host route",
+        "process restart restores durable per-device lease after confirmed peer cleanup",
+        "Control accepts only fresh authenticated kernel observations and never claims handshake",
+        "repeated live worker tick performs zero kernel writes",
+        "device revocation invalidates the previous Control observation immediately",
+        "private service unreachable before VPN",
+        "Android-generated public key enrolled idempotently over pinned LAN HTTPS",
+        "encrypted enrollment key bound to NOVA server origin and device",
+        "owner approval checked before constructing local lab tunnel profile",
+        "public gateway configuration delivered by authenticated pinned device API",
+        "remote profile rejects foreign device broad route injection public gateway and expiry",
+        "clock skew bounded to thirty seconds without extending expiry or disabling TLS validation",
+        "WireGuard profile encrypted by Android Keystore",
+        "Android system VPN consent explicitly approved",
+        "full-tunnel and other-application profiles rejected",
+        "Cinema session uses verified tunnel origin while durable association remains bound to LAN identity",
+        "actual Cinema catalogue D-pad first video frame seek pause progress and resume over native WireGuard",
+        "authenticated profile renewal extends shortened test lease through the tunnel without LAN or engine restart",
+        "authenticated NOVA device API over native WireGuard and TLS 1.3",
+        "wrong HTTPS identity rejected inside tunnel",
+        "client surface does not mount administrative routes",
+        "firewall blocks live SSH/admin canaries and underlay ingress",
+        "revoked access credential refused even while tunnel remains UP",
+        "gateway peer removal prevents further private traffic",
+        "explicit disconnect restores selected LAN transport",
+        "disconnect stops tunnel without public fallback",
+        "failed remote reconnection preserves selection and blocks implicit LAN credentials",
+        "process restart with remote selected refuses silent LAN fallback and preserves association",
+        "encrypted profile survives process restart",
+        "Android-generated enrollment key survives process restart",
+        "enrollment tampering fails closed without replacing key",
+        "missing wrapping key never regenerates enrollment identity",
+        "forgetting NOVA association erases local WireGuard enrollment",
+        "tampered encrypted profile fails closed",
+        "local profile revocation removes decryption material"
+      ],
+      "gateway_handshake": {
+        "observed": true,
+        "received_bytes": 351508,
+        "sent_bytes": 6966700,
+        "firewall_dropped_packets": 6
+      },
+      "adb_reverse": false,
+      "tls": "TLS 1.3, exact certificate and hostname validation",
+      "gateway": "isolated Linux kernel WireGuard namespace",
+      "client": "official embedded Android GoBackend",
+      "consent": "actual system dialog, no appops bypass",
+      "playback": "actual Media3 frame/seek/pause/resume over WireGuard; synthetic Jellyfin HTTP fixture inside namespace",
+      "private_profile_delivery": "authenticated public profile API; private key stays on TV; application transport switches after pinned HTTPS identity validation",
+      "gateway_installation": "standalone opt-in host worker with authenticated local mailbox and durable leases; NAS network provisioning/installer pending",
+      "physical_nas": false,
+      "physical_tv": false,
+      "production_remote_access_enabled": false,
+      "apk_sha256": "8a670a3c73e4fb1be72bea3d6f6402352a3ca52cf92975ce0a04b31d84d1d707",
+      "source_commit": "01559599672ceae10eaf6c9629d2cc44c56fa884"
+    },
+    "distribution_api_35": {
+      "result": "passed",
+      "api": 35,
+      "checks": [
+        "release installed; run-as denied for non-debug application",
+        "release launcher renders Directory entry and D-pad focuses it",
+        "foreign signing identity refused by Android; original sandbox retained",
+        "higher version with same signer preserves sandbox and UID",
+        "version downgrade refused by Android",
+        "updated non-debug release launches"
+      ],
+      "physical_device": false,
+      "candidate_sha256": "7d9e0dae85b6b7305f980abf7f2c0af09010cd5df68a1a7b16ca9baf42bb7dba",
+      "upgrade_sha256": "1748905ed0861937d7fc15295687244907635c630c88cce563bdeae19b764a61",
+      "signing_identity": "disposable CI key; production key never uploaded"
+    },
+    "gateway": {
+      "result": "passed",
+      "checks": [
+        "generated_isolated_container_stack",
+        "authenticated_profile_only_after_approval",
+        "real_wireguard_pinned_tls13_identity",
+        "actual_jellyfin_catalogue_over_tunnel",
+        "actual_jellyfin_range_video_over_tunnel",
+        "remote_admin_surface_blocked",
+        "kernel_deadline_blocks_existing_and_new_https_while_gateway_frozen",
+        "container_restart_preserves_identity_and_peer_address",
+        "owner_enrollment_revocation_removes_remote_media_access"
+      ],
+      "physical_nas": false,
+      "physical_tv": false,
+      "gateway": "generated Docker namespace, native kernel WireGuard, nftables source deadlines",
+      "media": "real Jellyfin catalogue and 256-byte HTTP Range video through the tunnel"
+    },
+    "gateway_recovery": {
+      "result": "passed",
+      "format": 3,
+      "physical_truenas": false,
+      "checks": [
+        "age_encrypted_complete_state",
+        "tamper_truncation_wrong_key_refused",
+        "existing_destination_refused",
+        "identities_and_tls_preserved",
+        "safe_yaml_new_dataset",
+        "five_restored_services",
+        "admin_device_directory_sessions_revoked",
+        "jellyfin_sessions_revoked",
+        "republication_required",
+        "pre_restore_assertion_refused",
+        "media_requires_fresh_grant_and_approval",
+        "catalog_and_video_after_reassociation",
+        "gateway_key_preserved_channel_secret_rotated_runtime_discarded",
+        "no_old_peers_after_restore",
+        "fresh_approval_native_tunnel_video_and_revocation_after_restore"
+      ]
+    },
+    "compose": {
+      "compose": "passed",
+      "read_only_sources": 2,
+      "restart_persistence": true,
+      "nova_jellyfin_setup": true,
+      "indexed_media_sources": 2,
+      "duplicate_libraries": 0,
+      "missing_source_refused": true,
+      "container_recreation": true,
+      "encrypted_backup_restore": true,
+      "tampered_backup_rejected": true,
+      "nova_and_jellyfin_sessions_revoked": true,
+      "device_credentials_and_pending_grants_revoked": true,
+      "snapshot": {
+        "snapshot_checks_passed": true,
+        "checks": [
+          {
+            "check": "nova-core.running",
+            "ok": true
+          },
+          {
+            "check": "nova-core.healthy",
+            "ok": true
+          },
+          {
+            "check": "nova-core.loopback_only",
+            "ok": true
+          },
+          {
+            "check": "nova-core.non_root",
+            "ok": true
+          },
+          {
+            "check": "nova-core.restricted",
+            "ok": true
+          },
+          {
+            "check": "jellyfin.running",
+            "ok": true
+          },
+          {
+            "check": "jellyfin.healthy",
+            "ok": true
+          },
+          {
+            "check": "jellyfin.loopback_only",
+            "ok": true
+          },
+          {
+            "check": "jellyfin.non_root",
+            "ok": true
+          },
+          {
+            "check": "jellyfin.restricted",
+            "ok": true
+          },
+          {
+            "check": "/media/source-a.read_only_mount",
+            "ok": true
+          },
+          {
+            "check": "/media/source-b.read_only_mount",
+            "ok": true
+          },
+          {
+            "check": "core_no_media_or_docker_socket",
+            "ok": true
+          }
+        ],
+        "images": {
+          "nova-core": {
+            "reference": "nova-test-d1e79b777ce4-nova-core",
+            "local_image_id": "sha256:8d284b90817ff5c21b994442b2912adb9c7b9614ff905c294e5414e5b6d11e46"
+          },
+          "jellyfin": {
+            "reference": "jellyfin/jellyfin:12.2.20261005-225228",
+            "local_image_id": "sha256:b603f4b6dede2e060e8bb34e2dc5234926c1ced89d856f227c4a58749719b2a9"
+          }
+        }
+      },
+      "physical_truenas_test": false,
+      "m3": {
+        "result": "passed",
+        "jellyfin": "real Docker",
+        "nova_instances": 2,
+        "jellyfin_instances": 1,
+        "checks": [
+          "directory_account_binding",
+          "owner_device_approval",
+          "two_restricted_jellyfin_users",
+          "nova_library_isolation",
+          "jellyfin_library_isolation",
+          "jellyfin_admin_denied",
+          "device_token_not_admin",
+          "cross_server_token_denied",
+          "cross_server_assertion_denied",
+          "assertion_replay_denied",
+          "scoped_renewal_without_password",
+          "device_revocation",
+          "account_revocation"
+        ],
+        "m4_checks": [
+          "catalog_two_sources",
+          "detail_sanitized",
+          "original_mp4_range",
+          "seek_range",
+          "jellyfin_progress_and_resume",
+          "cross_library_media_denied",
+          "revoked_media_denied"
+        ],
+        "catalog": true,
+        "playback": "original bytes and Jellyfin progress; decode tested separately on Android",
+        "physical_nas": false
+      }
+    },
+    "jellyfin": {
+      "result": "passed",
+      "profile": "generated private LAN",
+      "physical_truenas": false,
+      "checks": [
+        "three_https_roles",
+        "ca_hostname_tls13",
+        "control_login",
+        "public_pinned_bootstrap",
+        "jellyfin_setup_two_roots",
+        "publication_from_container",
+        "owner_only_family_creation",
+        "directory_discovery",
+        "restricted_account_pairing",
+        "catalog_and_range_video",
+        "authenticated_jellyfin_artwork",
+        "jellyfin_continue_watching",
+        "admin_surface_isolation",
+        "restart_identity_continuity"
+      ],
+      "image": "locally built fixture image"
+    },
+    "lan_recovery": {
+      "result": "passed",
+      "format": 2,
+      "physical_truenas": false,
+      "checks": [
+        "age_encrypted_complete_state",
+        "tamper_truncation_wrong_key_refused",
+        "existing_destination_refused",
+        "identities_and_tls_preserved",
+        "safe_yaml_new_dataset",
+        "four_restored_services",
+        "admin_device_directory_sessions_revoked",
+        "jellyfin_sessions_revoked",
+        "republication_required",
+        "pre_restore_assertion_refused",
+        "media_requires_fresh_grant_and_approval",
+        "catalog_and_video_after_reassociation"
+      ]
+    }
+  },
+  "verified_artifact_downloads": {
+    "tv012-distribution-final-35": {
+      "artifact_zip_sha256": "4c757b7d8bbdd6380e1ca7eb7165524b761b4b4f4057c980bcb22eba44c56aa9",
+      "files": [
+        {
+          "path": "android-distribution.json",
+          "bytes": 700,
+          "sha256": "bc11b2cdc5ead4bfff440079a9f83b3ce68b000199e321d394152f774d9dabe8"
+        },
+        {
+          "path": "candidate.json",
+          "bytes": 580,
+          "sha256": "ac9161e18ed80e894d3b4068780b70a124b86055db6f80d04c205d759be9d75c"
+        },
+        {
+          "path": "foreign.json",
+          "bytes": 580,
+          "sha256": "31d973805c92dbfa49f2df2c45fa9b185bc5c3e41c3c243648aa571463db8ae2"
+        },
+        {
+          "path": "identity.json",
+          "bytes": 206,
+          "sha256": "fb348568156ef5e5e3ad021b3c86a4344890b70abbeb691efcbda543e904c0eb"
+        },
+        {
+          "path": "launcher.png",
+          "bytes": 3861,
+          "sha256": "8136b725e50dc7d666184fcda6587aafe2edf0d7b02c4eea795810e69e2fc3bb"
+        },
+        {
+          "path": "launcher.xml",
+          "bytes": 5700,
+          "sha256": "daa13d8fae74408396493f57df7f69aa5dc9975822a1bdafe95e5e97795c8093"
+        },
+        {
+          "path": "signing-gate.json",
+          "bytes": 2159,
+          "sha256": "51e105063f96aa04f689501397ddeea320ab23eb085d6271dc08b6cc8302b598"
+        },
+        {
+          "path": "unsigned.apk",
+          "bytes": 30672776,
+          "sha256": "5e4ede95a4ef5ad86d2d1384a937b99552a499f1f1b20f04e13a21af3396a059"
+        },
+        {
+          "path": "upgrade.json",
+          "bytes": 642,
+          "sha256": "3b46699d39b2f3ae41de7475f46c27bd03fb807552ec848d039b214e30f26a71"
+        }
+      ]
+    },
+    "tv012-distribution-final-26": {
+      "artifact_zip_sha256": "0664e3a9b39ffa8324161afff1771e6b07b09a72dfb7a0c441ad2b70ce1fcac6",
+      "files": [
+        {
+          "path": "android-distribution.json",
+          "bytes": 700,
+          "sha256": "1c52d204ecad6d3d60b452acaab865144d8cfe1b3ff681a1e8a4f918f5f7241c"
+        },
+        {
+          "path": "candidate.json",
+          "bytes": 580,
+          "sha256": "91cfc2d04efb2d6351d9a5cadb9257dd577424a116e6788845c65e412dc4d00f"
+        },
+        {
+          "path": "foreign.json",
+          "bytes": 580,
+          "sha256": "a96442d8e6b8877efa33987f492a0472e9d059ac4f43263e085db55b3510894b"
+        },
+        {
+          "path": "identity.json",
+          "bytes": 206,
+          "sha256": "1fff962e6b5fc7163c2ba87ee9922a05b35d98d4fd5e23e485ded94acc3664ad"
+        },
+        {
+          "path": "launcher.png",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "launcher.xml",
+          "bytes": 6048,
+          "sha256": "7bb1b9407ca8ed236542f5cdf76a9c85b0b432ddae5948e50f710104ddaaa18a"
+        },
+        {
+          "path": "signing-gate.json",
+          "bytes": 2159,
+          "sha256": "1b90545ae97d8fd354b917aed14197c175350e46d813af47f14afc5adab2bf81"
+        },
+        {
+          "path": "unsigned.apk",
+          "bytes": 30672776,
+          "sha256": "5e4ede95a4ef5ad86d2d1384a937b99552a499f1f1b20f04e13a21af3396a059"
+        },
+        {
+          "path": "upgrade.json",
+          "bytes": 642,
+          "sha256": "58f8111997909901bf83f5143e1db6129e6f59ef15d81fcdbc62b64ba7239f4e"
+        }
+      ]
+    },
+    "tv012-validated-server-image": {
+      "artifact_zip_sha256": "962e3828ea911931cc48ab7e1ad82b1e55f3181a930ce2820bd8a7f625d0fd05",
+      "files": [
+        {
+          "path": "IMAGE.txt",
+          "bytes": 100,
+          "sha256": "52a58aa8445379af572e4b8e6afc9bcd9394bfefe2665afc6080912c230d23f4"
+        },
+        {
+          "path": "M2_TRUENAS_RECUPERACAO.md",
+          "bytes": 10803,
+          "sha256": "37344ab6a4095b78ce58c9686b64b7cb7b8d846465729af5350a73c2955ee670"
+        },
+        {
+          "path": "M3_ASSOCIACAO_DISPOSITIVOS.md",
+          "bytes": 7367,
+          "sha256": "e97d9c4f6927303b50c33a5331e4225563143374bad6487328fd08825e27b0b4"
+        },
+        {
+          "path": "M3_CLIENTE_ANDROID.md",
+          "bytes": 7983,
+          "sha256": "31cd04798a2f74acc442c9865c0018db24d755a2322d0cbd02a2f951a9305924"
+        },
+        {
+          "path": "M4_RECUPERACAO_LAN.md",
+          "bytes": 7971,
+          "sha256": "b42660b3e1f3044110626213a90df28a03ce29a9d6457bc21f3d82d85e6e24ed"
+        },
+        {
+          "path": "SOURCE_COMMIT.txt",
+          "bytes": 41,
+          "sha256": "7e3dda1275d8b26f7a37d8c15b56c9940d1ad5225f588c11f61f0755fa761d4f"
+        },
+        {
+          "path": "image-test/compose-recovery.json",
+          "bytes": 2940,
+          "sha256": "89c63a814d5e609fab139b65467c9733df6267e183b4285bea2fb6d61d54395f"
+        },
+        {
+          "path": "image-test/lan-recovery.json",
+          "bytes": 535,
+          "sha256": "35dc3042a9ed8b99371c518930e52955d3c7cf2666d1bca692652affacc237be"
+        },
+        {
+          "path": "image-test/lan-server.json",
+          "bytes": 576,
+          "sha256": "1a720148bdafecee4696e5d244ee9e60cf93f8c55ac019501363cc008b951ef2"
+        },
+        {
+          "path": "image-test/m3-server.json",
+          "bytes": 883,
+          "sha256": "350727c4f3ab4979fef1b8fb433b0fa5d647f462c9bb011e80029bb09e4f3633"
+        }
+      ]
+    },
+    "tv012-validated-compose": {
+      "artifact_zip_sha256": "cf5252a56e86e0b714fccf744e4b73899d21aac551e7a4733bf786beee013952",
+      "files": [
+        {
+          "path": "compose-recovery.json",
+          "bytes": 2900,
+          "sha256": "a387c74941cca4a36d231bf9e39853a9df6e58f135d8921fa9cc1df2f3a02389"
+        },
+        {
+          "path": "lan-recovery.json",
+          "bytes": 535,
+          "sha256": "35dc3042a9ed8b99371c518930e52955d3c7cf2666d1bca692652affacc237be"
+        },
+        {
+          "path": "lan-server.json",
+          "bytes": 583,
+          "sha256": "88caf7afe34a902497745cebd580a0ce7e7de1d0a42936a9752ae0d0f1660371"
+        },
+        {
+          "path": "m3-server.json",
+          "bytes": 883,
+          "sha256": "350727c4f3ab4979fef1b8fb433b0fa5d647f462c9bb011e80029bb09e4f3633"
+        }
+      ]
+    },
+    "tv012-validated-gateway": {
+      "artifact_zip_sha256": "bf808c35929a5dc2a348e24b2f9bc641c79bbd53438a31422772aa946b20b49a",
+      "files": [
+        {
+          "path": "IMAGE.txt",
+          "bytes": 103,
+          "sha256": "65bcb84b316894c06a85e8f09d20026f0c155ecb208e51b9a9db47f966280a76"
+        },
+        {
+          "path": "gateway-local-image.txt",
+          "bytes": 51,
+          "sha256": "599fb36f55ee16a79f76aa6308ba3627a2ccf60a8645f99fc688a69c44b45ea9"
+        },
+        {
+          "path": "SOURCE_COMMIT.txt",
+          "bytes": 41,
+          "sha256": "7e3dda1275d8b26f7a37d8c15b56c9940d1ad5225f588c11f61f0755fa761d4f"
+        },
+        {
+          "path": "gateway-recovery.json",
+          "bytes": 710,
+          "sha256": "36f9821da2325de398a007aac29c2742a350b9d189ecef4120d8910f0a9b358e"
+        },
+        {
+          "path": "gateway-remote.json",
+          "bytes": 735,
+          "sha256": "3d533d1e02d4985ae217c89fbbb00fc85bbcbb3020026360075ebce722146b5e"
+        },
+        {
+          "path": "lan-server.json",
+          "bytes": 583,
+          "sha256": "88caf7afe34a902497745cebd580a0ce7e7de1d0a42936a9752ae0d0f1660371"
+        }
+      ]
+    },
+    "tv012-validated-pair-26": {
+      "artifact_zip_sha256": "bcb570ed047926c49ac9a1deb08373caedc41c4fbafcd9c222def5d20b850962",
+      "files": [
+        {
+          "path": "test-results/pairing/1-pair.txt",
+          "bytes": 166,
+          "sha256": "25b3d4bd50f3b0637e8a24fbd90ad94811121c1813f885635e4d6f140193c57e"
+        },
+        {
+          "path": "test-results/pairing/10-logout.txt",
+          "bytes": 137,
+          "sha256": "d110ec306eac32d5d624e7cbadc3e269caf089cbedb8beb9bcecd0407585b0b0"
+        },
+        {
+          "path": "test-results/pairing/0-security.txt",
+          "bytes": 139,
+          "sha256": "9e7d19238ffd70a433042583395004dbb5b8ac9c55cd00d5a6aaa83a67dec06d"
+        },
+        {
+          "path": "test-results/pairing/2-refresh.txt",
+          "bytes": 138,
+          "sha256": "ed075431efdccde53566c8006bb6bf32ba5796e9d6b01dad24ac4b3724854786"
+        },
+        {
+          "path": "test-results/pairing/3-revoked.txt",
+          "bytes": 138,
+          "sha256": "c8a5dc45bb3210b22a954167a29f1af991e07b728761eefb54d08b18060b1e60"
+        },
+        {
+          "path": "test-results/pairing/4-pair.txt",
+          "bytes": 166,
+          "sha256": "25b3d4bd50f3b0637e8a24fbd90ad94811121c1813f885635e4d6f140193c57e"
+        },
+        {
+          "path": "test-results/pairing/5-rotation-marker.txt",
+          "bytes": 146,
+          "sha256": "3d8b4916500e39487c021cf5686711b1ea1af45e4b0b6b0abd5c50bce28d8933"
+        },
+        {
+          "path": "test-results/pairing/6-after-marker.txt",
+          "bytes": 143,
+          "sha256": "9ae4704f3eb391fa5bb094fd93f488f85af0d1f95fea5bfe5c5df7f055b6f76c"
+        },
+        {
+          "path": "test-results/pairing/7-pair.txt",
+          "bytes": 166,
+          "sha256": "25b3d4bd50f3b0637e8a24fbd90ad94811121c1813f885635e4d6f140193c57e"
+        },
+        {
+          "path": "test-results/pairing/8-tamper.txt",
+          "bytes": 137,
+          "sha256": "2e7c3badb10421bd2e92ca6b7bec03728b1008ee659015e8c94f2dd0e5b30463"
+        },
+        {
+          "path": "test-results/pairing/9-pair.txt",
+          "bytes": 166,
+          "sha256": "25b3d4bd50f3b0637e8a24fbd90ad94811121c1813f885635e4d6f140193c57e"
+        },
+        {
+          "path": "test-results/pairing/results.json",
+          "bytes": 1159,
+          "sha256": "fce0d82acee3eca82f4382931770bf0414f13bb70fbc43a2b74b360731ff2493"
+        },
+        {
+          "path": "test-results/m3/0-security.txt",
+          "bytes": 142,
+          "sha256": "8353e3ecdc33b859531ab965fa31b92091b52c6c297cf5aed724185c5daa15a9"
+        },
+        {
+          "path": "test-results/m3/1-login.txt",
+          "bytes": 170,
+          "sha256": "dac1373e0a0e53d5a9beb2b46578016c2efd672a155c59ed4df8c76405d9f42b"
+        },
+        {
+          "path": "test-results/m3/10-pins-tampered.txt",
+          "bytes": 147,
+          "sha256": "6c887baa7fcaa82f64479abf43bebf01b93949b234b9f4cbd89d4170367b89fc"
+        },
+        {
+          "path": "test-results/m3/2-refresh.txt",
+          "bytes": 141,
+          "sha256": "e362d9afcdd22705924599070e0e283435a3e7f16c4019ab9e8556533d87d85e"
+        },
+        {
+          "path": "test-results/m3/3-rotation.txt",
+          "bytes": 142,
+          "sha256": "84ad89f7577c5476ae1a943fd439486c6353a58a43f67462e3ecceaf88ba33d2"
+        },
+        {
+          "path": "test-results/m3/4-rollback.txt",
+          "bytes": 142,
+          "sha256": "9ddecc57abd1f13481447fb3e7376b20cf0a92fab86b36a333fe21ba24804d7d"
+        },
+        {
+          "path": "test-results/m3/5-foreign.txt",
+          "bytes": 141,
+          "sha256": "451c7cecc01329bd36bc02803c3c8601cf2e05d4ea19c6d09964b68ccd4ba52f"
+        },
+        {
+          "path": "test-results/m3/6-device-revoked.txt",
+          "bytes": 148,
+          "sha256": "b9b3deea074f1396bf86fd8a8bcb0b75b0dc7e4f61fa3eab293c495b5b3dfdf8"
+        },
+        {
+          "path": "test-results/m3/7-relogin.txt",
+          "bytes": 172,
+          "sha256": "2f3d6e080a2234c17173da866f77cdc86756f665d347e35f1640e2d7a57c304d"
+        },
+        {
+          "path": "test-results/m3/8-account-revoked.txt",
+          "bytes": 149,
+          "sha256": "8ed70446512294e1d689d0e495a9d1d6bd3ab4110d6b1e82ea9432ae2557ce0a"
+        },
+        {
+          "path": "test-results/m3/9-unshared.txt",
+          "bytes": 142,
+          "sha256": "2418dbb19aeb4d1fca6e2c2d6809abf2bbc1a2517d6d05363e3b79e1036a5f5f"
+        },
+        {
+          "path": "test-results/m3/m3.json",
+          "bytes": 1058,
+          "sha256": "c7928f31b37dcecb5fa6a20632b141aec2f4bae71db052283ebf106d21e8ab13"
+        },
+        {
+          "path": "test-results/m4/cinema.txt",
+          "bytes": 1118,
+          "sha256": "d237631cabab744fd0523a85884d8f51b68e2ae418fab56cdb181d88533ce859"
+        },
+        {
+          "path": "test-results/m4/m4.json",
+          "bytes": 683,
+          "sha256": "cd47e4d1877314c93caf5e0a14fd1e8927261b275140b58c2289ad1cf72f3c91"
+        },
+        {
+          "path": "test-results/lan/lan-android.json",
+          "bytes": 1533,
+          "sha256": "84b136ee1b977f48becc17757d840f313d605ebd1055a6f433c062c8cbbfe212"
+        },
+        {
+          "path": "test-results/lan/native-setup.txt",
+          "bytes": 296,
+          "sha256": "60cda75355f6274048ca2eccdedc56a38eaec06b46417ea6ae824c5743cdea16"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-catalogue.png",
+          "bytes": 16766,
+          "sha256": "91084ea33b3b124d7225d93829a0aa7b41005d07c49c456c9d50f17dbab1feee"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-detail.png",
+          "bytes": 15082,
+          "sha256": "41fabcf3c49f1c98329fbd0ae8f92895966350a94b5040eb6cc6415bb338eac8"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-libraries.png",
+          "bytes": 13837,
+          "sha256": "45d0a2d2979f726eacbdd282d7710eb45760096f702733cbd1dc542f5a349e6b"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-player.png",
+          "bytes": 53198,
+          "sha256": "4f29a7a0687eef45baa6a1a8d2ef3fb162fbc3fe72eacf6aab9e2e34d77cdeb6"
+        }
+      ]
+    },
+    "tv012-validated-pair-35": {
+      "artifact_zip_sha256": "7e17f150c8248e3e39a2481463290b0f325df18a57a637575155dd50a7a22b26",
+      "files": [
+        {
+          "path": "test-results/pairing/1-pair.txt",
+          "bytes": 166,
+          "sha256": "62c3bce27064d6b6ee9872505954bc1a91c095ca06f2f7d991b0f645b25ff755"
+        },
+        {
+          "path": "test-results/pairing/10-logout.txt",
+          "bytes": 137,
+          "sha256": "33fd5fe79e710cbdb598da9049ddd8dd15f435cea8de1d16d0bb3bec4a4e4a22"
+        },
+        {
+          "path": "test-results/pairing/2-refresh.txt",
+          "bytes": 138,
+          "sha256": "a1f558e60af230c8f42759ad676b96ba83817bb94512f6dcc005a312fbda986f"
+        },
+        {
+          "path": "test-results/pairing/0-security.txt",
+          "bytes": 139,
+          "sha256": "a861330dce001df9a6592b18b3cab6e0a4e48922229715ec626937b12a0336f2"
+        },
+        {
+          "path": "test-results/pairing/3-revoked.txt",
+          "bytes": 138,
+          "sha256": "9978530f9fea0d265203a17ebc83392781b3d818576716e303c071f9d123e754"
+        },
+        {
+          "path": "test-results/pairing/4-pair.txt",
+          "bytes": 166,
+          "sha256": "62c3bce27064d6b6ee9872505954bc1a91c095ca06f2f7d991b0f645b25ff755"
+        },
+        {
+          "path": "test-results/pairing/5-rotation-marker.txt",
+          "bytes": 146,
+          "sha256": "d792184613fefcffd0f31e86159b90fe2afc8b72258bb485eaea97bd002ff6f2"
+        },
+        {
+          "path": "test-results/pairing/6-after-marker.txt",
+          "bytes": 143,
+          "sha256": "6ea8ab7e0e4a4999e31c77ccb4eb3a2d1a3e4a268ddb7d6af0a6abd7ae2edbf1"
+        },
+        {
+          "path": "test-results/pairing/7-pair.txt",
+          "bytes": 166,
+          "sha256": "62c3bce27064d6b6ee9872505954bc1a91c095ca06f2f7d991b0f645b25ff755"
+        },
+        {
+          "path": "test-results/pairing/8-tamper.txt",
+          "bytes": 137,
+          "sha256": "3f710aa3fc86eee2cbe9947239e11e889aa47a295893dfb24cfdfe55b580ed0a"
+        },
+        {
+          "path": "test-results/pairing/9-pair.txt",
+          "bytes": 166,
+          "sha256": "62c3bce27064d6b6ee9872505954bc1a91c095ca06f2f7d991b0f645b25ff755"
+        },
+        {
+          "path": "test-results/pairing/results.json",
+          "bytes": 1159,
+          "sha256": "f2fb9ed017bcb10afc3762b5c79fa01800683be93e4a7bee91bc678bfabff73e"
+        },
+        {
+          "path": "test-results/m3/0-security.txt",
+          "bytes": 142,
+          "sha256": "990670041086b80af2fec0937f22c2cee8908cf63eaf66704bcab3cc374ad024"
+        },
+        {
+          "path": "test-results/m3/1-login.txt",
+          "bytes": 170,
+          "sha256": "70eb3763dd959e6739dcc086b81caebdf1889dc40884a8ff012c36ff4ec385f6"
+        },
+        {
+          "path": "test-results/m3/10-pins-tampered.txt",
+          "bytes": 147,
+          "sha256": "551b89680ff3f1c55dc6a18cbff9a928a3d7868ad6fa7cb311be6854019c5241"
+        },
+        {
+          "path": "test-results/m3/2-refresh.txt",
+          "bytes": 141,
+          "sha256": "14db344f3da4a78d3ea6b6d0a2bbb93866bd632c2dd4a15676e5508612127b49"
+        },
+        {
+          "path": "test-results/m3/3-rotation.txt",
+          "bytes": 142,
+          "sha256": "8e4a1379cd44357dfe1d5fe3f30ac18e1da43f40c3c8325a60fcce453e674bd7"
+        },
+        {
+          "path": "test-results/m3/4-rollback.txt",
+          "bytes": 142,
+          "sha256": "f86f24c4415bbea231daafdf178f965c41fc3999d4139d1f56060c3758d0dbad"
+        },
+        {
+          "path": "test-results/m3/5-foreign.txt",
+          "bytes": 141,
+          "sha256": "ec1d95be94f98419672bf3855dcfeef3962a1cf4fde71e42df7abf2f4c4e2992"
+        },
+        {
+          "path": "test-results/m3/6-device-revoked.txt",
+          "bytes": 148,
+          "sha256": "2396f0ac032794399e3710e49412dd207282c812b77fb3d379c42e871cc5d675"
+        },
+        {
+          "path": "test-results/m3/7-relogin.txt",
+          "bytes": 172,
+          "sha256": "bf7795e383d4b21a878ddcce09ef0afcdf1546b1d8cc92578cb4056c310cedfd"
+        },
+        {
+          "path": "test-results/m3/8-account-revoked.txt",
+          "bytes": 149,
+          "sha256": "1f98f1bdbb29332d1ae2919c5fc864ca2df97d60a4e689c777215d3e6d41036c"
+        },
+        {
+          "path": "test-results/m3/9-unshared.txt",
+          "bytes": 142,
+          "sha256": "aefd6206665fb8dac2400f42dacf661c54e858cbe94d94def28bad353f63b77a"
+        },
+        {
+          "path": "test-results/m3/m3.json",
+          "bytes": 1058,
+          "sha256": "d644a3038e12a369f3a75da7b6c1b649ec04134841922fcdfe860f4c4d55d3f6"
+        },
+        {
+          "path": "test-results/m4/cinema.txt",
+          "bytes": 1118,
+          "sha256": "bbd5d4a83016d605955d1d8b509540d1c0135c4318b6da6f6ec91ec0ba8b7b41"
+        },
+        {
+          "path": "test-results/m4/m4.json",
+          "bytes": 683,
+          "sha256": "a35b051ea0409bca71687dbe61c0f81a30f5730ca1db6df941f208115d4668db"
+        },
+        {
+          "path": "test-results/lan/lan-android.json",
+          "bytes": 1537,
+          "sha256": "3ec054ba4366c6e2fccfb106da2f379ce2dc3d5b8e487aeb5a9d879739b349f4"
+        },
+        {
+          "path": "test-results/lan/native-setup.txt",
+          "bytes": 377,
+          "sha256": "cac76f460e19527380baf1757d47b008b23a80f7afb630cc78217a0b6c05b27d"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-catalogue.png",
+          "bytes": 34761,
+          "sha256": "b99592592609e6f3a988dc8e41bc1f72196bbaa7d8e85fd14844e9620cc1dcfe"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-detail.png",
+          "bytes": 28399,
+          "sha256": "86524139f28cd61139f96a62afc5a9b81e4cd0e46ea5d30daffe290aafce5163"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-player.png",
+          "bytes": 159315,
+          "sha256": "4e840013cbeb10a19ecdd08dea8719ddf7ccecb7fb3618e52b716796eee5d1f3"
+        },
+        {
+          "path": "test-results/lan/screenshots/tv-libraries.png",
+          "bytes": 25851,
+          "sha256": "15f02686f7d9e272dafcb8a2a2c36cc5ca152cdf5fcb01e45ba4f127125075e9"
+        }
+      ]
+    },
+    "tv012-validated-wg-26": {
+      "artifact_zip_sha256": "c46dd1c2c907db99af404c447f83e82c341ccec0049fbc306decce8bb54c9d71",
+      "files": [
+        {
+          "path": "test-results/wireguard/android-vpn-consent.xml",
+          "bytes": 5522,
+          "sha256": "581a4bebbbe561f569cac196907e8d47884625e74907dd93510b485a2949fec2"
+        },
+        {
+          "path": "test-results/wireguard/restart.txt",
+          "bytes": 595,
+          "sha256": "721afc7a54aa1b31b83e94c0239aa69b5494af054252c01a076e8d82af59c4d5"
+        },
+        {
+          "path": "test-results/wireguard/network.txt",
+          "bytes": 3400,
+          "sha256": "f6369f14fdb497b162d8ef8279253e3374bdc6def8d81b9ffce936322d216832"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-catalogue.png",
+          "bytes": 21013,
+          "sha256": "dc44bd857d5311e4808b176ca72b150600a993342bc659452235a2a269501628"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-detail.png",
+          "bytes": 25084,
+          "sha256": "ad7589df51d0720de31c78edaa001fb9d4088ef629b6f02da49811950ffff75e"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-libraries.png",
+          "bytes": 26925,
+          "sha256": "68d471b1beb57aff4f2b97ffb4434f947bfbf43954f6c5db17ee81b39ef0c547"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-home.png",
+          "bytes": 43412,
+          "sha256": "4eb0f8c700c4e0ec6e937fa76738cffa603fa02d288902184adccc76ee18a614"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-player.png",
+          "bytes": 33583,
+          "sha256": "c8b95f040744a0496e2d05371741bd09b61a1d4e2731127c91f82a78bc282449"
+        },
+        {
+          "path": "test-results/wireguard/wireguard-network.json",
+          "bytes": 3971,
+          "sha256": "50de30c500e7036b71effdba08d5a32b73af007b096f76f3310db284113b6d5f"
+        }
+      ]
+    },
+    "tv012-validated-wg-35": {
+      "artifact_zip_sha256": "ff788b19b683ad41ab6122488f3aa6c253b39b5dede3112f2b5412ea39f173c0",
+      "files": [
+        {
+          "path": "test-results/wireguard/android-vpn-consent.xml",
+          "bytes": 5553,
+          "sha256": "e1657bcf7c7c5a2ece540962df8a8bef74adab7bdab955a3662a627e8d1a717e"
+        },
+        {
+          "path": "test-results/wireguard/network.txt",
+          "bytes": 3481,
+          "sha256": "5ef0dcd626045e12ec3a9c7a970ff48317dfbfd2a5928c404fc2153e1f627a08"
+        },
+        {
+          "path": "test-results/wireguard/restart.txt",
+          "bytes": 595,
+          "sha256": "03d3e2b4ae149ccb4787aac2cecfd68337b72a5f21d205e0d6ff512363114e1e"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-catalogue.png",
+          "bytes": 23328,
+          "sha256": "6dfc4ca9d73a398b434ab978c91b9243d8807729b20bb4cc0480ec6ae51d7ee4"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-detail.png",
+          "bytes": 24664,
+          "sha256": "2b2f59768ef1199113f9a4d5005743e0a88d4d010c3ed8ed5066724a8d143fe5"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-home.png",
+          "bytes": 42789,
+          "sha256": "b5956f90638a61bff21e9af17458a7580d53865038346a613991bd700fc4441a"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-libraries.png",
+          "bytes": 26375,
+          "sha256": "c952e903b09eb640a8ae01aaa63fc43b67ebd3e6ff74753e7d0d3f73d72f4a87"
+        },
+        {
+          "path": "test-results/wireguard/screenshots/tv-player.png",
+          "bytes": 36836,
+          "sha256": "463ca4531e449fb06d5a9b360f541cd14442c7d038d91d21a453916f9ea8bf60"
+        },
+        {
+          "path": "test-results/wireguard/wireguard-network.json",
+          "bytes": 3971,
+          "sha256": "d8f14e6549d1b8ab173d0f9599e7c629cff17021d39d1b61a24b4d39c193ac76"
+        }
+      ]
+    }
+  },
+  "history": [
+    {
+      "source": "5f41f61",
+      "failure": "Artwork BitmapFactory default sample size was zero on API 26",
+      "fix": "Explicit inSampleSize=1; real emulator image decoding required"
+    },
+    {
+      "source": "aa8b202",
+      "failure": "Docker image variable was replaced by an image HTTP response in the new smoke test",
+      "fix": "Separate artwork response variable; full recovery rerun"
+    },
+    {
+      "source": "aa8b202 and 95ea599",
+      "failure": "API 35 seek timed out; early screenshot assertion could terminate instrumentation on the UI thread",
+      "fix": "Foreground Android media session and audio focus; screenshot assertions propagate to the test thread"
+    },
+    {
+      "source": "dde3a03",
+      "failure": "API 35 playback passed but fullscreen tutorial prevented screenshot window focus",
+      "fix": "Test-only observed system fullscreen tutorial acknowledgement; VPN permission still explicitly approved"
+    },
+    {
+      "failure": "Superseded intermediate runs were cancelled",
+      "fix": "Only successful jobs listed in ci count toward final acceptance"
+    }
+  ],
+  "limits": [
+    "Tailscale distribution journey including Control enrollment and player remains pending",
+    "NetBird native distribution journey remains pending",
+    "Offline-expired WireGuard profile still requires LAN preparation",
+    "Physical TrueNAS, Xiaomi Box S2, Chromecast, external network and long duration acceptance not performed",
+    "Direct Play only; no adaptive transcoding, external subtitle service or universal codec/HDR guarantee",
+    "Final SEC acceptance remains 0/12",
+    "CI signing tests use temporary keys; physical install of delivered persistent-signed APK pending"
+  ]
+}

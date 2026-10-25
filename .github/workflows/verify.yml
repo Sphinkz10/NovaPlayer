@@ -1,0 +1,144 @@
+name: Verify NOVA foundation
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+      - 'archives/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  server:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.12', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install --require-hashes -r server/requirements-dev.txt
+      - run: python -m pytest -q --junitxml=test-results/pytest.xml
+        working-directory: server
+      - run: python scripts/smoke_http.py
+        working-directory: server
+      - run: python scripts/smoke_devices_tls.py --output test-results/devices
+        working-directory: server
+      - run: python scripts/smoke_directory_tls.py --output test-results/directory
+        working-directory: server
+      - run: python -m playwright install --with-deps chromium
+        if: runner.os != 'Windows'
+      - run: python scripts/smoke_browser.py --output test-results/browser ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
+        working-directory: server
+      - run: python scripts/smoke_tailscale_control.py --output test-results/tailscale-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
+        working-directory: server
+      - run: python scripts/smoke_directory_control.py --output test-results/directory-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
+        working-directory: server
+      - run: python scripts/smoke_m3_control.py --output test-results/m3-control ${{ runner.os == 'Windows' && '--channel msedge' || '' }}
+        working-directory: server
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: server-${{ matrix.os }}-${{ matrix.python }}
+          path: server/test-results/
+  dependencies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m pip install pip-audit==2.10.1
+      - run: python -m pip_audit -r server/requirements.txt --no-deps --disable-pip
+      - run: python -m pip_audit -r server/requirements-directory.txt --no-deps --disable-pip
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Verify wrapper JAR checksum
+        working-directory: connect
+        run: sha256sum -c gradle/wrapper/gradle-wrapper.jar.sha256
+      - name: Build, behavioural tests and Android lint
+        working-directory: connect
+        run: bash gradlew :core:verifyCore :app:assembleDebug :app:lintDebug --no-daemon --console plain
+      - run: python connect/scripts/check_source_hygiene.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-phase1-debug
+          path: |
+            connect/app/build/outputs/apk/debug/*.apk
+            connect/app/build/reports/lint-results-debug.*
+  compose-lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --require-hashes -r server/requirements.txt
+      - run: python server/scripts/smoke_compose.py
+        env:
+          NOVA_EVIDENCE_DIR: server/test-results/compose
+      - run: python server/scripts/smoke_lan_compose.py
+        env:
+          NOVA_EVIDENCE_DIR: server/test-results/compose
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: server-compose-recovery
+          path: server/test-results/compose/
+  server-image:
+    needs: [server, dependencies, compose-lab]
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Build and publish tested server image (linux/amd64)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_ACTOR: ${{ github.actor }}
+        run: |
+          revision=$(git rev-parse HEAD)
+          image="ghcr.io/sphinkz10/nova-core:git-$revision"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GH_ACTOR" --password-stdin
+          docker build --label "org.opencontainers.image.revision=$revision" -t "$image" server
+          mkdir -p server-image
+          python3 -m venv /tmp/nova-image-test
+          /tmp/nova-image-test/bin/python -m pip install --require-hashes -r server/requirements.txt
+          NOVA_TEST_IMAGE="$image" NOVA_EVIDENCE_DIR=server-image/image-test /tmp/nova-image-test/bin/python server/scripts/smoke_compose.py
+          NOVA_TEST_IMAGE="$image" NOVA_EVIDENCE_DIR=server-image/image-test /tmp/nova-image-test/bin/python server/scripts/smoke_lan_compose.py
+          docker push "$image"
+          docker inspect --format '{{index .RepoDigests 0}}' "$image" > server-image/IMAGE.txt
+          printf '%s\n' "$revision" > server-image/SOURCE_COMMIT.txt
+          cp server/scripts/truenas.py server-image/
+          cp server/scripts/lan_install.py server-image/
+          cp server/scripts/acceptance.py server-image/
+          cp docs/M2_TRUENAS_RECUPERACAO.md server-image/
+          cp docs/M3_ASSOCIACAO_DISPOSITIVOS.md server-image/
+          cp docs/M3_CLIENTE_ANDROID.md server-image/
+          cp docs/M4_RECUPERACAO_LAN.md server-image/
+          docker logout ghcr.io
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nova-server-lab-install
+          path: server-image/

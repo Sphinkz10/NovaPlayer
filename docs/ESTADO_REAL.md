@@ -1,30 +1,18 @@
-# Estado real — NOVA Platform (17-10-2026)
+# Estado atual — 25 outubro 2026
 
-## Visão correta do produto
+**Aplicação de teste atual:** [NOVA Cinema 0.13](NOVA_CINEMA_0_13.md), com início centrado em títulos reais da conta, catálogo de posters, detalhe e foco por comando. Atualização assinada da 0.12; 17 jobs aprovados com fontes e resultados identificados. M5 completa mantém os limites abaixo.
 
-**NOVA Server:** pacote instalável no servidor de cada proprietário, contendo Jellyfin + NOVA Core e, futuramente, NOVA Connect, NOVA Control, gestão de bibliotecas, usuários, contas, pedidos e planeamento. Instalação pretendida no TrueNAS SCALE ou Linux com Docker. Dois ou mais diretórios.
+O ponto único para concluir a M3 é [M3_FECHO.md](M3_FECHO.md). Os quatro guias M3 anteriores são registos de incrementos; não devem ser usados para decidir o estado atual.
 
-**NOVA Cinema:** aplicação Android TV destinada aos convidados, com interface Premium, login, descoberta automática do servidor e reprodução Jellyfin. Não tem de configurar IP nem VPN.
+| Marco | Estado e limite |
+|---|---|
+| M1 — base | Implementada e testada |
+| M2 — servidor | Software aprovado em Docker, com instalação por digest e recuperação cifrada. [Imagem atualizada](M5_INSCRICAO_WIREGUARD.md#correções-no-servidor-lan) corrige arranque concorrente SQLite e atualiza `certifi`. Aceitação no TrueNAS físico pendente |
+| M3 — identidade e permissões | Concluída no software de laboratório: login Directory na TV, prova assinada de conta, aprovação, bibliotecas Jellyfin limitadas, renovação e revogação. Sete critérios aprovados; CI 8/8, API 26/35 e Docker real. Ver evidências no documento único |
+| M4 — primeiro filme local | Instalação LAN, configuração TV, catálogo/player e recuperação integrada aprovados em laboratório. [Distribuição 0.13](NOVA_CINEMA_0_13.md): pacote NOVA Cinema próprio, não depurável e com assinatura persistente offline; manter a chave privada e uma cópia de recuperação separada. Aceitação física pendente |
+| M5 — ligação remota | [Gateway Docker e percurso WireGuard](M5_GATEWAY_CONTENTOR.md), com [renovação pelo túnel e recuperação dos cinco serviços](M5_RENOVACAO_RECUPERACAO.md). [Tailscale no Cinema](M5_TAILSCALE_CINEMA.md) passou catálogo, capas e player nativos nas APIs 26/35, incluindo reconexão e revogação: 36 verificações Android + sete de laboratório em cada API; regressão 17/17 jobs. [Control Tailscale](M5_TAILSCALE_CONTROL.md): aprovação/desativação do perfil, preparação TLS e recuperação aprovadas; 39 verificações Android + oito de laboratório por API, regressão 17/17 jobs. Faltam inscrição na tailnet pelo Control, instalador/distribuição Tailscale, jornada NetBird e descoberta/reconexão após expiração offline |
+| M6/M7 — utilização familiar | Exigem matriz física, rede externa e validações finais de segurança |
 
-**NOVA Directory:** infraestrutura proposta para login e ligação conta ↔ NOVA Server, com descoberta automática. Por implementar; não guarda media.
+Alvos: TrueNAS Community e Android TV/Google TV API 26+, incluindo Xiaomi Box S2 e Chromecast. Os emuladores não certificam os aparelhos físicos, codecs, HDR ou desempenho.
 
-**NOVA Connect:** comunicação segura integrada; modos direto, VPN externa controlada pelo admin e alternativa edge/relay. O relay não deve ter chaves para descodificar vídeos. Por implementar na arquitetura final.
-
-## Componentes efetivamente disponíveis
-
-| Componente | Estado demonstrado | Falta |
-|---|---|---|
-| Figma Premium 1080p/720p | Design e protótipos editáveis no Figma remoto | UI Android real e exportação `.fig` offline |
-| Documento G0, F00, F01, Security | Ficheiros Markdown originais | Revisão e atualização final para arquitetura multi-proprietário |
-| NOVA Server P01 v0.1 | Código FastAPI, Docker Compose com Jellyfin, README, testes Python | Validação Docker/TrueNAS, configuração unificada, segurança produção |
-| NOVA Connect PoC v0.3 | Android Kotlin PoC e testes JVM conforme documentação original | APK compilada, handshake real, associação, permissão e isolamento reais |
-| NOVA Directory/Identity | Planeado / documentado no Figma | Implementação completa |
-| NOVA Cinema APK | Protótipos Figma | Código funcional, builds, instalação, testes TV |
-| Plataforma multi-servidor | Arquitetura corrigida no Figma | Dois servidores a funcionar em teste, auto-discovery |
-| Segurança P2P/E2EE | Requisitos e gates documentados | Implementação e auditoria de terceiros; 0/12 verificações finais |
-
-Não existe aqui uma APK final, nem um pacote NOVA Server produção pronto, nem um ficheiro `.fig` exportado. Os resultados de testes anteriores estão documentados nas respetivas versões de origem, não foram novamente executados para gerar este arquivo.
-
-## Segurança e confidencialidade
-
-Não colocar na Internet o protótipo do NOVA Server nem abrir as portas 8096/8787 do NAS. Não reutilizar diretamente o protótipo da VPN como configuração de produção. Não incluir credenciais reais, chaves de família, tokens nem `.env` gerado nos arquivos de partilha.
+A M3 permite ensaiar identidade e permissões. O perfil M4 LAN prepara uma instalação nova e configuração na própria TV, sem ADB para provisionar o Directory. O PC gera o pacote; a transferência inicial e os ACL no NAS são passos do proprietário. A utilização remota com escolha dos três fornecedores depende da M5. O NAS e as boxes ainda não foram usados nesta sessão.

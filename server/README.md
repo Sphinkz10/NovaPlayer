@@ -1,6 +1,18 @@
-# NOVA Server — P01 v0.1 · pacote local de instalação
+# NOVA Server — laboratório M2/M3/M4
 
-> **Estado:** primeira entrega funcional **de código**, NÃO uma versão pronta para famílias, nem uma instalação validada no TrueNAS. Não há ainda VPN, NOVA Directory, login universal nem APK NOVA Cinema. **Não publicar estas portas na Internet.**
+> Estado atual: [M4 Cinema local](../docs/M4_CINEMA_LOCAL.md), com gateway de catálogo/vídeo e progresso aprovados em Docker real; [M3 de identidade](../docs/M3_FECHO.md) concluída em laboratório. Usar a imagem atual por digest do guia M4. O Core conserva a versão de desenvolvimento `0.3.0-dev`; o digest identifica a revisão. Os detalhes M2/fase 1 abaixo são históricos onde divergirem destes documentos.
+
+Base de segurança implementada em 17-10-2026: login Control corrigido, diagnóstico Jellyfin limitado a 16 KiB/4 s com validação de produto/wizard/identidade opcional, limite de login atómico, duas verificações Argon2 simultâneas por processo, dependências transitivas fixadas com hashes. Cinco falhas/tentativas em curso por origem durante 15 minutos; sucesso retira apenas a própria reserva e não apaga outras falhas. A administração aceita Host `localhost`/`127.0.0.1`.
+
+O Control guarda **rascunhos** WireGuard/Tailscale/NetBird sem ativação de rede e dispõe do assistente M2 para configuração/indexação. Para comparar a identidade Jellyfin no diagnóstico de disponibilidade, definir `NOVA_JELLYFIN_SERVER_ID`; sem isso esse diagnóstico devolve `identity_verified=false`. A autorização de media verifica também a identidade guardada na configuração da conta.
+
+Instalação Apps TrueNAS, imagem por digest, cópia cifrada, recuperação e reversão: [guia M2](../docs/M2_TRUENAS_RECUPERACAO.md). Aceitação no NAS físico pendente.
+
+Novo incremento: [assistente M2](../docs/M2_SERVIDOR_LAB.md). Criação do proprietário pelo navegador, configuração Jellyfin, uma ou duas bibliotecas, retoma e contagens de indexação.
+
+Testes e limitações anteriores: [fase 1](../docs/FASE_1_RESULTADOS.md). O restante percurso de instalação abaixo continua destinado a laboratório; não foi executado neste TrueNAS.
+
+> **Estado:** entrega funcional de laboratório, com Directory privado, associação, permissões e player. Instalação LAN guiada, aceitação TrueNAS/boxes e VPN completa permanecem pendentes. Não publicar estas portas na Internet.
 
 ## Para que serve
 
@@ -23,11 +35,12 @@ Quando terminarmos o produto, o proprietário só instalará NOVA Server e confi
 
 ## Instalação passo a passo
 
-1. Extrair o ZIP e entrar na pasta `NOVA_Server_P01_v0.1`.
+1. Entrar na pasta `server/` das fontes atuais, ou na pasta do pacote de servidor extraído.
 2. Confirmar que ambos os diretórios têm os ficheiros desejados (ou pastas vazias temporárias).
-3. Criar configuração, **sem utilizar root** (substituir pelos teus caminhos):
+3. Verificar pré-requisitos e criar configuração, **sem utilizar root** (substituir pelos teus caminhos). A pasta do pacote deve ficar separada das duas origens de media:
 
    ```bash
+   python3 scripts/preflight.py --media-a "/mnt/disco1/Filmes" --media-b "/mnt/disco2/Series"
    python3 scripts/install.py --media-a "/mnt/disco1/Filmes" --media-b "/mnt/disco2/Series"
    ```
 
@@ -40,17 +53,13 @@ Quando terminarmos o produto, o proprietário só instalará NOVA Server e confi
    docker compose ps
    ```
 
-5. Configurar o proprietário no terminal do **próprio servidor**:
+5. Abrir `http://127.0.0.1:8787` localmente ou através do túnel SSH abaixo. Criar o proprietário usando o código em `state/nova/bootstrap.token` e uma palavra-passe de pelo menos 14 caracteres. O código é consumido uma única vez. O script `first_run.py` continua disponível como alternativa no terminal.
 
-   ```bash
-   python3 scripts/first_run.py
-   ```
+6. Entrar com a conta NOVA e usar **Configurar o Jellyfin**. Indicar uma conta administrativa Jellyfin nova (palavra-passe de pelo menos 14 caracteres), ou as credenciais existentes para retomar. Escolher uma biblioteca para as duas origens ou duas bibliotecas separadas, com o tipo Filmes/Séries de cada uma. Os caminhos no contentor são fixos: `/media/source-a` e `/media/source-b`.
 
-   Define o nome de proprietário e uma palavra-passe longa. O token de bootstrap é invalidado e apagado da pasta de dados após utilização.
+7. Aguardar a indexação e usar **Verificar indexação**, introduzindo novamente as credenciais Jellyfin. A NOVA guarda a última observação com data; não guarda a palavra-passe nem o token administrativo Jellyfin. As contas NOVA e Jellyfin continuam independentes. Bibliotecas incompatíveis são recusadas, sem apagar ou reconfigurar bibliotecas existentes. A configuração inicial desativa acesso remoto numa instalação Jellyfin nova e usa metadados locais; enriquecimento remoto pode ser configurado posteriormente no Jellyfin.
 
-6. Abrir o painel local `http://127.0.0.1:8787` e entrar com as credenciais NOVA; ver o estado do Jellyfin.
-
-7. **Primeiro arranque do Jellyfin:** abrir `http://127.0.0.1:8096` (localmente ou com túnel SSH) e completar o **assistente inicial do próprio Jellyfin**. Adicionar `/media/source-a` e `/media/source-b` às bibliotecas pretendidas. Se quiseres filmes e séries separados, cria bibliotecas diferentes; se quiseres um só catálogo de filmes a partir dos dois diretórios, adiciona ambos à biblioteca correspondente. Não confundir conta Jellyfin com o proprietário NOVA desta prova.
+Não mudar a organização/nome das bibliotecas para tentar corrigir uma falha: retomar com os mesmos dados. Uma alteração de identidade Jellyfin bloqueia a operação e exige revisão manual da instalação; não apagar a base NOVA para contornar esse bloqueio.
 
 ### Gestão noutro computador através de SSH
 
@@ -79,13 +88,13 @@ docker compose down                  # preserva diretórios persistentes
 docker compose up -d --build         # reinicia após revisão das versões
 ```
 
-**Não executar `docker compose down -v` nem eliminar `state/` sem cópias de segurança.** Em futuras versões o instalador deverá gerir migrações e backups cifrados.
+**Não executar `docker compose down -v` nem eliminar `state/` sem cópias de segurança.** A recuperação cifrada offline e o procedimento de reversão já estão disponíveis no guia M2; não há atualização automática. O Core versiona o schema SQLite e recusa schemas futuros.
 
 ## Fronteiras de segurança desta prova
 
 | Medida | Estado |
 |---|---|
-| Duas origens montadas read-only no Jellyfin | Configurado em Compose; não testado em Docker real |
+| Duas origens montadas read-only no Jellyfin | Aprovado em Docker Linux na CI: leitura e tentativa de escrita bloqueada |
 | NOVA Core sem acesso direto aos filmes | Configurado em Compose |
 | Portas 8096 e 8787 vinculadas a `127.0.0.1` | Configurado, exige validação real no host |
 | Senha NOVA Argon2id + segredo de bootstrap | Implementado e testado em Python |
@@ -124,14 +133,22 @@ python3 -m pip install -r requirements-dev.txt
 python3 -m pytest -q
 ```
 
-Os testes usam `httpx.MockTransport` e FastAPI `TestClient`; **não testam contentores, login Jellyfin, reprodução de vídeo ou VPN real**.
+Os testes unitários usam `httpx.MockTransport` e FastAPI `TestClient`. O teste separado `scripts/smoke_compose.py` arranca contentores reais, configura Jellyfin via NOVA e exige dois vídeos sintéticos indexados, retoma sem bibliotecas duplicadas e persistência após reinício. Consultar o relatório M2 para o resultado da execução; reprodução e VPN continuam fora desta prova.
 
 ## Próximas entregas (não confundir com concluídas)
 
-1. **P01.2:** verificar Docker real, saúde da imagem Jellyfin e acesso a ambos os diretórios; desenhar wizard unificado de Jellyfin + NOVA e testes TrueNAS SCALE.
+1. **P01.2:** Docker Linux, saúde Jellyfin e acesso read-only às duas origens aprovados na CI; wizard unificado e indexação das duas origens aprovados em Docker no incremento M2; executar testes TrueNAS Community e backup/restauro.
 2. **P02:** NOVA Directory/Identity, convites, associação servidor-conta, autenticação segura via código no telemóvel (RFC 8628).
-3. **P03:** NOVA Connect, canal autenticado e cifrado NOVA Cinema↔NOVA Server, modo integrado e integração VPN externa; testar relay que não pode desencriptar conteúdo.
+3. **P03:** NOVA Connect, canal autenticado e cifrado NOVA Cinema↔NOVA Server, WireGuard/Tailscale/NetBird nativos; testar relay que não pode desencriptar conteúdo.
 4. **P04:** primeira APK NOVA Cinema real com login, descoberta automática de servidor, biblioteca Jellyfin e Media3 Direct Play.
 5. **SEC:** testes das 12 barreiras de segurança, isolamento entre duas instalações, backup cifrado e auditoria externa antes de disponibilizar a familiares.
 
 **Referências:** [Jellyfin — Docker e múltiplos volumes](https://jellyfin.org/docs/general/installation/container/), [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/), [OWASP MASVS](https://mas.owasp.org/MASVS/).
+
+## Incremento M3 de laboratório
+
+As fontes atuais incluem associação por código, aprovação/revogação no Control e API HTTPS separada. Consultar [M3](../docs/M3_ASSOCIACAO_DISPOSITIVOS.md). O serviço cliente exige ativação explícita e não é iniciado pelo Compose M2. O schema passa para 2: preservar backup para regressar à imagem M2.
+
+## Directory no NOVA Control
+
+A integração opcional permite inicializar identidade, publicar/renovar manualmente e verificar a publicação. Configurar origem e confiança TLS no processo local; credenciais não são guardadas. A nova imagem inclui as dependências/código, mas não inicia o Directory separado nem altera o Compose por defeito. Ver [guia e ensaio](../docs/M3_DIRECTORY_CONTROL.md). Android, renovação automática e permissões de media continuam pendentes.

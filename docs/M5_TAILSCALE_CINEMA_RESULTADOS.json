@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-24",
+  "result": "passed_native_tailscale_cinema_lab",
+  "tested_source": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+  "pull_request_ci_merge_commit": "f15309ad587e15b3a3c0dd74aa4d0276803cb661",
+  "entire_git_tree_identical_between_head_and_ci_merge": true,
+  "production_provider_enabled": false,
+  "m5_complete": false,
+  "current_installable_distribution": "NOVA Cinema 0.12 LAN/WireGuard, unchanged signed APK",
+  "ci": [
+    {
+      "run_id": 40036059678,
+      "head_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036059678",
+      "jobs": [
+        {
+          "id": 120695691783,
+          "name": "tailscale (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036059678/job/120695691783"
+        },
+        {
+          "id": 120700316114,
+          "name": "tailscale (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 2,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036059678/job/120700316114"
+        }
+      ]
+    },
+    {
+      "run_id": 40036064106,
+      "head_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106",
+      "jobs": [
+        {
+          "id": 120695707353,
+          "name": "compose-lab",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120695707353"
+        },
+        {
+          "id": 120695707571,
+          "name": "server (windows-latest, 3.12)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120695707571"
+        },
+        {
+          "id": 120695707608,
+          "name": "android",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120695707608"
+        },
+        {
+          "id": 120695707665,
+          "name": "server (ubuntu-latest, 3.12)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120695707665"
+        },
+        {
+          "id": 120695707671,
+          "name": "dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120695707671"
+        },
+        {
+          "id": 120695707722,
+          "name": "server (windows-latest, 3.13)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120695707722"
+        },
+        {
+          "id": 120695707731,
+          "name": "server (ubuntu-latest, 3.13)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120695707731"
+        },
+        {
+          "id": 120697684478,
+          "name": "server-image",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064106/job/120697684478"
+        }
+      ]
+    },
+    {
+      "run_id": 40036064141,
+      "head_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064141",
+      "jobs": [
+        {
+          "id": 120695707509,
+          "name": "distribution (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064141/job/120695707509"
+        },
+        {
+          "id": 120695707787,
+          "name": "distribution (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064141/job/120695707787"
+        }
+      ]
+    },
+    {
+      "run_id": 40036064117,
+      "head_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064117",
+      "jobs": [
+        {
+          "id": 120695707415,
+          "name": "gateway",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064117/job/120695707415"
+        }
+      ]
+    },
+    {
+      "run_id": 40036064115,
+      "head_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064115",
+      "jobs": [
+        {
+          "id": 120695707847,
+          "name": "pairing (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064115/job/120695707847"
+        },
+        {
+          "id": 120700323600,
+          "name": "pairing (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 2,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064115/job/120700323600"
+        }
+      ]
+    },
+    {
+      "run_id": 40036064158,
+      "head_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064158",
+      "jobs": [
+        {
+          "id": 120695707783,
+          "name": "wireguard (26)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064158/job/120695707783"
+        },
+        {
+          "id": 120695708149,
+          "name": "wireguard (35)",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "url": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/40036064158/job/120695708149"
+        }
+      ]
+    }
+  ],
+  "reports": {
+    "26": {
+      "result": "passed",
+      "provider": "tailscale",
+      "api": 26,
+      "android_checks": 36,
+      "harness_checks": [
+        "pinned real Linux Tailscale peer enrolled with a one-use ten-minute key",
+        "host has no overlay route or TCP proxy to NOVA",
+        "real NOVA Core HTTPS and live blocked administration/SSH canaries",
+        "persisted identity sealed with Android Keystore; no enrollment key or NOVA token in engine preferences",
+        "overlay revocation proven while NOVA access credential remains valid",
+        "corrupted state remains corrupted after refusal, without silently replacing identity",
+        "sealed identity preserved when its missing Android wrapping key is refused"
+      ],
+      "native_engine_aar_sha256": "224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0",
+      "coordinator": "Headscale 0.29.5, disposable TLS coordinator",
+      "linux_peer": "Tailscale 1.104.2",
+      "source_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "apk_sha256": "0d5ed02e9acfcf4f4bd8c5b6d1d4dfa175be97d6c9080d3972d62d33776350cb",
+      "external_android_vpn_app": false,
+      "adb_reverse": false,
+      "physical_nas": false,
+      "physical_tv": false,
+      "tailscale_saas_account": false,
+      "production_provider_enabled": false,
+      "media_playback_tested": true,
+      "playback": "actual Cinema catalogue, artwork, Media3 frame/seek/pause/resume over native Tailscale; synthetic Jellyfin upstream",
+      "profile_delivery": "associated NOVA device API over pinned LAN HTTPS, existing leaf and server/device/account identity retained"
+    },
+    "35": {
+      "result": "passed",
+      "provider": "tailscale",
+      "api": 35,
+      "android_checks": 36,
+      "harness_checks": [
+        "pinned real Linux Tailscale peer enrolled with a one-use ten-minute key",
+        "host has no overlay route or TCP proxy to NOVA",
+        "real NOVA Core HTTPS and live blocked administration/SSH canaries",
+        "persisted identity sealed with Android Keystore; no enrollment key or NOVA token in engine preferences",
+        "overlay revocation proven while NOVA access credential remains valid",
+        "corrupted state remains corrupted after refusal, without silently replacing identity",
+        "sealed identity preserved when its missing Android wrapping key is refused"
+      ],
+      "native_engine_aar_sha256": "224bfc4ef95c9c173f1a2d62a377f129333313c1cb622b4d229cf37b6403e0a0",
+      "coordinator": "Headscale 0.29.5, disposable TLS coordinator",
+      "linux_peer": "Tailscale 1.104.2",
+      "source_commit": "6e9550c9e9b49e4bfca10589a87194ed385d6ad9",
+      "apk_sha256": "bfc2e69d64250e90667e27bdab32571c88fe59f390c8d7d660c4afaa36631655",
+      "external_android_vpn_app": false,
+      "adb_reverse": false,
+      "physical_nas": false,
+      "physical_tv": false,
+      "tailscale_saas_account": false,
+      "production_provider_enabled": false,
+      "media_playback_tested": true,
+      "playback": "actual Cinema catalogue, artwork, Media3 frame/seek/pause/resume over native Tailscale; synthetic Jellyfin upstream",
+      "profile_delivery": "associated NOVA device API over pinned LAN HTTPS, existing leaf and server/device/account identity retained"
+    }
+  },
+  "verified_artifact_downloads": {
+    "26": {
+      "artifact_zip_sha256": "6a306c625fe4caaab1ffdaf0ac14f0a2b0217ddff377c8dfd16517d2cae820d8",
+      "files": [
+        {
+          "path": "android-vpn-consent.xml",
+          "bytes": 5523,
+          "sha256": "1063ed8ccd8e2f575734264e5aa5d6dea8a72eaf754bccb2ed4a3c30c32e2bfd"
+        },
+        {
+          "path": "crash.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "missing-key.txt",
+          "bytes": 475,
+          "sha256": "15c053b6e1699f0ce41ede3d004ebf4f52bf3f57acaa6d194fcf57e2662c569d"
+        },
+        {
+          "path": "network.txt",
+          "bytes": 2767,
+          "sha256": "c7ff44893f00ed8d48b96d95c2d89a1ffbfde13af986b91fb8d09880bfda1b50"
+        },
+        {
+          "path": "restart.txt",
+          "bytes": 1310,
+          "sha256": "900c2de3e7cad4c2e54b876111fd72be3ef4a40c929fff30f7109fb44de68549"
+        },
+        {
+          "path": "screenshots/tv-catalogue.png",
+          "bytes": 17343,
+          "sha256": "4698ab88c368be16523f38622adb6171b83360dcecfa77bad8aa3c6f3b19d962"
+        },
+        {
+          "path": "screenshots/tv-detail.png",
+          "bytes": 14800,
+          "sha256": "3645307c82fde58970e0c9af729326763a905c634c7158d0253c3477df029266"
+        },
+        {
+          "path": "screenshots/tv-home.png",
+          "bytes": 25713,
+          "sha256": "2172b62483ea8fa783b9f1796782a92102f6d1f2087d16f00cffe3643cfb4f9e"
+        },
+        {
+          "path": "screenshots/tv-libraries.png",
+          "bytes": 14994,
+          "sha256": "7f8df1df4d7ef5f1bfc90a34aad9953d0257f560dc6c9f85f0235d81595c8c99"
+        },
+        {
+          "path": "screenshots/tv-player.png",
+          "bytes": 28059,
+          "sha256": "6429bffd594aa3ad5a864f596b1f5a5b857bed338ce6ef505b6ad82f8a49b6bf"
+        },
+        {
+          "path": "tailscale-network.json",
+          "bytes": 1512,
+          "sha256": "ee3f0bb28639fe0508e3904e18b6085ea445bcf762004f25f2e19bf8b57875c0"
+        },
+        {
+          "path": "tamper.txt",
+          "bytes": 475,
+          "sha256": "84c802fe0ca4f5e0425690df3abfa6b2caa0f6c66897acccd10d572f5a1ade6e"
+        }
+      ]
+    },
+    "35": {
+      "artifact_zip_sha256": "260ac5c50a01cebbef20a04ff70ebc31f9f30bb8a45bfc8209ebf6d9c0be8b4b",
+      "files": [
+        {
+          "path": "android-vpn-consent.xml",
+          "bytes": 5567,
+          "sha256": "30393f47e06208a57df6babf258b510a47df915502cb3328e8797a49656bdae6"
+        },
+        {
+          "path": "crash.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "missing-key.txt",
+          "bytes": 475,
+          "sha256": "37bf9af9ec5595037e3f5c5b81bbbbf83741472e8696d6d1e9c7a31e04bcd71b"
+        },
+        {
+          "path": "network.txt",
+          "bytes": 2848,
+          "sha256": "0d68f831faef486b295547719a1ea6279178a9e82858233373b3e574133d7f60"
+        },
+        {
+          "path": "restart.txt",
+          "bytes": 1310,
+          "sha256": "cf27ef5ec296489f3b3df585d7d8a49d952c6127ee1f2caf43879a797a35104a"
+        },
+        {
+          "path": "screenshots/tv-catalogue.png",
+          "bytes": 34294,
+          "sha256": "e4b844d47d36c23fcfaf57ffc4cc010ccaabc5aaf02df4f8d4dca35b2ae54847"
+        },
+        {
+          "path": "screenshots/tv-detail.png",
+          "bytes": 27510,
+          "sha256": "2615605133bd8c0a1bc4e8b9671edb4e7b6da83684a8a4af4afaf7d74149127b"
+        },
+        {
+          "path": "screenshots/tv-home.png",
+          "bytes": 41422,
+          "sha256": "6766c5367f50e1fd7787a3f88f1008883628d46104ab983672fec0f8b215fa91"
+        },
+        {
+          "path": "screenshots/tv-libraries.png",
+          "bytes": 26277,
+          "sha256": "8c704dfb4b472d5f9911ea0f2f99493bf8fe1454bc58f1c88544621115d5a51c"
+        },
+        {
+          "path": "screenshots/tv-player.png",
+          "bytes": 136813,
+          "sha256": "7d769103cf1cea40bc35a5ed52ef1a0f97a61caf569dfb02e6bc61cbb500eea7"
+        },
+        {
+          "path": "tailscale-network.json",
+          "bytes": 1512,
+          "sha256": "b61ca1e6768ad4f539b5f1058d8ee646261dd2f5c2afcb558a9d34783b515cb8"
+        },
+        {
+          "path": "tamper.txt",
+          "bytes": 475,
+          "sha256": "a7314f366e2968cb6411638f32dd1f380f239374c7278a667e9ffcebcae302cd"
+        }
+      ]
+    }
+  },
+  "local_checks": {
+    "python_windows": {
+      "passed": 432,
+      "skipped": 9
+    },
+    "core_jvm": 225,
+    "tailscale_route_policy": 42,
+    "release_build": "passed",
+    "release_lint": {
+      "errors": 0,
+      "warnings": 44
+    },
+    "source_hygiene": "11/11"
+  },
+  "python_ci": {
+    "ubuntu_python_3_12": "440 passed, 1 skipped",
+    "ubuntu_python_3_13": "440 passed, 1 skipped",
+    "windows_python_3_12": "432 passed, 9 skipped",
+    "windows_python_3_13": "432 passed, 9 skipped"
+  },
+  "scope": {
+    "coordinator": "Headscale lab, not Tailscale SaaS",
+    "real_native_tunnel": true,
+    "external_vpn_app": false,
+    "real_nova_media_api": true,
+    "real_media3_playback": true,
+    "jellyfin_upstream": "synthetic HTTP fixture in namespace",
+    "actual_jellyfin_regression": "separate real Docker compose job",
+    "initial_profile": "pinned LAN HTTPS with approved NOVA credential",
+    "activation": "test instrumentation drives the embedded native service; normal Control journey pending"
+  },
+  "history": [
+    {
+      "run_id": 40036059678,
+      "job_id": 120695691715,
+      "api": 26,
+      "outcome": "cancelled_by_task_before_android_tests",
+      "stage": "Namespace tooling and emulator acceleration",
+      "observation": "Slow azure.archive.ubuntu.com ffmpeg dependency downloads; cancelled during libflite1 transfer, not an app assertion",
+      "resolution": "Only this job rerun on the unchanged source; successful replacement listed in ci"
+    },
+    {
+      "run_id": 40036064115,
+      "job_id": 120695707832,
+      "api": 35,
+      "outcome": "cancelled_by_task_before_android_tests",
+      "stage": "Synthetic local video encoder",
+      "observation": "Slow Ubuntu ffmpeg dependency downloads; cancelled during package preparation, before the app build/tests",
+      "resolution": "Only this job rerun on the unchanged source; API 26 success retained"
+    }
+  ],
+  "limits": [
+    "Normal Tailscale Control enrollment, server peer installer and distribution adapter remain pending",
+    "Real Tailscale SaaS account flow not tested",
+    "Native NetBird complete journey remains pending",
+    "Offline-expired remote profile discovery/reconnection remains pending",
+    "Tailscale profile expiry/renewal and provider switching require production lifecycle integration",
+    "Physical TrueNAS Community, Xiaomi Box S2, Chromecast, external network and long duration acceptance not executed",
+    "Final SEC acceptance remains 0/12",
+    "Direct Play only; no universal codec/HDR guarantee"
+  ]
+}

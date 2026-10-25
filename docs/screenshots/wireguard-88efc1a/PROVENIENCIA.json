@@ -1,0 +1,52 @@
+{
+  "source_commit": "88efc1ac78ce500b946088925f3b4a9dde08a118",
+  "ci_merge_commit": "0211e08bb06e5bb3ab4c1ae2a2e3bb118c8052ea",
+  "run": "https://github.com/Sphinkz10/NovaPlayer/actions/runs/39686627658",
+  "method": "Original unedited Android screencap images from disposable debug instrumentation; secure window restored after capture",
+  "content": "Synthetic Jellyfin HTTP fixture video streamed through actual native WireGuard and NOVA media API",
+  "physical_tv": false,
+  "interface": "Functional prototype, portrait emulator; not final TV visual design",
+  "known_ui_copy": "Player/detail still display local/Direct Play wording; test asserts tunnel origin and no underlay route",
+  "files": [
+    {
+      "file": "api-26/tv-libraries.png",
+      "sha256": "de3d24a1b493de0073bfb5d799b7adb824d4ee6c6d98d7637c393c780fb0b6f2",
+      "api": 26
+    },
+    {
+      "file": "api-26/tv-catalogue.png",
+      "sha256": "6fc018132bc520fb52240929c2e6087a0485bc05506f69d18bb8328828d0266e",
+      "api": 26
+    },
+    {
+      "file": "api-26/tv-detail.png",
+      "sha256": "904df69393ddfa3c598b3b1f108c22ee595798edb403f9b4b55a08060edd13c2",
+      "api": 26
+    },
+    {
+      "file": "api-26/tv-player.png",
+      "sha256": "967e7f5705665b50ab2b2db667ade0fc2b00a3432839f83701b79c1079b1dca6",
+      "api": 26
+    },
+    {
+      "file": "api-35/tv-libraries.png",
+      "sha256": "cd5e3cec10f1a3112313a89366d8dfe0a2944c9571705413fe09aa4aa7f0bb21",
+      "api": 35
+    },
+    {
+      "file": "api-35/tv-catalogue.png",
+      "sha256": "22e258b0bfcd724611b939bb07306bcc3e2e0fe575e71af94dd5f01ac0304bf5",
+      "api": 35
+    },
+    {
+      "file": "api-35/tv-detail.png",
+      "sha256": "b7a53221e3aeb6288a4f21c85578a383e2f3fe8f8a18e9b38b0ac847a4807c34",
+      "api": 35
+    },
+    {
+      "file": "api-35/tv-player.png",
+      "sha256": "1e728c63b32dc0527d2c50076bcf8b5098581c4d671f7985ef52161967252351",
+      "api": 35
+    }
+  ]
+}
