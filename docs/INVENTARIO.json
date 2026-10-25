@@ -185,8 +185,8 @@
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/CinemaHomeView.kt",
-      "bytes": 5889,
-      "sha256": "11e337bc7aea8f82f851edc19e60d0b322e0b939c4f971c9840d2353a0b73569"
+      "bytes": 6096,
+      "sha256": "c1245d85bab78fe58e5935d575b84b1e1226791791978f2003588f11851d13ee"
     },
     {
       "path": "connect/app/src/main/java/com/novacinema/connect/ConnectionActivity.kt",

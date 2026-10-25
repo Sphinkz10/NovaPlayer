@@ -21,7 +21,9 @@ internal class CinemaHomeView(activity:Activity,openLibrary:()->Unit,connection:
     private val context=activity
     private var featured:String?=null
     init {
+        root.setPadding(TvUi.dp(activity,48),TvUi.dp(activity,16),TvUi.dp(activity,48),TvUi.dp(activity,20))
         val menu=root.getChildAt(0) as LinearLayout
+        menu.setPadding(0,0,0,TvUi.dp(activity,12))
         TvUi.action(menu,"Ligação","home-connection",connection)
         TvUi.action(menu,"Conta","home-account",account)
         TvUi.action(menu,"Configurar","home-setup",setup)
@@ -30,7 +32,7 @@ internal class CinemaHomeView(activity:Activity,openLibrary:()->Unit,connection:
                 intArrayOf(Color.rgb(29,48,60),Color.rgb(16,24,34))).apply { cornerRadius=TvUi.dp(activity,20).toFloat() }
             clipToOutline=true
         }
-        root.addView(hero,LinearLayout.LayoutParams(-1,TvUi.dp(activity,280)).apply { topMargin=TvUi.dp(activity,12) })
+        root.addView(hero,LinearLayout.LayoutParams(-1,TvUi.dp(activity,240)).apply { topMargin=TvUi.dp(activity,12) })
         poster=ImageView(activity).apply { scaleType=ImageView.ScaleType.CENTER_CROP;alpha=0.7f;visibility=View.GONE }
         hero.addView(poster,FrameLayout.LayoutParams(TvUi.dp(activity,220),-1,Gravity.END))
         hero.addView(View(activity).apply {
@@ -40,19 +42,19 @@ internal class CinemaHomeView(activity:Activity,openLibrary:()->Unit,connection:
         val copy=LinearLayout(activity).apply {
             orientation=LinearLayout.VERTICAL
             gravity=Gravity.CENTER_VERTICAL
-            setPadding(TvUi.dp(context,30),TvUi.dp(context,18),TvUi.dp(context,24),TvUi.dp(context,18))
+            setPadding(TvUi.dp(context,30),TvUi.dp(context,16),TvUi.dp(context,24),TvUi.dp(context,16))
         }
         hero.addView(copy,FrameLayout.LayoutParams(-1,-1))
         TvUi.label(copy,"O TEU ESPAÇO. O TEU CINEMA.",11f,TvUi.accent).apply { letterSpacing=0.17f }
         val textWidth=((activity.resources.configuration.screenWidthDp-96)*0.68).toInt().coerceIn(260,650)
         title=TvUi.heading(copy,"Uma boa história\ncomeça aqui.",32f).apply { maxLines=2;maxWidth=TvUi.dp(activity,textWidth) }
         description=TvUi.label(copy,"Entra na tua conta para descobrir os filmes e séries partilhados contigo.",15f,TvUi.muted).apply {
-            maxLines=2;maxWidth=TvUi.dp(activity,textWidth)
+            maxLines=1;ellipsize=android.text.TextUtils.TruncateAt.END;maxWidth=TvUi.dp(activity,textWidth)
         }
         val actions=TvUi.row(copy)
         primary=TvUi.action(actions,"Entrar na NOVA","home-primary",openLibrary).apply { minWidth=TvUi.dp(activity,190) }
         status=TvUi.label(root,"A ler a configuração desta TV…",12f,TvUi.muted).apply {
-            setPadding(0,TvUi.dp(context,12),0,TvUi.dp(context,18))
+            setPadding(0,TvUi.dp(context,8),0,TvUi.dp(context,8))
         }
         section=TvUi.heading(root,"Tudo pronto para a primeira sessão",20f)
         val scroll=HorizontalScrollView(activity).apply {
@@ -75,7 +77,7 @@ internal class CinemaHomeView(activity:Activity,openLibrary:()->Unit,connection:
                 tag="home-item-${item.id}";setOnClickListener { open(item) }
                 setOnFocusChangeListener { _,focused -> if(focused)feature(item,this.artwork.bitmap) }
             }
-            shelf.addView(card,LinearLayout.LayoutParams(TvUi.dp(context,142),TvUi.dp(context,252)).apply {
+            shelf.addView(card,LinearLayout.LayoutParams(TvUi.dp(context,142),TvUi.dp(context,260)).apply {
                 rightMargin=TvUi.dp(context,16)
             })
             artwork(card)

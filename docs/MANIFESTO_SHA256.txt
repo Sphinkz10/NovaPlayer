@@ -33,7 +33,7 @@ cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  connect/app/sr
 b126097ac8e436da9870196b117b8b845789b64aaa0128ecc088fe5a51bab1c0  connect/app/src/main/java/com/novacinema/connect/CinemaActivity.kt
 c6c8daea38d34b50efa8e84e6378e1dce5c5ed807c897569a8fe038a3cfda237  connect/app/src/main/java/com/novacinema/connect/CinemaArtwork.kt
 4124085f6a0273e0d2e3f0ab934565eeb1358257b528952827794612d2ee8631  connect/app/src/main/java/com/novacinema/connect/CinemaCard.kt
-11e337bc7aea8f82f851edc19e60d0b322e0b939c4f971c9840d2353a0b73569  connect/app/src/main/java/com/novacinema/connect/CinemaHomeView.kt
+c1245d85bab78fe58e5935d575b84b1e1226791791978f2003588f11851d13ee  connect/app/src/main/java/com/novacinema/connect/CinemaHomeView.kt
 59640bcb26dc042d02a0368a53e4cd456139007e12e155e06cb6ee354d922c52  connect/app/src/main/java/com/novacinema/connect/ConnectionActivity.kt
 d73fca28e693fa106db696b4e8481cfb5b1cf53c35c1c1b70b5eb4891952faa5  connect/app/src/main/java/com/novacinema/connect/DeviceClient.kt
 1994fd461c178d4b746688b4fb5b665d29a4b4cc3f1b2124e2ff88c403a2faab  connect/app/src/main/java/com/novacinema/connect/DevicePairingActivity.kt
