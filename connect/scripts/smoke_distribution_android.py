@@ -30,7 +30,7 @@ def main():
     checks = []
     adb('install', str(OUT/'candidate.apk'))
     details = adb('shell', 'dumpsys', 'package', PACKAGE).stdout
-    assert 'versionCode=12 ' in details
+    assert 'versionCode=13 ' in details
     assert adb('shell', 'run-as', PACKAGE, 'id', check=False).returncode != 0
     checks.append('release installed; run-as denied for non-debug application')
     adb('shell', 'input', 'keyevent', 'KEYCODE_WAKEUP')
@@ -68,7 +68,7 @@ def main():
     assert adb('shell', 'cat', marker_file).stdout == marker
     checks.append('foreign signing identity refused by Android; original sandbox retained')
     adb('install', '-r', str(OUT/'upgrade.apk'))
-    assert 'versionCode=13 ' in adb('shell', 'dumpsys', 'package', PACKAGE).stdout
+    assert 'versionCode=14 ' in adb('shell', 'dumpsys', 'package', PACKAGE).stdout
     assert adb('shell', 'stat', '-c', '%u', '/data/user/0/'+PACKAGE).stdout.strip() == uid_before
     assert adb('shell', 'cat', marker_file).stdout == marker
     assert adb('shell', 'run-as', PACKAGE, 'id', check=False).returncode != 0

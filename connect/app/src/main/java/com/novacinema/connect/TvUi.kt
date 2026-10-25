@@ -9,12 +9,13 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 
 /** One focus language for the remote, with no touch-only actions. */
 internal object TvUi {
-    val background = Color.rgb(9, 15, 27)
-    val surface = Color.rgb(23, 35, 53)
+    val background = Color.rgb(10, 13, 19)
+    val surface = Color.rgb(24, 30, 40)
     val ink = Color.rgb(238, 244, 252)
     val muted = Color.rgb(170, 187, 207)
     val accent = Color.rgb(109, 226, 216)
@@ -28,7 +29,47 @@ internal object TvUi {
         addState(intArrayOf(android.R.attr.state_pressed), shape(Color.rgb(30, 64, 79), accent))
         addState(intArrayOf(), shape(surface))
     }
+    /** TV chrome is deliberately quieter than the content. */
+    fun stage(activity: Activity, section: String): LinearLayout {
+        activity.window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        activity.window.navigationBarColor = background
+        val root=LinearLayout(activity).apply {
+            orientation=LinearLayout.VERTICAL
+            setPadding(dp(context,48),dp(context,24),dp(context,48),dp(context,32))
+        }
+        val scroll=ScrollView(activity).apply {
+            background=GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                intArrayOf(Color.rgb(19,27,38),TvUi.background,TvUi.background))
+            isFillViewport=true;clipToPadding=false;isVerticalScrollBarEnabled=false;addView(root)
+        }
+        activity.setContentView(scroll)
+        val top=row(root).apply { setPadding(0,0,0,dp(context,22)) }
+        label(top,"NOVA",22f,ink).apply {
+            letterSpacing=0.18f;typeface=Typeface.create("sans-serif-black",Typeface.NORMAL)
+            layoutParams=LinearLayout.LayoutParams(-2,-2)
+        }
+        label(top,"CINEMA",11f,accent).apply {
+            letterSpacing=0.25f
+            layoutParams=LinearLayout.LayoutParams(-2,-2).apply { leftMargin=dp(context,12) }
+        }
+        label(top,section,13f,muted).apply {
+            gravity=Gravity.END
+            layoutParams=LinearLayout.LayoutParams(0,-2,1f)
+        }
+        return root
+    }
+    fun heading(root:LinearLayout,value:String,size:Float=28f)=label(root,value,size).apply {
+        typeface=Typeface.create("sans-serif-medium",Typeface.NORMAL)
+    }
+    fun action(root:LinearLayout,title:String,tagValue:String?=null,action:()->Unit):Button {
+        val button=style(Button(root.context)).apply { text=title;tag=tagValue;setOnClickListener { action() } }
+        root.addView(button,LinearLayout.LayoutParams(-2,dp(root.context,48)).apply {
+            setMargins(0,dp(root.context,6),dp(root.context,10),dp(root.context,6))
+        })
+        return button
+    }
     fun screen(activity: Activity, title: String, subtitle: String? = null): LinearLayout {
+        activity.window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         activity.window.statusBarColor = background; activity.window.navigationBarColor = background
         val root = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
@@ -54,7 +95,7 @@ internal object TvUi {
         background = focusBackground(); backgroundTintList = null
         setTextColor(ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf()), intArrayOf(muted, ink)))
         isAllCaps = false; textSize = 17f; gravity = Gravity.CENTER_VERTICAL or Gravity.START
-        minHeight = dp(context, 52); minimumHeight = dp(context, 52)
+        minHeight = dp(context, 48); minimumHeight = dp(context, 48)
         setPadding(dp(context, 18), dp(context, 10), dp(context, 18), dp(context, 10))
         isFocusable = true; isFocusableInTouchMode = false
     }

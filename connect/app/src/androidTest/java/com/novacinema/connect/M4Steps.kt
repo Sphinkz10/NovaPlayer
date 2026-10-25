@@ -58,7 +58,22 @@ class M4Steps(private val runner:Instrumentation) {
         runner.setInTouchMode(false)
         waitUntil { var ready=false;main { ready=views(home.window.decorView).filterIsInstance<Button>()
             .any { it.tag=="home-primary" && it.text.toString()=="Abrir biblioteca" } };ready }
+        // The home shelf is actual account data. Open its title with the remote,
+        // then use real Back to return to the catalogue, before the library path.
+        waitUntil { var ready=false;main { ready=views(home.window.decorView)
+            .any { it.tag=="home-content-loaded-$library" } };ready }
         if(captureScreens)LabScreenshots(runner).capture(home,"tv-home")
+        click(home,"home-item-$item")
+        val featured=runner.waitForMonitorWithTimeout(catalogueMonitor,30000) ?: error("Home title did not open detail")
+        waitUntil { var ready=false;main { ready=views(featured.window.decorView).any { it.tag=="cinema-play" } };ready }
+        runner.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+        waitUntil { var ready=false;main { ready=views(featured.window.decorView)
+            .any { it.tag=="cinema-item-$item" && it.hasFocus() } };ready }
+        main { featured.finish() }
+        // Foregrounding must re-authorize and reload the home, never reuse a
+        // stale account's shelf or pin a previous network session in the UI.
+        waitUntil { var ready=false;main { ready=home.hasWindowFocus() && views(home.window.decorView)
+            .any { it.tag=="home-content-loaded-$library" } };ready }
         click(home,"home-primary")
         val cinema=runner.waitForMonitorWithTimeout(catalogueMonitor,30000) ?: error("Home did not open catalogue")
         runner.removeMonitor(catalogueMonitor)

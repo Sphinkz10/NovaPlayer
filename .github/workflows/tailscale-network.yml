@@ -7,6 +7,9 @@ on:
       - 'connect/tailscale-native/**'
       - 'connect/core/src/main/kotlin/com/novacinema/connect/core/TailscaleProfile.kt'
       - 'connect/app/src/main/java/com/novacinema/connect/RemoteTailscale.kt'
+      - 'connect/app/src/main/**'
+      - 'connect/app/src/androidTest/java/com/novacinema/connect/M4Steps.kt'
+      - 'connect/app/build.gradle.kts'
       - 'server/nova_server/tailscale_profile.py'
       - '.github/workflows/tailscale-network.yml'
 permissions:
